@@ -82,6 +82,36 @@ section.grp>.sub{font-size:12.5px;color:var(--muted);margin:0 0 10px;max-width:8
 textarea{width:100%;min-height:52px;resize:vertical;font:400 12.5px/1.4 var(--f-ui);border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--bg);color:var(--ink)}
 .saved{font-size:11px;color:var(--muted);min-height:14px}
 .blocked{background:var(--change-soft);border:1px solid var(--change);border-radius:var(--r);padding:12px 14px;font-size:13px}
+.card.gapc{grid-template-columns:260px minmax(0,1fr) 260px}
+.theme{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.theme button{font:500 12px var(--f-ui);border:0;background:none;color:var(--muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.gv{display:flex;flex-direction:column;gap:5px;width:100%;font-size:11.5px;color:var(--ink)}
+.gv-cap{font-size:10.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.gv-chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:3px 6px;font-size:11px;white-space:nowrap}
+.gv-chip i{width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.1);flex:none}
+.gv-sem{flex-direction:row;align-items:center;gap:6px}.gv-col{display:flex;flex-direction:column;gap:4px;min-width:0}
+.gv-arrow{color:var(--muted)}
+.gv-btn{display:inline-block;background:#0076DD;color:#fff;font:600 12px var(--f-v1);padding:6px 12px;border-radius:4px}
+.gv-bad{color:var(--flag);font-size:11px}.gv-ok{color:var(--keep);font-size:11px}
+.gv-row{display:flex;align-items:center;gap:8px}.gv-n{width:18px;text-align:right;font:500 11px var(--f-mono);color:var(--muted)}
+.gv-bar{height:10px;background:var(--accent);border-radius:2px;opacity:.75}
+.gv-rad{flex-direction:row;gap:10px;justify-content:center}.gv-rad>div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.gv-box{width:40px;height:40px;background:var(--accent-soft);border:2px solid var(--accent)}
+.gv-elev{flex-direction:row;gap:10px;padding:10px 0;justify-content:center}
+.gv-card{background:#fff;color:#313131;border-radius:6px;padding:12px 8px;font:600 11px var(--f-v1);flex:1;text-align:center}
+.gv-states{flex-direction:row;flex-wrap:wrap;gap:8px}.gv-states>div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.gv-input{display:block;background:#fff;color:#6C6C6C;border:1px solid #B5C3CB;border-radius:4px;padding:6px 8px;font:400 12px var(--f-v1)}
+.gv-con{flex-direction:row;gap:10px}.gv-con>div{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.gv-pair{font:600 12px var(--f-v1);padding:6px 10px;border-radius:4px}
+.gv-track{height:28px;background:var(--panel);border:1px solid var(--line);border-radius:999px;position:relative;overflow:hidden}
+.gv-dot{position:absolute;top:5px;left:6px;width:16px;height:16px;border-radius:50%;background:var(--accent);animation:gvslide 1.8s ease-out infinite alternate}
+@keyframes gvslide{to{left:calc(100% - 22px)}}
+@media (prefers-reduced-motion:reduce){.gv-dot{animation:none}}
+.gv-dark{flex-direction:row;gap:0;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.gv-dark>div{flex:1;padding:16px 8px;text-align:center;font:600 12px var(--f-v1)}
+.gv-bars{flex-direction:row;align-items:flex-end;gap:6px;height:66px;justify-content:center}.gv-bars span{width:18px;border-radius:2px 2px 0 0}
+@media (max-width:1000px){.card.gapc{grid-template-columns:200px minmax(0,1fr)}.card.gapc .dec{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}}
 @media (max-width:860px){.card{grid-template-columns:110px minmax(0,1fr)}.dec{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}}
 @media (max-width:480px){.card{grid-template-columns:1fr}.viz{border-right:0;border-bottom:1px solid var(--line)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -91,7 +121,8 @@ textarea{width:100%;min-height:52px;resize:vertical;font:400 12.5px/1.4 var(--f-
 <header class="top">
   <div class="title-row">
     <div><div class="eyebrow">Pando DS V1 · Step 1 · Foundations</div><h1>V1 Foundations Review</h1></div>
-    <div class="prog" id="prog"></div>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div class="prog" id="prog"></div>
+      <div class="theme" role="group" aria-label="Theme"><button type="button" id="th-light" aria-pressed="false">Light</button><button type="button" id="th-dark" aria-pressed="false">Dark</button></div></div>
   </div>
   <div class="bar" id="bar" aria-hidden="true"></div>
   <nav class="tabs" id="tabs" aria-label="Sections"></nav>
@@ -147,51 +178,53 @@ const S={
 };
 // kind: c = single colour, c3 = light/medium/dark trio, g = gradient, t = text style, x = other, gap = industry gap
 const GROUPS=[
-{id:"primary",tab:"Primary",title:"Main / Primary colours",sub:"Frame “Main Colors” (162:49). The PANDO Actions block appears twice on the canvas (162:63 and 10609:35); one copy is a duplicate.",items:[
- {id:"pando-blue",k:"c",name:"Primary / Pando Blue",hex:"#0076DD",node:"162:54",use:"Primary Button",flags:["Layer name says #008AFF; the style value and label are #0076DD."],rec:"<b>Keep</b> as the brand primary. White text on it passes AA at 4.53 : 1, with almost no margin.",src:["wcagText"]},
- {id:"pando-light",k:"c",name:"Primary / Pando Light",hex:"#EEF2F4",node:"162:65",use:"Secondary buttons (Figma note is cut off)"},
+{id:"primary",tab:"Primary",title:"Main / Primary colours",sub:"Frame “Main Colors” (162:49): Pando Blues, Pando Greys, Pando Actions and Freehand colour.",items:[
+ {id:"pando-blue",k:"c",name:"Primary / Pando Blue",hex:"#0076DD",node:"162:54",use:"Primary Buttons, Primary CTAs",flags:["Layer name still says #008AFF; the style value and label are #0076DD."],rec:"<b>Keep</b> as the brand primary. White text on it passes AA at 4.53 : 1, with almost no margin.",src:["wcagText"]},
+ {id:"pando-light",k:"c",name:"Primary / Pando Light",hex:"#EEF2F4",node:"162:65",use:"Secondary Buttons, Light Borders"},
  {id:"pando-dark",k:"c",name:"Primary / Pando Dark",hex:"#234357",node:"162:68",use:"No usage written in Figma. Seen as the top-header background on the Typography page.",warn:["Usage note is empty."]},
- {id:"action-blue",k:"c",name:"Action / Blue",hex:"#376F99",node:"162:63",use:"Pando Actions",warn:["Appears twice (162:63, 10609:35)."]},
+ {id:"fh-dark",k:"c",name:"Freehand / Freehand Dark",hex:"#153F69",node:"10609:36",use:"For header",flags:["Not a colour style: the swatch is a raw fill, so it can’t be reused from the library.","Swatch layer is still named “Color/Action/Blue-#376F99”."],rec:"<b>Keep</b> and register it as a style. White text on it is 10.8 : 1."},
+ {id:"fh-orange",k:"c",name:"Freehand / Freehand Orange",hex:"#FE6505",node:"10609:42",use:"No usage written in Figma.",flags:["Not a colour style: the swatch is a raw fill.","Swatch layer is still named “Color/Action/Red-#E25757”.","White text on it is 2.97 : 1, below AA for normal text."],warn:["Close to the Studio (V2) orange #FE6301. Same brand colour, two values?"]},
+ {id:"action-blue",k:"c",name:"Action / Blue",hex:"#376F99",node:"162:63",use:"Pando Actions"},
  {id:"action-red",k:"c",name:"Action / Red (Error Red)",hex:"#E25757",node:"162:91",use:"Pando Actions · error",flags:["White text on it is 3.66 : 1, below AA (4.5 : 1) for normal-size text."],rec:"Keep, but only for text ≥ 18.66px bold, or darken for small text.",src:["wcagText"]},
  {id:"action-green",k:"c",name:"Action / Green (Confirmation Green)",hex:"#91C38A",node:"162:92",use:"Pando Actions · confirmation",flags:["White text on it is 2.02 : 1, which fails AA at every size."],rec:"Use as a fill or icon colour only, never behind white text.",src:["wcagText","wcagUI"]},
- {id:"grey-light",k:"c",name:"Grey / Light",hex:"#E7E7E7",node:"162:78",use:"“Use as border also (” (note is cut off)"},
+ {id:"grey-light",k:"c",name:"Grey / Light",hex:"#E7E7E7",node:"162:78",use:"Use as border also (instead of E6E6E6)"},
  {id:"grey-medium",k:"c",name:"Grey / Medium",hex:"#A3A3A3",node:"162:83",use:"Not written",warn:["Layer name typo: “Mendium”."]},
  {id:"grey-dark",k:"c",name:"Grey / Dark",hex:"#515151",node:"162:93",use:"Not written"},
 ]},
-{id:"text",tab:"Text & Border",title:"Text & border colours",sub:"Frame “Text & Border Colors” (162:187). Four of the five text swatches show a different hex in the label than the actual style value.",items:[
- {id:"text-dark",k:"c",name:"Text / Dark",hex:"#313131",node:"162:192",use:"Primary text",flags:["Label on canvas says #404040; the style is #313131. Typography samples use #404040 and #1A1A1A, neither of which is a style."],rec:"Keep #313131 (13.0 : 1 on white). Retire #404040 and #1A1A1A from component specs.",src:["wcagText"]},
- {id:"text-medium",k:"c",name:"Text / Medium",hex:"#545454",node:"162:193",use:"Secondary text",flags:["Label says #616161. A second style “Text/Medium-#737373” exists whose value is #616161, so three hex values compete for one role."],rec:"Pick one value for “medium text” and delete the other style."},
- {id:"text-light",k:"c",name:"Text / Light",hex:"#6C6C6C",node:"162:194",use:"Tertiary text",flags:["Label says #737373."],rec:"Keep. It passes AA on white (5.25 : 1) and on #F8F8F8 (4.94 : 1).",src:["wcagText"]},
- {id:"text-disabled",k:"c",name:"Text / Disabled",hex:"#A3A2A2",node:"10287:18544",use:"Disabled text",flags:["Label says #737373."],rec:"Keep. 2.55 : 1 is acceptable because WCAG exempts disabled controls from the contrast rule.",src:["wcagText"]},
- {id:"blue-active",k:"c",name:"Text / Blue Active",hex:"#005399",node:"162:70",use:"Active heading; also table headers and all-caps section headings"},
+{id:"text",tab:"Text & Border",title:"Text & border colours",sub:"Frame “Text & Border Colors” (162:187). Labels now match the style values.",items:[
+ {id:"text-dark",k:"c",name:"Text / Dark",hex:"#313131",node:"162:192",use:"Primary text",warn:["Typography samples use #404040 and #1A1A1A, neither of which is a style."],rec:"Keep #313131 (13.0 : 1 on white). Map #404040 and #1A1A1A to it in components.",src:["wcagText"]},
+ {id:"text-medium",k:"c",name:"Text / Medium",hex:"#545454",node:"162:193",use:"Secondary text",flags:["A second style “Text/Medium-#737373” exists whose value is #616161 (used on the Typography page), so two values compete for one role."],rec:"Keep #545454 and retire the second style."},
+ {id:"text-light",k:"c",name:"Text / Light",hex:"#6C6C6C",node:"162:194",use:"Tertiary text",rec:"Keep. It passes AA on white (5.25 : 1) and on #F8F8F8 (4.94 : 1).",src:["wcagText"]},
+ {id:"text-disabled",k:"c",name:"Text / Disabled",hex:"#A3A2A2",node:"10287:18544",use:"Disabled text",rec:"Keep. 2.55 : 1 is acceptable because WCAG exempts disabled controls from the contrast rule.",src:["wcagText"]},
+ {id:"blue-active",k:"c",name:"Text / Blue Active",hex:"#005399",node:"162:70",use:"Active Headings & Borders"},
  {id:"border-blue",k:"c",name:"Border / Blue",hex:"#E9F1F5",node:"162:195",use:"Border",warn:["Same value as Accent / Light Highlight (162:149)."]},
  {id:"border-input",k:"c",name:"Border / Input Light",hex:"#E2EAEC",node:"162:196",use:"Input border",flags:["Only 1.22 : 1 against white. WCAG asks 3 : 1 for the visible edge of an input when that edge is the only thing that identifies it."],rec:"Keep for decorative dividers; consider a darker input border (e.g. Blue-Grey or darker).",src:["wcagUI"]},
- {id:"border-grey",k:"c",name:"Border / Grey",hex:"#EFEFEF",node:"162:197",use:"Border",flags:["Label says #E2EAEC; the style is #EFEFEF."]},
+ {id:"border-grey",k:"c",name:"Border / Grey",hex:"#EFEFEF",node:"162:197",use:"Border"},
  {id:"border-bluegrey",k:"c",name:"Border / Blue-Grey",hex:"#B5C3CB",node:"162:198",use:"Border",warn:["1.81 : 1 on white. Fine for dividers, too light for input outlines."],src:["wcagUI"]},
 ]},
 {id:"accent",tab:"Accent",title:"Accent & highlight colours",sub:"Frame “Accent Colors” (162:133) plus one swatch left outside any frame.",items:[
- {id:"green-highlight",k:"c",name:"Accent / Green Highlight",hex:"#008D5E",node:"162:148",use:"Main Highlight Accent (also the success toast)",flags:["Label under the swatch says #0076DD (Pando Blue). White 14px text on it is 4.22 : 1, just under AA."],src:["wcagText"]},
- {id:"light-highlight",k:"c",name:"Accent / Light Highlight",hex:"#E9F1F5",node:"162:149",use:"Light Highlight Accent",flags:["Name says #EFF3F5; the value is #E9F1F5 (same as Border / Blue)."]},
- {id:"accent-bluegrey",k:"c",name:"Accent / Blue-Grey",hex:"#CBD4D8",node:"162:154",use:"Deactivated toggle"},
- {id:"green-medium",k:"c",name:"Accent / Green Medium",hex:"#67AC5D",node:"162:139",use:"Toggle selection (note cut off)",warn:["White text on it is 2.75 : 1. Fine for a toggle track, not for text."]},
- {id:"red-medium",k:"c",name:"Accent / Red Medium",hex:"#D26568",node:"162:140",use:"Indent error warning",warn:["Very close to Action / Red #E25757."]},
- {id:"error-red-light",k:"c",name:"Accent / Error Red Light",hex:"#FFF8F9",node:"3272:3749",use:"Error background",flags:["Label under the swatch says #D26568."]},
+ {id:"green-highlight",k:"c",name:"Accent / Green Highlight",hex:"#008D5E",node:"162:148",use:"Main Highlight Accent Color (also the success toast)",flags:["White 14px text on it is 4.22 : 1, just under AA."],src:["wcagText"]},
+ {id:"light-highlight",k:"c",name:"Accent / Light Highlight",hex:"#E9F1F5",node:"162:149",use:"Light Highlight Accent Color, Active cards",flags:["Style name still says #EFF3F5 (and the label says #EFF3F5); the value is #E9F1F5, same as Border / Blue."]},
+ {id:"accent-bluegrey",k:"c",name:"Accent / Blue-Grey",hex:"#CBD4D8",node:"162:154",use:"Deactive Toggle"},
+ {id:"green-medium",k:"c",name:"Accent / Green Medium",hex:"#67AC5D",node:"162:139",use:"Toggle Selection, Confirmation Status Icons",warn:["White text on it is 2.75 : 1. Fine for a toggle track or icon, not for text."]},
+ {id:"red-medium",k:"c",name:"Accent / Red Medium",hex:"#D26568",node:"162:140",use:"Indent Error Warning Border",warn:["Very close to Action / Red #E25757."]},
+ {id:"error-red-light",k:"c",name:"Accent / Error Red Light",hex:"#FFF8F9",node:"3272:3749",use:"Error background (no usage note in Figma)"},
  {id:"light-blue-bg",k:"c",name:"Accent / Light Blue BG",hex:"#F3F6FC",node:"6181:6786",use:"Background"},
- {id:"dark-blue-bg",k:"c",name:"Accent / Dark Blue BG",hex:"#E0EBF6",node:"8716:3275",use:"Not written",flags:["Label says #EBF1FA. A loose “SHIPMENTS” swatch (8716:3271) also uses #EBF1FA."]},
+ {id:"dark-blue-bg",k:"c",name:"Accent / Dark Blue BG",hex:"#E0EBF6",node:"8716:3275",use:"Not written",warn:["A loose “SHIPMENTS” swatch (8716:3271) uses #EBF1FA, close to this."]},
  {id:"offwhite",k:"c",name:"Accent / Off White",hex:"#F8F8F8",node:"162:150",use:"Background"},
  {id:"lightbg",k:"c",name:"Accent / Light BG",hex:"#FAFAFA",node:"162:152",use:"Table header BG; disabled table row"},
  {id:"alt-white",k:"c",name:"Accent / Alternate White",hex:"#F9FAFA",node:"162:153",use:"Alternate table row",warn:["#F8F8F8, #F9FAFA and #FAFAFA are visually identical. Three tokens for one look."]},
  {id:"overlay",k:"c",name:"Accent / Overlay",hex:"#234357",alpha:.2,node:"162:185",use:"Modal overlay (Pando Dark at 20%)"},
  {id:"tertiary-action",k:"c",name:"Accent / Tertiary Action",hex:"#6D8EB4",node:"6051:1168",use:"No label on canvas",warn:["No hex label or usage note."]},
- {id:"hl-blue-light",k:"c",name:"Highlight / Blue Light",hex:"#9CD2FF",node:"162:178",use:"Not written",flags:["Label says #66B9FF; the style is #9CD2FF."]},
+ {id:"hl-blue-light",k:"c",name:"Highlight / Blue Light",hex:"#9CD2FF",node:"162:178",use:"Not written"},
  {id:"hl-yellow",k:"c",name:"Highlight / Yellow Warning",hex:"#FFCF00",node:"162:180",use:"Warning",rec:"Keep, with dark text only (8.8 : 1 with #313131)."},
  {id:"hl-blue-dark",k:"c",name:"Highlight / Blue Dark",hex:"#0078DD",node:"162:181",use:"Not written",flags:["Differs from Pando Blue #0076DD by 2 points of green: a near-duplicate."],rec:"Likely <b>Outdated</b>: merge into Pando Blue."},
  {id:"hl-orange",k:"c",name:"Highlight / Orange Warning",hex:"#FF8C54",node:"162:183",use:"Warning",warn:["White text is 2.30 : 1."]},
  {id:"green-email",k:"c",name:"Accent / Green Info Email",hex:"#19A476",node:"162:138",use:"Email notification accent",warn:["Sits outside every frame on the page."]},
 ]},
-{id:"status",tab:"Status",title:"Status / highlight palette",sub:"Frame “🟢 Status/Highlight Colors” (162:96). 11 hues × light / medium / dark. Typical use: chip background (light) + chip text (dark).",items:[
+{id:"status",tab:"Status",title:"Status / highlight palette",sub:"Frame “🟢 Status/Highlight Colors” (162:96). 11 hues × light / medium / dark. Figma usage: Status, Tags, Dashboard Filters, Indicator Icons. Light = backgrounds, Dark = text, Medium = borders.",items:[
  {id:"st-purple",k:"c3",name:"Status / Purple",trio:["#F2E7FE","#AB63F8","#2D0645"],node:"162:101"},
- {id:"st-red",k:"c3",name:"Status / Red",trio:["#FFEAEE","#F8637E","#FF0000"],node:"162:102",flags:["Light: label says #FFF0F0. Dark: style is pure #FF0000, label says #E00000.","Dark on light is only 3.48 : 1, below AA for chip text."],src:["wcagText"]},
+ {id:"st-red",k:"c3",name:"Status / Red",trio:["#FFEAEE","#F8637E","#FF0000"],node:"162:102",flags:["Light: label says #FFF0F0; the style is #FFEAEE.","Dark (#FF0000) on light is only 3.48 : 1, below AA for tag text."],src:["wcagText"]},
  {id:"st-maroon",k:"c3",name:"Status / Maroon",trio:["#FFE3EA","#FFA9BD","#54021A"],node:"162:103"},
  {id:"st-brown",k:"c3",name:"Status / Brown",trio:["#FFEEC4","#FAAE3C","#422500"],node:"162:104"},
  {id:"st-orange",k:"c3",name:"Status / Orange",trio:["#FFF4E5",null,"#F94200"],node:"162:105",flags:["No medium step. Every other hue has one."]},
@@ -211,8 +244,8 @@ const GROUPS=[
  {id:"dk-label",k:"c",name:"Dark / Label Text",hex:"#D5DAF4",node:"162:215",use:"Labels on dark (8.2 : 1)"},
  {id:"dk-green",k:"c",name:"Dark / Highlight Green",hex:"#1FCD93",node:"162:218",use:"Highlight on dark"},
  {id:"white",k:"c",name:"White",hex:"#FFFFFF",node:"162:223",use:"Base"},
- {id:"nimbus-orange",k:"c",name:"Nimbus / Orange",hex:"#E48352",node:"3181:2530",use:"Not written",flags:["Frame is titled “Dark BG Colors” and the label says #0076DD; both are copy-paste leftovers."]},
- {id:"nimbus-blue",k:"c",name:"Nimbus / Blue",hex:"#7AB4CF",node:"3181:2531",use:"Not written",flags:["Label says #0076DD."]},
+ {id:"nimbus-orange",k:"c",name:"Nimbus / Orange",hex:"#E48352",node:"3181:2530",use:"Not written"},
+ {id:"nimbus-blue",k:"c",name:"Nimbus / Blue",hex:"#7AB4CF",node:"3181:2531",use:"Not written"},
  {id:"shadow-1",k:"x",name:"Shadow / White BG / 0-2-4-6%",css:"box-shadow:0 2px 4px rgba(0,0,0,.06)",node:"316:479",use:"The only shadow style in the file.",rec:"Keep. See the elevation gap in Industry gaps."},
  {id:"banners",k:"x",name:"Banner colour pairs",css:"",node:"4885:221",banners:[["#184870","9.6"],["#134842","10.3"],["#EDDA79","1.4"],["#96617E","4.9"]],use:"Four banner backgrounds, each with white text. Ratios shown are white-text contrast.",flags:["#EDDA79 with white text is 1.41 : 1, which is unreadable."],src:["wcagText"]},
 ]},
@@ -262,19 +295,35 @@ const GROUPS=[
  {id:"t-em-calc",k:"x",name:"Em calculator (helper note)",css:"",node:"5498:17096",use:"px → em lookup (10 → 0.625 … 20 → 1.25). Designer helper, not a token.",rec:"Likely <b>Skip</b>."},
  {id:"t-grid",k:"x",name:"Grid Styles (2 frames)",css:"",node:"3736:3653",use:"Two 1280 × 900 “Grid Styles” frames (3736:3653, 5596:6555). No grid values were readable through Figma; please check them in Figma.",warn:["Couldn’t read the values."]},
 ]},
-{id:"gaps",tab:"Industry gaps",title:"Industry gaps",sub:"Things all or most of the six reference systems define at the foundation level that V1 doesn’t. Nothing here gets added unless you choose Add.",gap:true,items:[
- {id:"gap-semantic",k:"gap",name:"Semantic (role) tokens on top of raw colours",use:"V1 names colours by where they were used (“Toggle Selection”, “Table Header BG”). The six systems keep two layers: raw palette (blue-60) and role tokens (text-primary, border-subtle, surface-raised, support-error). Components only use role tokens, so changing a brand colour is one edit.",rec:"<b>Add.</b> This is the biggest win for prototyping speed: Claude builds every component against ~25 role tokens instead of 100 raw colours.",src:["cbTokens","m3roles","flTokens","antTheme","slds"]},
- {id:"gap-hexnames",k:"gap",name:"Token names without hex values",use:"Every V1 colour name contains its hex (“Pando-Blue-#008AFF”). 20+ of them now disagree with their real value. No reference system puts the value in the name.",rec:"<b>Add.</b> Repo token names drop the hex; Figma rename is optional, for you to decide.",src:["cbTokens","flTokens"]},
- {id:"gap-spacing",k:"gap",name:"Spacing scale",use:"No spacing variables or documented scale in the atoms file. All five product systems publish one, built on a 4px or 8px base.",rec:"<b>Add</b>, derived from the paddings actually used in your V1 components (Claude measures them as each component is read, then proposes a scale).",src:["m3space","cbSpace","flLayout","antLayout","slds"]},
- {id:"gap-radius",k:"gap",name:"Corner radius scale",use:"No radius tokens. Fluent and Ant expose small/medium/large radius tokens.",rec:"<b>Add</b>, measured from components the same way as spacing.",src:["flTokens","antTheme"]},
- {id:"gap-elevation",k:"gap",name:"Elevation / shadow scale",use:"One shadow style exists. Reference systems define 3–6 levels (card, dropdown, dialog, toast).",rec:"<b>Add</b>, measured from components (dropdown, modal, toast).",src:["m3elev","flElev","antTheme"]},
- {id:"gap-states",k:"gap",name:"Interaction state colours (hover, pressed, focus, disabled)",use:"No hover/pressed tokens at foundation level; each component defines its own. Material, Carbon and Fluent define them as tokens.",rec:"<b>Add</b>, collected from Buttons / Inputs when we reach them.",src:["m3states","cbTokens","flColor"]},
- {id:"gap-focus",k:"gap",name:"Focus ring",use:"No focus indicator colour or style. Keyboard focus must be visible (WCAG 2.4.7), and 2.4.13 sets size and contrast guidance.",rec:"<b>Add</b> one focus ring token in Pando Blue.",src:["wcagFocus","wcagFocusApp","cbTokens"]},
- {id:"gap-contrast",k:"gap",name:"Contrast pairing rules",use:"Several pairs fail AA (see the ▲ flags: Action Green, Error Red, Status Red, the yellow banner, placeholder, input border). Lightning and Apple document which text colour goes on which fill.",rec:"<b>Add</b> as a short “allowed pairs” table in the docs, not new colours.",src:["wcagText","wcagUI","sldsColor","appleColor"]},
- {id:"gap-typescale",k:"gap",name:"Registered type scale",use:"Only 4 text styles are registered; ~25 roles exist as written specs, several sharing the same size and weight. Reference systems use 8–15 named steps.",rec:"<b>Add</b>: collapse the 25 roles into ~8–10 steps (e.g. 10, 11, 12, 13, 14, 16 at regular and semibold).",src:["m3type","cbType","flType","appleType"]},
- {id:"gap-motion",k:"gap",name:"Motion tokens (duration, easing)",use:"None in V1. Carbon, Material and Fluent publish duration and easing tokens.",rec:"<b>Later.</b> Only matters once toasts, drawers and dropdowns animate in prototypes.",src:["cbMotion","m3motion","flMotion"]},
- {id:"gap-dark",k:"gap",name:"Full dark theme",use:"V1 has dark colours only for the sidebar. Material, Fluent and Apple pair every role with a dark value.",rec:"<b>Not needed</b> unless V1 products ship a dark mode.",src:["m3roles","flColor","appleColor"]},
- {id:"gap-dataviz",k:"gap",name:"Data visualisation palette",use:"No chart palette. Carbon and Ant publish ordered categorical palettes. Your 11-hue Status palette could serve as one.",rec:"<b>Later</b>, when V1 dashboards are prototyped.",src:["cbData","antColor"]},
+{id:"typescale",tab:"Type scale proposal",title:"Type scale proposal: 26 roles → 13 styles + 1 caps modifier",sub:"The 26 type roles you kept differ mostly by colour and capitals, not by size or weight. Proposal: a style is only size + weight + line-height. Colour comes from the colour tokens, and ALL CAPS is one modifier (uppercase + 0.5px tracking; 1px at 14px). Each card lists the roles it replaces and anything that would visibly shift.",ts:true,items:[
+ {id:"tp-16-r",k:"tp",name:"type-16-regular",f:[400,16,22,0,false],sample:"Global Industries",bg:"#234357",col:"#F7F7F7",replaces:["16px / Regular / Top-Header (H1 Header)"],changes:["Registered style line-height goes from 100% to 22px, matching the canvas spec."]},
+ {id:"tp-14-sb",k:"tp",name:"type-14-semibold",f:[600,14,19,0,false],sample:"Select Drop-off(s) for Gate 1 Ranchi",col:"#234357",replaces:["H1 / Body / Heading (Slider, Popups)","14px / Semi-Bold / All Caps (with caps)","H2 / Body / Heading (All Caps) (with caps)"],changes:["H2 Body Heading caps gains 1px tracking to match the registered 14px caps style."]},
+ {id:"tp-14-r",k:"tp",name:"type-14-regular",f:[400,14,19,0,false],sample:"Search",col:"#6C6C6C",replaces:["H2 / Header / Placeholder"],changes:["Placeholder colour moves to a colour token (fix of #D6D6D6 happens in the accessibility pass)."]},
+ {id:"tp-13-sb",k:"tp",name:"type-13-semibold",f:[600,13,16,0,false],sample:"Breadcrumb › Breadcrumb",col:"#545454",replaces:["H3 / Header / Breadcrumb"],changes:["The only 13px role. Alternative: fold into type-12-semibold and drop 13px entirely."]},
+ {id:"tp-12-sb",k:"tp",name:"type-12-semibold",f:[600,12,17,0,false],sample:"Mumbai - Delhi",col:"#313131",replaces:["H3 / Body / Heading","Input / Body / Filled-Input","Input / Sidebar-Dark / Dropdown-Input","Input / Sidebar-Dark / Filled-Input","H3 / Body / Heading (All Caps) (with caps)","Text / Body / Heading (All Caps) (with caps)","Button / Action / Label (with caps)","Label / 12px / Semibold (loose set)"],changes:["Sidebar inputs lose their 0.3–0.5px tracking.","Action label line-height 12 → 17px (single line, no visible change)."]},
+ {id:"tp-12-r",k:"tp",name:"type-12-regular",f:[400,12,17,0,false],sample:"17 Sep 2020",col:"#545454",replaces:["Text / Body / Light","Input / Sidebar-Dark / Placeholder-Input","Input / Sidebar-Dark / Label (with caps)","Label / 12px / Regular (loose set)"],changes:["Sidebar placeholder loses 0.5px tracking."]},
+ {id:"tp-12-b",k:"tp",name:"type-12-bold",f:[700,12,14,0,false],sample:"Save changes",col:"#313131",replaces:["Button / Normal / Label","Label / 12px / Bold (loose set)"],changes:[]},
+ {id:"tp-11-sb",k:"tp",name:"type-11-semibold",f:[600,11,15,0,false],sample:"Indent could not be mapped in ERP",bg:"#E25757",col:"#FFFFFF",replaces:["Text / Body / Medium-Semibold"],changes:[]},
+ {id:"tp-11-r",k:"tp",name:"type-11-regular",f:[400,11,15,0,false],sample:"Penvik Electricals Pvt Ltd",col:"#313131",replaces:["Text / Body / Medium-Regular","Text / Body / Medium-Regular-Caps (with caps)"],changes:[]},
+ {id:"tp-10-sb",k:"tp",name:"type-10-semibold",f:[600,10,12,.5,false],sample:"90909090",col:"#313131",replaces:["10px / Semibold / Sp0.5px (Table-Subtext heading)","H4 / Body / Table-Header (with caps)"],changes:["Table header tracking 0.8 → 0.5px and line-height 14 → 12px."]},
+ {id:"tp-10-r",k:"tp",name:"type-10-regular",f:[400,10,12,.5,false],sample:"90909090",col:"#313131",replaces:["10px / Regular / Sp0.5px (Table-Subtext)","Input / Body / Label (with caps)"],changes:["Input label gains 0.5px tracking; line-height 14 → 12px."]},
+ {id:"tp-10-b",k:"tp",name:"type-10-bold",f:[700,10,14,0,false],sample:"Small button",col:"#313131",replaces:["Button / Small / Label"],changes:[]},
+ {id:"tp-8-r",k:"tp",name:"type-8-regular",f:[400,8,10,0,false],sample:"Sum (Volume * Distance)",col:"#313131",replaces:["Text / Body / Small"],changes:["Kept as-is for now; 8px is flagged for the accessibility pass."]},
+ {id:"tp-caps",k:"tp",name:"Modifier: caps",f:[600,12,17,.5,true],sample:"Document Materials",col:"#005399",replaces:["Every “(All Caps)” / “-Caps” role above"],changes:["One rule instead of separate caps styles: uppercase + 0.5px tracking (1px on 14px)."]},
+]},
+{id:"gaps",tab:"Industry gaps",title:"Industry gaps",sub:"Things all or most of the six reference systems define at the foundation level that V1 doesn’t. Each card shows a small picture of what the gap means. Nothing here gets added unless you choose Add.",gap:true,items:[
+ {id:"gap-semantic",k:"gap",vis:"semantic",name:"Semantic (role) tokens on top of raw colours",use:"In plain words: give each colour a job name. Today a component says “use #0076DD”. With roles it says “use action-primary”, and action-primary points at #0076DD. If the brand blue ever changes, you edit one line and every button, link and focus ring follows. All six systems work this way.",rec:"<b>Add.</b> Biggest win for prototyping speed: Claude builds every component against ~25 job names instead of 100 raw colours.",src:["cbTokens","m3roles","flTokens","antTheme","slds"]},
+ {id:"gap-hexnames",k:"gap",vis:"hexnames",name:"Token names without hex values",use:"In plain words: a name that contains its value goes stale the day the value changes. “Pando-Blue-#008AFF” is already wrong, because the colour is #0076DD. No reference system puts the value in the name.",rec:"<b>Add.</b> Repo token names drop the hex; renaming in Figma is optional, for you to decide.",src:["cbTokens","flTokens"]},
+ {id:"gap-spacing",k:"gap",vis:"spacing",name:"Spacing scale",use:"In plain words: a short fixed list of allowed gaps (4, 8, 12, 16, 24, 32…) so every padding and margin comes from the same ruler. V1 has none written down, so each screen picks its own numbers.",rec:"<b>Add</b>, measured from your real V1 components as Claude reads them, then proposed for review.",src:["m3space","cbSpace","flLayout","antLayout","slds"]},
+ {id:"gap-radius",k:"gap",vis:"radius",name:"Corner radius scale",use:"In plain words: a few named corner roundings (small for inputs, medium for cards, full for pills) instead of a different radius per component.",rec:"<b>Add</b>, measured from components the same way as spacing.",src:["flTokens","antTheme"]},
+ {id:"gap-elevation",k:"gap",vis:"elevation",name:"Elevation / shadow scale",use:"In plain words: how “high” something floats. A card sits low, a dropdown higher, a modal highest, and each level has one shadow. You mentioned 3 more shadows exist; they become levels of this scale.",rec:"<b>Add</b>, with your 3 extra shadows plus the one in Figma.",src:["m3elev","flElev","antTheme"]},
+ {id:"gap-states",k:"gap",vis:"states",name:"Interaction state colours (hover, pressed, focus, disabled)",use:"In plain words: what a button or row looks like when you hover it, press it, tab to it, or can’t use it. Defined once as tokens instead of re-picked in every component. The picture is an illustration, not V1 values.",rec:"<b>Add</b>, collected from Buttons and Inputs when we reach them.",src:["m3states","cbTokens","flColor"]},
+ {id:"gap-focus",k:"gap",vis:"focus",name:"Focus ring",use:"In plain words: the outline that shows where the keyboard is. Without it, a keyboard user can’t tell which field is active. WCAG requires it to be visible.",rec:"<b>Add</b> one focus ring token in Pando Blue.",src:["wcagFocus","wcagFocusApp","cbTokens"]},
+ {id:"gap-contrast",k:"gap",vis:"contrast",name:"Contrast pairing rules",use:"In plain words: a small table of which text colour may sit on which background. It’s the rulebook the accessibility pass will use; no new colours.",rec:"<b>Add</b> as a short “allowed pairs” table in the docs.",src:["wcagText","wcagUI","sldsColor","appleColor"]},
+ {id:"gap-typescale",k:"gap",vis:"typescale",name:"Registered type scale",use:"In plain words: a short ladder of text sizes everyone picks from. See the “Type scale proposal” tab: 26 roles become 13 styles.",rec:"<b>Add</b>, via the Type scale proposal tab.",src:["m3type","cbType","flType","appleType"]},
+ {id:"gap-motion",k:"gap",vis:"motion",name:"Motion tokens (duration, easing)",use:"In plain words: named speeds and curves for things that move (toast slides in, drawer opens) so every animation feels the same.",rec:"<b>Later.</b> Only matters once toasts, drawers and dropdowns animate in prototypes.",src:["cbMotion","m3motion","flMotion"]},
+ {id:"gap-dark",k:"gap",vis:"dark",name:"Full dark theme",use:"In plain words: a dark version of every colour role, so the whole product can switch to dark mode. V1 has dark colours only for the sidebar.",rec:"<b>Not needed</b> unless V1 products ship a dark mode.",src:["m3roles","flColor","appleColor"]},
+ {id:"gap-dataviz",k:"gap",vis:"dataviz",name:"Data visualisation palette",use:"In plain words: a fixed order of colours for chart series (series 1 always this colour, series 2 that one). Your Status palette’s medium shades could be it; the picture uses them.",rec:"<b>Later</b>, when V1 dashboards are prototyped.",src:["cbData","antColor"]},
 ]},
 ];
 
@@ -292,11 +341,30 @@ function viz(it){
   if(it.k==="t"){const [w,s,lh,ls,caps]=it.f;return `<div class="spec" style="background:${it.bg||"#fff"};color:${it.col};font-weight:${w};font-size:${s}px;line-height:${lh}px;letter-spacing:${ls}px;${caps?"text-transform:uppercase":""}">${esc(it.sample)}</div>`}
   if(it.banners)return `<div class="sw3" style="grid-template-columns:1fr 1fr">${it.banners.map(([h,r])=>`<div style="background:${h};color:#fff;font-family:var(--f-v1);font-size:10px">${r}:1</div>`).join("")}</div>`;
   if(it.css)return `<div class="sw" style="background:#fff;${it.css}"></div>`;
-  if(it.k==="gap")return `<div class="eyebrow" style="text-align:center">Industry<br>gap</div>`;
+  if(it.k==="tp"){const [w,s,lh,ls,caps]=it.f;return `<div class="spec" style="background:${it.bg||"#fff"};color:${it.col};font-weight:${w};font-size:${s}px;line-height:${lh}px;letter-spacing:${ls}px;${caps?"text-transform:uppercase":""}">${esc(it.sample)}</div>`}
+  if(it.k==="gap")return VIS[it.vis]?VIS[it.vis]():`<div class="eyebrow">Industry gap</div>`;
   return `<div class="eyebrow" style="text-align:center">Note</div>`;
 }
+const VIS={
+ semantic:()=>`<div class="gv gv-sem"><div class="gv-col"><span class="gv-cap">Raw colour</span><span class="gv-chip"><i style="background:#0076DD"></i>#0076DD</span><span class="gv-chip"><i style="background:#313131"></i>#313131</span><span class="gv-chip"><i style="background:#E9F1F5"></i>#E9F1F5</span></div><div class="gv-arrow">→</div><div class="gv-col"><span class="gv-cap">Job name</span><span class="gv-chip mono">action-primary</span><span class="gv-chip mono">text-primary</span><span class="gv-chip mono">border-subtle</span></div><div class="gv-arrow">→</div><div class="gv-col"><span class="gv-cap">Component</span><span class="gv-btn">Save</span></div></div>`,
+ hexnames:()=>`<div class="gv"><span class="gv-cap">Today</span><span class="gv-chip"><i style="background:#0076DD"></i><s>Pando-Blue-#008AFF</s></span><span class="gv-bad">name says #008AFF, colour is #0076DD</span><span class="gv-cap" style="margin-top:8px">Proposed</span><span class="gv-chip"><i style="background:#0076DD"></i><span class="mono">brand-primary</span></span></div>`,
+ spacing:()=>`<div class="gv">${[4,8,12,16,24,32].map(n=>`<div class="gv-row"><span class="gv-n">${n}</span><span class="gv-bar" style="width:${n*3}px"></span></div>`).join("")}</div>`,
+ radius:()=>`<div class="gv gv-rad">${[["sm",2],["md",4],["lg",8],["pill",999]].map(([l,r])=>`<div><span class="gv-box" style="border-radius:${r}px"></span><span class="gv-cap">${l}</span></div>`).join("")}</div>`,
+ elevation:()=>`<div class="gv gv-elev">${[["Card","0 1px 2px rgba(0,0,0,.08)"],["Dropdown","0 4px 10px rgba(0,0,0,.12)"],["Modal","0 12px 28px rgba(0,0,0,.18)"]].map(([l,s])=>`<div class="gv-card" style="box-shadow:${s}">${l}</div>`).join("")}</div>`,
+ states:()=>`<div class="gv gv-states">${[["Default","#0076DD",""],["Hover","#0068c4",""],["Pressed","#005399",""],["Focus","#0076DD","outline:2px solid #0076DD;outline-offset:2px"],["Disabled","#cfd6dc","color:#7d8790"]].map(([l,b,x])=>`<div><span class="gv-btn" style="background:${b};${x}">Save</span><span class="gv-cap">${l}</span></div>`).join("")}</div>`,
+ focus:()=>`<div class="gv"><span class="gv-cap">No ring</span><span class="gv-input">Invoice number</span><span class="gv-cap" style="margin-top:6px">With ring</span><span class="gv-input" style="outline:2px solid #0076DD;outline-offset:1px">Invoice number</span></div>`,
+ contrast:()=>`<div class="gv gv-con"><div><span class="gv-pair" style="background:#91C38A;color:#fff">Approved</span><span class="gv-bad">2.0 : 1 fail</span></div><div><span class="gv-pair" style="background:#91C38A;color:#313131">Approved</span><span class="gv-ok">6.4 : 1 pass</span></div></div>`,
+ typescale:()=>`<div class="gv" style="font-family:var(--f-v1)">${[16,14,13,12,11,10].map(n=>`<div style="font-size:${n}px;line-height:1.3">${n}px Shipment</div>`).join("")}</div>`,
+ motion:()=>`<div class="gv"><div class="gv-track"><span class="gv-dot"></span></div><span class="gv-cap">e.g. fast · medium · slow, ease-out</span></div>`,
+ dark:()=>`<div class="gv gv-dark"><div style="background:#fff;color:#313131">Invoice</div><div style="background:#24242F;color:#D5DAF4">Invoice</div></div>`,
+ dataviz:()=>`<div class="gv gv-bars">${["#6397F8","#80E774","#FAAE3C","#AB63F8","#63EBF8","#F8637E"].map((c,i)=>`<span style="background:${c};height:${[60,42,50,30,38,24][i]}px"></span>`).join("")}</div>`,
+};
 function facts(it){
   const m=[];
+  if(it.k==="tp"){const [w,s,lh,ls,caps]=it.f;m.push(`<span class="mono">Open Sans ${w} · ${s}/${lh}px${ls?` · ls ${ls}px`:""}${caps?" · CAPS":""}</span>`);
+    const rep=`<div class="note"><span style="color:var(--muted)">Replaces: </span>${it.replaces.map(esc).join(" · ")}</div>`;
+    const ch=it.changes.length?`<div class="flags">${it.changes.map(c=>`<div class="flag w">${esc(c)}</div>`).join("")}</div>`:`<div class="rec">No visible change.</div>`;
+    return `<h3>${esc(it.name)}</h3><div class="meta">${m.join("")}</div>${rep}${ch}`;}
   if(it.hex)m.push(`<span class="mono">${it.hex}${it.alpha?` @ ${it.alpha*100}%`:""}</span>`);
   if(it.k==="t"){const [w,s,lh,ls,caps]=it.f;m.push(`<span class="mono">Open Sans ${w} · ${s}/${lh}px${ls?` · ls ${ls}px`:""}${caps?" · CAPS":""}</span>`);m.push(it.reg?"Registered style":"Canvas spec only")}
   if(it.k==="g")m.push(`<span class="mono" style="overflow-wrap:anywhere">${esc(it.css)}</span>`);
@@ -309,10 +377,10 @@ function facts(it){
    ${it.rec?`<div class="rec">Recommendation: ${it.rec}</div>`:""}
    ${src?`<div class="src"><span style="color:var(--muted)">Sources:</span>${src}</div>`:""}`;
 }
-const OPTS={item:[["keep","Keep"],["change","Keep with changes"],["outdated","Outdated"],["skip","Skip"]],gap:[["add","Add"],["later","Later"],["notneeded","Not needed"]]};
+const OPTS={item:[["keep","Keep"],["change","Keep with changes"],["outdated","Outdated"],["skip","Skip"]],gap:[["add","Add"],["later","Later"],["notneeded","Not needed"]],tp:[["keep","Approve"],["change","Approve with changes"],["skip","Keep roles separate"]]};
 function card(it){
-  const d=state.dec[it.id]||{};const opts=it.k==="gap"?OPTS.gap:OPTS.item;
-  return `<article class="card" id="c-${it.id}" data-d="${d.choice||""}">
+  const d=state.dec[it.id]||{};const opts=it.k==="gap"?OPTS.gap:it.k==="tp"?OPTS.tp:OPTS.item;
+  return `<article class="card${it.k==="gap"?" gapc":""}" id="c-${it.id}" data-d="${d.choice||""}">
    <div class="viz">${viz(it)}</div>
    <div class="facts">${facts(it)}</div>
    <div class="dec">
@@ -353,6 +421,7 @@ async function save(id,patch){
 document.addEventListener("click",e=>{
   const t=e.target.closest("button");if(!t)return;
   if(t.dataset.tab){state.tab=t.dataset.tab;try{localStorage.setItem("v1-tab",state.tab)}catch{}render();window.scrollTo({top:0});return}
+  if(t.id==="th-light"||t.id==="th-dark"){setTheme(t.id.slice(3));return}
   if(t.id==="f-all"||t.id==="f-open"||t.id==="f-flag"){state.filter=t.id.slice(2);["all","open","flag"].forEach(k=>$("#f-"+k).setAttribute("aria-pressed",k===state.filter));render();return}
   if(t.dataset.v&&t.dataset.id){const id=t.dataset.id;const v=state.dec[id]?.choice===t.dataset.v?null:t.dataset.v;
     save(id,{choice:v});const c=$("#c-"+id);c.dataset.d=v||"";c.querySelectorAll(".choices button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));renderProg();
@@ -361,6 +430,8 @@ document.addEventListener("click",e=>{
 const timers={};
 document.addEventListener("input",e=>{const t=e.target;if(t.tagName!=="TEXTAREA")return;const id=t.dataset.id;clearTimeout(timers[id]);timers[id]=setTimeout(()=>save(id,{note:t.value}),700)});
 
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("v1-theme",th)}catch{}}
+{let th=null;try{th=localStorage.getItem("v1-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
 try{const t=localStorage.getItem("v1-tab");if(t&&GROUPS.some(g=>g.id===t))state.tab=t}catch{}
 render();
 
