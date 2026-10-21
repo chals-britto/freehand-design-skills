@@ -9,3 +9,11 @@ Built from Figma "DS V2 – Atoms" (S21sFFHjfc3XvGDAAYvA49), Molecules and Organ
 - `skill/` — the Claude skill that points at this repo
 
 Review board (Foundations): https://claude.ai/artifact/7MccwSYjhh1fStmRnoFSG5
+Library (living reference): https://claude.ai/artifact/GwQoWeEqK3NnC5tpVEMjMB
+
+## Status
+- [x] Step 1 Foundations — tokens.css (colours, roles, gradients, type, 1 shadow)
+- [ ] Spacing / radius / elevation 2–4 / state colours — measured from components
+- [ ] Step 2 Atoms — Toast first
+- [ ] Step 3 Skill
+- [ ] Accessibility pass (after the system is complete)

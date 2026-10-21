@@ -1,0 +1,157 @@
+<title>Pando DS V1 Library</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* Layout: left section index (desktop) + long scrolling reference; page chrome themes, token samples stay true-colour. */
+:root{
+  --pg-bg:#f5f7f9; --pg-panel:#ffffff; --pg-ink:#16202a; --pg-muted:#5b6672; --pg-line:#dfe3e8; --pg-soft:#eef1f4; --pg-accent:#0060b8;
+  --pg-ok:#0f7a4d; --pg-bad:#b3261e;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif; --pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.shell{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px}
+nav.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-top:24px;display:flex;flex-direction:column;gap:2px}
+nav.side a{color:var(--pg-muted);text-decoration:none;font-size:13px;padding:4px 8px;border-radius:6px}
+nav.side a:hover{background:var(--pg-soft);color:var(--pg-ink)}
+nav.side .grp{font:500 10.5px var(--pg-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--pg-muted);margin:14px 8px 4px}
+header.hd{padding-block:24px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.eyebrow{font:500 11px var(--pg-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--pg-muted)}
+h1{font-size:24px;font-weight:600;margin:4px 0 6px;text-wrap:balance}
+.lede{color:var(--pg-muted);max-width:68ch;margin:0}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+section{padding-top:28px}
+section>h2{font-size:17px;font-weight:600;margin:0 0 2px}
+section>p.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+h3{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin:18px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.tok{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;text-align:left;font:inherit;color:inherit;padding:0}
+.tok:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+.tok .sw{height:56px;border-bottom:1px solid var(--pg-line)}
+.tok .b{padding:8px 10px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.tok .n{font:500 12px var(--pg-mono);overflow-wrap:anywhere}
+.tok .v{font:400 11.5px var(--pg-mono);color:var(--pg-muted)}
+.tok .u{font-size:11.5px;color:var(--pg-muted)}
+.tok.norole .n::after{content:" · no role";color:var(--pg-muted);font-weight:400}
+.status{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.st{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.st .tag{align-self:flex-start;font:600 11px/15px "Open Sans",sans-serif;padding:3px 8px;border-radius:4px;border:1px solid}
+.st .row{display:flex;gap:4px}.st .row span{flex:1;height:24px;border-radius:4px;border:1px solid rgba(0,0,0,.08)}
+.st .n{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.type-table{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:8px;overflow-x:auto}
+.type-table table{border-collapse:collapse;width:100%;min-width:640px}
+.type-table td,.type-table th{padding:10px 14px;border-bottom:1px solid var(--pg-line);text-align:left;vertical-align:middle}
+.type-table th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted)}
+.type-table tr:last-child td{border-bottom:0}
+.type-table .spec{font:400 12px var(--pg-mono);color:var(--pg-muted);white-space:nowrap}
+.type-table .cls{font:500 12px var(--pg-mono)}
+.sample-on{background:#fff;color:var(--color-text-primary);border-radius:6px;padding:6px 10px;display:inline-block}
+.shadow-demo{display:flex;gap:16px;flex-wrap:wrap}
+.shadow-demo div{background:#fff;color:#313131;border-radius:8px;padding:22px 26px;font:600 12px "Open Sans",sans-serif}
+.shadow-demo .pending{background:transparent;border:1px dashed var(--pg-line);color:var(--pg-muted);box-shadow:none}
+.pairs{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:8px;overflow-x:auto}
+.pairs table{border-collapse:collapse;width:100%;min-width:560px;font-variant-numeric:tabular-nums}
+.pairs td,.pairs th{padding:8px 12px;border-bottom:1px solid var(--pg-line);text-align:left}
+.pairs th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted)}
+.pairs .chip{font:600 12px "Open Sans",sans-serif;padding:5px 10px;border-radius:4px;display:inline-block}
+.ok{color:var(--pg-ok);font-weight:600}.bad{color:var(--pg-bad);font-weight:600}
+.pending-box{background:var(--pg-panel);border:1px dashed var(--pg-line);border-radius:8px;padding:12px 14px;color:var(--pg-muted);font-size:13px}
+.toast-copy{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--pg-ink);color:var(--pg-bg);padding:8px 14px;border-radius:999px;font-size:12.5px;opacity:0;transition:opacity .15s;pointer-events:none}
+.toast-copy.on{opacity:1}
+code{font:400 12px var(--pg-mono);background:var(--pg-soft);padding:1px 5px;border-radius:4px}
+@media (max-width:820px){.shell{grid-template-columns:1fr}nav.side{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="shell">
+<nav class="side" aria-label="Sections">
+  <div class="grp">Foundations</div>
+  <a href="#roles">Colour roles</a><a href="#palette">Palette</a><a href="#status">Status &amp; tags</a><a href="#gradients">Gradients</a><a href="#type">Type scale</a><a href="#elevation">Elevation</a><a href="#pairs">Contrast pairs</a>
+  <div class="grp">Components</div>
+  <a href="#components">Coming next: Toast</a>
+</nav>
+<main>
+<header class="hd">
+  <div><div class="eyebrow">Pando DS V1 · also V1, Pando, Old DS, FAP DS, Procure DS</div>
+  <h1>Pando DS V1 Library</h1>
+  <p class="lede">Every token here comes from <code>tokens.css</code> in the <code>pando-ds-v1</code> repo and was kept in the Foundations review. Click any swatch to copy its CSS variable. Build with <b>roles</b> (<code>--color-*</code>); use the palette only when no role fits.</p></div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+
+<section id="roles"><h2>Colour roles</h2><p class="sub">The job each colour does, taken from the “Used:” notes in Figma. Components should only reference these.</p><div id="roles-body"></div></section>
+<section id="palette"><h2>Palette</h2><p class="sub">Raw colours. “No role” means Figma doesn’t say where it’s used yet.</p><div id="palette-body"></div></section>
+<section id="status"><h2>Status &amp; tags</h2><p class="sub">Figma rule: light = background, medium = border, dark = text. Used in status, tags, dashboard filters and indicator icons.</p><div class="status" id="status-body"></div></section>
+<section id="gradients"><h2>Gradients</h2><p class="sub">“Inferred” names were matched by colour because the swatch isn’t linked to a style in Figma.</p><div class="grid" id="grad-body"></div></section>
+<section id="type"><h2>Type scale</h2><p class="sub">Open Sans. A style is size + weight + line-height; colour comes from roles. Add <code>.caps</code> for ALL CAPS (uppercase + 0.5px tracking, 1px on 14px).</p><div class="type-table"><table><thead><tr><th>Class</th><th>Spec</th><th>Sample</th><th>Replaces (Figma roles)</th></tr></thead><tbody id="type-body"></tbody></table></div></section>
+<section id="elevation"><h2>Elevation</h2><p class="sub">One shadow in Figma today. Three more are coming and will become levels 2–4.</p><div class="shadow-demo"><div style="box-shadow:var(--shadow-1)">--shadow-1</div><div class="pending">--shadow-2 · pending</div><div class="pending">--shadow-3 · pending</div><div class="pending">--shadow-4 · pending</div></div></section>
+<section id="pairs"><h2>Contrast pairs</h2><p class="sub">Text-on-fill combinations used in V1 today, measured against WCAG AA (4.5 : 1 for normal text). Failures are fixed in the accessibility pass after the system is complete.</p><div class="pairs"><table><thead><tr><th>Sample</th><th>Text</th><th>Fill</th><th>Ratio</th><th>AA</th></tr></thead><tbody id="pairs-body"></tbody></table></div></section>
+<section id="components"><h2>Components</h2><div class="pending-box">Toast is next. Each component lands here after its review: live demo, states, code and the Figma link.</div></section>
+</main>
+</div>
+<div class="toast-copy" id="copied" role="status" aria-live="polite"></div>
+
+<script>
+const ROLES=[
+ ["Actions",[["--color-action-primary","Primary Buttons, Primary CTAs"],["--color-action-secondary-bg","Secondary Buttons"],["--color-action-blue","Pando Actions"],["--color-text-on-action","Labels on primary buttons (inferred)"]]],
+ ["Text",[["--color-text-primary",""],["--color-text-secondary",""],["--color-text-tertiary",""],["--color-text-disabled",""],["--color-text-active","Active Headings"]]],
+ ["Borders",[["--color-border-default","Use as border (instead of E6E6E6)"],["--color-border-light","Light Borders"],["--color-border-blue",""],["--color-border-input",""],["--color-border-grey",""],["--color-border-strong",""],["--color-border-active","Active Borders"]]],
+ ["Surfaces",[["--color-surface",""],["--color-surface-muted","Background"],["--color-surface-blue","Background"],["--color-header-bg","For header"],["--color-table-header-bg","Table Header BG"],["--color-table-row-disabled-bg","Disabled Table Row/Col"],["--color-table-row-alt-bg","Alternate Table Row"],["--color-overlay","Overlay (Pando Dark 20%)"]]],
+ ["Highlight & feedback",[["--color-highlight","Main Highlight Accent"],["--color-highlight-subtle","Light Highlight, Active cards"],["--color-success","Confirmation Green"],["--color-success-icon","Confirmation Status Icons"],["--color-error","Error Red"],["--color-error-border","Indent Error Warning Border"],["--color-error-bg",""],["--color-warning","Yellow Warning"],["--color-warning-strong","Orange Warning"],["--color-toggle-on","Toggle Selection"],["--color-toggle-off","Deactive Toggle"]]],
+ ["Sidebar (dark)",[["--color-sidebar-bg",""],["--color-sidebar-bg-darker",""],["--color-sidebar-bg-light",""],["--color-sidebar-label",""],["--color-sidebar-input-text",""],["--color-sidebar-highlight",""]]],
+];
+const PALETTE=[
+ ["Pando & Freehand",["--pando-blue","--pando-light","--pando-dark*","--pando-blue-active","--freehand-dark","--freehand-orange*"]],
+ ["Greys & actions",["--white","--grey-light","--grey-medium*","--grey-dark*","--action-blue","--action-red","--action-green"]],
+ ["Text & borders",["--text-dark","--text-medium","--text-light","--text-disabled","--border-blue","--border-input-light","--border-grey","--border-blue-grey"]],
+ ["Accents & highlights",["--accent-green-highlight","--accent-light-highlight","--accent-blue-grey","--accent-green-medium","--accent-red-medium","--accent-error-red-light","--accent-light-blue-bg","--accent-dark-blue-bg*","--accent-off-white","--accent-light-bg","--accent-alternate-white","--accent-tertiary-action*","--highlight-blue-light*","--highlight-yellow","--highlight-orange"]],
+ ["Dark & Nimbus",["--dark-bg","--dark-darker","--dark-light","--dark-input-text","--dark-label-text","--dark-highlight-green","--nimbus-orange*","--nimbus-blue*"]],
+];
+const STATUS=["purple","red","maroon","brown","orange","cyan","blue","green","skyblue","violet","yellow"];
+const GRADS=[["steel-grey",""],["rejection-red",""],["forest-green",""],["primary-blue",""],["deep-blue",""],["ink-blue",""],["light-blue","inferred"],["dark-purple","inferred"],["pi-green","inferred"],["pando-green","inferred"],["ai-dark","inferred · AI section border"],["ai-light","inferred · AI section background"],["glass","unnamed · with 21px backdrop blur"]];
+const TYPE=[
+ ["type-16-regular","Global Industries","H1 Header / Top-Header",""],
+ ["type-14-semibold","Select Drop-off(s) for Gate 1 Ranchi","H1 Body Heading (Slider, Popups); with .caps: Sub-Header, H2 Body Heading caps",""],
+ ["type-14-regular","Search","H2 Header / Placeholder",""],
+ ["type-13-semibold","Breadcrumb › Current","H3 Header / Breadcrumb",""],
+ ["type-13-regular","Breadcrumb › Current","Added in review",""],
+ ["type-12-bold","Save changes","Button / Normal / Label",""],
+ ["type-12-semibold","Mumbai - Delhi","H3 Body Heading, Input Filled, Sidebar Dropdown / Filled; with .caps: H3 caps, Body Heading caps, Action label",""],
+ ["type-12-regular","17 Sep 2020","Text Body Light, Sidebar Placeholder; with .caps: Sidebar Label",""],
+ ["type-11-semibold","Indent could not be mapped in ERP","Text Body Medium-Semibold",""],
+ ["type-11-regular","Penvik Electricals Pvt Ltd","Medium-Regular; with .caps: Medium-Regular-Caps",""],
+ ["type-10-bold","Small button","Button / Small / Label",""],
+ ["type-10-semibold","90909090","Table-Subtext heading; with .caps: Table-Header",""],
+ ["type-10-regular","90909090","Table-Subtext; with .caps: Input Label",""],
+ ["type-8-regular","Sum (Volume * Distance)","Text Body Small (flagged for accessibility pass)",""],
+];
+const PAIRS=[["--color-text-on-action","--color-action-primary"],["--white","--freehand-dark"],["--white","--action-blue"],["--white","--action-red"],["--white","--action-green"],["--white","--accent-green-highlight"],["--white","--freehand-orange"],["--text-dark","--highlight-yellow"],["--color-text-primary","--color-surface"],["--color-text-secondary","--color-surface"],["--color-text-tertiary","--color-surface-muted"],["--color-text-active","--color-surface"],["--color-sidebar-label","--color-sidebar-bg"],["--color-sidebar-input-text","--color-sidebar-bg"],["--color-status-red-text","--color-status-red-bg"],["--color-status-blue-text","--color-status-blue-bg"],["--color-status-green-text","--color-status-green-bg"],["--color-status-orange-text","--color-status-orange-bg"]];
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const css=getComputedStyle(document.documentElement);
+const val=v=>css.getPropertyValue(v).trim();
+function toRGB(c){const d=document.createElement("div");d.style.color=c;document.body.appendChild(d);const m=getComputedStyle(d).color.match(/[\d.]+/g)||[0,0,0];d.remove();return m.slice(0,3).map(Number)}
+function hex(c){if(/^#/.test(c))return c.toUpperCase();const [r,g,b]=toRGB(c);return "#"+[r,g,b].map(x=>x.toString(16).padStart(2,"0")).join("").toUpperCase()}
+function lum([r,g,b]){return [r,g,b].map(x=>x/255).map(c=>c<=.03928?c/12.92:((c+.055)/1.055)**2.4).reduce((a,c,i)=>a+c*[.2126,.7152,.0722][i],0)}
+function ratio(a,b){const x=lum(toRGB(a)),y=lum(toRGB(b));return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+function tok(name,use,noRole){const v=val(name);const shown=v.includes("gradient")?"gradient":(v.startsWith("rgb(")&&v.includes("/")?v:hex(v));
+ return `<button type="button" class="tok${noRole?" norole":""}" data-copy="var(${name})"><span class="sw" style="background:var(${name})"></span><span class="b"><span class="n">${name}</span><span class="v">${esc(shown)}</span>${use?`<span class="u">${esc(use)}</span>`:""}</span></button>`}
+
+$("#roles-body").innerHTML=ROLES.map(([g,items])=>`<h3>${g}</h3><div class="grid">${items.map(([n,u])=>tok(n,u)).join("")}</div>`).join("");
+$("#palette-body").innerHTML=PALETTE.map(([g,items])=>`<h3>${g}</h3><div class="grid">${items.map(n=>{const nr=n.endsWith("*");return tok(n.replace("*",""),"",nr)}).join("")}</div>`).join("");
+$("#status-body").innerHTML=STATUS.map(h=>{const has=!!val(`--color-status-${h}-border`);return `<div class="st"><span class="tag" style="background:var(--color-status-${h}-bg);color:var(--color-status-${h}-text);border-color:${has?`var(--color-status-${h}-border)`:"transparent"}">${h[0].toUpperCase()+h.slice(1)}</span><div class="row"><span style="background:var(--status-${h}-light)"></span>${has?`<span style="background:var(--status-${h}-medium)"></span>`:`<span style="background:transparent;border-style:dashed"></span>`}<span style="background:var(--status-${h}-dark)"></span></div><span class="n">--color-status-${h}-{bg${has?", border":""}, text}</span></div>`}).join("");
+$("#grad-body").innerHTML=GRADS.map(([n,u])=>`<button type="button" class="tok" data-copy="var(--gradient-${n})"><span class="sw" style="background:var(--gradient-${n})"></span><span class="b"><span class="n">--gradient-${n}</span>${u?`<span class="u">${esc(u)}</span>`:""}</span></button>`).join("");
+$("#type-body").innerHTML=TYPE.map(([c,s,r])=>{const f=val("--"+c).split(" ");return `<tr><td class="cls">.${c}</td><td class="spec">${f[1]} · ${f[0]}${/^10px/.test(f[1])&&c!=="type-10-bold"?" · ls .5px":""}</td><td><span class="sample-on ${c}">${esc(s)}</span></td><td style="font-size:12.5px;color:var(--pg-muted)">${esc(r)}</td></tr>`}).join("");
+$("#pairs-body").innerHTML=PAIRS.map(([t,f])=>{const r=ratio(val(t),val(f));const ok=r>=4.5;return `<tr><td><span class="chip" style="background:var(${f});color:var(${t})">Shipment approved</span></td><td><code>${t}</code></td><td><code>${f}</code></td><td>${r.toFixed(2)} : 1</td><td class="${ok?"ok":"bad"}">${ok?"Pass":"Fail"}</td></tr>`}).join("");
+
+const copied=$("#copied");let tm;
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-copy]");if(b){const t=b.dataset.copy;try{await navigator.clipboard.writeText(t);copied.textContent="Copied "+t}catch{copied.textContent=t}copied.classList.add("on");clearTimeout(tm);tm=setTimeout(()=>copied.classList.remove("on"),1400);return}
+ if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3));});
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
