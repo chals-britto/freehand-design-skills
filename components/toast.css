@@ -1,0 +1,101 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Toast
+   Figma: DS V2 – Atoms › 🟢 Toast › component set "Toast" (232:58)
+   Reviewed 2026-10-22. Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Component tokens — colours exactly as the Figma variants use them */
+  --toast-success-bg:    var(--accent-green-highlight); /* #008D5E */
+  --toast-success-fg:    var(--white);
+  --toast-success-glyph: var(--accent-green-highlight);
+  --toast-success-close: var(--white);
+
+  --toast-error-bg:      var(--accent-red-medium);      /* #D26568 — kept as-is in review */
+  --toast-error-fg:      var(--white);
+  --toast-error-glyph:   var(--accent-red-medium);
+  --toast-error-close:   var(--white);
+
+  --toast-warning-bg:    var(--highlight-yellow);       /* #FFCF00 */
+  --toast-warning-fg:    var(--text-dark);
+  --toast-warning-glyph: var(--grey-dark);
+  --toast-warning-close: var(--text-dark);
+
+  --toast-info-bg:       var(--highlight-blue-light);   /* #9CD2FF */
+  --toast-info-fg:       var(--pando-dark);
+  --toast-info-glyph:    var(--pando-dark);
+  --toast-info-close:    var(--text-dark);              /* differs from text in Figma; kept */
+
+  /* Measured from the component */
+  --toast-width: 404px;
+  --toast-pad-y: 12px;
+  --toast-pad-x: 15px;
+  --toast-gap: 10px;        /* icon ↔ text ↔ close */
+  --toast-text-gap: 2px;    /* title ↔ body */
+  --toast-radius: 0 0 12px 12px;
+  --toast-icon: 24px;
+  --toast-close: 12px;
+
+  /* Placement: directly under the header, centred. Set --header-height per product. */
+  --header-height: 56px;
+  --toast-stack-gap: 8px;
+}
+
+/* ── Container that holds the live toasts ─────────────────────── */
+.pds-toaster {
+  position: fixed;
+  top: var(--header-height);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;      /* newest is inserted first, so it sits on top */
+  gap: var(--toast-stack-gap);
+  pointer-events: none;
+}
+.pds-toaster > .pds-toast { pointer-events: auto; }
+
+/* ── Toast ─────────────────────────────────────────────────────── */
+.pds-toast {
+  --_bg: var(--toast-success-bg); --_fg: var(--toast-success-fg);
+  --_glyph: var(--toast-success-glyph); --_close: var(--toast-success-close);
+  box-sizing: border-box;
+  width: var(--toast-width);
+  max-width: calc(100vw - 32px);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--toast-gap);
+  padding: var(--toast-pad-y) var(--toast-pad-x);
+  border-radius: var(--toast-radius);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: var(--font-family);
+  /* no shadow — kept as in Figma */
+}
+.pds-toast--success { --_bg: var(--toast-success-bg); --_fg: var(--toast-success-fg); --_glyph: var(--toast-success-glyph); --_close: var(--toast-success-close); }
+.pds-toast--error   { --_bg: var(--toast-error-bg);   --_fg: var(--toast-error-fg);   --_glyph: var(--toast-error-glyph);   --_close: var(--toast-error-close); }
+.pds-toast--warning { --_bg: var(--toast-warning-bg); --_fg: var(--toast-warning-fg); --_glyph: var(--toast-warning-glyph); --_close: var(--toast-warning-close); }
+.pds-toast--info    { --_bg: var(--toast-info-bg);    --_fg: var(--toast-info-fg);    --_glyph: var(--toast-info-glyph);    --_close: var(--toast-info-close); }
+
+.pds-toast__icon { flex: none; width: var(--toast-icon); height: var(--toast-icon); }
+.pds-toast__icon circle.bg { fill: #fff; }
+.pds-toast__icon .glyph { fill: var(--_glyph); stroke: var(--_glyph); }
+
+.pds-toast__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--toast-text-gap); }
+.pds-toast__title { font: var(--type-14-semibold); margin: 0; }
+.pds-toast__body {
+  font: var(--type-11-regular); margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; /* max 2 lines */
+}
+
+.pds-toast__action {
+  flex: none; align-self: center;
+  font: var(--type-12-semibold); color: inherit;
+  background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline;
+}
+.pds-toast__close {
+  flex: none; width: var(--toast-close); height: var(--toast-close);
+  margin-top: 2px; padding: 0; border: 0; background: none; cursor: pointer; color: var(--_close);
+}
+.pds-toast__close svg { display: block; width: 100%; height: 100%; }
+.pds-toast__action:focus-visible, .pds-toast__close:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 2px; }

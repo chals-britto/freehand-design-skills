@@ -196,6 +196,16 @@
   --shadow-3: 0 2px 14px rgb(0 0 0 / .10); /* Shadow / White BG / 0-2-14-10% (11353:31) */
   --shadow-4: 0 14px 28px rgb(0 0 0 / .06); /* Shadow / White BG / 0-14-28-6% (11353:30) */
 
+  /* ── Spacing & radius (measured, not yet a scale) ───────────────
+     Collected component by component; a scale is proposed once
+     enough components are in. Name = pixel value.
+     Seen in: Toast (2, 10, 12, 15 · radius 12). */
+  --space-2:  2px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-15: 15px;
+  --radius-12: 12px;
+
   /* ── Typography ─────────────────────────────────────────────── */
   --font-family: "Open Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
 
