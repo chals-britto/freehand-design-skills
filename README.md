@@ -17,5 +17,5 @@ Library (living reference): https://claude.ai/artifact/GwQoWeEqK3NnC5tpVEMjMB
 - [ ] Spacing / radius / elevation 2–4 / state colours — measured from components
 - [x] Step 2 Atoms — Toast (components/toast.*)
 - [ ] Step 2 Atoms — remaining 20 pages
-- [ ] Step 3 Skill
+- [x] Step 3 Skill — skill/SKILL.md, linked at ~/.claude/skills/pando-ds-v1
 - [ ] Accessibility pass (after the system is complete)

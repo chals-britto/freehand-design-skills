@@ -3,12 +3,15 @@
      type        'success' | 'error' | 'warning' | 'info'   (default 'success')
      title/body  strings; omit either to hide it (Show Title / Show Description)
      persistent  true → close × shown, stays until closed (default false)
-     action      optional label for ONE action link; onAction is called on click
+     action      optional label for ONE navigation link ("View" → take me there);
+                 onAction is called on click. No undo.
    Rules from the review: newest on top · max 3 visible · 8px apart ·
-   success/info announce politely (role=status), error/warning assertively (role=alert).
-   OPEN: how a non-persistent toast leaves the screen is not decided yet. */
+   non-persistent toasts close after 4 s; hovering (or keyboard focus inside)
+   keeps the toast on screen and the timer restarts on leave ·
+   success/info announce politely (role=status), error/warning assertively (role=alert). */
 (function () {
   const MAX = 3;
+  const DURATION = 4000;
   const GLYPH = {
     success: '<path class="glyph" d="M7 12.5l3 3 7-7" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
     error:   '<path class="glyph" d="M8.5 8.5l7 7M15.5 8.5l-7 7" fill="none" stroke-width="2.2" stroke-linecap="round"/>',
@@ -47,12 +50,27 @@
     return box;
   }
 
+  /* Auto-close a non-persistent toast after DURATION; hover/focus holds it. */
+  function autoClose(t, ms) {
+    let timer = null;
+    const start = () => { clearTimeout(timer); timer = setTimeout(() => t.remove(), ms); };
+    const hold = () => clearTimeout(timer);
+    t.addEventListener('mouseenter', hold);
+    t.addEventListener('mouseleave', start);
+    t.addEventListener('focusin', hold);
+    t.addEventListener('focusout', start);
+    start();
+  }
+
   window.pdsToast = {
     build,
-    show(o = {}) {
-      const box = toaster(), t = build(o);
+    autoClose,
+    DURATION,
+    show(o = {}, container) {
+      const box = container || toaster(), t = build(o);
       box.prepend(t);
       while (box.children.length > MAX) box.lastElementChild.remove();
+      if (!o.persistent) autoClose(t, DURATION);
       return t;
     },
     clear() { const b = document.querySelector('.pds-toaster'); if (b) b.replaceChildren(); }

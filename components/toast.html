@@ -106,7 +106,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 </header>
 <nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#dodont">Do &amp; don’t</a><a href="#a11y">Accessibility</a><a href="#code">Code</a></nav>
 
-<section id="try"><h2>Try it</h2><p class="sub">Toasts appear directly under the header, centred. Newest on top, at most 3, 8px apart.</p>
+<section id="try"><h2>Try it</h2><p class="sub">Toasts appear directly under the header, centred. Newest on top, at most 3, 8px apart. Untick “Persistent” to see the 4-second auto-close; hover to hold it.</p>
 <div class="panel play">
   <form class="ctrls" id="ctrls">
     <label>Toast type<select id="c-type"><option value="success">Success</option><option value="error">Error</option><option value="warning">Warning</option><option value="info">Info</option></select></label>
@@ -116,7 +116,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
     <label class="chk"><input type="checkbox" id="c-showbody" checked> Show description</label>
     <label class="chk"><input type="checkbox" id="c-persist" checked> Persistent (close ×)</label>
     <label class="chk"><input type="checkbox" id="c-action"> Action link</label>
-    <label>Action label<input type="text" id="c-actlabel" value="Action"></label>
+    <label>Action label<input type="text" id="c-actlabel" value="View"></label>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit">Show toast</button><button class="btn ghost" type="button" id="c-clear">Clear</button></div>
   </form>
   <div class="stage" id="stage"><div class="fake-hd">Pando <span>Invoices · Disputes · Payments</span></div><div class="stage-note">Example header. In product, set <code>--header-height</code>.</div></div>
@@ -148,7 +148,10 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
   <div class="panel card"><h3>When not to use</h3><ul><li>For critical information, or anything the person must act on to continue. Use a dialog, a field error or an inline message instead.</li><li>As the only place a message exists. If it matters later, it must also be shown somewhere else (a list, a status, a log).</li></ul><p class="src">Sources: <a href="https://fluent2.microsoft.design/components/web/react/core/toast/usage" target="_blank" rel="noopener">Fluent 2 Toast</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html" target="_blank" rel="noopener">WCAG 2.2.1</a> · <a href="https://carbondesignsystem.com/components/notification/usage/" target="_blank" rel="noopener">Carbon Notification</a></p></div>
   <div class="panel card"><h3>Content</h3><ul><li>Title: one short line.</li><li>Body: at most 2 lines. Longer text is cut off.</li><li>At most one action link, with a label of 1–2 words.</li></ul><p class="src">Sources: <a href="https://carbondesignsystem.com/components/notification/usage/" target="_blank" rel="noopener">Carbon Notification</a> · <a href="https://fluent2.microsoft.design/components/web/react/core/toast/usage" target="_blank" rel="noopener">Fluent 2 Toast</a></p></div>
 </div>
-<div class="open" style="margin-top:14px"><b>Open question:</b> how a non-persistent toast (no close ×) leaves the screen. In this demo it stays until you press Clear.</div>
+<div class="cols" style="margin-top:14px">
+  <div class="panel card"><h3>Closing</h3><ul><li>Persistent = No: closes by itself after <b>4 seconds</b>.</li><li>While the pointer is over the toast (or keyboard focus is inside it), it stays. The 4 seconds restart when the pointer leaves.</li><li>Persistent = Yes: stays until the close × is pressed.</li></ul></div>
+  <div class="panel card"><h3>Action link</h3><ul><li>Optional, at most one.</li><li>Navigation only (“take me there”), e.g. <b>View</b>. V1 has no undo.</li></ul></div>
+</div>
 </section>
 
 <section id="dodont"><h2>Do &amp; don’t</h2><p class="sub">Drawn from the reference systems; each card names its source. Example text is illustrative.</p>
@@ -172,7 +175,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 const $=s=>document.querySelector(s);
 const stage=$("#stage");
 let box=document.createElement("div");box.className="pds-toaster";stage.appendChild(box);
-function showInStage(o){const t=pdsToast.build(o);box.prepend(t);while(box.children.length>3)box.lastElementChild.remove()}
+function showInStage(o){return pdsToast.show(o,box)}
 $("#ctrls").addEventListener("submit",e=>{e.preventDefault();showInStage({type:$("#c-type").value,title:$("#c-showtitle").checked?$("#c-title").value:"",body:$("#c-showbody").checked?$("#c-body").value:"",persistent:$("#c-persist").checked,action:$("#c-action").checked?$("#c-actlabel").value:""})});
 $("#c-clear").addEventListener("click",()=>box.replaceChildren());
 showInStage({type:"success",title:"Heading",body:"Toast text message that can go over multiple lines",persistent:true});

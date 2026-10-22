@@ -27,7 +27,9 @@ Title `.type-14-semibold` · Body `.type-11-regular`, **max 2 lines**.
 ## Placement & behaviour
 - Placed below the main header and center of the screen — **directly under the header**, no built-in offset (the 50px top padding in Figma is not part of the component).
 - Several toasts: **newest on top, max 3 visible, 8px apart**; the oldest is removed.
-- **OPEN:** how a non-persistent toast leaves the screen (auto-dismiss time was marked “not needed”).
+- **Persistent = No** closes by itself after **4 s**. Hover (or keyboard focus inside) keeps it on screen; the 4 s restart on leave.
+- **Persistent = Yes** stays until the close × is pressed.
+- **Action link**: navigation only (“take me there”), e.g. **View**. V1 has no undo.
 
 ## When not to use
 - Critical information, or anything the person must act on to continue → dialog, field error or inline message. *(Fluent 2 Toast; Carbon Notification)*
@@ -47,7 +49,7 @@ Title `.type-14-semibold` · Body `.type-11-regular`, **max 2 lines**.
 - Contrast for the accessibility pass: white on Success 4.22:1, on Error 3.62:1.
 
 ## Not adopted (review decisions)
-Close × on every toast — Later · Pause on hover — not needed · Progress toast — not needed · Figma “Behaviour” and “When not to use” text — outdated (copied from Switch) · Example areas, loose instance — skipped.
+Close × on every toast — Later · Progress toast — not needed · Figma “Behaviour” and “When not to use” text — outdated (copied from Switch) · Example areas, loose instance — skipped.
 
 ## Sources
 Carbon Notification usage — https://carbondesignsystem.com/components/notification/usage/
