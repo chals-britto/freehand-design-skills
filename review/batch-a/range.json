@@ -1,0 +1,472 @@
+{
+ "component": "Range",
+ "pageId": "3224:2928",
+ "summary": "The Range page holds three overlapping slider sets: 'Range' (single handle, Dark/Light, Tight/Loose ticks, no filled track), 'Slider' (two handles, Pando blue fill) and 'Dual Range' (two handles, light blue fill). None has hover, focus or disabled states, the thumb is 14px and built from navigation parts, and the Overview copy is borrowed from Carbon and describes number inputs V1 does not have.",
+ "items": [
+  {
+   "id": "range-dark-loose",
+   "group": "variants",
+   "k": "viz",
+   "name": "Range · Dark · Loose",
+   "node": "3235:3846",
+   "html": "<div style='font-family:'Open Sans',sans-serif;background:#24242F;padding:16px;display:inline-flex;flex-direction:column;gap:15px'><div style='display:flex;gap:5px;align-items:baseline'><span style='font-size:12px;color:#FFFFFF'>Label</span><span style='font-size:10px;letter-spacing:.5px;color:#B5C3CB'>unit</span></div><div><div style='position:relative;width:300px;height:8px;border-radius:9px;background:radial-gradient(circle,#B5C3CB 2.0px,transparent 2.5px) 2px 50%/73.00px 8px repeat-x,#515151'><b style='position:absolute;left:88px;top:-6px;width:18px;height:18px;border-radius:50%;background:#F9FAFA;border:1px solid #8A8A9E;font-size:11px;line-height:18px;text-align:center;color:#19A476'>&lsaquo;&rsaquo;</b></div><div style='width:310px;display:flex;justify-content:space-between;font-size:10px;color:#B5C3CB;margin-top:10px'><span>50</span><span style='color:#1FCD93;font-weight:400'>100</span><span>150</span><span>200</span><span>250</span></div></div></div>",
+   "use": "310 wide, vertical stack gap 15. Label 'Label' #FFFFFF (white) Label/Regular/Normal 12px + 'unit' #B5C3CB (border-blue-grey) 10px/Regular/Sp0.5px, gap 5. Track 300x8 #515151 (grey-dark), radius 9, 5 tick dots 4x4 #B5C3CB. Handle 20x20 circle, #F9FAFA (accent-alternate-white) fill, 1px #8A8A9E (dark-input-text) stroke, left/right carets filled with the 'Gradient/Linear/Forest Green' gradient (#006265 to #19A476; preview shows the end stop). Scale 50/100/150/200/250 in #B5C3CB 10px Label/Regular/AllCaps, selected value '100' in #1FCD93 (dark-highlight-green). Scale sits 10 below the track.",
+   "flags": [
+    "No filled (active) track: the selected part of the bar looks the same as the rest, so the value is shown only by handle position and the green scale label.",
+    "Handle carets use 'Gradient/Linear/Forest Green', a gradient fill that is not in the V1 palette.",
+    "The handle is an instance of Navigation/Collapse-Expand (an expand/collapse button), not a slider thumb part."
+   ],
+   "warn": [
+    "White label sits on a transparent component; it only reads because of the loose dark rectangle behind it (see loose card).",
+    "'Spacing=Loose' actually changes tick density (5 dots vs 21), not spacing."
+   ],
+   "rec": "<b>Keep</b> as the dark-theme reference, but add a filled-track segment and swap the gradient carets for a palette colour."
+  },
+  {
+   "id": "range-dark-tight",
+   "group": "variants",
+   "k": "viz",
+   "name": "Range · Dark · Tight",
+   "node": "3235:3845",
+   "html": "<div style='font-family:'Open Sans',sans-serif;background:#24242F;padding:16px;display:inline-flex;flex-direction:column;gap:15px'><div style='display:flex;gap:5px;align-items:baseline'><span style='font-size:12px;color:#FFFFFF'>Label</span><span style='font-size:10px;letter-spacing:.5px;color:#B5C3CB'>unit</span></div><div><div style='position:relative;width:300px;height:8px;border-radius:9px;background:radial-gradient(circle,#B5C3CB 1.5px,transparent 2.0px) 2px 50%/14.65px 8px repeat-x,#515151'><b style='position:absolute;left:0px;top:-6px;width:18px;height:18px;border-radius:50%;background:#F9FAFA;border:1px solid #8A8A9E;font-size:11px;line-height:18px;text-align:center;color:#19A476'>&lsaquo;&rsaquo;</b></div><div style='width:307px;display:flex;justify-content:space-between;font-size:10px;color:#B5C3CB;margin-top:10px'><span>0</span><span>200</span><span>400</span><span>600</span><span>800</span><span>1000</span></div></div></div>",
+   "use": "307 wide. Same as Dark Loose but 21 tick dots at 3x3 #B5C3CB (gap 7.5) and scale 0/200/400/600/800/1000 all in #B5C3CB (no selected label highlight). Handle 20x20 sits at the start of the track (value 0).",
+   "flags": [
+    "No selected-value highlight in the scale here, unlike Dark Loose, so the two dark variants disagree on how the value is shown.",
+    "No filled track (same as Dark Loose)."
+   ],
+   "warn": [
+    "'Tight' = 21 ticks; scale labels only every 4th tick, so most ticks have no label."
+   ],
+   "rec": "<b>Keep</b>; align with Dark Loose so the current value is always highlighted."
+  },
+  {
+   "id": "range-light-tight",
+   "group": "variants",
+   "k": "viz",
+   "name": "Range · Light · Tight",
+   "node": "3235:3844",
+   "html": "<div style='font-family:'Open Sans',sans-serif;background:#FFFFFF;padding:16px;display:inline-flex;flex-direction:column;gap:10px'><div style='display:flex;gap:5px;align-items:baseline'><span style='font-size:12px;color:#313131'>Label</span><span style='font-size:10px;letter-spacing:.5px;color:#545454'>unit</span></div><div><div style='position:relative;width:200px;height:8px;border-radius:9px;background:radial-gradient(circle,#B5C3CB 1.5px,transparent 2.0px) 2px 50%/9.65px 8px repeat-x,#E2EAEC'><b style='position:absolute;left:43px;top:-3px;width:12px;height:12px;border-radius:50%;background:#F9FAFA;border:1px solid #8A8A9E;font-size:7px;line-height:12px;text-align:center;color:#0076DD'>&lsaquo;&rsaquo;</b></div><div style='width:200px;display:flex;justify-content:space-between;font-size:10px;color:#6C6C6C;margin-top:10px'><span>0</span><span style='color:#313131;font-weight:600'>200</span><span>400</span><span>600</span><span>800</span><span>1000</span></div></div></div>",
+   "use": "200x58, stack gap 10. Label 'Label' #313131 (text-dark) 12px + 'unit' #545454 (text-medium) 10px ls 0.5. Track 200x8 #E2EAEC (border-input-light), radius 9, padding 2.5/2, 21 dots 3x3 #B5C3CB gap 6. Handle 14x14, #F9FAFA fill, 1px #8A8A9E stroke, carets #0076DD (pando-blue). Scale 0-1000 in #6C6C6C (text-light) Label/Regular/AllCaps 10px; selected '200' #313131 Label/Semibold/AllCaps.",
+   "flags": [
+    "Handle is 14x14, below the 24x24 minimum pointer target (no spacing exception, since the handle sits on the clickable track).",
+    "No filled track; value shown only by handle position and the bold scale label.",
+    "Light handle (14) and dark handle (20) differ in size with no reason given."
+   ],
+   "warn": [
+    "Handle stroke uses #8A8A9E, a dark-theme token (dark-input-text), on the light theme.",
+    "Handle is a detached frame named 'Navigation/Collapse-Expand' (hidden 'Collapse' text still inside), not an instance."
+   ],
+   "rec": "<b>Keep</b> as the main light slider; add a filled segment and a 24px hit area.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 2.5.8 Target Size (Minimum)",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+    }
+   ]
+  },
+  {
+   "id": "range-light-loose",
+   "group": "variants",
+   "k": "viz",
+   "name": "Range · Light · Loose",
+   "node": "3235:3843",
+   "html": "<div style='font-family:'Open Sans',sans-serif;background:#FFFFFF;padding:16px;display:inline-flex;flex-direction:column;gap:10px'><div style='display:flex;gap:5px;align-items:baseline'><span style='font-size:12px;color:#313131'>Label</span><span style='font-size:10px;letter-spacing:.5px;color:#545454'>unit</span></div><div><div style='position:relative;width:191px;height:9px;border-radius:9px;background:radial-gradient(circle,#B5C3CB 1.5px,transparent 2.0px) 2px 50%/46.00px 9px repeat-x,#E2EAEC'><b style='position:absolute;left:53px;top:-3px;width:12px;height:12px;border-radius:50%;background:#F9FAFA;border:1px solid #8A8A9E;font-size:7px;line-height:12px;text-align:center;color:#0076DD'>&lsaquo;&rsaquo;</b></div><div style='width:200px;display:flex;justify-content:space-between;font-size:10px;color:#6C6C6C;margin-top:10px'><span>50</span><span style='color:#313131;font-weight:600'>100</span><span>150</span><span>200</span><span>250</span></div></div></div>",
+   "use": "200x59. Same styling as Light Tight. Track 191x9 (not 200x8), padding 3/2, 5 visible dots 3x3 #B5C3CB (16 more dots hidden inside). Handle 14x14 at value 100. Scale 50/100/150/200/250, selected '100' #313131 semibold.",
+   "flags": [
+    "Track is 191x9 here vs 200x8 in Light Tight, so the two light variants have different track sizes.",
+    "17 hidden dot layers left inside the track."
+   ],
+   "warn": [
+    "Scale is 200 wide but track is 191, so end labels do not line up with the track ends."
+   ],
+   "rec": "<b>Keep</b>; clean up hidden dots and match the track to 200x8."
+  },
+  {
+   "id": "slider-set",
+   "group": "variants",
+   "k": "viz",
+   "name": "Slider (Pando blue fill, two handles)",
+   "node": "8568:2053",
+   "html": "<div style='font-family:'Open Sans',sans-serif;background:#FFFFFF;padding:16px;display:inline-flex;flex-direction:column;gap:10px'><div style='position:relative;width:324px;height:8px;border-radius:9px;background:radial-gradient(circle,#F8F8F8 2.0px,transparent 2.5px) 2px 50%/63.20px 8px repeat-x,#E2EAEC'><i style='position:absolute;left:8px;width:105px;height:8px;border-radius:9px;background:#0076DD'></i><b style='position:absolute;left:6px;top:-3px;width:12px;height:12px;border-radius:50%;background:#F9FAFA;border:1px solid #8A8A9E;font-size:7px;line-height:12px;text-align:center;color:#0076DD'>&lsaquo;&rsaquo;</b><b style='position:absolute;left:113px;top:-3px;width:12px;height:12px;border-radius:50%;background:#F9FAFA;border:1px solid #8A8A9E;font-size:7px;line-height:12px;text-align:center;color:#0076DD'>&lsaquo;&rsaquo;</b></div></div>",
+   "use": "Separate set 'Slider ' with Level = 0 to 1 / 0 to 1.5 / 1 to 1.5. Track 'Slidebar' #E2EAEC radius 1000, 8 tall; filled 'Active Bar' #0076DD (pando-blue) radius 1000; dots 4x4 #F8F8F8 (accent-off-white). Two 14x14 handles (#F9FAFA, 1px #8A8A9E, #0076DD carets). '0 to 1' shows numbers 0-14 in 'Gray Text' #667085 10px/Regular/Sp0.5px.",
+   "flags": [
+    "Has two handles in every variant, so it is really a range slider and overlaps with the Dual Range set.",
+    "'Gray Text' #667085 is not a V1 token (unregistered style).",
+    "'0 to 1' scale shows 0-14 for 16 dots, and labels 12-14 sit outside the scale frame; the other two levels have no scale at all.",
+    "Level values (0 to 1.5 etc.) do not match any number shown."
+   ],
+   "warn": [
+    "Variant widths differ: 374 vs 324.",
+    "Set name has a trailing space ('Slider ')."
+   ],
+   "rec": "<b>Outdated</b>: merge into one range component (this is the only one with a strong filled track, which is worth keeping)."
+  },
+  {
+   "id": "dual-range-set",
+   "group": "variants",
+   "k": "viz",
+   "name": "Dual Range",
+   "node": "8570:1364",
+   "html": "<div style='font-family:'Open Sans',sans-serif;background:#FFFFFF;padding:16px;display:inline-flex;flex-direction:column;gap:0px'><div style='position:relative;width:332px;height:8px;border-radius:9px;background:radial-gradient(circle,#F8F8F8 2.0px,transparent 2.5px) 2px 50%/20.25px 8px repeat-x,#E2EAEC'><i style='position:absolute;left:0px;width:50px;height:8px;border-radius:9px;background:#9CD2FF'></i><b style='position:absolute;left:0px;top:-3px;width:12px;height:12px;border-radius:50%;background:#F9FAFA;border:1px solid #8A8A9E;font-size:7px;line-height:12px;text-align:center;color:#0076DD'>&lsaquo;&rsaquo;</b><b style='position:absolute;left:46px;top:-3px;width:12px;height:12px;border-radius:50%;background:#F9FAFA;border:1px solid #8A8A9E;font-size:7px;line-height:12px;text-align:center;color:#0076DD'>&lsaquo;&rsaquo;</b></div><div style='width:332px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:.5px;color:#6C6C6C;margin-top:4px'><span>00</span><span>02</span><span>04</span><span>06</span><span>08</span><span>10</span><span>12</span><span>14</span><span>16</span></div></div>",
+   "use": "Set with Level = 0 to 2 / 0 to 16 / - to 4 / 2 to 4 and boolean 'Show Scale Count'. Track 332x8 #E2EAEC radius 8, 17 '.dot' instances (12x8 cell, 4x4 #F8F8F8 dot). Filled segment 'Slider' #9CD2FF (highlight-blue-light) radius 1000. Two 14x14 handles as above. Scale count 00-16 in #6C6C6C (text-light) 10px/Regular/Sp0.5px, gap 8.",
+   "flags": [
+    "Filled segment #9CD2FF on #E2EAEC track is very faint (1.32:1) - see contrast card.",
+    "'- to 4' renders the same as '0 to 4' (both handles at 0 and 4); the '-' value is not shown.",
+    "3 hidden '16' labels in 'Gray Text' #667085 left in every variant."
+   ],
+   "warn": [
+    "Uses a different fill colour (#9CD2FF) from the Slider set (#0076DD) for the same job."
+   ],
+   "rec": "<b>Keep</b> as the base for the two-handle range, using the Pando blue fill from Slider."
+  },
+  {
+   "id": "props",
+   "group": "states",
+   "k": "spec",
+   "name": "Range properties",
+   "node": "3235:3847",
+   "use": "Range set props: Theme (Dark default, Light), Type (only 'Stepper'), Spacing (Tight, Loose; default Loose), Scale (boolean, default on), Label (boolean, default on). Dual Range: Level + 'Show Scale Count'. Slider: Level only.",
+   "flags": [
+    "No state property in any set: no hover, focus, pressed, disabled or error.",
+    "'Type' has a single option ('Stepper'), so it does nothing.",
+    "Default Theme is Dark, though light screens are the main use."
+   ],
+   "warn": [
+    "'Spacing' really means tick density."
+   ],
+   "rec": "<b>Add</b> a State property (default, hover, focus, disabled) and drop the one-option Type."
+  },
+  {
+   "id": "anatomy-handle",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Handle (thumb)",
+   "node": "3224:3478",
+   "use": "Circle radius 50, padding 4, fill #F9FAFA (accent-alternate-white), 1px stroke #8A8A9E (dark-input-text). Two 'Navigation/Button-Down-Caret' instances (5x4 light, 8x6 dark) rotated to read as < >. Light: 14x14, carets #0076DD. Dark: 20x20 (Navigation/Collapse-Expand instance), carets 'Gradient/Linear/Forest Green' (#006265 to #19A476).",
+   "flags": [
+    "Built from navigation/collapse parts rather than a dedicated thumb component, so it cannot be changed in one place.",
+    "14px thumb is below 24x24 target size."
+   ],
+   "warn": [
+    "No focus ring or hover/pressed look defined."
+   ],
+   "rec": "<b>Add</b> a single thumb component with sizes and states.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 2.5.8 Target Size (Minimum)",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+    }
+   ]
+  },
+  {
+   "id": "anatomy-track",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Track, ticks and scale",
+   "node": "3224:3455",
+   "use": "Light track #E2EAEC (border-input-light) 8 tall, radius 9 (Dual Range 8, Slider 1000). Dark track #515151 (grey-dark). Tick dots #B5C3CB (Range) or #F8F8F8 (Slider, Dual Range), 3x3 or 4x4, radius 4. Scale text 10px, 10 below track (Range) or 3-4 below (Slider/Dual).",
+   "flags": [
+    "Three different track radii (9, 8, 1000) and two dot colours across the three sets."
+   ],
+   "warn": [
+    "Range uses Label/Regular/AllCaps for numbers; Slider/Dual Range use 10px/Regular/Sp0.5px for the same role."
+   ],
+   "rec": "<b>Keep</b> 8px track; pick one radius (full round) and one dot colour."
+  },
+  {
+   "id": "contrast",
+   "group": "anatomy",
+   "k": "note",
+   "name": "Contrast check (non-text)",
+   "node": "3235:3847",
+   "use": "Computed WCAG ratios. Light track #E2EAEC vs white 1.22:1. Handle stroke #8A8A9E vs white 3.38:1, vs track 2.77:1. Pando-blue fill #0076DD vs track 3.71:1, vs white 4.53:1. Dual Range fill #9CD2FF vs track 1.32:1, vs white 1.61:1. Dark track #515151 vs #24242F 1.93:1. Dark handle #F9FAFA vs dark track 7.59:1. Tick dot #B5C3CB vs #E2EAEC 1.48:1.",
+   "warn": [
+    "Note only (a11y pass deferred): light track, Dual Range fill and dark track are under 3:1; the thumb outline is the only thing meeting 3:1 on light."
+   ],
+   "rec": "<b>Later</b>: revisit in the accessibility pass.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "doc-overview",
+   "group": "docs",
+   "k": "note",
+   "name": "Overview",
+   "node": "5414:10680",
+   "use": "Text: 'A slider allows a user to select a single value or range of values available within the slider track. The slider comes in two different variants: default and range. The default slider is accompanied by a label and a number input...' The range slider is described with two number inputs.",
+   "flags": [
+    "Wording matches Carbon's slider page; it describes number inputs that V1 does not have.",
+    "Says 'default and range' variants, but the Range set has no range (two-handle) variant; that lives in separate sets."
+   ],
+   "rec": "<b>Outdated</b>: rewrite to describe the V1 sets as built (ask Charles for wording).",
+   "src": [
+    {
+     "label": "Carbon · Slider usage",
+     "url": "https://carbondesignsystem.com/components/slider/usage/"
+    }
+   ]
+  },
+  {
+   "id": "doc-when-to-use",
+   "group": "docs",
+   "k": "note",
+   "name": "When to use",
+   "node": "5414:10674",
+   "use": "Bullets: visual indication of adjustable content via a handle on a horizontal track; use for a single value or range of numbers; use to show a single value or range; use to expose a variety of options or limit options quickly.",
+   "warn": [
+    "Last bullet matches Carbon's wording; first two bullets say the same thing."
+   ],
+   "rec": "<b>Keep</b> with light trimming.",
+   "src": [
+    {
+     "label": "Carbon · Slider usage",
+     "url": "https://carbondesignsystem.com/components/slider/usage/"
+    }
+   ]
+  },
+  {
+   "id": "doc-when-not",
+   "group": "docs",
+   "k": "note",
+   "name": "When not to use",
+   "node": "5414:10668",
+   "use": "Bullets: not for extremely large ranges (1-Max); not for too-small ranges (1-2); not for complex non-number values.",
+   "warn": [
+    "Close to Carbon's list; Carbon also excludes dates (use a date picker)."
+   ],
+   "rec": "<b>Keep</b>.",
+   "src": [
+    {
+     "label": "Carbon · Slider usage",
+     "url": "https://carbondesignsystem.com/components/slider/usage/"
+    }
+   ],
+   "def": "keep"
+  },
+  {
+   "id": "doc-behaviour",
+   "group": "docs",
+   "k": "note",
+   "name": "Behaviour",
+   "node": "5414:10658",
+   "use": "Text: thumb can be dragged or the user can click a spot on the track to jump there; 'All interactions are optimized for mouse, keyboard, and touch.'",
+   "flags": [
+    "Claims keyboard support, but no keyboard behaviour (arrow keys, step, Home/End) or focus state is specified anywhere on the page."
+   ],
+   "warn": [
+    "Click-to-jump is the drag alternative WCAG 2.5.7 asks for; keep it explicit."
+   ],
+   "rec": "<b>Keep</b> and <b>Add</b> the keyboard rules.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 2.5.7 Dragging Movements",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html"
+    },
+    {
+     "label": "Carbon · Slider usage",
+     "url": "https://carbondesignsystem.com/components/slider/usage/"
+    }
+   ]
+  },
+  {
+   "id": "doc-placement",
+   "group": "docs",
+   "k": "note",
+   "name": "Placement & Convention + .documentation block",
+   "node": "3235:3848",
+   "use": "Both places say: 'The slider label should indicate what value the slider is changing. Range values are used to describe the range in numbers.' The older .documentation block (3235:3848) also has an Overview line and a 'Uses:' field.",
+   "flags": [
+    "'Uses:' in the .documentation block still holds the placeholder 'Enter suggestion here'.",
+    "The .documentation block duplicates the newer section docs and is out of date."
+   ],
+   "rec": "<b>Skip</b> the old .documentation block; keep the section copy."
+  },
+  {
+   "id": "doc-do-dont",
+   "group": "docs",
+   "k": "note",
+   "name": "Do / Don't",
+   "node": "5414:10637",
+   "use": "Do: Light Tight Range with scale 0-1000. Don't (5414:10622): scale 0/100/200/300/400/MAX. No caption text explains either.",
+   "warn": [
+    "No written reason under Do or Don't; the Don't relies on the reader linking 'MAX' to the 'When not to use' bullet."
+   ],
+   "rec": "<b>Keep</b>, add a one-line caption to each (wording from Charles)."
+  },
+  {
+   "id": "loose-backdrop",
+   "group": "loose",
+   "k": "note",
+   "name": "Dark backdrop rectangle",
+   "node": "3235:3823",
+   "use": "'Rectangle 1', 417x483, #24242F (dark-darker), sits behind the Dark variants of the Range set.",
+   "warn": [
+    "Dark variants depend on this loose shape to be readable on canvas."
+   ],
+   "rec": "<b>Skip</b>; not part of the component."
+  },
+  {
+   "id": "loose-instances",
+   "group": "loose",
+   "k": "note",
+   "name": "Stray instances",
+   "node": "3714:3523",
+   "use": "Two Range instances at x -1458 (3714:3523 Light Tight, 3714:3524) far left of the set, and a Dual Range instance 8577:3020 resized to 148 wide while its contents stay 332 wide.",
+   "flags": [
+    "8577:3020 is cropped: contents overflow its 148px frame."
+   ],
+   "rec": "<b>Skip</b>; leftover copies."
+  },
+  {
+   "id": "loose-stray-text",
+   "group": "loose",
+   "k": "note",
+   "name": "Stray '15' text and .dot part",
+   "node": "8568:2148",
+   "use": "Text '15' (#667085 'Gray Text', 10px) at y 4947, far below everything. '.dot' component 8576:1379 (12x8, 4x4 #F8F8F8 dot) is a build part for Dual Range.",
+   "flags": [
+    "Orphan text layer left on the page."
+   ],
+   "rec": "<b>Skip</b> the text; keep .dot as an internal part."
+  },
+  {
+   "id": "loose-spec-frames",
+   "group": "loose",
+   "k": "note",
+   "name": "Spectral and Specs frames",
+   "node": "5414:13354",
+   "use": "'Spectral' (3 frames, 2590x1529) and 'Specs' (5414:13443, 1150x8719) are generated redline sheets with anatomy, padding and style names for the Range set only.",
+   "warn": [
+    "They cover the Range set but not Slider or Dual Range, and will go stale when the sets change."
+   ],
+   "rec": "<b>Skip</b> for review; regenerate after the merge."
+  },
+  {
+   "id": "gap-number-input",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Paired number input",
+   "node": "3235:3847",
+   "use": "Carbon pairs each slider with a number input (two for range) so users can type an exact value; Fluent advises an input for precise numbers; Ant Design shows a Slider synced with InputNumber. V1 has none, though its own Overview mentions one.",
+   "rec": "<b>Add</b> an optional value input (single + range).",
+   "src": [
+    {
+     "label": "Carbon · Slider usage",
+     "url": "https://carbondesignsystem.com/components/slider/usage/"
+    },
+    {
+     "label": "Fluent 2 · Slider usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/slider/usage"
+    },
+    {
+     "label": "Ant Design · Slider",
+     "url": "https://ant.design/components/slider"
+    }
+   ]
+  },
+  {
+   "id": "gap-states",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Focus, disabled and error states",
+   "node": "3235:3847",
+   "use": "Carbon defines focus, disabled (not focusable), read-only, error and warning states; Ant Design supports disabling the whole slider or single handles. WCAG 4.1.2 needs the value and focus state exposed. V1 defines none.",
+   "rec": "<b>Add</b> focus ring, disabled and error at minimum.",
+   "src": [
+    {
+     "label": "Carbon · Slider usage",
+     "url": "https://carbondesignsystem.com/components/slider/usage/"
+    },
+    {
+     "label": "Ant Design · Slider",
+     "url": "https://ant.design/components/slider"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 4.1.2 Name, Role, Value",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-keyboard-step",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Keyboard and step rules",
+   "node": "5414:10658",
+   "use": "Carbon: arrow keys move one step, Shift+arrow makes larger jumps, Home/End on range; Ant Design: step must divide (max-min), keyboard on by default; Fluent: step sliders snap to discrete values. V1 shows ticks but never states step, snapping or keys.",
+   "rec": "<b>Add</b> a short behaviour spec for step + keys.",
+   "src": [
+    {
+     "label": "Carbon · Slider usage",
+     "url": "https://carbondesignsystem.com/components/slider/usage/"
+    },
+    {
+     "label": "Ant Design · Slider",
+     "url": "https://ant.design/components/slider"
+    },
+    {
+     "label": "Fluent 2 · Slider usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/slider/usage"
+    }
+   ]
+  },
+  {
+   "id": "gap-minmax-tooltip",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Min/max labels and value tooltip",
+   "node": "3235:3847",
+   "use": "Carbon shows min/max text at the track ends and uses a tooltip for the value when there is no input; Fluent says value tooltips are common and must be screen-reader perceivable; Ant Design has a configurable tooltip. V1 relies on a full scale row and has no value bubble.",
+   "rec": "<b>Later</b>: decide between scale row and min/max + tooltip.",
+   "src": [
+    {
+     "label": "Carbon · Slider usage",
+     "url": "https://carbondesignsystem.com/components/slider/usage/"
+    },
+    {
+     "label": "Fluent 2 · Slider usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/slider/usage"
+    },
+    {
+     "label": "Ant Design · Slider",
+     "url": "https://ant.design/components/slider"
+    }
+   ]
+  }
+ ],
+ "spacing": [
+  2,
+  2.5,
+  3,
+  4,
+  5,
+  6,
+  7.5,
+  8,
+  10,
+  15,
+  20,
+  50
+ ],
+ "radius": [
+  4,
+  8,
+  9,
+  50,
+  1000
+ ],
+ "newTextStyles": [
+  "Label/Regular/Normal (Open Sans Regular 12/auto, ls 0) - nearest type-12-regular 12/17",
+  "Label/Regular/AllCaps (Open Sans Regular 10/auto, ls 0) - no match; type-10-regular is 10/12 +0.5",
+  "Label/Semibold/AllCaps (Open Sans SemiBold 10/auto, ls 0) - no match; type-10-semibold is 10/12 +0.5",
+  "Gray Text #667085 (colour style, not in V1 palette)",
+  "Gradient/Linear/Forest Green (gradient fill, not in V1 palette)"
+ ],
+ "notReadable": [
+  "Spectral (5414:13354) and Specs (5414:13443) generated sheets were only sampled for text, not walked node by node."
+ ]
+}

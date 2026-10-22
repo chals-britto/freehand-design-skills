@@ -1,0 +1,350 @@
+{
+ "component": "Checkbox",
+ "pageId": "3267:3636",
+ "summary": "One Checkbox component set (18 variants: Light/Dark x Default/Disabled/Focus/Error x Unselected/Selected/Indeterminate, 14x14 box, radius 2) with an optional 12px label. Indeterminate exists only for Default, one dark variant has a stray extra check mark, disabled greys are hardcoded, and focus is a 1px border colour swap that is almost invisible on selected boxes. The page also holds a draft doc frame, a copied Button doc frame and a stray instance.",
+ "items": [
+  {
+   "id": "light-states",
+   "group": "variants",
+   "k": "viz",
+   "name": "Light theme — all states",
+   "node": "3331:3626",
+   "use": "14x14 box, radius 2, 1px inside stroke. Unselected: border #A3A3A3 grey-medium, no fill. Selected: fill #0076DD pando-blue, check #FFFFFF white (10x8 vector). Indeterminate: #0076DD with 8x1.8 dash cut out. Focus: border #0076DD; focus+selected adds #005399 pando-blue-active border. Error: border / fill #E25757 action-red. Disabled: #D9D9D9 fill (unselected), #9C9C9C fill + #E7E7E7 grey-light check (selected).",
+   "html": "<style>.cbl{display:flex;flex-wrap:wrap;gap:12px;padding:12px;background:#FFFFFF;color:#6C6C6C;font:10px Open Sans}.cbl i{display:block;width:14px;height:14px;box-sizing:border-box;border-radius:2px;position:relative;margin:0 auto 4px}.cbl b{position:absolute;left:3px;top:6px;width:8px;height:2px}.cbl svg{width:10px;height:8px;position:absolute;left:1px;top:2px}.cbl path{fill:none;stroke-width:1.8}</style><div class='cbl'><div><i style='border:1px solid #A3A3A3'></i>Off</div><div><i style='background:#0076DD;'><svg><path d='M1 4l2.6 2.6L9 1' stroke='#FFF'/></svg></i>On</div><div><i style='background:#0076DD;'><b style='background:#FFF'></b></i>Ind</div><div><i style='border:1px solid #0076DD'></i>Foc</div><div><i style='background:#0076DD;border:1px solid #005399'><svg><path d='M1 4l2.6 2.6L9 1' stroke='#FFF'/></svg></i>Foc on</div><div><i style='border:1px solid #E25757'></i>Error</div><div><i style='background:#E25757;'><svg><path d='M1 4l2.6 2.6L9 1' stroke='#FFF'/></svg></i>Err on</div><div><i style='background:#D9D9D9;'></i>Dis</div><div><i style='background:#9C9C9C;'><svg><path d='M1 4l2.6 2.6L9 1' stroke='#E7E7E7'/></svg></i>Dis on</div></div>",
+   "flags": [
+    "Disabled fills #D9D9D9 and #9C9C9C are hardcoded hex, no style and not in tokens.css.",
+    "Unselected border #A3A3A3 on white is 2.52:1, below the 3:1 non-text minimum (NOTE, a11y pass deferred)."
+   ],
+   "warn": [
+    "Focus is only a 1px border colour swap; on Selected the #005399 ring vs #0076DD fill is 1.72:1, so focus is nearly invisible."
+   ],
+   "rec": "<b>Keep</b> the structure; move disabled greys onto tokens (grey-light / grey-medium) and add a real focus ring.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 2.4.7 Focus Visible",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"
+    }
+   ]
+  },
+  {
+   "id": "dark-states",
+   "group": "variants",
+   "k": "viz",
+   "name": "Dark theme — all states",
+   "node": "3331:3626",
+   "use": "Unselected: border #8A8A9E dark-input-text. Selected: fill #9CD2FF highlight-blue-light, check #234357 pando-dark. Indeterminate: fill #66B9FF + white dash. Focus: border #9CD2FF; focus+selected adds #D5DAF4 dark-label-text ring. Error: #D26568 accent-red-medium. Disabled: #515151 grey-dark; disabled selected check #8A8A9E. Shown on a #393944 backdrop rectangle.",
+   "html": "<style>.cbd{display:flex;flex-wrap:wrap;gap:12px;padding:12px;background:#393945;color:#D5DAF4;font:10px Open Sans}.cbd i{display:block;width:14px;height:14px;box-sizing:border-box;border-radius:2px;position:relative;margin:0 auto 4px}.cbd b{position:absolute;left:3px;top:6px;width:8px;height:2px}.cbd svg{width:10px;height:8px;position:absolute;left:1px;top:2px}.cbd path{fill:none;stroke-width:1.8}</style><div class='cbd'><div><i style='border:1px solid #8A8A9E'></i>Off</div><div><i style='background:#9CD2FF;'><svg><path d='M1 4l2.6 2.6L9 1' stroke='#234357'/></svg></i>On</div><div><i style='background:#66B9FF;'><b style='background:#FFF'></b></i>Ind</div><div><i style='border:1px solid #9CD2FF'></i>Foc</div><div><i style='background:#9CD2FF;border:1px solid #D5DAF4'><svg><path d='M1 4l2.6 2.6L9 1' stroke='#234357'/></svg></i>Foc on</div><div><i style='border:1px solid #D26568'></i>Error</div><div><i style='background:#D26568;'><svg><path d='M1 4l2.6 2.6L9 1' stroke='#FFF'/></svg></i>Err on</div><div><i style='background:#515151;'></i>Dis</div><div><i style='background:#515151;'><svg><path d='M1 4l2.6 2.6L9 1' stroke='#8A8A9E'/></svg></i>Dis on</div></div>",
+   "flags": [
+    "Indeterminate uses #66B9FF (style 'Color/Accent/Blue-Light-#66B9FF'), not in tokens.css and different from the Selected fill #9CD2FF.",
+    "White dash on #66B9FF is 2.11:1 (NOTE).",
+    "Focus+Selected ring #D5DAF4 on #9CD2FF is 1.16:1 — focus not visible (NOTE)."
+   ],
+   "warn": [
+    "Unselected border #8A8A9E on #393945 is 3.37:1 — passes, but only just.",
+    "Dark selected/focus/error-selected variants use gap 11 while every other variant uses gap 10."
+   ],
+   "rec": "<b>Keep</b>; align Indeterminate to the Selected fill #9CD2FF + #234357 mark, and fix the gap to 10.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "with-label",
+   "group": "anatomy",
+   "k": "viz",
+   "name": "Checkbox with label",
+   "node": "193:7",
+   "use": "Auto-layout row, gap 10, padding 0. Label 'Input Label', Open Sans Regular 12, line-height auto, text style 'Label/Regular/Normal' (maps to type-12-regular 12/17). Colour #313131 text-dark (light), #D5DAF4 dark-label-text (dark). Label hidden by default via boolean 'Show Label'.",
+   "html": "<div style='display:flex;align-items:center;gap:10px;padding:12px;background:#fff;font-family:Open Sans'><span style='width:14px;height:14px;box-sizing:border-box;border-radius:2px;background:#0076DD;position:relative;display:inline-block;'><svg width='10' height='8' viewBox='0 0 10 8' style='position:absolute;left:2px;top:3px'><path d='M1 4l2.6 2.6L9 1' stroke='#FFFFFF' stroke-width='1.8' fill='none'/></svg></span><span style='font-size:12px;line-height:17px;color:#313131'>Input Label</span></div>",
+   "flags": [
+    "Light Focus+Selected label turns #0076DD blue while every other state keeps #313131.",
+    "Light Disabled label colours are inconsistent: #545454 text-medium (unselected) vs hardcoded #9C9C9C (selected)."
+   ],
+   "warn": [
+    "Line-height is AUTO, not the 17px of type-12-regular.",
+    "Layer names mix 'LABEL' and 'Checkbox Label' across themes."
+   ],
+   "rec": "<b>Keep</b>; one label colour per state (text-dark, text-disabled #A3A2A2 for disabled).",
+   "src": [
+    {
+     "label": "Carbon · Checkbox usage",
+     "url": "https://carbondesignsystem.com/components/checkbox/usage/"
+    }
+   ]
+  },
+  {
+   "id": "props",
+   "group": "variants",
+   "k": "spec",
+   "name": "Component properties",
+   "node": "3331:3626",
+   "use": "Theme: Light | Dark. State: Default | Disabled | Focus | Error. Selection: Unselected | Selected | Indeterminate. Show Label (boolean, default false). 18 variants built of the 24 possible.",
+   "flags": [
+    "Indeterminate only exists in State=Default — no Disabled, Focus or Error indeterminate (6 combinations missing)."
+   ],
+   "warn": [
+    "No Hover state (Carbon deliberately has none, so this may be fine)."
+   ],
+   "rec": "<b>Add</b> the 6 missing Indeterminate variants.",
+   "src": [
+    {
+     "label": "Carbon · Checkbox usage",
+     "url": "https://carbondesignsystem.com/components/checkbox/usage/"
+    }
+   ]
+  },
+  {
+   "id": "stray-check",
+   "group": "states",
+   "k": "note",
+   "name": "Dark Disabled Selected — stray check vector",
+   "node": "3337:3775",
+   "use": "This variant is 34x14 instead of 14x14: an extra 'Check' vector (#234357 pando-dark) sits outside the box group at x=24, beside the box.",
+   "flags": [
+    "Stray second check mark renders next to the box and widens the component to 34px."
+   ],
+   "rec": "<b>Outdated</b> — delete the extra vector so the variant is 14x14 like the rest.",
+   "src": []
+  },
+  {
+   "id": "indet-build",
+   "group": "anatomy",
+   "k": "note",
+   "name": "Light Indeterminate — dash is a cut-out",
+   "node": "3332:3742",
+   "use": "Built as a SUBTRACT boolean mask (rounded 14x14 rect minus 8x1.8 dash) over a square #0076DD 'Container' (radius 0). The dash is a hole, so it shows whatever is behind the checkbox, not white. Dash height 1.8 vs 2 in dark theme.",
+   "flags": [
+    "Dash is transparent: on a non-white surface (e.g. #EEF2F4 rows) it takes that colour.",
+    "Built differently from Selected (rect + vector) and from the dark Indeterminate."
+   ],
+   "rec": "<b>Keep</b> the look, rebuild as rect radius 2 + white 8x2 dash, matching the other variants.",
+   "src": []
+  },
+  {
+   "id": "size",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Box size and click target",
+   "node": "3331:3618",
+   "use": "Box 14x14, radius 2, stroke 1 inside, check 10x8 at (2,3). No padding around the box, so the hit area is 14x14 unless the label is clickable.",
+   "flags": [
+    "14x14 is under the 24x24 minimum target (WCAG 2.5.8) unless spacing or a clickable label covers it (NOTE)."
+   ],
+   "warn": [
+    "Ant Design default box is 16 (controlInteractiveSize)."
+   ],
+   "rec": "<b>Later</b> — spec the label as part of the click target and a 24px hit area.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 2.5.8 Target Size (Minimum)",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+    },
+    {
+     "label": "Carbon · Checkbox usage",
+     "url": "https://carbondesignsystem.com/components/checkbox/usage/"
+    },
+    {
+     "label": "Ant Design · Checkbox",
+     "url": "https://ant.design/components/checkbox"
+    }
+   ]
+  },
+  {
+   "id": "doc-overview",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc — Overview",
+   "node": "3344:3764",
+   "use": "Text: 'Checkboxes allow multiple selections from a set of options.'",
+   "def": "keep",
+   "rec": "<b>Keep</b>.",
+   "src": []
+  },
+  {
+   "id": "doc-uses",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc — Uses",
+   "node": "3344:3764",
+   "use": "Text: 'Checkboxes are used for multiple choices, not for mutually exclusive choices. Each checkbox works independently from other checkboxes in the list, therefore checking an additional box does not affect any other selections.'",
+   "warn": [
+    "No 'when not to use' — e.g. radio for single choice, toggle for instant settings."
+   ],
+   "rec": "<b>Keep</b>; <b>Add</b> a when-not-to-use line.",
+   "src": [
+    {
+     "label": "Carbon · Checkbox usage",
+     "url": "https://carbondesignsystem.com/components/checkbox/usage/"
+    },
+    {
+     "label": "Fluent 2 · Checkbox usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/checkbox/usage"
+    }
+   ]
+  },
+  {
+   "id": "doc-placement",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc — Placement & Convention",
+   "node": "3344:3764",
+   "use": "Text: 'Checkboxes can be used alone, grouped, or nested. If a group contains a mix of checked and unchecked children, the parent will show an indeterminate state.'",
+   "warn": [
+    "No guidance on group label, vertical vs horizontal, or spacing between items."
+   ],
+   "rec": "<b>Keep</b>.",
+   "src": [
+    {
+     "label": "Carbon · Checkbox usage",
+     "url": "https://carbondesignsystem.com/components/checkbox/usage/"
+    }
+   ]
+  },
+  {
+   "id": "doc-variation-examples",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc — Variation Examples (empty)",
+   "node": "3344:3764",
+   "use": "Panel titled 'Variation Examples' with no content inside.",
+   "flags": [
+    "Empty panel."
+   ],
+   "rec": "<b>Add</b> examples (single, group, nested with indeterminate parent) or remove the panel.",
+   "src": []
+  },
+  {
+   "id": "loose-desktop1",
+   "group": "loose",
+   "k": "note",
+   "name": "Draft doc page 'Desktop - 1'",
+   "node": "5506:17380",
+   "use": "1440x2158 draft documentation frame: header 'Checkbox', Overview (reuses the 'Uses' text), Behaviour ('The checkbox input allows for a series of states: unselected, selected, and indeterminate. The default view of a set of checkboxes is having no option selected.'), and a Types grid of 12 light instances.",
+   "flags": [
+    "Types grid has 4 identical Default/Indeterminate instances — placeholders for the missing indeterminate states.",
+    "Overview here uses the 'Uses' copy, not the Overview copy."
+   ],
+   "warn": [
+    "The Behaviour text exists only here, not in the main doc block."
+   ],
+   "rec": "<b>Outdated</b> — move the Behaviour line into the main doc, then retire the frame.",
+   "src": []
+  },
+  {
+   "id": "loose-button",
+   "group": "loose",
+   "k": "note",
+   "name": "Copied Button doc frame",
+   "node": "5506:17237",
+   "use": "685x2143 frame named 'Button' with the full Button documentation (Overview, Behaviour, Types, Usage Guidelines) and Button/icon instances. Nothing about checkboxes.",
+   "flags": [
+    "Belongs to the Button page — a copy left on the Checkbox page, likely used as the layout template for 'Desktop - 1'."
+   ],
+   "rec": "<b>Skip</b> — remove from this page.",
+   "src": []
+  },
+  {
+   "id": "loose-instance",
+   "group": "loose",
+   "k": "note",
+   "name": "Stray instance",
+   "node": "5522:21238",
+   "use": "Single 14x14 Checkbox instance (Light / Error / Selected) floating left of the component set.",
+   "flags": [
+    "Stray instance outside any frame."
+   ],
+   "rec": "<b>Skip</b> — delete.",
+   "src": []
+  },
+  {
+   "id": "loose-backdrop",
+   "group": "loose",
+   "k": "note",
+   "name": "Dark backdrop rectangle",
+   "node": "3331:3627",
+   "use": "140x363 rectangle behind the dark column of the set, fill #393944.",
+   "flags": [
+    "#393944 is hardcoded and one step off dark-bg #393945."
+   ],
+   "rec": "<b>Keep</b> as a presentation backdrop; switch to dark-bg #393945.",
+   "src": []
+  },
+  {
+   "id": "gap-focus-ring",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Visible focus indicator",
+   "use": "V1 focus is a 1px border colour change. On selected boxes it is 1.72:1 (light) and 1.16:1 (dark) against the fill. Focus indicators are non-text content and fall under 1.4.11 as well as 2.4.7.",
+   "rec": "<b>Add</b> an offset 2px focus ring that works on both selected and unselected.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 2.4.7 Focus Visible",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-group-label",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Group label and clickable label",
+   "use": "No checkbox group component or group label. Carbon makes the label clickable as part of the target and offers an optional group label; Fluent asks for groups to be tied to a label; Ant has Checkbox.Group with a check-all pattern.",
+   "rec": "<b>Add</b> a Checkbox Group (label, vertical stack, optional helper/error text).",
+   "src": [
+    {
+     "label": "Carbon · Checkbox usage",
+     "url": "https://carbondesignsystem.com/components/checkbox/usage/"
+    },
+    {
+     "label": "Fluent 2 · Checkbox usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/checkbox/usage"
+    },
+    {
+     "label": "Ant Design · Checkbox",
+     "url": "https://ant.design/components/checkbox"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 4.1.2 Name, Role, Value",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-error-message",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Error / read-only messaging",
+   "use": "Error is only a red border/fill; there is no error text slot. Carbon also lists read-only and warning states, which V1 lacks.",
+   "rec": "<b>Later</b> — add helper/error text at group level; consider read-only.",
+   "src": [
+    {
+     "label": "Carbon · Checkbox usage",
+     "url": "https://carbondesignsystem.com/components/checkbox/usage/"
+    }
+   ]
+  }
+ ],
+ "spacing": [
+  10,
+  11
+ ],
+ "radius": [
+  2,
+  0
+ ],
+ "newTextStyles": [
+  "Label/Regular/Normal (Open Sans Regular 12, line-height AUTO) — closest class type-12-regular 12/17"
+ ],
+ "notReadable": []
+}

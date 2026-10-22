@@ -1,0 +1,441 @@
+{
+ "component": "Dropdown",
+ "pageId": "3240:3865",
+ "summary": "The Dropdown page holds one published component, 'Filter Dropdown Options': a flat 150px searchable menu with two grouped sections and a blue text selected state, with no trigger, variants or interaction states. Three loose frames show a richer multi-select list with icons and checks, a two-line depot list, and an unrelated chip filter. There is no written documentation and several colours are hardcoded outside the V1 tokens.",
+ "items": [
+  {
+   "id": "published-filter-dropdown",
+   "group": "variants",
+   "k": "viz",
+   "name": "Filter Dropdown Options (the only published component)",
+   "node": "4466:5808",
+   "use": "Single COMPONENT (no component set, no variant properties), 150×296, vertical auto-layout, 0 padding/gap. It is a searchable, grouped single-select menu: a 150×32 search field on top, then a 150×264 list with two groups (Region, City), four options each. This is the whole Dropdown offering on the page.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;width:150px\"><div style=\"position:relative;height:32px;background:rgba(255,255,255,.9);border-radius:2px;border-bottom:.5px solid #C8CED5;box-shadow:0 4.75px 17.8px rgba(0,0,0,.08)\"><span style=\"position:absolute;left:10px;top:6px;font-size:14px;color:#6C6C6C\">Search for Depot</span><span style=\"position:absolute;left:9px;top:24px;width:17px;border-top:1px solid #0076DD\"></span></div><div style=\"background:rgba(255,255,255,.8);border-radius:2px;box-shadow:0 4px 4px rgba(182,182,182,.25)\"><div style=\"background:#EEF2F4;padding:5px 10px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6C6C6C\">Region</div><div style=\"padding:10px;font-size:12px;line-height:24px;color:#404040\">North Region<br>South Region<br>East Region<br>West Region</div><div style=\"background:#EEF2F4;padding:5px 10px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6C6C6C\">City</div><div style=\"padding:10px;font-size:12px;line-height:24px;color:#404040\">Bangalore<br><b style=\"color:#0076DD;font-weight:600\">Chennai Depot</b><br>Depot City<br>Salem Depot</div></div></div>",
+   "flags": [
+    "Built as one flat component: no closed/trigger state, no variants, no component properties, so every use is a detach-and-edit.",
+    "Option text #404040 and divider #C8CED5 are hardcoded, not in V1 tokens.",
+    "Text nodes (except group headers) have no text style attached; line height is Auto, not the token line heights."
+   ],
+   "warn": [
+    "Width is fixed at 150px; long option labels will clip or wrap with no rule."
+   ],
+   "rec": "<b>Keep</b> the grouped-list idea, but rebuild as a component set (trigger + menu + option) with properties."
+  },
+  {
+   "id": "search-field",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Search field (menu header)",
+   "node": "3240:3887",
+   "use": "GROUP (not auto-layout) 150×32. Background rectangle white @90% with 42px background blur, radius 2. Placeholder 'Search for Depot' Open Sans Regular 14, line height Auto, #6C6C6C (style Text/Light, = text-light) — closest class type-14-regular 14/19. A 17px #0076DD (pando-blue) 1px line at y=24 under the first letters acts as a caret/focus underline. Bottom divider 0.5px #C8CED5 with drop shadow 0 4.75 17.8 black 8%.",
+   "flags": [
+    "Built from a GROUP with absolute positions, not auto-layout; will not resize.",
+    "Divider #C8CED5 is not a V1 token (closest border-blue-grey #B5C3CB).",
+    "Drop shadow 0 4.75 17.8 8% is not one of shadow-1..4; blur effects are non-standard."
+   ],
+   "warn": [
+    "The blue line reads as a text caret drawn as a shape; unclear if it means 'focused'.",
+    "Placeholder contrast 5.25:1 on white passes AA; divider #C8CED5 vs white is 1.59:1 (below 3:1, note only)."
+   ],
+   "rec": "Rebuild on the V1 input field with a search icon; use border-blue-grey and shadow-3.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "group-header",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Group header row",
+   "node": "3240:3893",
+   "use": "150×24 horizontal auto-layout, padding 5/10, gap 10, fill #EEF2F4 (style Primary/Pando Light = pando-light). Label uses text style '10px/Semibold/AllCaps-Sp0.5px' (Open Sans SemiBold 10, uppercase, +0.5px) in #6C6C6C (text-light) — matches type-10-semibold + .caps. Labels: 'Region', 'City'.",
+   "warn": [
+    "Text-light on pando-light is 4.66:1, passes AA for small text but only just.",
+    "Line height is Auto, not the token 12px."
+   ],
+   "rec": "<b>Keep</b>. Matches tokens; just bind the line height.",
+   "def": "keep"
+  },
+  {
+   "id": "option-row",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Option row (default)",
+   "node": "3240:3895",
+   "use": "Options are plain TEXT nodes inside a vertical auto-layout block (padding 10, gap 8), not individual rows. Open Sans Regular 12, line height Auto (≈16), #404040, no text style. Each option is 16px tall, so the clickable row is ~24px with gap included.",
+   "flags": [
+    "No per-option container: no hit area, no hover/focus fill possible without rebuilding.",
+    "#404040 is hardcoded (not text-dark #313131 or text-medium #545454).",
+    "No text style; closest class type-12-regular 12/17."
+   ],
+   "warn": [
+    "Row height ~24px is below Carbon's 32–40px option heights."
+   ],
+   "rec": "Rebuild each option as its own auto-layout row (padding 8/10) with type-12-regular in text-dark.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    }
+   ]
+  },
+  {
+   "id": "state-selected",
+   "group": "states",
+   "k": "viz",
+   "name": "Selected option (single-select)",
+   "node": "3240:3904",
+   "use": "Selected option 'Chennai Depot' shown by colour + weight only: Open Sans SemiBold 12, #0076DD (style Primary/Pando-Blue = pando-blue). No background, no check icon.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;width:150px;background:#fff;padding:10px;display:flex;flex-direction:column;gap:8px;font-size:12px;color:#404040\"><span>Bangalore</span><span style=\"color:#0076DD;font-weight:600\">Chennai Depot</span><span>Depot City</span></div>",
+   "flags": [
+    "Selection is shown by colour (plus weight) only; no icon or fill."
+   ],
+   "warn": [
+    "#0076DD on white 4.53:1 — just passes AA. Against #404040 neighbours the colour difference is 2.29:1."
+   ],
+   "rec": "Add a check icon or fill so selection is not colour-only (as the loose multi-select list already does).",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "states-missing",
+   "group": "states",
+   "k": "note",
+   "name": "Hover, focus, disabled and error states",
+   "node": "4466:5808",
+   "use": "None of these exist on the published component. Only default and selected options are drawn. The loose multi-select list has a selected-row fill #F8F8F8 but no hover either.",
+   "flags": [
+    "No hover, keyboard focus, disabled option, disabled field, or error state anywhere on the page."
+   ],
+   "rec": "<b>Add</b> hover (accent-light-bg), focus ring, disabled (text-disabled) and error (action-red) states.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 2.4.7 Focus Visible",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "trigger-missing",
+   "group": "states",
+   "k": "note",
+   "name": "Closed trigger / field state",
+   "node": "4466:5808",
+   "use": "The page only shows the open menu. There is no closed dropdown field (label, value, chevron) as a component.",
+   "flags": [
+    "No closed/trigger state — designers must borrow another component (likely the Input page) to show a dropdown at rest."
+   ],
+   "rec": "<b>Add</b> a trigger variant (placeholder, filled, open, disabled, error) sized to the V1 input.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    }
+   ]
+  },
+  {
+   "id": "menu-container",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Menu list container",
+   "node": "3240:3892",
+   "use": "150×264 vertical auto-layout, 0 padding/gap, fill white @80%, radius 2, background blur 42, drop shadow 0 4 4 #B6B6B6 @25%.",
+   "flags": [
+    "Shadow 0 4 4 #B6B6B6 25% is not a V1 shadow token (closest shadow-1 0 2 3 10%).",
+    "Translucent 80% white fill + blur: content behind will show through."
+   ],
+   "warn": [
+    "No max height or scroll rule on the published menu."
+   ],
+   "rec": "Use solid white, shadow-3, and a documented max height with scroll.",
+   "src": [
+    {
+     "label": "Ant Design · Select",
+     "url": "https://ant.design/components/select"
+    },
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    }
+   ]
+  },
+  {
+   "id": "no-docs",
+   "group": "docs",
+   "k": "note",
+   "name": "Documentation blocks",
+   "node": "3240:3865",
+   "use": "The page has no written documentation at all: no Overview, Uses, When to use / not to use, Behaviour, Placement, Do/Don't or anatomy notes. All text on the page is sample data inside the designs.",
+   "flags": [
+    "Zero documentation text on the page."
+   ],
+   "rec": "<b>Add</b> overview, when to use (vs radio/checkbox/combobox), behaviour and do/don't.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    },
+    {
+     "label": "Fluent 2 · Dropdown usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/dropdown/usage"
+    }
+   ]
+  },
+  {
+   "id": "loose-multiselect-regions",
+   "group": "loose",
+   "k": "viz",
+   "name": "Multi-select list with icons (Regions, 2 selected)",
+   "node": "3240:3961",
+   "use": "Loose frame 400×293 (not a component). White panel, drop shadow 0 14 29 #BDBDBD @40%, mixed corner radius. Rows 385×40, padding 5/10, gap 10: 30×30 circle (radius 20) fill #F2E7FE (Status/Purple-Light) with 'Indicator Icon/Location' 14px; label Open Sans SemiBold 12 #404040. Selected rows ('North America', 'India') get fill #F8F8F8 (accent-off-white) and a 'Navigation/Selected' check icon 12px in #0076DD. 'Scrollbar/Theme=Light' instance (6×251, #F8F8F8, radius 8). First row 'Select All Regions'.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;width:300px;background:#fff;box-shadow:0 14px 29px rgba(189,189,189,.4);padding:4px 0\"><div style=\"display:flex;align-items:center;gap:10px;padding:5px 10px;font-size:12px;font-weight:600;color:#404040\"><span style=\"width:30px;height:30px;border-radius:20px;background:#F2E7FE\"></span>Select All Regions</div><div style=\"display:flex;align-items:center;gap:10px;padding:5px 10px;font-size:12px;font-weight:600;color:#404040;background:#F8F8F8\"><span style=\"width:30px;height:30px;border-radius:20px;background:#F2E7FE\"></span><span style=\"flex:1\">North America</span><span style=\"color:#0076DD\">✓</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:5px 10px;font-size:12px;font-weight:600;color:#404040\"><span style=\"width:30px;height:30px;border-radius:20px;background:#F2E7FE\"></span>South America</div></div>",
+   "flags": [
+    "Real multi-select pattern lives only as a loose frame, not a component.",
+    "Selected fill #F8F8F8 vs white is 1.06:1 — the row fill is invisible as a state cue; the check icon carries it.",
+    "Contains 7 hidden 'Depot Row' layers left over from the depot version.",
+    "Shadow 0 14 29 #BDBDBD 40% is not a V1 shadow token; #404040 hardcoded."
+   ],
+   "warn": [
+    "Layer names ('Hardeep Copy 5', 'Depot Row') are stale and don't match content."
+   ],
+   "rec": "<b>Keep</b> as the basis for a multi-select variant; componentise it.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    },
+    {
+     "label": "Fluent 2 · Dropdown usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/dropdown/usage"
+    }
+   ]
+  },
+  {
+   "id": "loose-regions-unselected",
+   "group": "loose",
+   "k": "spec",
+   "name": "Duplicate Regions list (no selection)",
+   "node": "3240:3907",
+   "use": "Loose frame 400×293, same build as the Regions multi-select but with no rows selected (check icons hidden). Also carries 7 hidden Depot rows and the same Scrollbar instance.",
+   "flags": [
+    "Near-duplicate of 3240:3961; only difference is selection.",
+    "Hidden leftover layers."
+   ],
+   "rec": "<b>Outdated</b> — fold into a component's default state, then remove."
+  },
+  {
+   "id": "loose-depot-list",
+   "group": "loose",
+   "k": "spec",
+   "name": "Depot list with secondary line",
+   "node": "3240:4042",
+   "use": "Loose GROUP 400×336. Rows are 'Depot Row' instances (padding 10, gap 10): 30×30 circle #D7F3F6 with 'Indicator Icon/Depot' 14px, title Open Sans SemiBold 12 #404040, secondary line '0990909087' Open Sans Regular 10 #737373. Rows 56px (50px for 'Select All Depots'). No selected state drawn. Scrollbar instance present.",
+   "flags": [
+    "#D7F3F6 icon circle and #737373 secondary text are not V1 tokens.",
+    "Sample text '0990909087' repeated on every row; 'Chengalpattu Depot' row duplicated in hidden layers."
+   ],
+   "warn": [
+    "#737373 on white 4.74:1 passes AA."
+   ],
+   "rec": "<b>Keep</b> as a two-line option variant; map colours to tokens (text-light, a status light)."
+  },
+  {
+   "id": "loose-movement-chips",
+   "group": "loose",
+   "k": "viz",
+   "name": "'Select movement' chip filter",
+   "node": "3240:3866",
+   "use": "Loose frame 'Destination-1' 211×89, white @50%, radius 2, shadow 0 4 4 #B6B6B6 25%, padding 10, gap 10. Chips 'All', 'Depots', 'Consignees', 'Vendors', 'Returns': padding 5, radius 2, Open Sans 14 #404040; selected 'All' is Bold on fill #D6DDE9. Below: 'Select movement' Regular 14 #6C6C6C with a 10px 'corner-down-left' (enter) icon in #000000.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;width:191px;padding:10px;background:rgba(255,255,255,.5);border-radius:2px;box-shadow:0 4px 4px rgba(182,182,182,.25);font-size:14px;color:#404040\"><div style=\"display:flex;flex-wrap:wrap;gap:2px 10px\"><span style=\"padding:0 5px;background:#D6DDE9;border-radius:2px;font-weight:700\">All</span><span style=\"padding:0 5px\">Depots</span><span style=\"padding:0 5px\">Consignees</span><span style=\"padding:0 5px\">Vendors</span><span style=\"padding:0 5px\">Returns</span></div><div style=\"margin-top:10px;color:#6C6C6C\">Select movement ↵</div></div>",
+   "flags": [
+    "Not a dropdown — this is a chip/segment filter plus input; it does not belong on this page.",
+    "#D6DDE9 chip fill not a V1 token; icon stroke pure #000000.",
+    "Text nodes are 10px tall for 14px type (clipped boxes)."
+   ],
+   "rec": "<b>Skip</b> — move to a Chips/Filter page or delete."
+  },
+  {
+   "id": "scrollbar",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Scrollbar",
+   "node": "3240:3960",
+   "use": "Instance of 'Scrollbar/Theme=Light' (from another page), 6×251, fill #F8F8F8 (Accent/OffWhite = accent-off-white), radius 8, top padding 30. Only appears in loose frames, not in the published component.",
+   "warn": [
+    "Published menu has no scroll behaviour at all."
+   ],
+   "rec": "Use this scrollbar in the rebuilt menu with a max height.",
+   "src": [
+    {
+     "label": "Ant Design · Select",
+     "url": "https://ant.design/components/select"
+    }
+   ]
+  },
+  {
+   "id": "tokens-offlist",
+   "group": "anatomy",
+   "k": "note",
+   "name": "Colours and styles not in V1 tokens",
+   "node": "3240:3865",
+   "use": "Hardcoded: #404040 (option text, everywhere), #C8CED5 (search divider), #737373 (secondary text), #D7F3F6 (depot icon circle), #D6DDE9 (chip fill), #B6B6B6 and #BDBDBD (shadow colours), #000000 (icon stroke). Registered styles used correctly: Text/Light #6C6C6C, Primary/Pando Light #EEF2F4, Primary/Pando-Blue #0076DD, Accent/OffWhite #F8F8F8, Status/Purple-Light #F2E7FE, text style 10px/Semibold/AllCaps-Sp0.5px.",
+   "flags": [
+    "8 hardcoded colours not in the V1 token list.",
+    "Most text has no text style; line heights are Auto."
+   ],
+   "rec": "Map #404040→text-dark, #C8CED5→border-blue-grey, #737373→text-light, shadows→shadow-1/3."
+  },
+  {
+   "id": "gap-search-empty",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Search behaviour and empty state",
+   "node": "4466:5808",
+   "use": "The menu has a search field but no 'no results' state, no highlight of matches, and no loading state. Ant Design Select offers notFoundContent (default 'No data') and a loading state; Carbon and Fluent separate a filterable combo box from a plain dropdown.",
+   "rec": "<b>Add</b> empty and loading states; decide if search makes this a combobox.",
+   "src": [
+    {
+     "label": "Ant Design · Select",
+     "url": "https://ant.design/components/select"
+    },
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    },
+    {
+     "label": "Fluent 2 · Dropdown usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/dropdown/usage"
+    }
+   ]
+  },
+  {
+   "id": "gap-multiselect",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Multi-select in the component",
+   "node": "3240:3961",
+   "use": "Multi-select exists only as loose frames. Fluent's multiselect puts a checkbox on each option, keeps the list open and shows a count when selections overflow; Ant Design has multiple/tags mode with maxTagCount.",
+   "rec": "<b>Add</b> a multi-select variant with checkboxes and an overflow count in the trigger.",
+   "src": [
+    {
+     "label": "Fluent 2 · Dropdown usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/dropdown/usage"
+    },
+    {
+     "label": "Ant Design · Select",
+     "url": "https://ant.design/components/select"
+    }
+   ]
+  },
+  {
+   "id": "gap-height-scroll",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Max menu height and scroll",
+   "node": "3240:3892",
+   "use": "No max height defined. Carbon recommends starting scroll around the sixth option and showing about half of the last visible one; Ant Design's default list height is 256px.",
+   "rec": "<b>Add</b> a max height (~256px / 6 options) with the Light scrollbar.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    },
+    {
+     "label": "Ant Design · Select",
+     "url": "https://ant.design/components/select"
+    }
+   ]
+  },
+  {
+   "id": "gap-keyboard-a11y",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Keyboard, focus and semantics",
+   "node": "4466:5808",
+   "use": "No focus state is drawn and no behaviour is written. Carbon: Tab to reach, Up/Down to move through options, Esc closes multiselect. WCAG 2.1.1 requires full keyboard operation, 2.4.7 a visible focus indicator, 4.1.2 exposed role and expanded/selected state.",
+   "rec": "<b>Later</b> (a11y pass): add focus ring and document key behaviour.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 2.1.1 Keyboard",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 2.4.7 Focus Visible",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 4.1.2 Name, Role, Value",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-disabled-error",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Disabled options, error/warning and clear",
+   "node": "4466:5808",
+   "use": "No disabled option, no error/warning field state, no clear-selection control. Carbon lists error, warning, disabled, read-only and skeleton states; Ant Design supports per-option disabled, status error/warning and allowClear.",
+   "rec": "<b>Add</b> disabled option + error state first; clear button optional.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    },
+    {
+     "label": "Ant Design · Select",
+     "url": "https://ant.design/components/select"
+    }
+   ]
+  },
+  {
+   "id": "gap-sizes",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Sizes",
+   "node": "4466:5808",
+   "use": "One fixed 150px width and ~24px rows. Carbon defines field heights 24/32/40/48 with option height matching the field.",
+   "rec": "<b>Later</b>: pick one or two sizes aligned to the V1 input height.",
+   "src": [
+    {
+     "label": "Carbon · Dropdown usage",
+     "url": "https://carbondesignsystem.com/components/dropdown/usage/"
+    }
+   ]
+  }
+ ],
+ "spacing": [
+  0,
+  2,
+  5,
+  8,
+  10,
+  30
+ ],
+ "radius": [
+  2,
+  8,
+  20
+ ],
+ "newTextStyles": [],
+ "notReadable": []
+}

@@ -1,0 +1,419 @@
+{
+ "component": "Toggle",
+ "pageId": "225:0",
+ "summary": "The page holds one real switch (25×12 track, green ON / grey OFF, Light and Dark, Default and Disabled) plus a 2-option segmented 'Toggle Tab' and a dark-only transport-mode 'Icon Tab', all published under one 'Toggle' set. Docs are the original Toggle/Switch copy but still contain template filler, a duplicated paragraph and promises of hover/focus states that are not drawn. Colours are mostly styled, but OFF ignores the toggle-off token and ON uses an off-palette 40% green fill.",
+ "items": [
+  {
+   "id": "wrapper-set",
+   "group": "variants",
+   "k": "spec",
+   "name": "Toggle (published wrapper set)",
+   "node": "3218:3840",
+   "use": "Public set with one property, Type = Switch | Toggle Tab | Icon Tab. Each variant just wraps one fixed instance: Switch = Light / Yes / Default (47×14), Toggle Tab = Light / Option 2 active (139×24), Icon Tab = Dark / 1st selected (161×54). Theme, on/off, disabled and the label boolean live only on the hidden base sets.",
+   "flags": [
+    "Three different components (switch, 2-option segmented control, icon segmented control) share one name 'Toggle'.",
+    "Wrapper exposes no Theme / State / On-Off props; designers must dig into nested instances to change them."
+   ],
+   "rec": "<b>Keep</b> the Switch; split Toggle Tab and Icon Tab out as a segmented control so 'Toggle' means one thing."
+  },
+  {
+   "id": "switch-light-default",
+   "group": "variants",
+   "k": "viz",
+   "name": "Switch · Light · Default (on / off)",
+   "node": "227:64",
+   "use": "Track 25×12, radius 8, 1px stroke; knob 8×8 circle, inset 2px (x=2 off, x=15 on). ON: track fill #D5F9D1 at 40% (style 'Opacity/D5F9D1-40%', not in tokens), stroke + knob #67AC5D accent-green-medium. OFF: track #F9FAFA accent-alternate-white, stroke + knob #6C6C6C text-light. Action text 10px Open Sans Regular, uppercase, auto line-height (14px box), 0 tracking, #313131 text-dark, style 'Label/Regular/AllCaps'. Gap 5px.",
+   "html": "<div style=\"background:#fff;padding:12px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap\"><i style=\"display:inline-flex;gap:5px;align-items:center;font:10px/14px 'Open Sans';color:#313131\"><b style=\"width:23px;height:10px;border:1px solid #67AC5D;border-radius:8px;background:rgba(213,249,209,.4)\"><b style=\"display:block;margin:1px 0 0 14px;width:8px;height:8px;border-radius:50%;background:#67AC5D\"></b></b>YES</i><i style=\"display:inline-flex;gap:5px;align-items:center;font:10px/14px 'Open Sans';color:#313131\"><b style=\"width:23px;height:10px;border:1px solid #6C6C6C;border-radius:8px;background:#F9FAFA\"><b style=\"display:block;margin:1px 0 0 1px;width:8px;height:8px;border-radius:50%;background:#6C6C6C\"></b></b>NO</i></div>",
+   "flags": [
+    "OFF state does not use the toggle-off token accent-blue-grey #CBD4D8; it uses #F9FAFA + #6C6C6C.",
+    "ON track fill #D5F9D1@40% is not in the V1 palette.",
+    "Contrast note: ON stroke #67AC5D vs white 2.75:1 and knob vs track 2.61:1, below 3:1 (WCAG 1.4.11). OFF passes (5.25:1)."
+   ],
+   "warn": [
+    "Action text characters are stored as 'YES' / 'No' / 'Yes' inconsistently; uppercase transform hides it."
+   ],
+   "rec": "<b>Keep</b> shape and size; map ON to accent-green-medium and decide OFF colour (current #6C6C6C vs token #CBD4D8).",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "switch-light-disabled",
+   "group": "states",
+   "k": "viz",
+   "name": "Switch · Light · Disabled (on / off)",
+   "node": "227:66",
+   "use": "Track #E7E7E7 grey-light, stroke #A3A2A2 text-disabled. Knob ON stays #67AC5D accent-green-medium; knob OFF #6C6C6C text-light. Action text #6C6C6C text-light.",
+   "html": "<div style=\"background:#fff;padding:12px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap\"><i style=\"display:inline-flex;gap:5px;align-items:center;font:10px/14px 'Open Sans';color:#6C6C6C\"><b style=\"width:23px;height:10px;border:1px solid #A3A2A2;border-radius:8px;background:#E7E7E7\"><b style=\"display:block;margin:1px 0 0 14px;width:8px;height:8px;border-radius:50%;background:#67AC5D\"></b></b>YES</i><i style=\"display:inline-flex;gap:5px;align-items:center;font:10px/14px 'Open Sans';color:#6C6C6C\"><b style=\"width:23px;height:10px;border:1px solid #A3A2A2;border-radius:8px;background:#E7E7E7\"><b style=\"display:block;margin:1px 0 0 1px;width:8px;height:8px;border-radius:50%;background:#6C6C6C\"></b></b>NO</i></div>",
+   "flags": [
+    "Disabled ON keeps the full-strength green knob, so it reads almost as enabled.",
+    "Disabled action text uses text-light #6C6C6C, not text-disabled #A3A2A2."
+   ],
+   "warn": [
+    "A hidden 'Navigation/Selected' 6×6 instance sits inside the Yes/Disabled variant (8323:2124) - leftover layer."
+   ],
+   "rec": "<b>Keep</b> state; mute the ON knob and text to the disabled colours."
+  },
+  {
+   "id": "switch-dark",
+   "group": "variants",
+   "k": "viz",
+   "name": "Switch · Dark theme (default + disabled)",
+   "node": "227:62",
+   "use": "No track fill. ON: stroke + knob #1FCD93 dark-highlight-green. OFF: stroke + knob #8A8A9E dark-input-text. Disabled ON and OFF: both #A3A3A3 grey-medium (preview shows disabled ON; disabled OFF is the same colours with knob left). Text #D5DAF4 dark-label-text (default), #A3A3A3 (disabled). Gap 6px (light uses 5px). Knob carries a 0.825px stroke.",
+   "html": "<div style=\"background:#393945;padding:12px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap\"><i style=\"display:inline-flex;gap:5px;align-items:center;font:10px/14px 'Open Sans';color:#D5DAF4\"><b style=\"width:23px;height:10px;border:1px solid #1FCD93;border-radius:8px;background:transparent\"><b style=\"display:block;margin:1px 0 0 14px;width:8px;height:8px;border-radius:50%;background:#1FCD93\"></b></b>YES</i><i style=\"display:inline-flex;gap:5px;align-items:center;font:10px/14px 'Open Sans';color:#D5DAF4\"><b style=\"width:23px;height:10px;border:1px solid #8A8A9E;border-radius:8px;background:transparent\"><b style=\"display:block;margin:1px 0 0 1px;width:8px;height:8px;border-radius:50%;background:#8A8A9E\"></b></b>NO</i><i style=\"display:inline-flex;gap:5px;align-items:center;font:10px/14px 'Open Sans';color:#A3A3A3\"><b style=\"width:23px;height:10px;border:1px solid #A3A3A3;border-radius:8px;background:transparent\"><b style=\"display:block;margin:1px 0 0 14px;width:8px;height:8px;border-radius:50%;background:#A3A3A3\"></b></b>YES</i></div>",
+   "flags": [
+    "Gap is 6px in dark vs 5px in light - same component, different spacing.",
+    "Disabled ON and OFF are identical colours; only knob position differs."
+   ],
+   "warn": [
+    "Contrast on #393945: ON 5.53:1, OFF 3.37:1 - pass."
+   ],
+   "rec": "<b>Keep</b> if V1 dark screens still ship; align gap to 5px."
+  },
+  {
+   "id": "switch-label",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Switch · Label and Action text slots",
+   "node": "3218:3689",
+   "use": "'.Swappable Label' (40×14, right padding 10) holds a 10px Open Sans SemiBold uppercase label, #545454 text-medium, style 'Label/Semibold/AllCaps'; hidden by default via 'Show Label' boolean. 'Action Text' boolean (default on) shows Yes/No after the track. Order: Label, track, action text.",
+   "warn": [
+    "Dark variants' label instances are empty shells (no text child read)."
+   ],
+   "rec": "<b>Keep</b>; maps to type-10-semibold .caps, but Figma uses 0 tracking and auto line-height while the token is 10/12 + 0.5px.",
+   "def": "keep"
+  },
+  {
+   "id": "toggle-tab",
+   "group": "variants",
+   "k": "viz",
+   "name": "Toggle Tab (2-option segmented)",
+   "node": "748:468",
+   "use": "Container #F8F8F8 accent-off-white, 1px #E2EAEC border-input-light, radius 2, gap 1. Each option 69×24, padding 4/10, radius 2. Active: #0076DD pando-blue, inner shadow #234357 @50% blur 4, text #FFFFFF. Inactive: no fill, text #313131 text-dark. 12px Open Sans Regular, style 'Label/Regular/Normal'. Variants: Light/Dark × Option1/Option2 active.",
+   "html": "<div style=\"background:#fff;padding:12px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap\"><span style=\"display:inline-flex;gap:1px;border:1px solid #E2EAEC;border-radius:2px;background:#F8F8F8;font-family:'Open Sans',sans-serif;font-size:12px;line-height:16px\"><span style=\"width:69px;height:24px;box-sizing:border-box;padding:4px 10px;color:#313131\">Option 1</span><span style=\"width:69px;height:24px;box-sizing:border-box;padding:4px 10px;border-radius:2px;background:#0076DD;color:#fff;box-shadow:inset 0 0 4px rgba(35,67,87,.5)\">Option 2</span></span><span style=\"display:inline-flex;gap:1px;border:1px solid #E2EAEC;border-radius:2px;background:#F8F8F8;font-family:'Open Sans',sans-serif;font-size:12px;line-height:16px\"><span style=\"width:69px;height:24px;box-sizing:border-box;padding:4px 10px;border-radius:2px;background:#0076DD;color:#fff;box-shadow:inset 0 0 4px rgba(35,67,87,.5)\">Option 1</span><span style=\"width:69px;height:24px;box-sizing:border-box;padding:4px 10px;color:#313131\">Option 2</span></span></div>",
+   "flags": [
+    "Only two options and fixed 69px widths; no 3-option or hug-width version.",
+    "Inner shadow #234357@50% is not one of the shadow tokens."
+   ],
+   "warn": [
+    "Contrast: active blue vs container 4.27:1, outer border #E2EAEC vs white 1.22:1."
+   ],
+   "rec": "<b>Keep</b> as a segmented control, but document it outside 'Toggle'.",
+   "src": [
+    {
+     "label": "Carbon · Toggle usage",
+     "url": "https://carbondesignsystem.com/components/toggle/usage/"
+    }
+   ]
+  },
+  {
+   "id": "toggle-tab-dark",
+   "group": "variants",
+   "k": "viz",
+   "name": "Toggle Tab · Dark",
+   "node": "770:15",
+   "use": "Container #484858 @50% (style 'Opacity/484858-Dark-50'), border #8A8A9E @50%. Active fill #D9E6FF with NO style attached, text #484858 ('Dark/Input BG'). Inactive text #D5DAF4 dark-label-text.",
+   "html": "<div style=\"background:#393945;padding:12px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap\"><span style=\"display:inline-flex;gap:1px;border:1px solid rgba(138,138,158,.5);border-radius:2px;background:rgba(72,72,88,.5);font-family:'Open Sans',sans-serif;font-size:12px;line-height:16px\"><span style=\"width:69px;height:24px;box-sizing:border-box;padding:4px 10px;color:#D5DAF4\">Option 1</span><span style=\"width:69px;height:24px;box-sizing:border-box;padding:4px 10px;border-radius:2px;background:#D9E6FF;color:#484858;box-shadow:inset 0 0 4px rgba(35,67,87,.5)\">Option 2</span></span></div>",
+   "flags": [
+    "Active fill #D9E6FF is unstyled and not in the V1 token list (it matches the status blue-light hue).",
+    "#484858 and the 50% opacity styles are not in the token list."
+   ],
+   "rec": "<b>Later</b> - map to tokens if dark V1 is still in use."
+  },
+  {
+   "id": "icon-tab",
+   "group": "variants",
+   "k": "viz",
+   "name": "Icon Tab (dark only)",
+   "node": "3218:3158",
+   "use": "Three '.Icon Base' cells 54×54, padding 15, 1px #8A8A9E dark-input-text stroke, gap -1 (shared borders), radius 0. Selected cell fill #24242F dark-darker. Icons 24×24 Road / Ship / Air in status light colours (#FFEEC4, #BDF0F4, #D9E6FF). Selected = 1st | 2nd | 3rd. Theme option = Dark only.",
+   "html": "<div style=\"background:#393945;padding:12px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap\"><span style=\"display:inline-flex;padding-left:1px\"><span style=\"width:54px;height:54px;box-sizing:border-box;border:1px solid #8A8A9E;margin-left:-1px;display:flex;align-items:center;justify-content:center;background:#24242F;color:#FFEEC4;font-family:'Open Sans',sans-serif;font-size:9px\">Road</span><span style=\"width:54px;height:54px;box-sizing:border-box;border:1px solid #8A8A9E;margin-left:-1px;display:flex;align-items:center;justify-content:center;background:transparent;color:#BDF0F4;font-family:'Open Sans',sans-serif;font-size:9px\">Ship</span><span style=\"width:54px;height:54px;box-sizing:border-box;border:1px solid #8A8A9E;margin-left:-1px;display:flex;align-items:center;justify-content:center;background:transparent;color:#D9E6FF;font-family:'Open Sans',sans-serif;font-size:9px\">Air</span></span></div>",
+   "flags": [
+    "Dark theme only; no light version.",
+    "Icons are hard-wired to transport modes - not a general component."
+   ],
+   "rec": "<b>Skip</b> as a DS atom; treat as a product-specific mode picker."
+  },
+  {
+   "id": "specs-frames",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Spectral spec frames (spacing, anatomy, properties)",
+   "node": "5380:1909",
+   "use": "Three 'Specs' frames: 5380:1909 Toggle Tab (spacing 139×24, anatomy, properties), 5409:8378 Switch (spacing 47×14, properties - no anatomy), 5409:8986 Icon Tab (spacing 161×54, anatomy, properties).",
+   "warn": [
+    "Switch spec has no anatomy panel, unlike the other two."
+   ],
+   "rec": "<b>Keep</b> as reference; add a Switch anatomy panel."
+  },
+  {
+   "id": "doc-overview",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc · Overview",
+   "node": "5401:5708",
+   "use": "Text: \"Toggle/ Switch is a clear and concise label that provides a general introduction or summary of the toggle's purpose. It effectively sets the context for users.\" then \"Toggle is a control that is used to quickly switch between two possible states. For examples, choices that follow a boolean relationship like on/off, true/false, enable/disable, or activate/deactivate.\"",
+   "flags": [
+    "First paragraph is template filler describing the heading, not the component - left in by mistake.",
+    "'For examples' typo."
+   ],
+   "rec": "<b>Keep</b> the second paragraph only."
+  },
+  {
+   "id": "doc-when-to-use",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc · When to use",
+   "node": "5401:5702",
+   "use": "\"A toggle is used to view or switch between enabled or disabled states. The result of changing the toggle state is immediately effective and there's no need for an additional action to apply or save a change.\" - the same two sentences appear twice.",
+   "flags": [
+    "Whole paragraph is duplicated."
+   ],
+   "warn": [
+    "Immediate-effect rule matches Carbon and Ant Design guidance."
+   ],
+   "rec": "<b>Keep</b> one copy.",
+   "src": [
+    {
+     "label": "Carbon · Toggle usage",
+     "url": "https://carbondesignsystem.com/components/toggle/usage/"
+    },
+    {
+     "label": "Ant Design · Switch",
+     "url": "https://ant.design/components/switch"
+    }
+   ]
+  },
+  {
+   "id": "doc-when-not",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc · When not to use",
+   "node": "5401:5696",
+   "use": "\"This label effectively conveys the situations in which the toggle should be avoided. It's clear and straightforward.\" / \"Switches can only be on or off. Indeterminate switches don't exist in accessibility APIs... If you need to show a partial state, use a checkbox instead of a switch.\" / \"Don't use to present critical information or request required input needed to complete a workflow\"",
+   "flags": [
+    "First sentence is template filler, not guidance."
+   ],
+   "warn": [
+    "Checkbox-for-partial-state advice lines up with Fluent 2 (checkbox for indeterminate/submission)."
+   ],
+   "rec": "<b>Keep</b> the last two points.",
+   "src": [
+    {
+     "label": "Fluent 2 · Switch usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/switch/usage"
+    }
+   ]
+  },
+  {
+   "id": "doc-behaviour",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc · Behaviour",
+   "node": "5401:5686",
+   "use": "\"If using a switch with an icon, use a hidden text label to identify the switch's purpose to screen readers.\" / \"A switch can be navigated using a keyboard. The keyboard focus state takes the switch's visual hover state and adds a blue ring to the switch in focus.\"",
+   "flags": [
+    "Describes hover and blue focus-ring states that are not drawn anywhere on the page.",
+    "The icon/hidden-label line mirrors Fluent 2 wording; V1 has no switch-with-icon."
+   ],
+   "rec": "<b>Add</b> hover + focus variants or drop the claim.",
+   "src": [
+    {
+     "label": "Fluent 2 · Switch usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/switch/usage"
+    }
+   ]
+  },
+  {
+   "id": "doc-placement",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc · Placement & Convention",
+   "node": "5401:5681",
+   "use": "\"Either a Label text must be placed before a toggle to clarify the action that the toggle performs, or an Action text to describe the binary action of toggle needs to be present, so that the action is clear. Action text must be three words or less and is displayed on the side of a toggle.\" Same text also in the older .documentation block.",
+   "warn": [
+    "'Three words or less ... on the side of a toggle' matches Carbon's state-text rule almost word for word."
+   ],
+   "rec": "<b>Keep</b>.",
+   "src": [
+    {
+     "label": "Carbon · Toggle usage",
+     "url": "https://carbondesignsystem.com/components/toggle/usage/"
+    }
+   ]
+  },
+  {
+   "id": "doc-do-dont",
+   "group": "docs",
+   "k": "note",
+   "name": "Doc · Do / Don't + Example",
+   "node": "5401:5673",
+   "use": "Do: segmented tab 'List view | Map view'; settings card 'Light' with a Yes switch. Don't: switch between 'Map view / List view'; switch for 'Agree to terms & conditions'. Example group shows two screenshots with pins 1 and 2.",
+   "flags": [
+    "Do/Don't tiles have no caption explaining why.",
+    "Example pins 1 and 2 have no matching notes."
+   ],
+   "rec": "<b>Add</b> one-line captions; pin notes."
+  },
+  {
+   "id": "doc-legacy-block",
+   "group": "docs",
+   "k": "note",
+   "name": "Older .documentation block",
+   "node": "3195:1953",
+   "use": "Instance of '.documentation' with Overview, Uses, Placement & Convention (same copy as the new section) and an empty 'Variation Examples' heading.",
+   "flags": [
+    "Title still reads the placeholder 'Name'.",
+    "Duplicates the newer Toggle/Switch section."
+   ],
+   "rec": "<b>Outdated</b> - remove once the section is final."
+  },
+  {
+   "id": "loose-role-pills",
+   "group": "loose",
+   "k": "note",
+   "name": "Loose 'Toggle' frame - role pills",
+   "node": "3218:3118",
+   "use": "Four 24px pills radius 12: 'Super Admin' active (#0076DD, 12 SemiBold white, eye-off icon), 'Admin', 'Gate Manager', 'Checker' (#EEF2F4 border-ish, 12 Regular #313131). Uses #979797, not a token.",
+   "flags": [
+    "Not a component; pill style not documented anywhere.",
+    "#979797 off-palette."
+   ],
+   "rec": "<b>Outdated</b> exploration - archive."
+  },
+  {
+   "id": "loose-bree-serif",
+   "group": "loose",
+   "k": "note",
+   "name": "Loose 'Split button' + 'Frame 2161'",
+   "node": "3218:3136",
+   "use": "Two 20px pill groups: 'PRIMARY | S | R | V' and 'LIST | CHART | MAP' in Bree Serif Regular 10, colours #0D204A / #18283B / #F9FAFA / #0076DD, radius 14-15.",
+   "flags": [
+    "Bree Serif is not the V1 font.",
+    "#0D204A and #18283B not in tokens.",
+    "Layer 'chart ' has a trailing space."
+   ],
+   "rec": "<b>Outdated</b> - archive."
+  },
+  {
+   "id": "loose-strays",
+   "group": "loose",
+   "k": "note",
+   "name": "Stray instances and frames",
+   "node": "5380:1395",
+   "use": "Stray '.Toggle Tab' instance (5380:1395) and detached 'Inactive' frame (5380:1393) above the sets; eight 'Toggle' Switch instances at x≈6695-7331 (5454:1936...2002) outside any Specs frame; dark backdrop rectangle 225:52 (#393944, 1 off dark-bg #393945); divider Vector 13.",
+   "flags": [
+    "Loose instances not inside a frame or spec."
+   ],
+   "rec": "<b>Skip</b> / tidy into the spec frames."
+  },
+  {
+   "id": "gap-hover-focus",
+   "group": "gaps",
+   "k": "gap",
+   "name": "No hover, focus or pressed states",
+   "node": "227:79",
+   "use": "Only Default and Disabled exist. Docs promise a hover look and a blue focus ring. Carbon lists Focus as a state and keyboard Space/Enter to switch.",
+   "rec": "<b>Add</b> hover + focus (ring colour from pando-blue).",
+   "src": [
+    {
+     "label": "Carbon · Toggle usage",
+     "url": "https://carbondesignsystem.com/components/toggle/usage/"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 4.1.2 Name, Role, Value",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-readonly-loading",
+   "group": "gaps",
+   "k": "gap",
+   "name": "No read-only, loading or skeleton",
+   "node": "227:79",
+   "use": "Carbon has read-only and skeleton; Ant Design has a loading switch for async saves. V1 toggles save immediately, so a pending state matters.",
+   "rec": "<b>Later</b> - add loading first.",
+   "src": [
+    {
+     "label": "Carbon · Toggle usage",
+     "url": "https://carbondesignsystem.com/components/toggle/usage/"
+    },
+    {
+     "label": "Ant Design · Switch",
+     "url": "https://ant.design/components/switch"
+    }
+   ]
+  },
+  {
+   "id": "gap-size-target",
+   "group": "gaps",
+   "k": "gap",
+   "name": "One tiny size; small hit target",
+   "node": "227:79",
+   "use": "Track is 25×12 (whole row 47×14). WCAG 2.5.8 asks for 24×24 or enough spacing. Carbon and Ant offer default + small sizes.",
+   "warn": [
+    "Note only - accessibility pass deferred. Hit area can be padded without changing the visual."
+   ],
+   "rec": "<b>Later</b> - pad the click area to 24px; consider a default size.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 2.5.8 Target Size (Minimum)",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+    },
+    {
+     "label": "Carbon · Toggle usage",
+     "url": "https://carbondesignsystem.com/components/toggle/usage/"
+    },
+    {
+     "label": "Ant Design · Switch",
+     "url": "https://ant.design/components/switch"
+    }
+   ]
+  },
+  {
+   "id": "gap-contrast",
+   "group": "gaps",
+   "k": "gap",
+   "name": "ON state below 3:1",
+   "node": "227:64",
+   "use": "Light ON: green stroke vs white 2.75:1, knob vs track 2.61:1; disabled-ON knob vs #E7E7E7 2.22:1 (disabled exempt). OFF and dark pass.",
+   "warn": [
+    "Note only - accessibility pass deferred."
+   ],
+   "rec": "<b>Later</b> - consider accent-green-highlight #008D5E for the ON stroke.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  }
+ ],
+ "spacing": [
+  1,
+  2,
+  4,
+  5,
+  6,
+  10,
+  15
+ ],
+ "radius": [
+  2,
+  8
+ ],
+ "newTextStyles": [
+  "Label/Regular/AllCaps - Open Sans Regular 10, auto line-height (~14), 0 tracking, uppercase (token type-10-regular is 10/12 +0.5)",
+  "Label/Semibold/AllCaps - Open Sans SemiBold 10, auto line-height, 0 tracking, uppercase",
+  "Label/Regular/Normal - Open Sans Regular 12, auto line-height (~16) (token type-12-regular is 12/17)",
+  "Bree Serif Regular 10 (loose frames only)"
+ ],
+ "notReadable": [
+  "Example screenshots in group 5401:5691 are images; their content and pin meanings were not readable as text."
+ ]
+}

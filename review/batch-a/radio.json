@@ -1,0 +1,407 @@
+{
+ "component": "Radio Buttons",
+ "pageId": "193:223",
+ "summary": "One component set 'Radio' with 8 variants (Theme Light/Dark x State Default/Disabled x Selected No/Yes, plus Show Label). Light theme is clean and uses registered styles; dark theme borrows orphaned components and doesn't dim disabled labels. Docs are spread across three overlapping blocks, with empty Example and Do/Don't panels, and there is no focus, error or group variant.",
+ "items": [
+  {
+   "id": "light-unselected",
+   "group": "variants",
+   "k": "viz",
+   "name": "Light · Default · Unselected",
+   "node": "3344:3639",
+   "use": "14x14 ring, 1px, #A3A3A3 (grey-medium, style Grey/Medium-#A3A3A3), empty centre. 10px gap to label. Label 'Unselected' Open Sans Regular 12, line height Auto (~16), #313131 (text-dark, style Text/Dark-#313131), text style Label/Regular/Normal. Hug width 87, height 16.",
+   "html": "<div style=\"background:#FFFFFF;padding:16px;display:inline-block\"><div style=\"display:flex;align-items:center;gap:10px;font-family:'Open Sans',sans-serif;font-size:12px;line-height:16px;color:#313131\"><span style=\"position:relative;width:14px;height:14px;box-sizing:border-box;border:1px solid #A3A3A3;border-radius:50%;background:transparent;flex:none\"></span><span>Unselected</span></div></div>",
+   "flags": [],
+   "warn": [
+    "Ring #A3A3A3 on white is 2.52:1, below the 3:1 non-text contrast guide (note only, a11y pass deferred).",
+    "Label line height is Auto (~16px); nearest class type-12-regular is 12/17.",
+    "Hidden child paths carry #D6D6D6 (not a token); not rendered because the boolean op fill wins."
+   ],
+   "rec": "<b>Keep</b>. Map label to type-12-regular and decide 16 vs 17 line height.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · 1.4.11 Non-text contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "light-selected",
+   "group": "variants",
+   "k": "viz",
+   "name": "Light · Default · Selected",
+   "node": "3344:3645",
+   "use": "14x14 ring 1px plus 7x7 centre dot (3.5px inset), all #0076DD (pando-blue, style Primary/Pando-Blue-#0076DD). Label 'Selected' #313131, Label/Regular/Normal 12.",
+   "html": "<div style=\"background:#FFFFFF;padding:16px;display:inline-block\"><div style=\"display:flex;align-items:center;gap:10px;font-family:'Open Sans',sans-serif;font-size:12px;line-height:16px;color:#313131\"><span style=\"position:relative;width:14px;height:14px;box-sizing:border-box;border:1px solid #0076DD;border-radius:50%;background:transparent;flex:none\"><span style=\"position:absolute;left:2.5px;top:2.5px;width:7px;height:7px;border-radius:50%;background:#0076DD\"></span></span><span>Selected</span></div></div>",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Keep</b>.",
+   "src": [],
+   "def": "keep"
+  },
+  {
+   "id": "light-disabled",
+   "group": "states",
+   "k": "viz",
+   "name": "Light · Disabled · Unselected",
+   "node": "3344:3648",
+   "use": "Ring 1px #A3A3A3 (grey-medium) with a 12x12 inner fill #E7E7E7 (grey-light, style Grey/Light-#E7E7E7). Label 'Disabled' #6C6C6C (text-light, style Text/Light-#6C6C6C).",
+   "html": "<div style=\"background:#FFFFFF;padding:16px;display:inline-block\"><div style=\"display:flex;align-items:center;gap:10px;font-family:'Open Sans',sans-serif;font-size:12px;line-height:16px;color:#6C6C6C\"><span style=\"position:relative;width:14px;height:14px;box-sizing:border-box;border:1px solid #A3A3A3;border-radius:50%;background:#E7E7E7;flex:none\"></span><span>Disabled</span></div></div>",
+   "flags": [
+    "Messy layer structure: the ring is drawn twice (a boolean op plus a duplicate copy inside group 'Object'), and the Radio frame has 1px padding the other variants don't."
+   ],
+   "warn": [
+    "Label uses text-light #6C6C6C, not text-disabled #A3A2A2. Confirm which one is meant for disabled."
+   ],
+   "rec": "<b>Keep</b> the look, clean up the layers to match the Default variants.",
+   "src": []
+  },
+  {
+   "id": "light-disabled-selected",
+   "group": "states",
+   "k": "viz",
+   "name": "Light · Disabled · Selected",
+   "node": "3344:3651",
+   "use": "Ring 1px plus 7x7 dot, all #A3A3A3 (grey-medium). No inner fill. Label 'Selected Disabled' #6C6C6C (text-light).",
+   "html": "<div style=\"background:#FFFFFF;padding:16px;display:inline-block\"><div style=\"display:flex;align-items:center;gap:10px;font-family:'Open Sans',sans-serif;font-size:12px;line-height:16px;color:#6C6C6C\"><span style=\"position:relative;width:14px;height:14px;box-sizing:border-box;border:1px solid #A3A3A3;border-radius:50%;background:transparent;flex:none\"><span style=\"position:absolute;left:2.5px;top:2.5px;width:7px;height:7px;border-radius:50%;background:#A3A3A3\"></span></span><span>Selected Disabled</span></div></div>",
+   "flags": [],
+   "warn": [
+    "No #E7E7E7 inner fill here, unlike Disabled Unselected, so the two disabled variants don't share a background."
+   ],
+   "rec": "<b>Keep</b>. Decide whether disabled-selected also gets the #E7E7E7 fill.",
+   "src": []
+  },
+  {
+   "id": "dark-theme",
+   "group": "variants",
+   "k": "viz",
+   "name": "Dark theme · 4 variants",
+   "node": "3344:3654",
+   "use": "Same 14px ring, 10px gap. Unselected: ring #A3A3A3. Selected: ring and dot #9CD2FF (highlight-blue-light). Disabled unselected: ring #A3A3A3 with a #515151 (grey-dark) fill. Disabled selected: ring and dot #A3A3A3. All labels #D5DAF4 (dark-label-text, style Dark/Label-Text-#D5DAF4). Shown on a loose rectangle #393944.",
+   "html": "<div style=\"background:#393944;padding:16px;display:inline-flex;flex-direction:column;gap:18px;font-family:'Open Sans',sans-serif;font-size:12px;line-height:16px;color:#D5DAF4\"><div style=\"display:flex;align-items:center;gap:10px\"><b style=\"position:relative;width:12px;height:12px;border:1px solid #A3A3A3;border-radius:50%;background:transparent\"></b>Unselected</div><div style=\"display:flex;align-items:center;gap:10px\"><b style=\"position:relative;width:12px;height:12px;border:1px solid #9CD2FF;border-radius:50%;background:transparent\"><i style=\"position:absolute;left:2.5px;top:2.5px;width:7px;height:7px;border-radius:50%;background:#9CD2FF\"></i></b>Selected</div><div style=\"display:flex;align-items:center;gap:10px\"><b style=\"position:relative;width:12px;height:12px;border:1px solid #A3A3A3;border-radius:50%;background:#515151\"></b>Disabled</div><div style=\"display:flex;align-items:center;gap:10px\"><b style=\"position:relative;width:12px;height:12px;border:1px solid #A3A3A3;border-radius:50%;background:transparent\"><i style=\"position:absolute;left:2.5px;top:2.5px;width:7px;height:7px;border-radius:50%;background:#A3A3A3\"></i></b>Selected Disabled</div></div>",
+   "flags": [
+    "Disabled labels are #D5DAF4, the same as default, so disabled text is not dimmed in dark theme.",
+    "Selected, Disabled and Disabled-Selected use instances of 'Radio/Dark/Initial/No/Yes', 'Radio/Dark/Disabled/No/No', 'Radio/Dark/Disabled/No/Yes' (3344:3697, 3344:3702, 3344:3707). Those main components are no longer on the canvas (parent is null) — orphaned sources.",
+    "Dark Unselected has no 'Radio' wrapper frame, unlike every other variant.",
+    "Dark background rectangle 194:58 is #393944 with no style; token dark-bg is #393945."
+   ],
+   "warn": [
+    "Disabled unselected #515151 fill on #393944 is 1.44:1 and reads like a dark filled dot. Selected #9CD2FF on #393944 is 7.1:1 (fine)."
+   ],
+   "rec": "<b>Keep</b> dark theme but rebuild the three variants from local layers, dim disabled labels, and use dark-bg #393945.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · 1.4.11 Non-text contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "props",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Component properties",
+   "node": "3344:3638",
+   "use": "Set 'Radio' has Theme (Light / Dark, default Light), State (Default / Disabled, default Default), Selected (No / Yes, default No), and a boolean Show Label (default true). 8 variants. Horizontal auto layout, gap 10, no padding, centred, hug width, 16 high.",
+   "flags": [
+    "No Focus, Hover or Error state in the set."
+   ],
+   "warn": [
+    "Variant widths come from label text (72–123px), so 'Selected Disabled' is just sample copy."
+   ],
+   "rec": "<b>Add</b> Focus and Error to State before handoff.",
+   "src": [
+    {
+     "label": "Carbon · Radio button usage",
+     "url": "https://carbondesignsystem.com/components/radio-button/usage/"
+    }
+   ]
+  },
+  {
+   "id": "spectral-anatomy",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Spectral sheet (Spacing / Anatomy / Properties)",
+   "node": "5415:16116",
+   "use": "Auto-generated spec sheet. Spacing: gap 10px, radio 14, label 63 wide, total 87. Anatomy: 1 Label, 2 Radio. Properties table lists each variant.",
+   "flags": [
+    "Anatomy says Fill style 'Text/Dark-#404040' but the label actually uses Text/Dark-#313131.",
+    "Line height shows 'undefined%'.",
+    "Properties table shows a 'Focus' state with a blue ring, but no Focus variant exists in the component set.",
+    "Dark theme preview is on a light background, so the label is barely visible."
+   ],
+   "warn": [],
+   "rec": "<b>Outdated</b>. Regenerate after the component is fixed.",
+   "src": []
+  },
+  {
+   "id": "doc-overview",
+   "group": "docs",
+   "k": "note",
+   "name": "Overview",
+   "node": "5416:22035",
+   "use": "'Radio buttons are used for mutually exclusive choices, not for multiple choices. Only one radio button can be selected at a time...' Same text also in the .documentation instance (3344:3749).",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Keep</b>.",
+   "src": [],
+   "def": "keep"
+  },
+  {
+   "id": "doc-when-to-use",
+   "group": "docs",
+   "k": "note",
+   "name": "When to use",
+   "node": "5416:22029",
+   "use": "Two cases: Form (tiles, data tables, modals, side panels, full-page forms) and Settings (switching settings in a menu, page or component; can act as a filter).",
+   "flags": [
+    "The same Form/Settings text is reused as 'Placement & Convention' in the .documentation instance, and the Placement block says nearly the same thing again — three overlapping copies."
+   ],
+   "warn": [],
+   "rec": "<b>Keep</b>, but say it once.",
+   "src": []
+  },
+  {
+   "id": "doc-when-not",
+   "group": "docs",
+   "k": "note",
+   "name": "When not to use",
+   "node": "5416:22023",
+   "use": "If users can pick several options, use checkboxes instead.",
+   "flags": [],
+   "warn": [
+    "Loose text 3370:3644 has more 'use instead' advice (Switch, Select, Button Select). It sits outside every frame."
+   ],
+   "rec": "<b>Keep</b>, and merge in the loose alternatives text.",
+   "src": [
+    {
+     "label": "Fluent 2 · RadioGroup usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/radiogroup/usage"
+    }
+   ]
+  },
+  {
+   "id": "doc-behaviour",
+   "group": "docs",
+   "k": "note",
+   "name": "Behaviour",
+   "node": "5416:22012",
+   "use": "Two states, unselected and selected. Default is no option preselected. Choosing a new item deselects the old one. To let users clear a choice, add an 'other' or 'none' option.",
+   "flags": [],
+   "warn": [
+    "This matches Carbon's guidance almost word for word. Fluent says to preselect an option when it makes sense. Decide which rule V1 follows."
+   ],
+   "rec": "<b>Keep</b>. Confirm the default-selection rule.",
+   "src": [
+    {
+     "label": "Carbon · Radio button usage",
+     "url": "https://carbondesignsystem.com/components/radio-button/usage/"
+    },
+    {
+     "label": "Fluent 2 · RadioGroup usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/radiogroup/usage"
+    }
+   ]
+  },
+  {
+   "id": "doc-placement",
+   "group": "docs",
+   "k": "note",
+   "name": "Placement & Convention",
+   "node": "5416:22007",
+   "use": "Often used in forms on a full page, modal or side panel, and for settings or picking one item in a data table. The .documentation instance adds: 'Always provide a label for a radio button' and 'Present the options in a logical order for the best context.'",
+   "flags": [
+    "Repeats the When to use content."
+   ],
+   "warn": [
+    "The heading is spelled 'Placement &Convention' (missing space)."
+   ],
+   "rec": "<b>Keep</b> the two bullet rules. Drop the repeated text.",
+   "src": []
+  },
+  {
+   "id": "doc-example-empty",
+   "group": "docs",
+   "k": "note",
+   "name": "Example block (empty)",
+   "node": "5416:22013",
+   "use": "1024x286 grey panel with pins 1 and 2, but no example content.",
+   "flags": [
+    "Empty: the numbered pins point at nothing."
+   ],
+   "warn": [],
+   "rec": "<b>Add</b> a real example or remove the block.",
+   "src": []
+  },
+  {
+   "id": "doc-do-dont-empty",
+   "group": "docs",
+   "k": "note",
+   "name": "Do / Don't (empty)",
+   "node": "5416:21987",
+   "use": "Do (5416:21987) and Don't (5416:21972) panels have only their status tags. No images or text.",
+   "flags": [
+    "Both panels are empty."
+   ],
+   "warn": [],
+   "rec": "<b>Add</b> content (e.g. label every option, don't use for multi-select) or remove.",
+   "src": []
+  },
+  {
+   "id": "doc-variation-empty",
+   "group": "docs",
+   "k": "note",
+   "name": ".documentation 'Variation Examples' (empty)",
+   "node": "3344:3749",
+   "use": "Older .documentation instance at the top of the page. Left side has Overview / Uses / Placement. Right panel 'Variation Examples' is empty.",
+   "flags": [
+    "Duplicates the newer 'Radio Buttons' section docs, and the Variation Examples panel is empty."
+   ],
+   "warn": [],
+   "rec": "<b>Outdated</b>. Keep one doc source (the section) and retire this instance.",
+   "src": []
+  },
+  {
+   "id": "loose-bg-rect",
+   "group": "loose",
+   "k": "note",
+   "name": "Loose dark background rectangle",
+   "node": "194:58",
+   "use": "297x547 rectangle, #393944, no style, sitting behind the dark column of the component set.",
+   "flags": [
+    "Not part of the component; hardcoded #393944 (token dark-bg is #393945)."
+   ],
+   "warn": [],
+   "rec": "<b>Skip</b>. Give the set a styled dark panel instead.",
+   "src": []
+  },
+  {
+   "id": "loose-alt-text",
+   "group": "loose",
+   "k": "note",
+   "name": "Loose 'use instead' text",
+   "node": "3370:3644",
+   "use": "'If there are two options showing an on/off setting, consider using Switch. For lists with more than ten options, consider using a Select. When there are only two or three options with short labels, consider using a Button Select.' 16px text outside all frames.",
+   "flags": [
+    "Stray text node with useful guidance that isn't in any doc block."
+   ],
+   "warn": [],
+   "rec": "<b>Keep</b> the copy; move it into When not to use.",
+   "src": []
+  },
+  {
+   "id": "gap-focus",
+   "group": "gaps",
+   "k": "gap",
+   "name": "No focus state",
+   "node": "3344:3638",
+   "use": "V1 has no focus variant. Carbon lists focus as a standard state. The Spectral sheet shows a Focus ring that does not exist in the component.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> a Focus state with a visible ring.",
+   "src": [
+    {
+     "label": "Carbon · Radio button usage",
+     "url": "https://carbondesignsystem.com/components/radio-button/usage/"
+    }
+   ]
+  },
+  {
+   "id": "gap-error-group",
+   "group": "gaps",
+   "k": "gap",
+   "name": "No error / group label / helper text",
+   "node": "3344:3638",
+   "use": "Only single radios exist. Carbon offers a group label, helper text, and error, warning and read-only states at group level. Ant has Radio.Group with group-wide disable and vertical layout.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> a Radio Group with label, helper and error.",
+   "src": [
+    {
+     "label": "Carbon · Radio button usage",
+     "url": "https://carbondesignsystem.com/components/radio-button/usage/"
+    },
+    {
+     "label": "Ant Design · Radio",
+     "url": "https://ant.design/components/radio"
+    }
+   ]
+  },
+  {
+   "id": "gap-keyboard",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Keyboard behaviour not documented",
+   "node": "5416:22012",
+   "use": "Docs don't cover keyboard use. Standard: Tab moves into the group onto the checked (or first) option; arrow keys move and select; Space selects. The group needs a label (radiogroup role).",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> a keyboard note to Behaviour.",
+   "src": [
+    {
+     "label": "WAI-ARIA APG · Radio group pattern",
+     "url": "https://www.w3.org/WAI/ARIA/apg/patterns/radio/"
+    },
+    {
+     "label": "Carbon · Radio button usage",
+     "url": "https://carbondesignsystem.com/components/radio-button/usage/"
+    }
+   ]
+  },
+  {
+   "id": "gap-target-contrast",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Small target and light ring (note)",
+   "node": "3344:3639",
+   "use": "Control is 14px and the row is 16px high, below the 24x24 minimum unless spacing exempts it or the label is clickable. Ring #A3A3A3 on white is 2.52:1, below 3:1. Selected #0076DD on white is 4.53:1 (passes).",
+   "flags": [],
+   "warn": [
+    "Accessibility pass is deferred; note only."
+   ],
+   "rec": "<b>Later</b>. Make the label part of the hit area and darken the ring.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · 2.5.8 Target size (minimum)",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+    },
+    {
+     "label": "WCAG 2.2 · 1.4.11 Non-text contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-layout",
+   "group": "gaps",
+   "k": "gap",
+   "name": "No group layout or size options",
+   "node": "3344:3638",
+   "use": "No guidance on vertical vs horizontal stacking or spacing between options. Fluent prefers vertical stacking for scanning. Ant offers sizes and vertical layout.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Later</b>. Define stack direction and row gap.",
+   "src": [
+    {
+     "label": "Fluent 2 · RadioGroup usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/radiogroup/usage"
+    },
+    {
+     "label": "Ant Design · Radio",
+     "url": "https://ant.design/components/radio"
+    }
+   ]
+  }
+ ],
+ "spacing": [
+  10,
+  14,
+  7,
+  16
+ ],
+ "radius": [],
+ "newTextStyles": [
+  "Label/Regular/Normal (Open Sans Regular 12, line height Auto) — not a type class; nearest is type-12-regular 12/17"
+ ],
+ "notReadable": []
+}
