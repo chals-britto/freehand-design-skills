@@ -240,6 +240,7 @@ function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").s
 document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
 {let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
 </script>
+<script src="nav.js"></script>
 <script src="flag.js"></script>
 </body>
 </html>
