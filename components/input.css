@@ -1,0 +1,429 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Inputs
+   Figma: DS V2 – Atoms › 🟡 Inputs (page 0:1)
+     · component set "Input - Text" (7:2) — 46 variants
+     · component set "Input - Dropdown Select" (3535:3521) — 28 variants
+     · component set "Text Area" (3352:3688) — 1 variant
+   Info icon + tooltip from 11396:3213 (icon) and Tooltip (243:236, Style=Text).
+   Reviewed 2026-10-22 (batch A). Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Light field ─────────────────────────────────────────────── */
+  --input-bg:               var(--white);
+  --input-border:           var(--border-input-light);     /* #E2EAEC */
+  --input-border-active:    var(--pando-blue);             /* #0076DD  Active / Open */
+  --input-border-hover:     var(--border-blue-grey);       /* #B5C3CB  Inline hover (dashed) */
+  --input-error-bg:         var(--accent-error-red-light); /* #FFF8F9 */
+  --input-error:            var(--action-red);             /* #E25757  border + label */
+  --input-disabled-bg:      color-mix(in srgb, var(--grey-light) 30%, transparent); /* Opacity/E7E7E7-Light-30 */
+  --input-label:            var(--text-medium);            /* #545454 */
+  --input-placeholder:      var(--text-light);             /* #6C6C6C */
+  --input-value:            var(--text-dark);              /* #313131 */
+  --input-value-disabled:   var(--text-medium);            /* #545454 */
+  --input-select-text:      var(--text-medium);            /* "Select" / "Search" in dropdowns */
+  --input-muted:            #9C9C9C;  /* off-token in Figma — prefix "$", disabled dropdown text + arrow */
+  --input-required:         var(--action-red);             /* "*" */
+  --input-arrow:            var(--pando-dark);             /* #234357 */
+  --input-icon:             var(--grey-medium);            /* #A3A3A3 search glyph */
+  --input-calendar:         var(--dark-light);             /* #343440 calendar glyph */
+
+  /* Tags inside the field */
+  --input-tag-bg:           var(--pando-light);            /* #EEF2F4 */
+  --input-tag-bg-disabled:  var(--border-input-light);     /* #E2EAEC */
+  --input-tag-text:         var(--text-dark);
+  --input-tag-close:        var(--grey-dark);              /* #515151 */
+  --input-tag-count-border: var(--border-input-light);
+  --input-selected-icon:    var(--action-green);           /* #91C38A Search Tag selected */
+
+  /* Condition */
+  --input-condition-label:  var(--text-light);
+  --input-condition-select-border: var(--border-grey);     /* #EFEFEF */
+  --input-condition-select-value:  var(--pando-blue);
+
+  /* Formula */
+  --input-formula-label:       var(--pando-dark);
+  --input-formula-result-bg:   var(--status-green-light);  /* #D5F9D1 Tag Small Green */
+  --input-formula-placeholder: #737373;  /* off-token in Figma — style is named "Text/Light-#B4B4B4" */
+  --input-formula-plain:       #404040;  /* off-token in Figma — syntax colour for arguments */
+  --input-formula-fn:          var(--status-blue-dark);    /* #0D204A */
+  --input-formula-open:        var(--status-violet-medium);/* #7963F8 "(" */
+  --input-formula-string:      var(--action-red);          /* #E25757 */
+  --input-formula-var:         var(--dark-highlight-green);/* #1FCD93 */
+  --input-formula-close:       var(--status-blue-medium);  /* #6397F8 ")" */
+
+  /* Info icon + tooltip (review change, from 11396:3213 and Tooltip 243:236) */
+  --input-info-bg:          var(--pando-light);
+  --input-info-glyph:       var(--text-dark);
+  --input-tooltip-bg:       rgb(0 0 0 / .8);  /* off-token in Figma — Opacity/#000000-Light-80% */
+  --input-tooltip-fg:       var(--white);
+
+  /* Messages (added in review — not in Figma for light inputs) */
+  --input-message:          var(--text-light);
+  --input-message-error:    var(--action-red);
+
+  /* Open lists */
+  --input-menu-bg:          var(--white);
+  --input-menu-shadow:      var(--shadow-3);  /* Dropdown Light on Input - Dropdown Select */
+  --input-menu-shadow-text: var(--shadow-4);  /* Dropdown Light / list on Input - Text */
+  --input-menu-shadow-up:   0 -2px 14px rgb(0 0 0 / .10); /* DropUp: shadow-3 mirrored */
+  --input-option-text:      var(--text-dark);
+  --input-option-hover-bg:  var(--accent-light-highlight);  /* #E9F1F5 */
+  --input-option-selected-bg: var(--accent-alternate-white);/* #F9FAFA */
+  --input-option-selected:  var(--pando-blue);
+  --input-searchmenu-border: var(--border-grey);
+  --input-searchmenu-shadow: var(--shadow-2);
+
+  /* Small Active: cancel / confirm buttons (Button · Dual Icon · Small) */
+  --input-cancel-bg:        var(--grey-light);
+  --input-cancel-glyph:     var(--grey-dark);
+  --input-confirm-bg:       var(--pando-blue);
+  --input-confirm-glyph:    var(--white);
+
+  /* ── Dark (sidebar) ──────────────────────────────────────────── */
+  --input-dark-surface:     var(--dark-bg);           /* #393945 */
+  --input-dark-label:       var(--dark-label-text);   /* #D5DAF4 */
+  --input-dark-field-bg:    #484858;  /* off-token in Figma — Dark/Input BG */
+  --input-dark-field-bg-disabled: rgb(72 72 88 / .5); /* off-token in Figma — Opacity/484858-Dark-50 */
+  --input-dark-placeholder: var(--border-input-light);/* #E2EAEC (a border style used as text) */
+  --input-dark-value:       var(--white);
+  --input-dark-disabled-text: var(--accent-alternate-white); /* #F9FAFA */
+  --input-dark-error-bg:    var(--status-red-light);  /* #FFEAEE */
+  --input-dark-error:       var(--action-red);
+  --input-dark-error-message: var(--status-red-light);/* #FFEAEE */
+  --input-dark-select-text: var(--accent-blue-grey);  /* #CBD4D8 "Select" */
+  --input-dark-select-error: var(--accent-red-medium);/* #D26568 */
+  --input-dark-arrow:       var(--dark-input-text);   /* #8A8A9E */
+  --input-dark-select-disabled: color-mix(in srgb, var(--dark-input-text) 50%, transparent); /* Opacity/#8A8A9E-Dark-50% */
+  --input-dark-icon:        var(--grey-medium);       /* calendar on dark dropdown */
+  --input-dark-tag-bg:      var(--dark-input-text);
+  --input-dark-tag-text:    var(--accent-alternate-white);
+  --input-dark-tag-close:   var(--border-blue);
+  --input-dark-menu-bg:     var(--dark-darker);       /* #24242F */
+  --input-dark-option:      var(--white);
+  --input-dark-option-selected: var(--highlight-blue-light); /* #9CD2FF */
+  --input-dark-scroll:      var(--dark-light);
+  --input-dark-textarea-border: var(--dark-bg);
+  --input-dark-count:       color-mix(in srgb, var(--dark-label-text) 60%, transparent);
+  --input-dark-required:    var(--accent-red-medium);
+
+  /* ── Measured from the components ────────────────────────────── */
+  --input-h: 60px;            /* Default, Inline, Tag, Search Tag, Dropdown */
+  --input-h-small: 52px;      /* Small (100) */
+  --input-h-compact: 36px;    /* Condition, Formula box */
+  --input-h-nolabel: 30px;    /* Dropdown No Label */
+  --input-pad: var(--space-10);
+  --input-pad-small-y: 8px;
+  --input-gap: var(--space-10);        /* label row ↔ input row; icon ↔ text */
+  --input-gap-small: 6px;
+  --input-label-gap: var(--space-2);   /* label ↔ "*" */
+  --input-condition-gap: 8px;          /* prefix ↔ value (text); 10 on dropdown */
+  --input-formula-gap: 5px;            /* header ↔ box */
+  --input-icon-size: 10px;
+  --input-arrow-w: 8px; --input-arrow-h: 5px;
+  --input-info-size: 12px;
+  --input-tags-top: 28px;
+  --input-tag-pad: 4px 8px;
+  --input-tag-pad-small: 4px 10px;
+  --input-tag-radius: var(--radius-12);
+  --input-tag-gap: var(--space-10);
+  --input-tag-inner-gap: 4px;
+  --input-msg-gap: 3px;                /* field ↔ message (dark text input uses 3) */
+  --input-menu-pad-b: 5px;
+  --input-option-h: 36px;
+  --input-option-h-multi: 52px;
+  --input-action-size: 24px;
+
+  --input-dark-label-w: 140px;
+  --input-dark-gap: 20px;
+  --input-dark-select-gap: 10px;
+  --input-dark-field-h: 20px;
+  --input-dark-field-pad: 2px 5px;
+  --input-dark-radius: 2px;
+  --input-dark-menu-radius: 4px;
+
+  --input-tooltip-w: 164px;
+  --input-tooltip-pad: var(--space-10);
+  --input-tooltip-gap: 4px;
+  --input-tooltip-radius: 4px;
+  --input-tooltip-beak-w: 16px;
+  --input-tooltip-beak-h: 8px;
+  --input-tooltip-beak-offset: 24px;   /* beak centre from the bubble's right edge (Beak = 5:00) */
+
+  --input-focus-ring: 2px solid var(--pando-blue); /* added in review */
+}
+
+/* ── Wrapper ─────────────────────────────────────────────────────── */
+.pds-input {
+  --_w: 200px;
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--input-msg-gap);
+  width: var(--_w);
+  max-width: 100%;
+  font-family: var(--font-family);
+  color: var(--input-value);
+  vertical-align: top;
+}
+.pds-input *, .pds-input *::before, .pds-input *::after { box-sizing: border-box; }
+.pds-input--w100 { --_w: 100px; }  .pds-input--w200 { --_w: 200px; }
+.pds-input--w225 { --_w: 225px; }  .pds-input--w250 { --_w: 250px; }
+.pds-input--w310 { --_w: 310px; }  .pds-input--w400 { --_w: 400px; }
+.pds-input--w600 { --_w: 600px; }  .pds-input--wauto { --_w: auto; }
+
+/* ── Field box (light) ───────────────────────────────────────────── */
+.pds-input__box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--input-gap);
+  height: var(--input-h);
+  padding: calc(var(--input-pad) - 1px); /* Figma strokes are inside: 1px border + 9px = 10px to content */
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 0;
+  cursor: text;
+}
+.pds-input__head { display: flex; align-items: center; gap: var(--input-label-gap); min-width: 0; padding-right: calc(var(--input-info-size) + 4px); }
+.pds-input__label {
+  font: var(--type-10-regular); letter-spacing: 0; text-transform: uppercase;
+  color: var(--input-label); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;
+}
+.pds-input__req { font: var(--type-10-regular); letter-spacing: 0; color: var(--input-required); }
+.pds-input__row { display: flex; align-items: center; gap: var(--input-gap); min-width: 0; flex: 1; }
+.pds-input__control, .pds-input__value {
+  flex: 1; min-width: 0; margin: 0; padding: 0; border: 0; background: none; outline: none;
+  font: var(--type-12-semibold); color: var(--input-value);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;
+}
+.pds-input__control::placeholder { font-weight: 400; color: var(--input-placeholder); opacity: 1; }
+.pds-input__value.is-placeholder { font: italic 400 12px/17px var(--font-family); color: var(--input-select-text); }
+button.pds-input__control { cursor: pointer; display: flex; align-items: center; gap: var(--input-gap); }
+.pds-input__icon { flex: none; width: var(--input-icon-size); height: var(--input-icon-size); color: var(--input-icon); }
+.pds-input__icon--calendar { color: var(--input-calendar); }
+.pds-input__arrow { flex: none; width: var(--input-arrow-w); height: var(--input-arrow-h); color: var(--input-arrow); margin-left: auto; }
+.pds-input__arrow.is-faded { opacity: .5; }  /* Dropdown Standard Empty/Filled: arrow at 50% */
+.pds-input__clear { position: absolute; right: var(--input-pad); top: 37px; width: 12px; height: 12px; padding: 0; border: 0; background: none; color: var(--input-tag-close); cursor: pointer; }
+
+/* States — static classes mirror the Figma variants; real inputs get them from :focus-within / :hover */
+.pds-input--active .pds-input__box,
+.pds-input--open .pds-input__box,
+.pds-input--focus .pds-input__box,
+.pds-input__box:focus-within { border-color: var(--input-border-active); }
+.pds-input--error .pds-input__box { background: var(--input-error-bg); border-color: var(--input-error); }
+.pds-input--error .pds-input__label { color: var(--input-error); }
+.pds-input--disabled .pds-input__box { background: var(--input-disabled-bg); border-color: var(--input-border); cursor: not-allowed; }
+.pds-input--disabled .pds-input__control, .pds-input--disabled .pds-input__value { color: var(--input-value-disabled); cursor: not-allowed; }
+.pds-input--disabled .pds-input__control::placeholder { color: var(--input-placeholder); }
+/* Read-only — added in review, not in Figma: looks like Filled, stays focusable, no Active border */
+.pds-input--readonly .pds-input__box:focus-within { border-color: var(--input-border); }
+.pds-input--readonly .pds-input__box { cursor: default; }
+/* Focus — added in review, not in Figma */
+.pds-input--focus .pds-input__box,
+.pds-input__box:has(.pds-input__control:focus-visible) { outline: var(--input-focus-ring); outline-offset: 2px; }
+
+/* Small (100) */
+.pds-input--small .pds-input__box { height: var(--input-h-small); padding: calc(var(--input-pad-small-y) - 1px) calc(var(--input-pad) - 1px); gap: var(--input-gap-small); }
+.pds-input--small .pds-input__info { top: var(--input-pad-small-y); }
+.pds-input__actions { position: absolute; left: 100%; top: 1px; display: flex; flex-direction: column; gap: var(--space-2); }
+.pds-input__action { width: var(--input-action-size); height: var(--input-action-size); display: grid; place-items: center; border: 0; padding: 0; cursor: pointer; }
+.pds-input__action svg { width: 12px; height: 12px; }
+.pds-input__action--cancel { background: var(--input-cancel-bg); color: var(--input-cancel-glyph); }
+.pds-input__action--confirm { background: var(--input-confirm-bg); color: var(--input-confirm-glyph); }
+
+/* Inline (250): no border until hover; hover/active border is dashed 3/3 */
+.pds-input--inline .pds-input__box { border-color: transparent; }
+.pds-input--inline .pds-input__box:hover,
+.pds-input--inline.pds-input--hover .pds-input__box { border: 1px dashed var(--input-border-hover); }
+.pds-input--inline .pds-input__box:focus-within,
+.pds-input--inline.pds-input--active .pds-input__box { border: 1px dashed var(--input-border-active); }
+.pds-input--inline.pds-input--error .pds-input__box { border-color: transparent; }
+.pds-input--inline.pds-input--disabled .pds-input__box { border-color: transparent; }
+.pds-input--inline.pds-input--disabled .pds-input__control { color: var(--input-placeholder); }
+
+/* Tags (Tag Input, Multi-Tag, Search Tag) */
+.pds-input__tags { position: absolute; left: var(--input-pad); top: var(--input-tags-top); right: var(--input-pad); display: flex; align-items: center; gap: var(--input-tag-gap); overflow: hidden; }
+.pds-input__tags--after-icon { left: 30px; }
+.pds-input__tags--edge { left: 8px; }
+.pds-input__tag {
+  flex: none; display: inline-flex; align-items: center; gap: var(--input-tag-inner-gap);
+  height: 24px; padding: var(--input-tag-pad); border-radius: var(--input-tag-radius);
+  background: var(--input-tag-bg); color: var(--input-tag-text);
+  font: var(--type-12-regular); white-space: nowrap;
+}
+.pds-input__tag-x { width: 12px; height: 12px; padding: 0; border: 0; background: none; color: var(--input-tag-close); cursor: pointer; display: grid; place-items: center; }
+.pds-input__tag-x svg { width: 12px; height: 12px; }
+.pds-input--disabled .pds-input__tag { background: var(--input-tag-bg-disabled); }
+.pds-input__count { flex: none; display: inline-flex; align-items: center; height: 22px; padding: 4px 10px; border: 2px solid var(--input-tag-count-border); border-radius: var(--input-tag-radius); font: var(--type-10-semibold); letter-spacing: 0; color: var(--input-tag-text); }
+.pds-input__chip { /* Search Tag "Name" — Input Tag, Remove = No */
+  position: absolute; right: var(--input-pad); top: 8px; height: 20px; padding: var(--input-tag-pad-small);
+  border-radius: var(--input-tag-radius); background: var(--input-tag-bg); color: var(--input-tag-text);
+  font: var(--type-10-regular); display: inline-flex; align-items: center;
+}
+.pds-input__selected { position: absolute; right: var(--input-pad); top: 36px; width: 14px; height: 14px; color: var(--input-selected-icon); }
+.pds-input--tags .pds-input__control.is-hidden { opacity: 0; }
+
+/* Condition (auto width): label outside, compact box */
+.pds-input--condition .pds-input__head { padding-right: 0; }
+.pds-input--condition .pds-input__label { text-transform: none; color: var(--input-condition-label); }
+.pds-input--condition { gap: var(--space-2); }
+.pds-input--condition .pds-input__box { height: var(--input-h-compact); flex-direction: row; align-items: center; gap: var(--input-condition-gap); }
+.pds-input__prefix { flex: none; font: var(--type-12-semibold); color: var(--input-muted); }
+.pds-input--condition .pds-input__control::placeholder { font-style: italic; }
+.pds-input--condition .pds-input__control { field-sizing: content; min-width: 4ch; flex: none; }
+.pds-input--condition.pds-input--select .pds-input__box { gap: var(--input-gap); border-color: var(--input-condition-select-border); background: var(--input-disabled-bg); }
+.pds-input--condition.pds-input--select.pds-input--open .pds-input__box { background: var(--input-bg); border-color: var(--input-condition-select-border); }
+.pds-input--condition.pds-input--select .pds-input__value,
+.pds-input--condition.pds-input--select.pds-input--filled .pds-input__value { color: var(--input-condition-select-value); flex: none; }
+.pds-input--condition.pds-input--select.pds-input--disabled .pds-input__value { color: var(--input-value-disabled); }
+.pds-input--condition.pds-input--select.pds-input--disabled .pds-input__arrow { color: var(--input-muted); }
+
+/* Formula (600) */
+.pds-input--formula { gap: var(--input-formula-gap); }
+.pds-input__fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--input-gap); height: 15px; }
+.pds-input--formula .pds-input__label { font: var(--type-12-semibold); text-transform: none; color: var(--input-formula-label); }
+.pds-input__result { display: inline-flex; align-items: center; gap: 4px; font: var(--type-10-semibold); letter-spacing: 0; text-transform: uppercase; color: var(--input-formula-label); }
+.pds-input__result-tag { padding: .5px 2px; border-radius: var(--space-2); background: var(--input-formula-result-bg); font: var(--type-10-regular); letter-spacing: 0; text-transform: none; color: var(--input-value); }
+.pds-input--formula .pds-input__box { height: var(--input-h-compact); }
+.pds-input--formula .pds-input__control::placeholder { color: var(--input-formula-placeholder); }
+.pds-input__formula { font: var(--type-12-semibold); color: var(--input-formula-plain); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pds-input__formula .fn { color: var(--input-formula-fn); } .pds-input__formula .po { color: var(--input-formula-open); }
+.pds-input__formula .str { color: var(--input-formula-string); } .pds-input__formula .var { color: var(--input-formula-var); }
+.pds-input__formula .pc { color: var(--input-formula-close); }
+
+/* Dropdown Select */
+.pds-input--select .pds-input__box { cursor: pointer; }
+.pds-input--select .pds-input__value { font-weight: 600; color: var(--input-select-text); }
+.pds-input--select.pds-input--filled .pds-input__value { color: var(--input-value); }
+.pds-input--select.pds-input--disabled .pds-input__value { color: var(--input-value-disabled); }
+.pds-input--select.pds-input--disabled .pds-input__value.is-placeholder { color: var(--input-muted); }
+.pds-input--select.pds-input--disabled .pds-input__arrow { color: var(--input-muted); }
+.pds-input--select .pds-input__value.is-placeholder { font-weight: 400; }
+.pds-input--select.pds-input--tags .pds-input__row { align-items: flex-end; }
+.pds-input--nolabel .pds-input__box { height: var(--input-h-nolabel); padding-top: 6px; padding-bottom: 6px; }
+.pds-input--nolabel .pds-input__value.is-placeholder { color: var(--input-value); }
+.pds-input__caret { flex: none; width: 10px; height: 8px; color: var(--input-arrow); margin-left: auto; }
+.pds-input--open .pds-input__caret { transform: rotate(180deg); }
+
+/* Open lists */
+.pds-input__menu {
+  position: absolute; left: 0; top: 100%; z-index: 20;
+  width: var(--_mw, 100%); margin: 0; padding: 0 0 var(--input-menu-pad-b); list-style: none;
+  background: var(--input-menu-bg); box-shadow: var(--input-menu-shadow);
+}
+.pds-input__menu[hidden] { display: none; }
+.pds-input--condition .pds-input__menu { --_mw: 200px; }
+.pds-input--text-menu .pds-input__menu { box-shadow: var(--input-menu-shadow-text); }
+.pds-input--dropup .pds-input__menu { top: auto; bottom: 100%; box-shadow: var(--input-menu-shadow-up); }
+.pds-input__option {
+  display: flex; align-items: center; gap: var(--input-gap); height: var(--input-option-h); padding: var(--input-pad);
+  font: var(--type-12-semibold); color: var(--input-option-text); background: var(--input-menu-bg); cursor: pointer;
+}
+.pds-input__option:hover, .pds-input__option.is-hover, .pds-input__option.is-active { background: var(--input-option-hover-bg); }
+.pds-input__option[aria-selected="true"] { background: var(--input-option-selected-bg); color: var(--input-option-selected); }
+.pds-input__option--multi { height: var(--input-option-h-multi); }
+.pds-input__option-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.pds-input__option-sub { font: var(--type-10-regular); color: var(--input-option-text); }
+.pds-input__option .pds-input__tag { padding: var(--input-tag-pad-small); }
+.pds-input__menu--search { box-shadow: var(--input-searchmenu-shadow); border: 1px solid var(--input-searchmenu-border); padding: 0; }
+.pds-input__menu--search .pds-input__option { height: 28px; padding: 6px 10px; font: var(--type-12-regular); color: var(--input-placeholder); }
+.pds-input__menu--search .pds-input__option.is-active { background: var(--input-disabled-bg); color: var(--input-label); }
+.pds-input__menu--stub {
+  height: var(--_mh, 428px); display: grid; place-items: center; padding: 16px; text-align: center;
+  font: var(--type-11-regular); color: var(--input-placeholder); box-shadow: var(--input-menu-shadow-text);
+}
+
+/* ── Info icon + tooltip (review change · Figma 11396:3213 + Tooltip Style=Text) ── */
+.pds-input__info {
+  position: absolute; top: var(--input-pad); right: var(--input-pad);
+  width: var(--input-info-size); height: var(--input-info-size); padding: 0; border: 0; border-radius: 50%;
+  background: none; cursor: help; display: block;
+}
+.pds-input__info svg { display: block; width: 100%; height: 100%; }
+.pds-input__info:focus-visible { outline: var(--input-focus-ring); outline-offset: 2px; }
+.pds-input__tip {
+  position: absolute; z-index: 30;
+  bottom: calc(100% + var(--input-tooltip-beak-h));
+  right: calc(var(--input-info-size) / 2 - var(--input-tooltip-beak-offset));
+  width: var(--input-tooltip-w); padding: var(--input-tooltip-pad);
+  display: flex; flex-direction: column; gap: var(--input-tooltip-gap);
+  background: var(--input-tooltip-bg); color: var(--input-tooltip-fg); border-radius: var(--input-tooltip-radius);
+  text-align: left; pointer-events: none; cursor: default;
+}
+.pds-input__tip[hidden] { display: none; }
+.pds-input__tip::after { /* beak, Beak = 5:00 */
+  content: ""; position: absolute; top: 100%;
+  right: calc(var(--input-tooltip-beak-offset) - var(--input-tooltip-beak-w) / 2);
+  border-left: calc(var(--input-tooltip-beak-w) / 2) solid transparent;
+  border-right: calc(var(--input-tooltip-beak-w) / 2) solid transparent;
+  border-top: var(--input-tooltip-beak-h) solid var(--input-tooltip-bg);
+}
+.pds-input__tip-title { font: var(--type-12-semibold); margin: 0; }
+.pds-input__tip-text { font: var(--type-12-regular); margin: 0; }
+
+/* ── Helper / error message (added in review — not in Figma for light) ── */
+.pds-input__message { margin: 0; font: var(--type-11-regular); color: var(--input-message); }
+.pds-input--error .pds-input__message { color: var(--input-message-error); }
+
+/* ════ Dark theme (sidebar) ═══════════════════════════════════════ */
+.pds-input--dark { --_w: 310px; flex-direction: row; flex-wrap: wrap; align-items: flex-start; column-gap: var(--input-dark-gap); row-gap: var(--input-msg-gap); color: var(--input-dark-value); }
+.pds-input--dark .pds-input__head { width: var(--input-dark-label-w); flex: none; padding: 2px 0 0; }
+.pds-input--dark .pds-input__label { font: var(--type-12-regular); letter-spacing: .5px; color: var(--input-dark-label); }
+.pds-input--dark .pds-input__box {
+  flex: 1; min-width: 0; height: var(--input-dark-field-h); padding: var(--input-dark-field-pad);
+  flex-direction: row; align-items: center; gap: var(--input-gap);
+  background: var(--input-dark-field-bg); border: 0; border-radius: var(--input-dark-radius);
+}
+.pds-input--dark .pds-input__control { font: var(--type-12-semibold); letter-spacing: .5px; color: var(--input-dark-value); }
+.pds-input--dark .pds-input__control::placeholder { color: var(--input-dark-placeholder); }
+.pds-input--dark .pds-input__icon--calendar { color: var(--input-calendar); }
+.pds-input--dark .pds-input__box:focus-within { box-shadow: none; }
+.pds-input--dark.pds-input--disabled .pds-input__head { opacity: .75; }
+.pds-input--dark.pds-input--disabled .pds-input__box { background: var(--input-dark-field-bg-disabled); }
+.pds-input--dark.pds-input--disabled .pds-input__control { color: var(--input-dark-disabled-text); opacity: .74; }
+.pds-input--dark.pds-input--disabled .pds-input__control::placeholder { color: var(--input-dark-disabled-text); }
+.pds-input--dark.pds-input--error .pds-input__box { background: var(--input-dark-error-bg); box-shadow: inset 0 0 0 .5px var(--input-dark-error); }
+.pds-input--dark.pds-input--error .pds-input__control { font-weight: 400; color: var(--input-dark-error); }
+.pds-input--dark.pds-input--error .pds-input__label { color: var(--input-dark-label); }
+.pds-input--dark .pds-input__message { flex-basis: 100%; text-align: right; font: var(--type-10-regular); color: var(--input-dark-error-message); }
+.pds-input--dark.pds-input--error .pds-input__message { color: var(--input-dark-error-message); }
+
+/* Dark Dropdown Select: no box */
+.pds-input--dark.pds-input--select { column-gap: var(--input-dark-select-gap); row-gap: 6px; }
+.pds-input--dark.pds-input--select .pds-input__head { padding: 0; }
+.pds-input--dark.pds-input--select .pds-input__box { height: 16px; padding: 0; background: none; }
+.pds-input--dark.pds-input--select .pds-input__value { font: var(--type-12-semibold); letter-spacing: .5px; color: var(--input-dark-select-text); }
+.pds-input--dark.pds-input--select.pds-input--filled .pds-input__value { color: var(--input-dark-value); }
+.pds-input--dark.pds-input--select.pds-input--error .pds-input__box { background: none; box-shadow: none; }
+.pds-input--dark.pds-input--select.pds-input--error .pds-input__value { color: var(--input-dark-select-error); }
+.pds-input--dark.pds-input--select.pds-input--disabled .pds-input__head { opacity: 1; }
+.pds-input--dark.pds-input--select.pds-input--disabled .pds-input__box { background: none; }
+.pds-input--dark.pds-input--select.pds-input--disabled .pds-input__value { color: var(--input-dark-select-disabled); }
+.pds-input--dark.pds-input--select.pds-input--disabled .pds-input__arrow { color: var(--input-dark-select-disabled); }
+.pds-input--dark .pds-input__arrow { color: var(--input-dark-arrow); }
+.pds-input--dark.pds-input--select .pds-input__icon--calendar { color: var(--input-dark-icon); }
+.pds-input--dark.pds-input--right .pds-input__head { width: auto; }
+.pds-input--dark.pds-input--right .pds-input__box { flex: none; margin-left: auto; }
+.pds-input--dark .pds-input__tag { background: var(--input-dark-tag-bg); color: var(--input-dark-tag-text); }
+.pds-input--dark .pds-input__tag .pds-input__tag-x { color: var(--input-dark-tag-close); }
+.pds-input--dark .pds-input__menu {
+  --_mw: 242px; left: auto; right: 0; top: 22px; display: flex; gap: 11px;
+  padding: 10px 5px 10px 15px; border-radius: var(--input-dark-menu-radius); background: var(--input-dark-menu-bg); box-shadow: none;
+}
+.pds-input__dlist { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.pds-input__dopt { display: flex; align-items: center; gap: 5px; padding-left: 15px; font: var(--type-12-regular); color: var(--input-dark-option); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.pds-input__dopt[aria-selected="true"] { padding-left: 0; color: var(--input-dark-option-selected); }
+.pds-input__dopt svg { flex: none; width: 10px; height: 8px; margin-left: auto; }
+.pds-input__dscroll { flex: none; width: 6px; height: 80px; border-radius: 8px; background: var(--input-dark-scroll); }
+
+/* Dark Text Area */
+.pds-input--textarea .pds-input__box {
+  height: 60px; padding: calc(var(--input-pad) - 1px); background: var(--input-dark-field-bg);
+  border: 1px solid var(--input-dark-textarea-border); border-radius: var(--input-dark-radius);
+}
+.pds-input--textarea .pds-input__label { color: var(--input-dark-label); }
+.pds-input--textarea .pds-input__req { color: var(--input-dark-required); }
+.pds-input--textarea .pds-input__control { font: var(--type-12-regular); color: var(--input-dark-value); resize: none; height: 16px; }
+.pds-input--textarea .pds-input__control::placeholder { color: var(--input-dark-value); }
+.pds-input__tacount { position: absolute; right: var(--input-pad); top: var(--input-pad); font: var(--type-8-regular); color: var(--input-dark-count); }

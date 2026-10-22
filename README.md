@@ -17,6 +17,6 @@ Library (living reference): https://claude.ai/artifact/GwQoWeEqK3NnC5tpVEMjMB
 - [x] Step 1 Foundations — tokens.css (colours, roles, gradients, type, 1 shadow)
 - [ ] Spacing / radius / elevation 2–4 / state colours — measured from components
 - [x] Step 2 Atoms — Toast (components/toast.*)
-- [ ] Step 2 Atoms — remaining 20 pages
+- [x] Step 2 Atoms — all 17 built as spec pages (Alerts page empty in Figma); Tooltip partial
 - [x] Step 3 Skill — skill/SKILL.md, linked at ~/.claude/skills/pando-ds-v1
 - [ ] Accessibility pass (after the system is complete)

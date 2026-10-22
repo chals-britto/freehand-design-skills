@@ -1,0 +1,224 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Range
+   Figma: DS V2 – Atoms › Range page (3224:2928). Three published sets:
+     · "Range"       (3235:3847)  single handle · Theme × Spacing     → .pds-range
+     · "Slider "     (8568:2053)  two handles, Pando blue fill         → .pds-range--slider
+     · "Dual Range"  (8570:1364)  two handles, light blue fill          → .pds-range--dual
+   The three sets do the same job; picking one is an open issue.
+   No review decisions: everything published is built as in Figma.
+   Requires ../tokens.css. Behaviour (drag, click-to-jump, keys) in range.js.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Thumb (shared by all three sets) ─────────────────────────── */
+  --range-thumb-bg:        var(--accent-alternate-white); /* #F9FAFA */
+  --range-thumb-border:    var(--dark-input-text);        /* #8A8A9E — a dark-theme token, used on light too */
+  --range-thumb-size:      14px;
+  --range-thumb-size-dark: 20px;
+  --range-caret:           var(--pando-blue);             /* #0076DD */
+  --range-caret-dark:      var(--gradient-forest-green);  /* #006265 → #19A476 gradient */
+  --range-caret-w:         3px;
+  --range-caret-h:         5px;
+  --range-caret-gap:       4px;
+  --range-caret-w-dark:    4.5px;
+  --range-caret-h-dark:    8px;
+  --range-caret-gap-dark:  5.6px;
+
+  /* ── Range (single handle) · Light ────────────────────────────── */
+  --range-light-label:          var(--text-dark);          /* #313131 */
+  --range-light-unit:           var(--text-medium);        /* #545454 */
+  --range-light-track:          var(--border-input-light); /* #E2EAEC */
+  --range-light-tick:           var(--border-blue-grey);   /* #B5C3CB */
+  --range-light-scale:          var(--text-light);         /* #6C6C6C */
+  --range-light-scale-selected: var(--text-dark);          /* #313131, semibold */
+
+  /* ── Range (single handle) · Dark ─────────────────────────────── */
+  --range-dark-label:           var(--white);
+  --range-dark-unit:            var(--border-blue-grey);   /* #B5C3CB */
+  --range-dark-track:           var(--grey-dark);          /* #515151 */
+  --range-dark-tick:            var(--border-blue-grey);   /* #B5C3CB */
+  --range-dark-scale:           var(--border-blue-grey);   /* #B5C3CB */
+  --range-dark-scale-selected:  var(--dark-highlight-green); /* #1FCD93, regular weight */
+
+  /* Range measurements */
+  --range-track-h:       8px;
+  --range-track-radius:  9px;
+  --range-tick-pad-x:    2px;
+  --range-label-gap:     5px;   /* label ↔ unit */
+  --range-gap-light:     10px;  /* label row ↔ track, track ↔ scale */
+  --range-gap-dark:      15px;  /* label row ↔ track (track ↔ scale stays 10 + 2px rail padding) */
+
+  /* ── Slider (two handles, Pando blue) ─────────────────────────── */
+  --range-slider-track:  var(--border-input-light);       /* #E2EAEC */
+  --range-slider-fill:   var(--pando-blue);               /* #0076DD */
+  --range-slider-dot:    var(--accent-off-white);         /* #F8F8F8 */
+  --range-slider-scale:  #667085;                         /* off-token in Figma ('Gray Text' style) */
+
+  /* ── Dual Range (two handles, light blue) ─────────────────────── */
+  --range-dual-track:    var(--border-input-light);       /* #E2EAEC */
+  --range-dual-fill:     var(--highlight-blue-light);     /* #9CD2FF */
+  --range-dual-dot:      var(--accent-off-white);         /* #F8F8F8 */
+  --range-dual-scale:    var(--text-light);               /* #6C6C6C */
+}
+
+/* ── Range (single handle) ─────────────────────────────────────── */
+/* Geometry per variant:
+   --_w      component width        --_track-x / --_track-w / --_track-h  track box
+   --_c0     x of the min value (thumb centre at min)
+   --_span   px from min to max     --a  value as 0–1 (set by range.js) */
+.pds-range {
+  --_w: 200px; --_track-x: 0px; --_track-w: 200px; --_track-h: var(--range-track-h);
+  --_c0: 6px; --_span: 182px; --_rail-pad: 0px;
+  --_thumb: var(--range-thumb-size);
+  --_caret: var(--range-caret); --_caret-w: var(--range-caret-w); --_caret-h: var(--range-caret-h); --_caret-gap: var(--range-caret-gap);
+  --_label: var(--range-light-label); --_unit: var(--range-light-unit);
+  --_track: var(--range-light-track); --_tick: var(--range-light-tick); --_tick-size: 3px;
+  --_scale: var(--range-light-scale); --_scale-sel: var(--range-light-scale-selected); --_scale-sel-font: var(--type-10-semibold);
+  --_gap: var(--range-gap-light); --_label-align: center;
+  box-sizing: border-box;
+  width: var(--_w);
+  display: flex;
+  flex-direction: column;
+  gap: var(--_gap);
+  font-family: var(--font-family);
+  -webkit-user-select: none; user-select: none;
+}
+.pds-range *, .pds-range *::before { box-sizing: border-box; }
+
+/* Theme */
+.pds-range--light { /* defaults above */ }
+.pds-range--dark {
+  --_w: 310px; --_track-x: 5px; --_track-w: 300px; --_c0: 10px; --_span: 290px; --_rail-pad: 2px;
+  --_thumb: var(--range-thumb-size-dark);
+  --_caret: var(--range-caret-dark); --_caret-w: var(--range-caret-w-dark); --_caret-h: var(--range-caret-h-dark); --_caret-gap: var(--range-caret-gap-dark);
+  --_label: var(--range-dark-label); --_unit: var(--range-dark-unit);
+  --_track: var(--range-dark-track); --_tick: var(--range-dark-tick); --_tick-size: 4px;
+  --_scale: var(--range-dark-scale); --_scale-sel: var(--range-dark-scale-selected); --_scale-sel-font: var(--type-10-regular);
+  --_gap: var(--range-gap-dark); --_label-align: flex-start;
+}
+/* Spacing (= tick density: Tight 21 ticks, Loose 5) */
+.pds-range--light.pds-range--loose { --_track-x: 4.5px; --_track-w: 191px; --_track-h: 9px; --_span: 184px; }  /* Figma: 191×9, not 200×8 */
+.pds-range--dark.pds-range--tight  { --_w: 307px; --_track-x: 0px; --_span: 284px; --_tick-size: 3px; }
+
+.pds-range__label-row { display: flex; align-items: var(--_label-align); gap: var(--range-label-gap); }
+.pds-range__label { font: var(--type-12-regular); color: var(--_label); }
+.pds-range__unit  { font: var(--type-10-regular); letter-spacing: .5px; color: var(--_unit); }
+
+.pds-range__body { display: flex; flex-direction: column; gap: var(--range-gap-light); }
+.pds-range__rail {
+  position: relative;
+  width: var(--_w);
+  padding: var(--_rail-pad) 0;
+  touch-action: none;
+  cursor: pointer;
+}
+.pds-range__track {
+  position: relative;
+  margin-left: var(--_track-x);
+  width: var(--_track-w);
+  height: var(--_track-h);
+  border-radius: var(--range-track-radius);
+  background: var(--_track);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--range-tick-pad-x);
+}
+/* No filled (active) segment on the Range set — as in Figma. */
+.pds-range__tick {
+  flex: none;
+  width: var(--_tick-size); height: var(--_tick-size);
+  border-radius: 50%;
+  background: var(--_tick);
+}
+
+/* Scale: labels spread across the full width */
+.pds-range__scale { display: flex; justify-content: space-between; width: var(--_w); }
+.pds-range__scale-item { font: var(--type-10-regular); letter-spacing: 0; color: var(--_scale); }
+.pds-range__scale-item--selected { font: var(--_scale-sel-font); letter-spacing: 0; color: var(--_scale-sel); }
+
+/* ── Thumb (all sets) ──────────────────────────────────────────── */
+.pds-range__thumb {
+  position: absolute;
+  top: calc(50% - var(--_thumb) / 2);
+  left: calc(var(--_c0) + var(--a, 0) * var(--_span) - var(--_thumb) / 2);
+  width: var(--_thumb); height: var(--_thumb);
+  border-radius: 50%;
+  background: var(--range-thumb-bg);
+  border: 1px solid var(--range-thumb-border);
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--_caret-gap);
+  cursor: grab;
+  touch-action: none;
+}
+.pds-range__thumb--b { left: calc(var(--_c0) + var(--b, 0) * var(--_span) - var(--_thumb) / 2); }
+.pds-range__thumb.is-dragging { cursor: grabbing; }
+/* Focus: added in review — not in Figma */
+.pds-range__thumb:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; }
+
+/* Carets "‹ ›" — chevrons cut from the caret fill (solid or gradient) */
+.pds-range__caret {
+  flex: none;
+  width: var(--_caret-w); height: var(--_caret-h);
+  background: var(--_caret);
+  clip-path: polygon(62% 0, 100% 16%, 42% 50%, 100% 84%, 62% 100%, 0 50%);
+}
+.pds-range__caret--next { transform: scaleX(-1); }
+
+/* ── Slider (two handles, Pando blue fill) ─────────────────────── */
+/* --_pitch = distance between dots. Two published widths:
+   16 dots / pitch 24 / 374 wide (with scale 0–14) · 6 dots / pitch 54 / 324 wide. */
+.pds-range--slider, .pds-range--dual {
+  --_thumb: var(--range-thumb-size);
+  --_caret: var(--range-caret); --_caret-w: var(--range-caret-w); --_caret-h: var(--range-caret-h); --_caret-gap: var(--range-caret-gap);
+  gap: 0;
+}
+.pds-range--slider {
+  --_w: 324px; --_c0: 7px; --_pitch: 54px; --_span: 270px;
+  --_track: var(--range-slider-track); --_fill: var(--range-slider-fill);
+  --_dot: var(--range-slider-dot); --_dot-x: 5px; --_dot-gap: 50px;
+  --_scale: var(--range-slider-scale); --_scale-gap: 2px;
+}
+.pds-range--slider.pds-range--steps-16 { --_w: 374px; --_pitch: 24px; --_span: 360px; --_dot-gap: 20px; }
+
+/* ── Dual Range (two handles, light blue fill) ─────────────────── */
+.pds-range--dual {
+  --_w: 334px; --_c0: 8px; --_pitch: 20px; --_span: 320px;
+  --_track: var(--range-dual-track); --_fill: var(--range-dual-fill);
+  --_dot: var(--range-dual-dot); --_dot-x: 6px; --_dot-gap: 16px;   /* = 12px cells, 8px apart, dot centred */
+  --_scale: var(--range-dual-scale); --_scale-gap: 4px;
+}
+
+.pds-range--slider .pds-range__rail, .pds-range--dual .pds-range__rail { height: var(--range-thumb-size); padding: 0; }
+.pds-range--slider .pds-range__track, .pds-range--dual .pds-range__track {
+  position: absolute; top: 3px; left: 0;
+  margin: 0; width: var(--_w); height: var(--range-track-h);
+  border-radius: 999px;          /* Figma radius 1000 */
+  background: var(--_track);
+  justify-content: flex-start;
+  gap: var(--_dot-gap);
+  padding: 0 0 0 var(--_dot-x);
+  overflow: hidden;
+}
+.pds-range--dual .pds-range__track { left: 2px; width: 332px; border-radius: 8px; }
+.pds-range--slider .pds-range__tick, .pds-range--dual .pds-range__tick { width: 4px; height: 4px; background: var(--_dot); position: relative; z-index: 1; }
+
+.pds-range__fill {
+  position: absolute; top: 0; height: 100%;
+  left: calc(var(--_c0) + var(--a, 0) * var(--_span) - var(--_track-left, 0px));
+  width: calc((var(--b, 0) - var(--a, 0)) * var(--_span));
+  border-radius: 999px;
+  background: var(--_fill);
+}
+.pds-range--dual .pds-range__fill { --_track-left: 2px; }
+
+/* Scale under the dots: one cell per dot, centred */
+.pds-range__count {
+  display: flex;
+  margin-top: var(--_scale-gap);
+  margin-left: calc(var(--_c0) - var(--_pitch) / 2);
+}
+.pds-range__count-item {
+  flex: none; width: var(--_pitch); text-align: center;
+  font: var(--type-10-regular); letter-spacing: .5px; color: var(--_scale);
+}

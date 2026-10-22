@@ -1,0 +1,220 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Dropdown (menu)
+   Figma: DS V2 – Atoms › Dropdown page (3240:3865)
+     · Published component "Filter Dropdown Options" (4466:5808)
+     · Loose frames kept in review: multi-select list (3240:3961),
+       two-line depot list (3240:4042), scrollbar instance (3240:3960)
+   Reviewed 2026-10-22. Requires ../tokens.css.
+   This is the OPEN MENU only. The closed field is "Input – Dropdown Select"
+   on the Inputs page (3535:3521) — not part of this file.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colours exactly as Figma uses them ───────────────────────── */
+  --dropdown-option-fg:        #404040;                   /* off-token in Figma (nearest --text-dark #313131) */
+  --dropdown-option-selected:  var(--pando-blue);         /* #0076DD */
+  --dropdown-option-disabled:  var(--text-disabled);      /* added in review — not in Figma */
+  --dropdown-placeholder:      var(--text-light);         /* #6C6C6C "Search for Depot" */
+  --dropdown-caret:            var(--pando-blue);         /* 17px line under the placeholder */
+  --dropdown-search-bg:        rgb(255 255 255 / .9);     /* white @ 90% */
+  --dropdown-search-divider:   #C8CED5;                   /* off-token in Figma (nearest --border-blue-grey) */
+  --dropdown-search-shadow:    0 4.75px 17.8px rgb(0 0 0 / .08); /* off-token in Figma (not --shadow-1..4) */
+  --dropdown-list-bg:          rgb(255 255 255 / .8);     /* white @ 80% */
+  --dropdown-list-shadow:      0 4px 4px rgb(182 182 182 / .25); /* off-token in Figma: #B6B6B6 @ 25% */
+  --dropdown-blur:             42px;                      /* background blur on search + list */
+  --dropdown-group-bg:         var(--pando-light);        /* #EEF2F4 */
+  --dropdown-group-fg:         var(--text-light);         /* #6C6C6C */
+  --dropdown-empty-fg:         var(--text-light);         /* added in review — not in Figma */
+
+  /* Rich panel (multi-select / two-line lists, from the loose frames) */
+  --dropdown-panel-bg:         var(--white);
+  --dropdown-panel-shadow:     0 14px 29px rgb(189 189 189 / .4); /* off-token in Figma: #BDBDBD @ 40% */
+  --dropdown-row-selected-bg:  var(--accent-off-white);   /* #F8F8F8 */
+  --dropdown-check:            var(--pando-blue);
+  --dropdown-icon-region-bg:   var(--status-purple-light);/* #F2E7FE */
+  --dropdown-icon-region-fg:   var(--pando-dark);         /* #234357 location glyph */
+  --dropdown-icon-depot-bg:    #D7F3F6;                   /* off-token in Figma */
+  --dropdown-icon-depot-fg:    #006064;                   /* off-token in Figma (nearest --status-cyan-dark #006265) */
+  --dropdown-secondary-fg:     #737373;                   /* off-token in Figma (nearest --text-light) */
+
+  /* Scrollbar (Scrollbar / Theme=Light instance) */
+  --dropdown-scroll-track:     var(--accent-off-white);   /* #F8F8F8 */
+  --dropdown-scroll-thumb:     var(--grey-light);         /* #E7E7E7 handle */
+  --dropdown-scroll-width:     6px;
+  --dropdown-scroll-radius:    8px;
+
+  /* ── Measured ─────────────────────────────────────────────────── */
+  --dropdown-width:            150px;
+  --dropdown-radius:           2px;
+  --dropdown-search-height:    32px;
+  --dropdown-caret-width:      17px;
+  --dropdown-group-pad:        5px var(--space-10);       /* 5 / 10 */
+  --dropdown-options-pad:      var(--space-10);           /* 10 */
+  --dropdown-options-gap:      8px;
+  --dropdown-max-height:       264px;                     /* added in review: = published list height; longer lists scroll */
+
+  --dropdown-panel-width:      400px;
+  --dropdown-panel-max-height: 280px;                     /* rows frame in 3240:3961 */
+  --dropdown-panel-pad-top:    5px;
+  --dropdown-row-pad:          5px var(--space-10);       /* single-line row, 40px tall */
+  --dropdown-row-pad-2:        var(--space-10);           /* two-line row, 56px tall */
+  --dropdown-row-gap:          var(--space-10);
+  --dropdown-row-icon:         30px;
+  --dropdown-row-glyph:        14px;
+  --dropdown-row-text-gap:     6px;
+  --dropdown-check-size:       12px;
+}
+
+/* ── Menu (published "Filter Dropdown Options") ─────────────────── */
+.pds-dropdown {
+  box-sizing: border-box;
+  width: var(--dropdown-width);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family);
+}
+.pds-dropdown[hidden] { display: none; }
+
+/* Search header */
+.pds-dropdown__search {
+  position: relative;
+  box-sizing: border-box;
+  height: var(--dropdown-search-height);
+  background: var(--dropdown-search-bg);
+  border-radius: var(--dropdown-radius);
+  border-bottom: .5px solid var(--dropdown-search-divider);
+  box-shadow: var(--dropdown-search-shadow);
+  -webkit-backdrop-filter: blur(var(--dropdown-blur));
+  backdrop-filter: blur(var(--dropdown-blur));
+}
+.pds-dropdown__search-input {
+  box-sizing: border-box;
+  width: 100%; height: 100%;
+  margin: 0; border: 0; outline: 0; background: none;
+  padding: 0 var(--space-10);
+  font: var(--type-14-regular);
+  color: var(--color-text-primary);
+}
+.pds-dropdown__search-input::placeholder { color: var(--dropdown-placeholder); opacity: 1; }
+/* The 17px blue line Figma draws under the first letters (x 9, y 24) */
+.pds-dropdown__search::after {
+  content: "";
+  position: absolute; left: 9px; top: 24px;
+  width: var(--dropdown-caret-width); height: 1px;
+  background: var(--dropdown-caret);
+  pointer-events: none;
+}
+
+/* List */
+.pds-dropdown__list {
+  display: flex;
+  flex-direction: column;
+  max-height: var(--dropdown-max-height);   /* added in review */
+  overflow-y: auto;
+  background: var(--dropdown-list-bg);
+  border-radius: var(--dropdown-radius);
+  box-shadow: var(--dropdown-list-shadow);
+  -webkit-backdrop-filter: blur(var(--dropdown-blur));
+  backdrop-filter: blur(var(--dropdown-blur));
+}
+.pds-dropdown__group {
+  flex: none;
+  padding: var(--dropdown-group-pad);
+  background: var(--dropdown-group-bg);
+  color: var(--dropdown-group-fg);
+  font: var(--type-10-semibold);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.pds-dropdown__options {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dropdown-options-gap);
+  padding: var(--dropdown-options-pad);
+}
+.pds-dropdown__option {
+  font: var(--type-12-regular);
+  color: var(--dropdown-option-fg);
+  cursor: pointer;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pds-dropdown__option[aria-selected="true"],
+.pds-dropdown__option--selected {
+  color: var(--dropdown-option-selected);
+  font-weight: 600;
+}
+/* added in review — not in Figma */
+.pds-dropdown__option[aria-disabled="true"],
+.pds-dropdown__option--disabled {
+  color: var(--dropdown-option-disabled);
+  cursor: not-allowed;
+}
+.pds-dropdown__option[hidden], .pds-dropdown__group[hidden], .pds-dropdown__options[hidden] { display: none; }
+
+/* Empty / loading message — added in review, not in Figma */
+.pds-dropdown__empty {
+  padding: var(--dropdown-options-pad);
+  font: var(--type-12-regular);
+  color: var(--dropdown-empty-fg);
+}
+.pds-dropdown__empty[hidden] { display: none; }
+
+/* ── Rich panel: multi-select & two-line lists (loose frames, kept) ── */
+.pds-dropdown--panel { width: var(--dropdown-panel-width); }
+.pds-dropdown--panel .pds-dropdown__list {
+  max-height: var(--dropdown-panel-max-height);
+  padding-top: var(--dropdown-panel-pad-top);
+  background: var(--dropdown-panel-bg);
+  box-shadow: var(--dropdown-panel-shadow);
+  border-radius: 0;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.pds-dropdown__row {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--dropdown-row-gap);
+  padding: var(--dropdown-row-pad);
+  cursor: pointer;
+}
+.pds-dropdown__row--two-line { padding: var(--dropdown-row-pad-2); }
+.pds-dropdown__row[aria-selected="true"] { background: var(--dropdown-row-selected-bg); }
+.pds-dropdown__row[aria-disabled="true"] { cursor: not-allowed; }
+.pds-dropdown__row[aria-disabled="true"] .pds-dropdown__row-title { color: var(--dropdown-option-disabled); }
+.pds-dropdown__row[hidden] { display: none; }
+
+.pds-dropdown__row-icon {
+  flex: none;
+  width: var(--dropdown-row-icon); height: var(--dropdown-row-icon);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--dropdown-icon-region-bg);
+  color: var(--dropdown-icon-region-fg);
+}
+.pds-dropdown__row-icon svg { width: var(--dropdown-row-glyph); height: var(--dropdown-row-glyph); display: block; }
+.pds-dropdown__row-icon--depot { background: var(--dropdown-icon-depot-bg); color: var(--dropdown-icon-depot-fg); }
+
+.pds-dropdown__row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--dropdown-row-text-gap); }
+.pds-dropdown__row-title {
+  font: var(--type-12-semibold);
+  color: var(--dropdown-option-fg);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pds-dropdown__row-sub {
+  font: var(--type-10-regular);
+  color: var(--dropdown-secondary-fg);
+}
+.pds-dropdown__check {
+  flex: none;
+  width: var(--dropdown-check-size); height: var(--dropdown-check-size);
+  color: var(--dropdown-check);
+  visibility: hidden;
+}
+.pds-dropdown__row[aria-selected="true"] .pds-dropdown__check { visibility: visible; }
+
+/* ── Scrollbar (Scrollbar / Theme=Light) ─────────────────────────── */
+.pds-dropdown__list { scrollbar-width: thin; scrollbar-color: var(--dropdown-scroll-thumb) var(--dropdown-scroll-track); }
+.pds-dropdown__list::-webkit-scrollbar { width: var(--dropdown-scroll-width); }
+.pds-dropdown__list::-webkit-scrollbar-track { background: var(--dropdown-scroll-track); border-radius: var(--dropdown-scroll-radius); }
+.pds-dropdown__list::-webkit-scrollbar-thumb { background: var(--dropdown-scroll-thumb); border-radius: var(--dropdown-scroll-radius); }

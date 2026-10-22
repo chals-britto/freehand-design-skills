@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Status · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="status.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* status page additions */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.vgrid.st{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px 20px}
+.vgrid.dark-stage{background:var(--dark-bg);border-color:var(--dark-darker)}
+.vgrid.dark-stage .lbl{color:var(--dark-label-text)}
+.vhead{font:600 13px var(--pg-ui);margin:18px 0 8px}
+.redline-st{position:relative;width:560px;margin:40px auto 48px;height:200px}
+.redline-st .pds-status{position:absolute;left:0;top:30px;transform:scale(4);transform-origin:top left}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.order{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.order .n{font:500 11px var(--pg-mono);color:var(--pg-muted)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Status</h1>
+    <p class="lede">Presents information as to what is the current status of an item. Can also add additional context and information with the help of icons.</p>
+    <div class="meta"><span>Status: Built from Figma 2026-10-23 · not yet reviewed</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=270-188" target="_blank" rel="noopener">Figma component 270:188 ↗</a><span>Files: status.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">36 variants in Figma: Light × 9 colours × (Horizontal Default, Horizontal Small, Vertical Default) and Dark × 9 colours × Horizontal Default. Sample text is Figma’s.</p>
+<div class="vhead">Theme=Light · Layout=Horizontal · Size=Default</div><div class="panel vgrid st" id="v-lhd"></div>
+<div class="vhead">Theme=Light · Layout=Horizontal · Size=Small</div><div class="panel vgrid st" id="v-lhs"></div>
+<div class="vhead">Theme=Light · Layout=Vertical · Size=Default</div><div class="panel vgrid st" id="v-lvd"></div>
+<div class="vhead">Theme=Dark · Layout=Horizontal · Size=Default <span class="ex-note">(shown on <code>--dark-bg</code>)</span></div><div class="panel vgrid st dark-stage" id="v-dhd"></div>
+<div class="vhead">Without icon strip <span class="ex-note">(<code>.Base</code> “Show Icons” off)</span></div><div class="panel vgrid st" id="v-noicon"></div>
+</section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma component, drawn at 4× size.</p>
+<div class="panel"><div class="spec"><div class="redline-st" id="rl"></div></div>
+<div class="spec-table">
+  <div><b>Width</b><code>140px</code> Default · <code>107px</code> Small</div>
+  <div><b>Height</b><code>20px</code> Horizontal · <code>42px</code> Vertical</div>
+  <div><b>Label padding</b><code>2px 5px</code></div>
+  <div><b>Corner radius</b><code>2px</code></div>
+  <div><b>Label</b><code>.type-12-semibold</code> · uppercase · line-height <code>16px</code> · centred</div>
+  <div><b>Icon</b><code>14px</code> · label colour</div>
+  <div><b>Icon strip · Horizontal</b><code>23×20</code> · padding <code>3 4 3 5</code> · radius <code>0 2 2 0</code></div>
+  <div><b>Icon strip · Vertical</b><code>140×23</code> · padding <code>5 4 4 4</code> · gap <code>2</code> · radius <code>0 0 2 2</code></div>
+  <div><b>Label ↔ strip</b><code>−1px</code> overlap (Light) · <code>0</code> (Dark)</div>
+  <div><b>Strip fill</b>Light: colour bg @ 20% · Dark: <code>--pando-dark</code> @ 20%</div>
+  <div><b>Dark fill</b><code>--dark-bg</code> @ 70%</div>
+  <div><b>Shadow / border</b>none</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Uses</h3><p>The text label updates based on information but they are not clickable or actionable. Keep the text as short as possible (2 words or less).</p></div>
+  <div class="panel card"><h3>Placement &amp; convention</h3><p>Order of Status (In Workflows) in color is as follows:</p><div class="order" id="order" style="margin-top:10px"></div><p class="ex-note" style="margin-top:8px">Figma names “Yellow” as step 3; there is no Yellow variant — Brown is shown. See Open issues.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Text, not colour</h3><p>The label always says the status; colour only supports it. Icons are <code>aria-hidden</code>. If an icon adds meaning (e.g. Sea), add visually-hidden text.</p></div>
+  <div class="panel card"><h3>Not focusable</h3><p>Status is read-only: a <code>&lt;span&gt;</code>, no role, not in the tab order.</p></div>
+  <div class="panel card"><h3>Open for the accessibility pass</h3><p>Light Orange 3.33 : 1 and Red 3.48 : 1 are below 4.5 : 1. Dark on the sidebar: Purple 3.18, Red 3.84, Blue 3.96 : 1. Dark on a white page fails for every colour.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul style="margin:0;padding-left:18px">
+  <li>Doc order lists <b>Yellow</b> (step 3) but there is no Yellow variant; Brown appears to fill the slot.</li>
+  <li>Light Purple Horizontal (Default + Small): fills are raw hex, not linked to the Status/Purple styles (values match).</li>
+  <li>Widths are fixed (140 / 107). Long-label behaviour isn’t defined; built with single-line ellipsis.</li>
+  <li>Dark has only Horizontal Default — no Dark Vertical or Small.</li>
+  <li>Label ↔ icon strip: −1px in Light, 0 in Dark.</li>
+  <li>Line-height: Figma auto (16px) vs <code>.type-12-semibold</code> 17px — overridden to 16px.</li>
+  <li>Contrast below 4.5 : 1: Light Orange 3.33, Light Red 3.48; Dark (on <code>--dark-bg</code>) Purple 3.18, Red 3.84, Blue 3.96.</li>
+  <li>Icons are instance-swaps from 4 icon sets on the Icons page; only the 4 sample icons are embedded here.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>Dismissible, selectable and operational types. <span class="src"><a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a> · <a href="https://ant.design/components/tag" target="_blank" rel="noopener">Ant Design Tag</a></span></li>
+  <li>Truncate long labels and show the full text in a tooltip on hover/focus. <span class="src"><a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a></span></li>
+  <li>Three sizes (V1 has two widths, one height). <span class="src"><a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a></span></li>
+  <li>Filled / solid / outlined variants. <span class="src"><a href="https://ant.design/components/tag" target="_blank" rel="noopener">Ant Design Tag</a></span></li>
+  <li>Sentence-case labels (V1 is uppercase); aria-label for icon-only badges. <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/badge/usage" target="_blank" rel="noopener">Fluent 2 Badge</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include <code>tokens.css</code> and <code>status.css</code>. Modifiers: colour (<code>--purple</code> … <code>--red</code>), <code>--small</code>, <code>--vertical</code>, <code>--dark</code>.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const ICON={
+ sea:'<svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.01806 6.66072V6.78971L11.6126 8.12417L9.66216 3.49393H3.70671L2.13531 8.00272L6.24129 6.76029V6.66072C6.24129 6.45176 6.41529 6.28354 6.62967 6.28354C6.84406 6.28354 7.01806 6.45176 7.01806 6.66072ZM8.67103 9.30024C8.79531 9.30024 8.91649 9.24291 8.99183 9.13579C9.11301 8.9638 9.06796 8.72919 8.89085 8.61227L8.06282 8.06234C7.88572 7.94466 7.64415 7.98841 7.52297 8.16116C7.4018 8.33315 7.44763 8.56776 7.62473 8.68544L8.45198 9.23461C8.51956 9.27912 8.59568 9.30024 8.67103 9.30024ZM4.46637 9.23454L5.2944 8.68537C5.4715 8.56769 5.51655 8.33308 5.39538 8.16109C5.27498 7.98909 5.03341 7.94534 4.85553 8.06227L4.02827 8.61219C3.85117 8.72912 3.80534 8.96372 3.92729 9.13572C4.00186 9.24284 4.12382 9.30017 4.2481 9.30017C4.32344 9.30017 4.39957 9.27904 4.46637 9.23454ZM5.34416 1.9581V2.73961H7.91914C7.91914 2.73631 7.91525 2.72312 7.91525 2.71925V1.9581C7.91525 1.8457 7.82049 1.75443 7.70475 1.75443H5.55389C5.43815 1.75443 5.34416 1.8457 5.34416 1.9581ZM11.6841 11.4343C12.3405 11.5437 13.1211 11.7956 13.8466 12.3297C14.0167 12.4557 14.0509 12.6918 13.9212 12.8578C13.7907 13.0237 13.5475 13.0562 13.3767 12.9309C12.2977 12.1351 10.9508 12.0544 10.47 12.1396C9.96321 12.2301 9.46649 12.389 8.98605 12.5428C7.99479 12.8591 6.98565 13.1812 5.81253 12.9634C5.41172 12.8887 5.03033 12.7454 4.66214 12.6066C3.93195 12.3321 3.30433 12.0963 2.66741 12.4082L0.949983 13.25L0.599662 12.5764L1.74694 12.0136L1.59547 12.0151L0 8.64921L1.21874 8.28033L3.06045 2.99606C3.11405 2.84292 3.26163 2.73958 3.42786 2.73958H4.56815V1.95806C4.56737 1.43001 5.01013 1.00003 5.55386 1.00003H7.70473C8.24924 1.00003 8.69199 1.43001 8.69199 1.95806V2.71921C8.69199 2.72348 8.68767 2.73663 8.68733 2.73958H9.92316C10.0808 2.73958 10.2222 2.83161 10.2828 2.97343L12.5688 8.40178L13.5771 8.69447L11.6841 11.4343ZM5.35123 5.21691H7.90756C8.12195 5.21691 8.29594 5.04794 8.29594 4.83973C8.29594 4.63153 8.12195 4.46255 7.90756 4.46255H5.35123C5.13684 4.46255 4.96284 4.63153 4.96284 4.83973C4.96284 5.04794 5.13684 5.21691 5.35123 5.21691Z"/></svg>',
+ contract:'<svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.6087 2.7012C13.6981 2.66263 13.7978 2.67826 13.8756 2.74206C13.9536 2.80586 14 2.90986 14 3.02087V9.82633C14 10.0144 13.8695 10.1666 13.7083 10.1666H12.8564C12.481 10.1666 12.1366 9.94922 11.92 9.60657L11.1801 10.0841C11.2174 10.4579 11.0856 10.8368 10.7979 11.0934C10.5966 11.2732 10.3715 11.3533 10.1608 11.3307C10.073 11.5606 9.90926 11.7574 9.68682 11.8873C9.44955 12.0262 9.18779 12.0661 8.95994 12.0116C8.84829 12.2911 8.65631 12.521 8.41905 12.643C8.18121 12.7653 7.92544 12.7706 7.68818 12.6619C7.45802 12.8889 7.13017 12.8889 7.00001 12.8889C6.66732 12.8889 6.22982 12.6908 5.98687 12.5047C5.72683 12.3054 4.42116 11.1599 3.3351 10.0992C3.18078 9.94832 2.84018 9.64943 2.5162 9.36513C2.31449 9.18835 2.177 9.06776 2.06093 8.96479C1.84303 9.28673 1.50593 9.48611 1.1436 9.48611H0.291676C0.130457 9.48611 0 9.33391 0 9.14582V2.3403C0 2.22932 0.0464298 2.12532 0.124496 2.06149C0.201961 1.99803 0.302231 1.9824 0.391372 2.02062L2.76916 3.02955C3.06398 3.15448 3.29867 3.40637 3.42998 3.73868C3.49495 3.90329 3.53017 4.07753 3.53632 4.25311C3.7869 4.23528 4.09591 4.2043 4.42289 4.17065C4.94288 4.11718 5.47286 4.06397 5.85215 4.05654C6.79551 3.22903 7.61902 3.15428 8.59197 3.73932C9.34606 4.1926 10.1048 4.47543 10.5131 4.61085C10.5295 4.54548 10.5456 4.48114 10.5701 4.41919C10.7014 4.08691 10.9361 3.83502 11.2309 3.71006L13.6087 2.7012ZM10.1452 10.6187C10.2067 10.6904 10.3451 10.6413 10.4439 10.5529C10.5066 10.497 10.7006 10.2923 10.5608 10.0075C10.3095 9.4954 9.35963 8.58224 8.52165 7.77674C8.0399 7.31351 7.58184 6.87306 7.24018 6.49837C7.03795 6.61535 6.8528 6.69708 6.57852 6.74328C6.25895 7.20619 5.70978 7.44711 5.29536 7.44711C5.09996 7.44711 4.93133 7.39661 4.79461 7.29692C4.55393 7.12146 4.41122 6.86791 4.38131 6.56351C4.31612 5.89474 4.8106 5.18106 5.14319 4.78293C4.92679 4.80258 4.70038 4.82526 4.47417 4.84852C4.07421 4.88967 3.69629 4.92779 3.41282 4.94224L2.32076 8.34021C2.44826 8.45463 2.62127 8.60626 2.80904 8.77071C3.15939 9.07776 3.54221 9.4137 3.70996 9.57787C4.81881 10.6612 6.10285 11.779 6.30735 11.9359C6.4751 12.0645 6.80692 12.2084 7.00005 12.2084C7.04911 12.2084 7.10076 12.2044 7.14995 12.1974C6.70955 11.7124 6.13022 10.996 5.93422 10.7512C5.82427 10.614 5.83053 10.3987 5.94816 10.2704C6.06552 10.1421 6.25067 10.1491 6.36031 10.2867C6.52564 10.4931 7.36621 11.537 7.78506 11.9513C7.94872 12.0924 8.09194 12.0681 8.18352 12.0206C8.3076 11.9567 8.40432 11.8249 8.45179 11.6658C7.96876 11.1631 7.10874 10.0808 7.09917 10.0687C6.99007 9.93047 6.99805 9.71514 7.11653 9.58785C7.23532 9.46089 7.41959 9.46953 7.52869 9.60811C7.72723 9.86 8.60478 10.9479 8.95456 11.2739C9.04403 11.37 9.23885 11.3882 9.42569 11.2789C9.48598 11.2436 9.60471 11.1514 9.63722 11.002C9.20183 10.5397 8.11398 9.21786 7.97847 9.05284C7.86682 8.91726 7.87081 8.70193 7.9873 8.572C8.10324 8.4414 8.28808 8.4464 8.39945 8.5823C8.97679 9.28479 9.91104 10.4 10.1195 10.5921C10.1274 10.6026 10.1394 10.6151 10.1452 10.6187Z"/></svg>',
+ secondary:'<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M6.64301 11.018C7.76301 11.018 8.32301 10.57 8.32301 9.674C8.32301 9.20733 8.07568 8.862 7.58101 8.638C7.31967 8.50734 6.98134 8.386 6.56601 8.274C6.15067 8.162 5.80534 8.04767 5.53001 7.931C5.25467 7.81434 4.97701 7.65334 4.69701 7.448C4.14634 7.03733 3.87101 6.40501 3.87101 5.551C3.87101 4.697 4.16734 4.02501 4.76001 3.535C5.35268 3.045 6.12733 2.8 7.08401 2.8C8.04068 2.8 8.92967 2.99133 9.75101 3.374V5.474L8.32301 5.572V4.76C8.32301 4.62 8.30434 4.51734 8.26701 4.452C8.16434 4.27467 7.83534 4.186 7.28001 4.186C6.72467 4.186 6.31401 4.284 6.04801 4.48C5.782 4.676 5.64901 4.97933 5.64901 5.39C5.64901 5.68867 5.761 5.95 5.98501 6.174C6.13434 6.32334 6.356 6.447 6.65001 6.545C6.94401 6.643 7.25667 6.74334 7.58801 6.846C7.91934 6.94867 8.21334 7.06067 8.47001 7.182C8.72667 7.30334 8.995 7.47134 9.27501 7.686C9.84434 8.10601 10.129 8.75467 10.129 9.632C10.129 10.5093 9.81401 11.2 9.18401 11.704C8.554 12.208 7.72334 12.46 6.69201 12.46C5.66067 12.46 4.73434 12.2687 3.91301 11.886V9.674L5.34101 9.576V10.43C5.34101 10.57 5.35967 10.6727 5.39701 10.738C5.43434 10.8033 5.54867 10.8663 5.74001 10.927C5.93134 10.9877 6.23234 11.018 6.64301 11.018Z"/></svg>',
+ overpack:'<svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.09978 0.5242V4.44245H8.9002V0.5242H11.8434V8.27369H2.15657V0.5242H5.09978Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.48428 0.0982666V3.06704C7.48428 3.30127 7.26743 3.49115 6.99994 3.49115C6.73244 3.49115 6.51559 3.30127 6.51559 3.06704V0.0982666H7.48428Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 10.5C0 10.2239 0.223858 10 0.5 10H13.5C13.7761 10 14 10.2239 14 10.5V14H13V11H1V14H0V10.5Z"/></svg>'
+};
+const COLORS=["purple","maroon","brown","cyan","blue","green","grey","orange","red"];
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+function build(color,{small=false,vertical=false,dark=false,icons=true,text="Status Text"}={}){
+  const el=document.createElement("span");
+  el.className="pds-status pds-status--"+color+(small?" pds-status--small":"")+(vertical?" pds-status--vertical":"")+(dark?" pds-status--dark":"");
+  el.innerHTML='<span class="pds-status__label"></span>'+(icons?'<span class="pds-status__icons">'+(vertical?ICON.contract+ICON.secondary+ICON.overpack:ICON.sea)+'</span>':'');
+  el.firstChild.textContent=text;return el;
+}
+function grid(id,opts,label){const g=$(id);COLORS.forEach(c=>{const d=document.createElement("div");d.className="vcell";d.innerHTML=`<span class="lbl">${label.replace("%",cap(c))}</span>`;d.appendChild(build(c,opts));g.appendChild(d)})}
+grid("#v-lhd",{},"Color=%");
+grid("#v-lhs",{small:true},"Color=%, Size=Small");
+grid("#v-lvd",{vertical:true},"Color=%, Layout=Vertical");
+grid("#v-dhd",{dark:true},"Theme=Dark, Color=%");
+grid("#v-noicon",{icons:false},"Color=%, no icons");
+
+// order
+[["1","purple","START"],["2","maroon",""],["3","brown","Yellow in Figma"],["4","cyan",""],["5","blue",""],["6","green","END"],["Error","red",""],["Neutral","grey",""],["If necessary","orange",""]].forEach(([n,c,t])=>{const w=document.createElement("span");w.className="order";w.innerHTML=`<span class="n">${n}</span>`;w.appendChild(build(c,{icons:false,text:cap(c)}));$("#order").appendChild(w)});
+
+// redline at 4x
+(function(){const r=$("#rl");const s=build("blue");r.appendChild(s);
+ const L=(st,txt)=>{const d=document.createElement("div");d.className="rl";Object.assign(d.style,st);d.textContent=txt;r.appendChild(d)};
+ L({left:"0",top:"6px",width:"560px",borderTop:"1px solid var(--pg-red)",paddingTop:"2px",textAlign:"center"},"140");
+ L({left:"472px",top:"116px",width:"92px",borderTop:"1px solid var(--pg-red)",paddingTop:"2px",textAlign:"center"},"23");
+ L({left:"-34px",top:"30px",height:"80px",borderLeft:"1px solid var(--pg-red)",paddingLeft:"4px",lineHeight:"80px"},"20");
+ L({left:"4px",top:"116px"},"pad 2 / 5 · radius 2");
+ L({left:"480px",top:"140px"},"icon 14 · pad 3 4 3 5");
+})();
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/status.css">
+
+<!-- Light, Horizontal, Default, with one icon -->
+<span class="pds-status pds-status--blue">
+  <span class="pds-status__label">Status Text</span>
+  <span class="pds-status__icons"><svg viewBox="0 0 14 14" aria-hidden="true">…</svg></span>
+</span>
+
+<!-- Small, label only -->
+<span class="pds-status pds-status--green pds-status--small">
+  <span class="pds-status__label">Status Text</span>
+</span>
+
+<!-- Vertical (icons below) · Dark -->
+<span class="pds-status pds-status--purple pds-status--vertical">…</span>
+<span class="pds-status pds-status--red pds-status--dark">…</span>`;
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="flag.js"></script>
+</body>
+</html>

@@ -26,11 +26,30 @@ If it's unclear which, ask before building.
 5. Follow the `build-rules` skill (confirm-before-build, Artifact output, desktop-only, no invented copy).
 
 ## Components in the kit
-| Component | Files | Status |
-|---|---|---|
-| Toast | `components/toast.{css,js,md,html}` | Reviewed 2026-10-22 |
+All Atoms are built (2026-10-23). Each has `components/<id>.css` (+ `.js` if interactive), `<id>.md` (read this first), `<id>.html` (live spec page).
 
-Not yet reviewed (read from Figma when needed): Accordion, Alerts, Avatars, Badges & Callouts, Breadcrumb, Buttons, Icons, Checkbox, Inputs, Dropdown, Radio Buttons, Range, Status, Tags, Scrollbar, Toggle, Tooltips; all Molecules and Organisms.
+| Component | id | JS | Status |
+|---|---|---|---|
+| Toast | `toast` | `pdsToast` | Reviewed |
+| Buttons | `button` | `pdsButton` | Reviewed (Batch A) |
+| Inputs | `input` | `pdsInput` | Reviewed (Batch A) |
+| Dropdown | `dropdown` | `pdsDropdown` | Reviewed (Batch A) — closed trigger = Inputs › Dropdown Select |
+| Checkbox | `checkbox` | `pdsCheckbox` | Reviewed (Batch A) |
+| Radio Buttons | `radio` | native | Reviewed (Batch A) |
+| Toggle (switch, toggle tab, icon tab) | `toggle` | `pdsToggle` | As in Figma |
+| Range (3 slider sets — ask which) | `range` | `pdsRange` | As in Figma |
+| Accordion | `accordion` | `pdsAccordion` | As in Figma |
+| Breadcrumb | `breadcrumb` | — | As in Figma |
+| Badges, Callout, Ribbon | `badge` | — | As in Figma |
+| Avatars | `avatar` | — | As in Figma |
+| Tags | `tag` | — | As in Figma |
+| Status | `status` | — | As in Figma |
+| Tooltips | `tooltip` | `pdsTooltip` | Partial: Custom Content + Map Tracking styles not yet read |
+| Icons (430) | `icons` | manifest `components/icons/icons-data.js`, files `components/icons/*.svg` | As in Figma |
+| Scrollbar | `scrollbar` | — | As in Figma |
+
+Alerts: Figma page is empty — use Toast or Callout (`badge`) and ask.
+"As in Figma" pages have an **Open issues** section; respect it and don't silently fix. Not built yet: Molecules, Organisms (read from Figma when needed).
 
 ## Shipping kit code inside an Artifact
 Artifacts can't reach local files. Either inline the CSS/JS from the repo into the page, or publish them as supporting `files` (e.g. `tokens.css`, `components/toast.css`) and link them relatively. Never retype values by hand.

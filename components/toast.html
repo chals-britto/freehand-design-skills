@@ -91,6 +91,7 @@ pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono
 a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
 @media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -104,9 +105,10 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
   </div>
   <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
 </header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
 <nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#dodont">Do &amp; don’t</a><a href="#a11y">Accessibility</a><a href="#code">Code</a></nav>
 
-<section id="try"><h2>Try it</h2><p class="sub">Toasts appear directly under the header, centred. Newest on top, at most 3, 8px apart. Untick “Persistent” to see the 4-second auto-close; hover to hold it.</p>
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Toasts appear directly under the header, centred. Newest on top, at most 3, 8px apart. Untick “Persistent” to see the 4-second auto-close; hover to hold it.</p>
 <div class="panel play">
   <form class="ctrls" id="ctrls">
     <label>Toast type<select id="c-type"><option value="success">Success</option><option value="error">Error</option><option value="warning">Warning</option><option value="info">Info</option></select></label>
@@ -122,10 +124,10 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
   <div class="stage" id="stage"><div class="fake-hd">Pando <span>Invoices · Disputes · Payments</span></div><div class="stage-note">Example header. In product, set <code>--header-height</code>.</div></div>
 </div></section>
 
-<section id="variants"><h2>Variants</h2><p class="sub">Toast Type × Persistent. Colours exactly as in Figma.</p>
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Toast Type × Persistent. Colours exactly as in Figma.</p>
 <div class="panel vgrid" id="vgrid"></div></section>
 
-<section id="spec"><h2>Spec</h2><p class="sub">Measured from the Figma component, drawn at 2× size.</p>
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma component, drawn at 2× size.</p>
 <div class="panel"><div class="spec" id="spec-box"></div>
 <div class="spec-table">
   <div><b>Width</b><code>404px</code> fixed · height hugs content</div>
@@ -142,7 +144,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
   <div><b>Stack</b>newest on top · max 3 · <code>8px</code></div>
 </div></div></section>
 
-<section id="usage"><h2>Usage</h2>
+<section id="usage" data-flag-area><h2>Usage</h2>
 <div class="cols">
   <div class="panel card"><h3>Placement &amp; convention</h3><p>Placed below the main header and center of the screen. The toast sits directly under the header with no gap.</p></div>
   <div class="panel card"><h3>When not to use</h3><ul><li>For critical information, or anything the person must act on to continue. Use a dialog, a field error or an inline message instead.</li><li>As the only place a message exists. If it matters later, it must also be shown somewhere else (a list, a status, a log).</li></ul><p class="src">Sources: <a href="https://fluent2.microsoft.design/components/web/react/core/toast/usage" target="_blank" rel="noopener">Fluent 2 Toast</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html" target="_blank" rel="noopener">WCAG 2.2.1</a> · <a href="https://carbondesignsystem.com/components/notification/usage/" target="_blank" rel="noopener">Carbon Notification</a></p></div>
@@ -154,17 +156,17 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 </div>
 </section>
 
-<section id="dodont"><h2>Do &amp; don’t</h2><p class="sub">Drawn from the reference systems; each card names its source. Example text is illustrative.</p>
+<section id="dodont" data-flag-area><h2>Do &amp; don’t</h2><p class="sub">Drawn from the reference systems; each card names its source. Example text is illustrative.</p>
 <div class="dd" id="dd"></div></section>
 
-<section id="a11y"><h2>Accessibility</h2>
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
 <div class="cols">
   <div class="panel card"><h3>Announced without moving focus</h3><p>Success and Info use <code>role="status"</code> (read politely). Error and Warning use <code>role="alert"</code> (read immediately). <code>toast.js</code> sets this for you.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html" target="_blank" rel="noopener">WCAG 2.2 · 4.1.3 Status messages</a></p></div>
   <div class="panel card"><h3>Close and action are buttons</h3><p>The × has the label “Close”. Both the × and the action link can be reached with Tab and pressed with Enter or Space.</p></div>
   <div class="panel card"><h3>Open for the accessibility pass</h3><p>White text on Success (4.2 : 1) and Error (3.6 : 1) is below 4.5 : 1. Kept as Figma for now.</p></div>
 </div></section>
 
-<section id="code"><h2>Code</h2><p class="sub">Include the three files, then call <code>pdsToast.show()</code>.</p>
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the three files, then call <code>pdsToast.show()</code>.</p>
 <pre id="code1"></pre>
 <p class="sub" style="margin-top:14px">Static markup (what <code>toast.js</code> produces):</p>
 <pre id="code2"></pre></section>
@@ -233,5 +235,6 @@ function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").s
 document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
 {let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
 </script>
+<script src="flag.js"></script>
 </body>
 </html>

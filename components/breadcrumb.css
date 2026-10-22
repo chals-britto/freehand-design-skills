@@ -1,0 +1,73 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Breadcrumb
+   Figma: DS V2 – Atoms › 🟡 Breadcrumb › component set "Breadcrumb" (3044:1280)
+   Built 2026-10-23 from the published set, every variant Kept (no review
+   file). Requires ../tokens.css. No JS — hover is CSS only.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colours exactly as the Figma variants use them */
+  --breadcrumb-link:           var(--text-medium);          /* #545454  Text/Medium — earlier levels + caret */
+  --breadcrumb-link-hover:     var(--pando-blue-active);    /* #005399  Type=Hover — link + caret */
+  --breadcrumb-current:        var(--pando-blue-active);    /* #005399  Text/Blue Active */
+  --breadcrumb-dropdown-bg:    var(--pando-light);          /* #EEF2F4  Type=Dropdown current */
+  --breadcrumb-dropdown-arrow: var(--pando-dark);           /* #234357 */
+  --breadcrumb-tag-bg:         var(--status-green-light);   /* #D5F9D1  Tag Small · Filled · Green */
+  --breadcrumb-tag-fg:         var(--text-dark);            /* #313131 */
+  --breadcrumb-match-fg:       var(--text-dark);            /* #313131  "3-way match" */
+
+  /* Measured */
+  --breadcrumb-gap: var(--space-10);        /* between every item, caret and slot */
+  --breadcrumb-height: 16px;
+  --breadcrumb-caret-w: 5px;                /* box 5×8, glyph 4×7 */
+  --breadcrumb-caret-h: 8px;
+  --breadcrumb-dropdown-pad: 0 var(--space-10);
+  --breadcrumb-dropdown-arrow-w: 8px;       /* 8×5 */
+  --breadcrumb-dropdown-arrow-h: 5px;
+  --breadcrumb-tag-pad: .5px var(--space-10);
+  --breadcrumb-tag-radius: 2px;
+  --breadcrumb-match-radius: 0 2px 2px 0;
+}
+
+.pds-breadcrumb { font-family: var(--font-family); }
+.pds-breadcrumb__list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; align-items: center; gap: var(--breadcrumb-gap);
+  min-height: var(--breadcrumb-height);
+}
+.pds-breadcrumb__item { display: inline-flex; align-items: center; gap: var(--breadcrumb-gap); color: var(--breadcrumb-link); white-space: nowrap; }
+.pds-breadcrumb__link, .pds-breadcrumb__current {
+  font: var(--type-13-semibold);             /* Figma 13px/Semibold, line-height 16 */
+  color: inherit; text-decoration: none;
+}
+.pds-breadcrumb__sep { flex: none; width: var(--breadcrumb-caret-w); height: var(--breadcrumb-caret-h); color: inherit; }
+.pds-breadcrumb__sep svg, .pds-breadcrumb__arrow svg { display: block; width: 100%; height: 100%; }
+
+/* Type=Hover — the hovered level and its caret turn Blue Active */
+.pds-breadcrumb__item:has(.pds-breadcrumb__link:hover),
+.pds-breadcrumb__item.is-hover { color: var(--breadcrumb-link-hover); }
+
+/* Current page */
+.pds-breadcrumb__item--current { color: var(--breadcrumb-current); }
+
+/* Type=Dropdown — current level sits in a Pando Light box with a solid down arrow */
+.pds-breadcrumb__current--dropdown {
+  display: inline-flex; align-items: center; gap: var(--breadcrumb-gap);
+  padding: var(--breadcrumb-dropdown-pad); margin: 0; border: 0; border-radius: 0;
+  background: var(--breadcrumb-dropdown-bg); cursor: pointer;
+  height: var(--breadcrumb-height);
+}
+.pds-breadcrumb__arrow { flex: none; width: var(--breadcrumb-dropdown-arrow-w); height: var(--breadcrumb-dropdown-arrow-h); color: var(--breadcrumb-dropdown-arrow); }
+
+/* Optional slots after the current level */
+.pds-breadcrumb__tag {                       /* Status — Tag · Small · Filled · Green */
+  font: var(--type-10-semibold); letter-spacing: 0; line-height: normal;
+  color: var(--breadcrumb-tag-fg); background: var(--breadcrumb-tag-bg);
+  padding: var(--breadcrumb-tag-pad); border-radius: var(--breadcrumb-tag-radius);
+}
+.pds-breadcrumb__match {                     /* Match Type — "3-way match" */
+  font: var(--type-10-semibold); line-height: normal; letter-spacing: .5px; text-transform: uppercase;
+  color: var(--breadcrumb-match-fg); border-radius: var(--breadcrumb-match-radius);
+}
+
+/* No focus style in Figma — browser default focus ring is left in place (open issue). */

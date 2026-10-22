@@ -1,0 +1,127 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Status
+   Figma: DS V2 – Atoms › 🟢 Status › component set "#Status" (270:188)
+   Built 2026-10-23 from Figma (no review yet — everything published kept).
+   Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Light theme — Figma: Light step = background, Dark step = label + icon.
+     Grey uses the grey palette, not the Status palette. */
+  --status-purple-bg: var(--color-status-purple-bg);   --status-purple-fg: var(--color-status-purple-text);
+  --status-maroon-bg: var(--color-status-maroon-bg);   --status-maroon-fg: var(--color-status-maroon-text);
+  --status-brown-bg:  var(--color-status-brown-bg);    --status-brown-fg:  var(--color-status-brown-text);
+  --status-cyan-bg:   var(--color-status-cyan-bg);     --status-cyan-fg:   var(--color-status-cyan-text);
+  --status-blue-bg:   var(--color-status-blue-bg);     --status-blue-fg:   var(--color-status-blue-text);
+  --status-green-bg:  var(--color-status-green-bg);    --status-green-fg:  var(--color-status-green-text);
+  --status-grey-bg:   var(--grey-light);               --status-grey-fg:   var(--grey-dark);
+  --status-orange-bg: var(--color-status-orange-bg);   --status-orange-fg: var(--color-status-orange-text);
+  --status-red-bg:    var(--color-status-red-bg);      --status-red-fg:    var(--color-status-red-text);
+
+  /* Dark theme — Figma: one shared background, label + icon use the Medium
+     step (the "border" role in tokens.css). Grey → Grey Light; Orange has no
+     Medium step, so Figma uses Orange Light. */
+  --status-dark-bg:        color-mix(in srgb, var(--dark-bg) 70%, transparent);    /* #393945 @ 70% */
+  --status-dark-icons-bg:  color-mix(in srgb, var(--pando-dark) 20%, transparent); /* #234357 @ 20% */
+  --status-dark-purple-fg: var(--color-status-purple-border);
+  --status-dark-maroon-fg: var(--color-status-maroon-border);
+  --status-dark-brown-fg:  var(--color-status-brown-border);
+  --status-dark-cyan-fg:   var(--color-status-cyan-border);
+  --status-dark-blue-fg:   var(--color-status-blue-border);
+  --status-dark-green-fg:  var(--color-status-green-border);
+  --status-dark-grey-fg:   var(--grey-light);
+  --status-dark-orange-fg: var(--color-status-orange-bg);
+  --status-dark-red-fg:    var(--color-status-red-border);
+
+  /* Light icon strip = the colour's own background at 20% */
+  --status-icons-alpha: 20%;
+
+  /* Measured from the component */
+  --status-width: 140px;          /* Size=Default */
+  --status-width-small: 107px;    /* Size=Small */
+  --status-label-pad-y: var(--space-2);
+  --status-label-pad-x: 5px;
+  --status-label-lh: 16px;        /* Figma "Button/Action-Semibold" = 12px, auto line-height (16px box) */
+  --status-radius: 2px;
+  --status-overlap: -1px;         /* label ↔ icon strip, Figma gap −1 (Light); Dark uses 0 */
+  --status-icon: 14px;
+  --status-icons-pad-h: 3px 4px 3px 5px;  /* Layout=Horizontal */
+  --status-icons-pad-v: 5px 4px 4px 4px;  /* Layout=Vertical */
+  --status-icons-gap: var(--space-2);     /* Vertical: between icons */
+}
+
+/* ── Status ────────────────────────────────────────────────────── */
+.pds-status {
+  --_bg: var(--status-purple-bg); --_fg: var(--status-purple-fg);
+  --_icons-bg: color-mix(in srgb, var(--_bg) var(--status-icons-alpha), transparent);
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: row;           /* Layout=Horizontal */
+  align-items: stretch;
+  width: var(--status-width);
+  font-family: var(--font-family);
+  color: var(--_fg);
+  vertical-align: middle;
+}
+.pds-status *, .pds-status *::before { box-sizing: border-box; }
+
+.pds-status__label {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--status-label-pad-y) var(--status-label-pad-x);
+  background: var(--_bg);
+  border-radius: var(--status-radius);
+  font: var(--type-12-semibold);
+  line-height: var(--status-label-lh);
+  text-transform: uppercase;
+  letter-spacing: 0;             /* Figma style has 0 tracking (the .caps class adds .5px — not used) */
+  text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* long-text behaviour not defined in Figma — see Open issues */
+}
+
+.pds-status__icons {
+  flex: none;
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--space-10);
+  margin-left: var(--status-overlap);
+  padding: var(--status-icons-pad-h);
+  background: var(--_icons-bg);
+  border-radius: 0 var(--status-radius) var(--status-radius) 0;
+}
+.pds-status__icons svg { display: block; width: var(--status-icon); height: var(--status-icon); fill: currentColor; }
+
+/* Size */
+.pds-status--small { width: var(--status-width-small); }
+
+/* Layout=Vertical (Light, Size=Default only in Figma) */
+.pds-status--vertical { flex-direction: column; }
+.pds-status--vertical .pds-status__icons {
+  margin-left: 0; margin-top: var(--status-overlap);
+  padding: var(--status-icons-pad-v);
+  gap: var(--status-icons-gap);
+  border-radius: 0 0 var(--status-radius) var(--status-radius);
+}
+
+/* Colour (Light) */
+.pds-status--purple { --_bg: var(--status-purple-bg); --_fg: var(--status-purple-fg); }
+.pds-status--maroon { --_bg: var(--status-maroon-bg); --_fg: var(--status-maroon-fg); }
+.pds-status--brown  { --_bg: var(--status-brown-bg);  --_fg: var(--status-brown-fg); }
+.pds-status--cyan   { --_bg: var(--status-cyan-bg);   --_fg: var(--status-cyan-fg); }
+.pds-status--blue   { --_bg: var(--status-blue-bg);   --_fg: var(--status-blue-fg); }
+.pds-status--green  { --_bg: var(--status-green-bg);  --_fg: var(--status-green-fg); }
+.pds-status--grey   { --_bg: var(--status-grey-bg);   --_fg: var(--status-grey-fg); }
+.pds-status--orange { --_bg: var(--status-orange-bg); --_fg: var(--status-orange-fg); }
+.pds-status--red    { --_bg: var(--status-red-bg);    --_fg: var(--status-red-fg); }
+
+/* Theme=Dark (Layout=Horizontal, Size=Default only in Figma) */
+.pds-status--dark { --_bg: var(--status-dark-bg); --_icons-bg: var(--status-dark-icons-bg); }
+.pds-status--dark .pds-status__icons { margin-left: 0; } /* Figma gap 0 on Dark */
+.pds-status--dark.pds-status--purple { --_fg: var(--status-dark-purple-fg); }
+.pds-status--dark.pds-status--maroon { --_fg: var(--status-dark-maroon-fg); }
+.pds-status--dark.pds-status--brown  { --_fg: var(--status-dark-brown-fg); }
+.pds-status--dark.pds-status--cyan   { --_fg: var(--status-dark-cyan-fg); }
+.pds-status--dark.pds-status--blue   { --_fg: var(--status-dark-blue-fg); }
+.pds-status--dark.pds-status--green  { --_fg: var(--status-dark-green-fg); }
+.pds-status--dark.pds-status--grey   { --_fg: var(--status-dark-grey-fg); }
+.pds-status--dark.pds-status--orange { --_fg: var(--status-dark-orange-fg); }
+.pds-status--dark.pds-status--red    { --_fg: var(--status-dark-red-fg); }

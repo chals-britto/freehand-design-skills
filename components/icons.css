@@ -1,0 +1,55 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Icons
+   Figma: DS V2 – Atoms › 🟡 Icons (page 17:18)
+   Built 2026-10-23 · no review yet, everything published = Keep.
+   Requires ../tokens.css. Icon files: components/icons/<name>.svg
+   Manifest (name, Figma name, size, colour, svg): components/icons/icons-data.js
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Sizes found on the page (square icons). Non-square icons
+     (file types 20×24, map markers, logos) keep their own size. */
+  --icon-size-10: 10px;  /* Action icons · 10px line */
+  --icon-size-12: 12px;  /* Navigation: close-tag, selected, grid view, sort arrow */
+  --icon-size-14: 14px;  /* Indicator 14 · Status 14 solid · System status */
+  --icon-size-20: 20px;  /* Indicator 20 · Menu 20 two-colour */
+  --icon-size-24: 24px;  /* Header icons · toast state icons */
+  --icon-size-40: 40px;  /* Add-attachment tile */
+
+  /* Default colour per family — exactly what the Figma icons are drawn in.
+     Single-colour SVGs use currentColor, so these only apply when set. */
+  --icon-indicator: var(--pando-dark);          /* #234357 — Indicator & most Navigation */
+  --icon-action:    var(--action-blue);         /* #376F99 — Action icons 10px */
+  --icon-status:    var(--status-purple-dark);  /* #2D0645 — Status icons 14 solid */
+}
+
+/* ── Wrapper: <span class="pds-icon pds-icon--14"><svg …/></span> ── */
+.pds-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--_icon, var(--icon-size-14));
+  height: var(--_icon, var(--icon-size-14));
+  line-height: 0;
+  vertical-align: middle;
+  color: inherit;           /* single-colour icons follow the text colour */
+}
+.pds-icon > svg,
+.pds-icon > img { display: block; width: 100%; height: 100%; }
+
+.pds-icon--10 { --_icon: var(--icon-size-10); }
+.pds-icon--12 { --_icon: var(--icon-size-12); }
+.pds-icon--14 { --_icon: var(--icon-size-14); }
+.pds-icon--20 { --_icon: var(--icon-size-20); }
+.pds-icon--24 { --_icon: var(--icon-size-24); }
+.pds-icon--40 { --_icon: var(--icon-size-40); }
+
+/* Natural size — for non-square icons (file types, logos, map markers). */
+.pds-icon--native { width: auto; height: auto; }
+.pds-icon--native > svg { width: auto; height: auto; }
+
+/* Family colours (optional) */
+.pds-icon--indicator { color: var(--icon-indicator); }
+.pds-icon--action    { color: var(--icon-action); }
+.pds-icon--status    { color: var(--icon-status); }

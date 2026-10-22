@@ -1,0 +1,185 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Accordion
+   Figma: DS V2 – Atoms › 🟢 Accordion › component set "Accordion" (295:25)
+   Built 2026-10-23 from the published set, every variant Kept (no review
+   file). Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Vertical / Slideout header (Light) ─────────────────────────── */
+  --accordion-light-closed-bg:        var(--accent-off-white);       /* #F8F8F8 */
+  --accordion-light-open-bg:          var(--white);
+  --accordion-light-hover-bg:         var(--accent-light-blue-bg);   /* #F3F6FC  Vertical Closed Hover */
+  --accordion-light-slide-hover-bg:   var(--accent-light-highlight); /* #E9F1F5  Slideout Closed Hover */
+  --accordion-light-title:            var(--pando-dark);             /* #234357  Vertical + Slideout Closed */
+  --accordion-light-slide-title:      var(--text-dark);              /* #313131  Slideout Open / Hover */
+  --accordion-light-icon:             var(--border-blue-grey);       /* #B5C3CB */
+  --accordion-light-icon-hover:       var(--pando-dark);             /* #234357  Vertical hover + */
+  --accordion-light-slide-icon-hover: var(--grey-dark);              /* #515151  Slideout hover arrow */
+  --accordion-light-ind:              var(--border-blue-grey);       /* #B5C3CB  closed */
+  --accordion-light-ind-open:         var(--pando-dark);             /* #234357  open */
+  --accordion-light-ind-open-hover:   var(--pando-light);            /* #EEF2F4  Slideout Open Hover — as in Figma */
+
+  /* ── Vertical / Slideout header (Dark) ──────────────────────────── */
+  --accordion-dark-bg:                var(--dark-light);             /* #343440 */
+  --accordion-dark-slide-open-bg:     rgb(36 36 47 / .8);            /* Dark/Darker #24242F @ 80% — opacity not a token */
+  --accordion-dark-title:             var(--dark-input-text);        /* #8A8A9E  closed */
+  --accordion-dark-title-open:        var(--dark-label-text);        /* #D5DAF4  open */
+  --accordion-dark-icon:              var(--dark-input-text);        /* #8A8A9E */
+  --accordion-dark-icon-hover:        var(--dark-label-text);        /* #D5DAF4  Slideout hover arrow */
+  --accordion-dark-ind:               var(--dark-input-text);
+  --accordion-dark-ind-open:          var(--dark-label-text);
+
+  /* ── Boxed toggle (With Additional Details = True) ──────────────── */
+  --accordion-box-bg:                 var(--white);
+  --accordion-box-border:             var(--pando-light);            /* #EEF2F4, 0.5px */
+  --accordion-box-plus:               var(--text-dark);              /* #313131 */
+  --accordion-box-minus:              #404040;                       /* off-token in Figma */
+
+  /* ── Page type ──────────────────────────────────────────────────── */
+  --accordion-page-bg:                var(--pando-light);            /* #EEF2F4 */
+  --accordion-page-title:             var(--pando-blue-active);      /* #005399 — raw fill, no style in Figma */
+  --accordion-page-action:            var(--accent-tertiary-action); /* #6D8EB4 "Temp/ Greyblue" */
+  --accordion-panel-bg:               var(--white);
+  --accordion-panel-inner-bg:         var(--accent-alternate-white); /* #F9FAFA */
+  --accordion-panel-title:            var(--pando-dark);             /* #234357 */
+  --accordion-panel-body:             #000000;                       /* off-token in Figma */
+
+  /* ── Header slots (Additional Details) ──────────────────────────── */
+  --accordion-meta-tag-bg:            var(--status-blue-light);      /* #D9E6FF — variant is named "Purple" */
+  --accordion-meta-tag-fg:            var(--text-dark);
+  --accordion-meta-value:             var(--text-medium);            /* #545454 */
+  --accordion-meta-label:             var(--text-dark);
+  --accordion-meta-status:            var(--status-cyan-dark);       /* #006265 "Picked Up" */
+  --accordion-secondary:              var(--pando-dark);             /* #234357 secondary text + dash */
+  --accordion-switch-bg:              rgb(213 249 209 / .4);         /* Opacity/D5F9D1-40% */
+  --accordion-switch-on:              var(--accent-green-medium);    /* #67AC5D */
+  --accordion-checkbox-border:        var(--grey-medium);            /* #A3A3A3 */
+
+  /* ── Measured ───────────────────────────────────────────────────── */
+  --accordion-height: 35px;
+  --accordion-pad-l: var(--space-15);
+  --accordion-pad-r: var(--space-10);
+  --accordion-indicator: 2px;
+  --accordion-text-gap: 5px;            /* title ↔ secondary text */
+  --accordion-extra-gap: 20px;          /* additional info ↔ toggle */
+  --accordion-icon: 20px;
+  --accordion-title-tracking: .3px;     /* Figma 12px/Heading-AllCaps */
+  --accordion-page-pad: 6px 20px;
+  --accordion-page-radius: 4px;
+  --accordion-page-gap: 10px;           /* heading ↔ switch */
+  --accordion-panel-pad: 10px 8px 10px 15px;
+  --accordion-panel-inner-pad: 10px;
+  --accordion-panel-inner-gap: 4px;
+  --accordion-panel-title-gap: 8px;
+}
+
+/* ── Root ─────────────────────────────────────────────────────────── */
+.pds-accordion { font-family: var(--font-family); }
+.pds-accordion__panel[hidden] { display: none; }
+
+/* ── Header (Vertical + Slideout) ─────────────────────────────────── */
+.pds-accordion__header {
+  --_bg: var(--accordion-light-closed-bg); --_fg: var(--accordion-light-title);
+  --_icon: var(--accordion-light-icon); --_ind: var(--accordion-light-ind); --_rot: 0deg;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--accordion-height);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--accordion-extra-gap);
+  padding: 0 var(--accordion-pad-r) 0 var(--accordion-pad-l);
+  margin: 0; border: 0; border-radius: 0;
+  background: var(--_bg); color: var(--_fg);
+  text-align: left; cursor: pointer; font: inherit;
+}
+.pds-accordion__header::before { /* "Indicator" — 2px bar on the left edge */
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: var(--accordion-indicator); background: var(--_ind);
+}
+.pds-accordion__text { display: flex; align-items: center; gap: var(--accordion-text-gap); min-width: 0; }
+.pds-accordion__title {
+  font: var(--type-12-semibold); line-height: normal;
+  text-transform: uppercase; letter-spacing: var(--accordion-title-tracking);
+  white-space: nowrap;
+}
+.pds-accordion__secondary { display: inline-flex; align-items: center; gap: var(--accordion-text-gap); color: var(--accordion-secondary); font: var(--type-12-regular); line-height: 16px; white-space: nowrap; }
+.pds-accordion__secondary::before { content: ""; width: 8px; height: 1px; background: currentColor; }
+.pds-accordion__right { display: flex; align-items: center; justify-content: flex-end; gap: var(--accordion-extra-gap); margin-left: auto; }
+.pds-accordion__icon { flex: none; width: var(--accordion-icon); height: var(--accordion-icon); color: var(--_icon); }
+.pds-accordion__icon svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.pds-accordion__icon .arrow { transform: rotate(var(--_rot)); transform-origin: 10px 10px; }
+.pds-accordion__icon .long { display: none; }
+.pds-accordion__icon .minus, .pds-accordion.is-open .pds-accordion__icon .plus { display: none; }
+.pds-accordion.is-open .pds-accordion__icon .minus { display: inline; }
+
+/* Boxed toggle — With Additional Details = True */
+.pds-accordion__icon--boxed { background: var(--accordion-box-bg); box-shadow: inset 0 0 0 .5px var(--accordion-box-border); border-radius: 2px; color: var(--accordion-box-plus); }
+.pds-accordion.is-open .pds-accordion__icon--boxed { color: var(--accordion-box-minus); }
+
+/* ── Vertical · Light ── */
+.pds-accordion--vertical .pds-accordion__header:hover,
+.pds-accordion--vertical .pds-accordion__header.is-hover { --_bg: var(--accordion-light-hover-bg); --_icon: var(--accordion-light-icon-hover); }
+.pds-accordion--vertical.is-open .pds-accordion__header { --_bg: var(--accordion-light-open-bg); --_ind: var(--accordion-light-ind-open); --_icon: var(--accordion-light-icon); }
+/* Figma has no Vertical · Open · Hover variant: open header stays as Open on hover */
+
+/* ── Slideout · Light ── */
+.pds-accordion--slideout .pds-accordion__header:hover,
+.pds-accordion--slideout .pds-accordion__header.is-hover { --_bg: var(--accordion-light-slide-hover-bg); --_fg: var(--accordion-light-slide-title); --_icon: var(--accordion-light-slide-icon-hover); --_rot: 180deg; }
+.pds-accordion--slideout.is-open .pds-accordion__header { --_bg: var(--accordion-light-open-bg); --_fg: var(--accordion-light-slide-title); --_ind: var(--accordion-light-ind-open); --_icon: var(--accordion-light-icon); --_rot: 180deg; }
+.pds-accordion--slideout.is-open .pds-accordion__header:hover,
+.pds-accordion--slideout.is-open .pds-accordion__header.is-hover { --_bg: var(--accordion-light-closed-bg); --_ind: var(--accordion-light-ind-open-hover); --_icon: var(--accordion-light-slide-icon-hover); --_rot: 0deg; }
+/* Light Slideout hover arrows point the opposite way to their resting state — as drawn in Figma (open issue) */
+
+/* ── Dark (Vertical + Slideout) — declared after Light so it wins at equal specificity ── */
+.pds-accordion--dark:is(.pds-accordion--vertical, .pds-accordion--slideout) .pds-accordion__header { --_bg: var(--accordion-dark-bg); --_fg: var(--accordion-dark-title); --_icon: var(--accordion-dark-icon); --_ind: var(--accordion-dark-ind); --_rot: 0deg; }
+.pds-accordion--dark.is-open .pds-accordion__header { --_fg: var(--accordion-dark-title-open); --_ind: var(--accordion-dark-ind-open); }
+.pds-accordion--dark.pds-accordion--slideout.is-open .pds-accordion__header { --_bg: var(--accordion-dark-slide-open-bg); --_rot: 180deg; }
+/* Dark Vertical has no hover variant in Figma: the base rule above keeps it unchanged */
+.pds-accordion--dark.pds-accordion--slideout .pds-accordion__header:hover,
+.pds-accordion--dark.pds-accordion--slideout .pds-accordion__header.is-hover { --_icon: var(--accordion-dark-icon-hover); }
+.pds-accordion--dark.pds-accordion--slideout.is-open .pds-accordion__header:hover,
+.pds-accordion--dark.pds-accordion--slideout.is-open .pds-accordion__header.is-hover { --_bg: var(--accordion-dark-slide-open-bg); --_fg: var(--accordion-dark-title-open); --_ind: var(--accordion-dark-ind-open); --_icon: var(--accordion-dark-icon-hover); --_rot: 180deg; }
+/* Dark Slideout hover: the arrow's shaft grows from 12px to 19px (.arrow-right/left "Hover"). Light hover keeps the short arrow. */
+.pds-accordion--dark.pds-accordion--slideout .pds-accordion__header:is(:hover, .is-hover) .short { display: none; }
+.pds-accordion--dark.pds-accordion--slideout .pds-accordion__header:is(:hover, .is-hover) .long { display: inline; }
+
+/* ── Page type ────────────────────────────────────────────────────── */
+.pds-accordion--page .pds-accordion__header {
+  --_bg: var(--accordion-page-bg);
+  min-height: 0;
+  padding: var(--accordion-page-pad);
+  border-radius: var(--accordion-page-radius);
+}
+.pds-accordion--page .pds-accordion__header::before { content: none; }
+.pds-accordion--page .pds-accordion__header:hover { --_bg: var(--accordion-page-bg); } /* no hover variant in Figma */
+.pds-accordion__lead { display: flex; align-items: center; gap: var(--accordion-page-gap); }
+.pds-accordion__page-title { font: var(--type-14-semibold); color: var(--accordion-page-title); white-space: nowrap; }
+.pds-accordion--details .pds-accordion__page-title { line-height: 16px; } /* 14px/Semi-Bold/Normal in the Additional Details variants */
+.pds-accordion__action { font: var(--type-10-semibold); text-transform: uppercase; color: var(--accordion-page-action); white-space: nowrap; }
+.pds-accordion__action .when-open, .pds-accordion.is-open .pds-accordion__action .when-closed { display: none; }
+.pds-accordion.is-open .pds-accordion__action .when-open { display: inline; }
+
+.pds-accordion__panel--page { background: var(--accordion-panel-bg); padding: var(--accordion-panel-pad); }
+.pds-accordion__slot { background: var(--accordion-panel-inner-bg); padding: var(--accordion-panel-inner-pad); display: flex; flex-direction: column; gap: var(--accordion-panel-inner-gap); }
+.pds-accordion__slot-title { display: flex; align-items: center; gap: var(--accordion-panel-title-gap); font: var(--type-12-semibold); line-height: normal; color: var(--accordion-panel-title); }
+.pds-accordion__slot-title svg { width: 20px; height: 20px; flex: none; }
+.pds-accordion__slot-body { font: var(--type-12-regular); line-height: 16px; color: var(--accordion-panel-body); margin: 0; }
+
+/* ── Header slot pieces (visual only — see Accessibility) ─────────── */
+.pds-accordion__meta { display: flex; align-items: center; gap: 10px; }
+.pds-accordion__stat { display: inline-flex; align-items: center; gap: 4px; font: var(--type-12-regular); line-height: normal; color: var(--accordion-meta-value); white-space: nowrap; }
+.pds-accordion__tag { font: var(--type-10-semibold); letter-spacing: 0; line-height: normal; color: var(--accordion-meta-tag-fg); background: var(--accordion-meta-tag-bg); border-radius: 2px; padding: .5px 2px; }
+.pds-accordion__label { font: var(--type-12-regular); line-height: normal; color: var(--accordion-meta-label); white-space: nowrap; }
+.pds-accordion__status { font: var(--type-12-regular); line-height: 16px; color: var(--accordion-meta-status); padding: .5px 2px; border-radius: 2px; white-space: nowrap; }
+.pds-accordion__switch { display: inline-flex; align-items: center; gap: 5px; font: var(--type-10-regular); letter-spacing: 0; line-height: normal; text-transform: uppercase; color: var(--text-dark); }
+.pds-accordion__switch::before {
+  content: ""; width: 25px; height: 12px; box-sizing: border-box; border-radius: 8px;
+  border: 1px solid var(--accordion-switch-on); background: var(--accordion-switch-bg);
+  background-image: radial-gradient(circle 4px at 19px 50%, var(--accordion-switch-on) 99%, transparent 100%);
+}
+.pds-accordion__check { width: 14px; height: 14px; box-sizing: border-box; border: 1px solid var(--accordion-checkbox-border); border-radius: 2px; }
+.pds-accordion__toggle-input { display: inline-flex; align-items: flex-end; gap: 10px; }
+.pds-accordion__toggle-inputs { display: flex; align-items: center; gap: 20px; }
+
+/* No focus style in Figma — browser default focus ring is left in place (open issue). */

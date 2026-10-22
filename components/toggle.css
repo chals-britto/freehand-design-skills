@@ -1,0 +1,203 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Toggle
+   Figma: DS V2 – Atoms › 🟢 Toggle (225:0) › published set "Toggle" (3218:3840)
+   The published set holds three different components, built here as three
+   blocks:  .pds-toggle (Switch, base set 227:79)
+            .pds-toggle-tab (Toggle Tab, base set 748:468)
+            .pds-icon-tab (Icon Tab, base set 3218:3158 — dark only)
+   Reviewed 2026-10-23 (no review decisions: everything published kept).
+   Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Switch · Light ─────────────────────────────────────────── */
+  --toggle-on-track:        color-mix(in srgb, var(--status-green-light) 40%, transparent); /* #D5F9D1 @ 40% — Figma style "Opacity/D5F9D1-40%", opacity step not in tokens */
+  --toggle-on-stroke:       var(--accent-green-medium);    /* #67AC5D (= --color-toggle-on) */
+  --toggle-on-knob:         var(--accent-green-medium);
+  --toggle-off-track:       var(--accent-alternate-white); /* #F9FAFA — Figma does not use --color-toggle-off */
+  --toggle-off-stroke:      var(--text-light);             /* #6C6C6C */
+  --toggle-off-knob:        var(--text-light);
+  --toggle-text:            var(--text-dark);              /* #313131 action text */
+  --toggle-label:           var(--text-medium);            /* #545454 label */
+  --toggle-disabled-track:  var(--grey-light);             /* #E7E7E7 */
+  --toggle-disabled-stroke: var(--text-disabled);          /* #A3A2A2 */
+  --toggle-disabled-on-knob:  var(--accent-green-medium);  /* kept full green, as Figma */
+  --toggle-disabled-off-knob: var(--text-light);           /* #6C6C6C */
+  --toggle-disabled-text:   var(--text-light);             /* #6C6C6C, not text-disabled — as Figma */
+
+  /* ── Switch · Dark ──────────────────────────────────────────── */
+  --toggle-dark-on:         var(--dark-highlight-green);   /* #1FCD93 stroke + knob */
+  --toggle-dark-off:        var(--dark-input-text);        /* #8A8A9E stroke + knob */
+  --toggle-dark-disabled:   var(--grey-medium);            /* #A3A3A3 stroke, knob, text */
+  --toggle-dark-text:       var(--dark-label-text);        /* #D5DAF4 */
+
+  /* ── Switch · measurements ─────────────────────────────────── */
+  --toggle-track-w: 25px;
+  --toggle-track-h: 12px;
+  --toggle-track-radius: 8px;
+  --toggle-knob: 8px;
+  --toggle-knob-inset: 2px;          /* from the track's outer edge */
+  --toggle-knob-on-x: 15px;          /* knob left edge when on */
+  --toggle-gap: 5px;                 /* track ↔ action text, light */
+  --toggle-gap-dark: 6px;            /* dark uses 6px in Figma */
+  --toggle-label-gap: 15px;          /* label slot: 10px right padding + 5px gap */
+  --toggle-row-h: 14px;
+
+  /* ── Toggle Tab ────────────────────────────────────────────── */
+  --toggle-tab-bg:          var(--accent-off-white);       /* #F8F8F8 */
+  --toggle-tab-border:      var(--border-input-light);     /* #E2EAEC */
+  --toggle-tab-active-bg:   var(--pando-blue);             /* #0076DD */
+  --toggle-tab-active-fg:   var(--white);
+  --toggle-tab-fg:          var(--text-dark);              /* #313131 */
+  --toggle-tab-active-shadow: inset 0 0 4px color-mix(in srgb, var(--pando-dark) 50%, transparent); /* #234357 @ 50% blur 4 — not a --shadow-* token */
+  --toggle-tab-dark-bg:     #48485880;                     /* off-token in Figma — #484858 @ 50% ("Opacity/484858-Dark-50") */
+  --toggle-tab-dark-border: color-mix(in srgb, var(--dark-input-text) 50%, transparent); /* #8A8A9E @ 50% */
+  --toggle-tab-dark-active-bg: var(--status-blue-light);   /* #D9E6FF — unstyled in Figma */
+  --toggle-tab-dark-active-fg: #484858;                    /* off-token in Figma — "Dark/Input BG" */
+  --toggle-tab-dark-fg:     var(--dark-label-text);        /* #D5DAF4 */
+  --toggle-tab-option-w: 69px;
+  --toggle-tab-option-h: 24px;
+  --toggle-tab-pad: 4px var(--space-10);
+  --toggle-tab-gap: 1px;
+  --toggle-tab-radius: 2px;
+
+  /* ── Icon Tab (dark only) ──────────────────────────────────── */
+  --icon-tab-stroke:        var(--dark-input-text);        /* #8A8A9E */
+  --icon-tab-selected-bg:   var(--dark-darker);            /* #24242F */
+  --icon-tab-road:          var(--status-brown-light);     /* #FFEEC4 */
+  --icon-tab-ship:          var(--status-cyan-light);      /* #BDF0F4 */
+  --icon-tab-air:           var(--status-blue-light);      /* #D9E6FF */
+  --icon-tab-cell: 54px;
+  --icon-tab-pad: var(--space-15);
+  --icon-tab-icon: 24px;
+}
+
+/* ════════ Switch ════════════════════════════════════════════════ */
+.pds-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--toggle-gap);
+  min-height: var(--toggle-row-h);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--toggle-text);
+  font: var(--type-10-regular);  /* Figma: Open Sans 10 Regular, auto line-height, 0 tracking */
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-align: left;
+}
+.pds-toggle:disabled,
+.pds-toggle[aria-disabled="true"] { cursor: default; color: var(--toggle-disabled-text); }
+
+.pds-toggle__label {
+  margin-right: calc(var(--toggle-label-gap) - var(--toggle-gap));
+  color: var(--toggle-label);
+  font: var(--type-10-semibold); /* Figma: Open Sans 10 SemiBold, 0 tracking */
+  letter-spacing: 0;
+}
+
+.pds-toggle__track {
+  position: relative;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--toggle-track-w);
+  height: var(--toggle-track-h);
+  border: 1px solid var(--toggle-off-stroke);
+  border-radius: var(--toggle-track-radius);
+  background: var(--toggle-off-track);
+}
+.pds-toggle__knob {
+  position: absolute;
+  top: calc(var(--toggle-knob-inset) - 1px);
+  left: calc(var(--toggle-knob-inset) - 1px);
+  width: var(--toggle-knob);
+  height: var(--toggle-knob);
+  border-radius: 50%;
+  background: var(--toggle-off-knob);
+}
+.pds-toggle[aria-checked="true"] .pds-toggle__track { border-color: var(--toggle-on-stroke); background: var(--toggle-on-track); }
+.pds-toggle[aria-checked="true"] .pds-toggle__knob  { left: calc(var(--toggle-knob-on-x) - 1px); background: var(--toggle-on-knob); }
+
+/* Disabled (light) */
+.pds-toggle:is(:disabled, [aria-disabled="true"]) .pds-toggle__track { border-color: var(--toggle-disabled-stroke); background: var(--toggle-disabled-track); }
+.pds-toggle:is(:disabled, [aria-disabled="true"]) .pds-toggle__knob  { background: var(--toggle-disabled-off-knob); }
+.pds-toggle:is(:disabled, [aria-disabled="true"])[aria-checked="true"] .pds-toggle__knob { background: var(--toggle-disabled-on-knob); }
+
+/* Dark theme */
+.pds-toggle--dark { gap: var(--toggle-gap-dark); color: var(--toggle-dark-text); }
+.pds-toggle--dark .pds-toggle__track { background: none; border-color: var(--toggle-dark-off); }
+.pds-toggle--dark .pds-toggle__knob  { background: var(--toggle-dark-off); }
+.pds-toggle--dark[aria-checked="true"] .pds-toggle__track { background: none; border-color: var(--toggle-dark-on); }
+.pds-toggle--dark[aria-checked="true"] .pds-toggle__knob  { background: var(--toggle-dark-on); }
+.pds-toggle--dark:is(:disabled, [aria-disabled="true"]) { color: var(--toggle-dark-disabled); }
+.pds-toggle--dark:is(:disabled, [aria-disabled="true"]) .pds-toggle__track,
+.pds-toggle--dark:is(:disabled, [aria-disabled="true"])[aria-checked="true"] .pds-toggle__track { background: none; border-color: var(--toggle-dark-disabled); }
+.pds-toggle--dark:is(:disabled, [aria-disabled="true"]) .pds-toggle__knob,
+.pds-toggle--dark:is(:disabled, [aria-disabled="true"])[aria-checked="true"] .pds-toggle__knob { background: var(--toggle-dark-disabled); }
+
+/* ════════ Toggle Tab (2-option segmented) ═══════════════════════ */
+.pds-toggle-tab {
+  position: relative;
+  display: inline-flex;
+  gap: var(--toggle-tab-gap);
+  border-radius: var(--toggle-tab-radius);
+  background: var(--toggle-tab-bg);
+}
+.pds-toggle-tab::after { /* Figma stroke is inside and drawn over the options */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--toggle-tab-border);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.pds-toggle-tab__option {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  width: var(--toggle-tab-option-w);
+  height: var(--toggle-tab-option-h);
+  margin: 0;
+  padding: var(--toggle-tab-pad);
+  border: 0;
+  border-radius: var(--toggle-tab-radius);
+  background: none;
+  color: var(--toggle-tab-fg);
+  font: var(--type-12-regular); /* Figma: Open Sans 12 Regular, auto line-height (16) */
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pds-toggle-tab__option[aria-checked="true"] {
+  background: var(--toggle-tab-active-bg);
+  color: var(--toggle-tab-active-fg);
+  box-shadow: var(--toggle-tab-active-shadow);
+}
+.pds-toggle-tab--dark { background: var(--toggle-tab-dark-bg); }
+.pds-toggle-tab--dark::after { border-color: var(--toggle-tab-dark-border); }
+.pds-toggle-tab--dark .pds-toggle-tab__option { color: var(--toggle-tab-dark-fg); }
+.pds-toggle-tab--dark .pds-toggle-tab__option[aria-checked="true"] { background: var(--toggle-tab-dark-active-bg); color: var(--toggle-tab-dark-active-fg); }
+
+/* ════════ Icon Tab (dark only) ══════════════════════════════════ */
+.pds-icon-tab { display: inline-flex; padding-left: 1px; }
+.pds-icon-tab__cell {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-tab-cell);
+  height: var(--icon-tab-cell);
+  margin: 0 0 0 -1px;              /* gap -1: neighbours share a border */
+  padding: var(--icon-tab-pad);
+  border: 1px solid var(--icon-tab-stroke);
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+}
+.pds-icon-tab__cell[aria-checked="true"] { background: var(--icon-tab-selected-bg); }
+.pds-icon-tab__icon { width: var(--icon-tab-icon); height: var(--icon-tab-icon); display: block; fill: currentColor; }
+.pds-icon-tab__cell--road { color: var(--icon-tab-road); }
+.pds-icon-tab__cell--ship { color: var(--icon-tab-ship); }
+.pds-icon-tab__cell--air  { color: var(--icon-tab-air); }

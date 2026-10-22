@@ -1,0 +1,200 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Badges & Callouts
+   Figma: DS V2 – Atoms › 🟢 Badges & Callouts (3185:1868)
+     · "Badge" component set (3241:3574)                    → .pds-badge
+     · "Callout / Subheader Notification" set (3241:3594)   → .pds-callout
+     · "Indicator Ribbbon" set (2533:905)                   → .pds-ribbon
+   Built 2026-10-23 from Figma (no review yet — everything published = Keep).
+   Requires ../tokens.css. No behaviour, so no JS.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Callout / Subheader Notification ─────────────────────────── */
+  /* Variant "Info" uses the Status/Brown palette in Figma (kept as-is). */
+  --callout-info-bg:          var(--status-brown-light);   /* #FFEEC4 */
+  --callout-info-fg:          var(--status-brown-dark);    /* #422500 */
+  --callout-info-ring:        color-mix(in srgb, var(--status-brown-dark) 10%, transparent); /* #422500 @10% */
+  --callout-info-dot:         linear-gradient(180deg, var(--status-brown-dark), #A05A00);   /* #A05A00 off-token in Figma */
+
+  --callout-error-bg:         var(--status-red-light);     /* #FFEAEE */
+  --callout-error-fg:         var(--status-red-dark);      /* #FF0000 */
+  --callout-error-ring:       rgb(87 0 0 / .10);           /* #570000 @10% — off-token in Figma */
+  --callout-error-dot:        linear-gradient(180deg, #760000, var(--status-red-dark)); /* #760000 off-token in Figma */
+
+  --callout-success-bg:       var(--status-green-light);   /* #D5F9D1 */
+  --callout-success-fg:       var(--status-green-dark);    /* #041F04 */
+  --callout-success-ring:     rgb(17 87 0 / .10);          /* #115700 @10% — off-token in Figma */
+  --callout-success-dot:      linear-gradient(180deg, #1F7600, #1CCA00); /* #1F7600, #1CCA00 off-token in Figma */
+
+  --callout-height: 34px;
+  --callout-pad-x: 20px;
+  --callout-gap: var(--space-10);
+  --callout-icon: 16px;
+  --callout-icon-dot: 8px;
+
+  /* ── Badge ─────────────────────────────────────────────────────── */
+  /* Small (Type=Text): gradient tint, fades to 5% at the bottom */
+  --badge-sm-green-bg:   linear-gradient(180deg,
+                           color-mix(in srgb, var(--accent-green-highlight) 12%, transparent),
+                           color-mix(in srgb, var(--accent-green-highlight) .6%, transparent)); /* #008D5E 100→5%, layer opacity 12% */
+  --badge-sm-green-dot:  var(--accent-green-highlight);   /* #008D5E */
+  --badge-sm-green-fg:   var(--status-cyan-dark);         /* #006265 */
+  --badge-sm-red-bg:     linear-gradient(180deg,
+                           var(--status-red-light),
+                           color-mix(in srgb, var(--status-red-light) 5%, transparent)); /* #FFEAEE 100→5% */
+  --badge-sm-red-dot:    var(--status-orange-dark);       /* #F94200 */
+  --badge-sm-red-fg:     var(--status-orange-dark);       /* #F94200 */
+
+  /* Large (Type=Text): flat tint + uppercase label + bold value */
+  --badge-lg-red-bg:     color-mix(in srgb, var(--status-red-light) 70%, transparent);   /* #FFEAEE @70% */
+  --badge-lg-red-dot:    var(--action-red);               /* #E25757 */
+  --badge-lg-red-label:  var(--pando-dark);               /* #234357 */
+  --badge-lg-red-fg:     var(--action-red);               /* #E25757 (raw hex in Figma, matches Action/Red) */
+  --badge-lg-blue-bg:    color-mix(in srgb, var(--status-blue-light) 50%, transparent);  /* #D9E6FF @50% */
+  --badge-lg-blue-dot:   var(--pando-blue-active);        /* #005399 */
+  --badge-lg-blue-label: var(--pando-dark);               /* #234357 */
+  --badge-lg-blue-fg:    var(--pando-blue-active);        /* #005399 */
+  --badge-lg-green-bg:   color-mix(in srgb, var(--status-green-light) 50%, transparent); /* #D5F9D1 @50% */
+  --badge-lg-green-dot:  var(--status-cyan-dark);         /* #006265 */
+  --badge-lg-green-label:var(--status-green-dark);        /* #041F04 */
+  --badge-lg-green-fg:   var(--status-cyan-dark);         /* #006265 */
+
+  /* Count */
+  --badge-count-bg:      var(--border-blue-grey);         /* #B5C3CB */
+  --badge-count-fg:      var(--text-dark);                /* #313131 */
+
+  --badge-dot: 5px;
+  --badge-sm-height: 16px;  --badge-sm-pad-x: 5px;  --badge-sm-gap: 5px;  --badge-sm-radius: 4px;
+  --badge-lg-height: 24px;  --badge-lg-pad: 4px 8px; --badge-lg-gap: 8px; --badge-lg-radius: 2px;
+  --badge-count-size: 16px; --badge-count-pad: 1px 2px;
+
+  /* ── Indicator ribbon ──────────────────────────────────────────── */
+  --ribbon-error-bg:     var(--action-red);               /* #E25757 */
+  --ribbon-error-fg:     var(--white);
+  --ribbon-info-bg:      var(--highlight-blue-light);     /* #9CD2FF */
+  --ribbon-info-fg:      var(--pando-dark);               /* #234357 */
+  --ribbon-warning-bg:   var(--highlight-yellow);         /* #FFCF00 */
+  --ribbon-warning-fg:   var(--text-dark);                /* #313131 */
+
+  --ribbon-height: 52px;
+  --ribbon-pad: var(--space-10) var(--space-10) var(--space-10) var(--space-15);
+  --ribbon-pad-warning: var(--space-10);                  /* Warning uses 10 on all sides in Figma */
+  --ribbon-gap: var(--space-10);
+  --ribbon-radius: 2px 0 0 2px;
+  --ribbon-tail: 20px;
+  --ribbon-checkbox: 14px;
+}
+
+/* ════ Callout / Subheader Notification ═══════════════════════════ */
+.pds-callout {
+  --_bg: var(--callout-info-bg); --_fg: var(--callout-info-fg);
+  --_ring: var(--callout-info-ring); --_dot: var(--callout-info-dot);
+  box-sizing: border-box;
+  display: inline-flex;          /* hugs its text */
+  align-items: center;
+  justify-content: center;
+  gap: var(--callout-gap);
+  height: var(--callout-height);
+  padding: 0 var(--callout-pad-x);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: var(--font-family);
+  /* no radius, no border, no shadow — as in Figma */
+}
+.pds-callout--info    { --_bg: var(--callout-info-bg);    --_fg: var(--callout-info-fg);    --_ring: var(--callout-info-ring);    --_dot: var(--callout-info-dot); }
+.pds-callout--error   { --_bg: var(--callout-error-bg);   --_fg: var(--callout-error-fg);   --_ring: var(--callout-error-ring);   --_dot: var(--callout-error-dot); }
+.pds-callout--success { --_bg: var(--callout-success-bg); --_fg: var(--callout-success-fg); --_ring: var(--callout-success-ring); --_dot: var(--callout-success-dot); }
+
+.pds-callout__icon {
+  flex: none; position: relative;
+  width: var(--callout-icon); height: var(--callout-icon);
+  border-radius: 50%; background: var(--_ring);
+}
+.pds-callout__icon::after {
+  content: ""; position: absolute; inset: 0; margin: auto;
+  width: var(--callout-icon-dot); height: var(--callout-icon-dot);
+  border-radius: 50%; background: var(--_dot);
+}
+.pds-callout__text { font: var(--type-12-semibold); margin: 0; white-space: nowrap; }
+
+/* ════ Badge ═══════════════════════════════════════════════════════ */
+.pds-badge {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-family);
+  white-space: nowrap;
+}
+.pds-badge__dot { flex: none; width: var(--badge-dot); height: var(--badge-dot); border-radius: 50%; background: var(--_dot); }
+
+/* Type=Text, Size=Small */
+.pds-badge--sm {
+  --_bg: var(--badge-sm-green-bg); --_dot: var(--badge-sm-green-dot); --_fg: var(--badge-sm-green-fg);
+  height: var(--badge-sm-height);
+  padding: 0 var(--badge-sm-pad-x);
+  gap: var(--badge-sm-gap);
+  border-radius: var(--badge-sm-radius);
+  background: var(--_bg);
+  color: var(--_fg);
+}
+.pds-badge--sm.pds-badge--green { --_bg: var(--badge-sm-green-bg); --_dot: var(--badge-sm-green-dot); --_fg: var(--badge-sm-green-fg); }
+.pds-badge--sm.pds-badge--red   { --_bg: var(--badge-sm-red-bg);   --_dot: var(--badge-sm-red-dot);   --_fg: var(--badge-sm-red-fg); }
+.pds-badge--sm .pds-badge__value { font: var(--type-12-semibold); }
+
+/* Type=Text, Size=Large */
+.pds-badge--lg {
+  --_bg: var(--badge-lg-blue-bg); --_dot: var(--badge-lg-blue-dot); --_label: var(--badge-lg-blue-label); --_fg: var(--badge-lg-blue-fg);
+  height: var(--badge-lg-height);
+  padding: var(--badge-lg-pad);
+  gap: var(--badge-lg-gap);
+  justify-content: flex-end;
+  border-radius: var(--badge-lg-radius);
+  background: var(--_bg);
+  color: var(--_fg);
+}
+.pds-badge--lg.pds-badge--red   { --_bg: var(--badge-lg-red-bg);   --_dot: var(--badge-lg-red-dot);   --_label: var(--badge-lg-red-label);   --_fg: var(--badge-lg-red-fg); }
+.pds-badge--lg.pds-badge--blue  { --_bg: var(--badge-lg-blue-bg);  --_dot: var(--badge-lg-blue-dot);  --_label: var(--badge-lg-blue-label);  --_fg: var(--badge-lg-blue-fg); }
+.pds-badge--lg.pds-badge--green { --_bg: var(--badge-lg-green-bg); --_dot: var(--badge-lg-green-dot); --_label: var(--badge-lg-green-label); --_fg: var(--badge-lg-green-fg); }
+.pds-badge__label { font: var(--type-10-semibold); letter-spacing: 0; text-transform: uppercase; color: var(--_label); } /* Show Label */
+.pds-badge--lg .pds-badge__value { font: var(--type-12-bold); text-transform: uppercase; }
+.pds-badge__value .pds-badge__light { font-weight: 400; text-transform: none; } /* Figma sample "+ USD 50.00 more": + and "more" regular */
+
+/* Type=Count, Size=Small, Color=Blue */
+.pds-badge--count {
+  justify-content: center;
+  min-width: var(--badge-count-size);
+  height: var(--badge-count-size);
+  padding: var(--badge-count-pad);
+  border-radius: var(--badge-count-size);
+  background: var(--badge-count-bg);
+  color: var(--badge-count-fg);
+  font: var(--type-10-semibold);
+  letter-spacing: 0;
+  text-align: center;
+}
+
+/* ════ Indicator ribbon ════════════════════════════════════════════ */
+.pds-ribbon {
+  --_bg: var(--ribbon-error-bg); --_fg: var(--ribbon-error-fg);
+  display: inline-flex;
+  height: var(--ribbon-height);
+  font-family: var(--font-family);
+}
+.pds-ribbon--error   { --_bg: var(--ribbon-error-bg);   --_fg: var(--ribbon-error-fg); }
+.pds-ribbon--info    { --_bg: var(--ribbon-info-bg);    --_fg: var(--ribbon-info-fg); }
+.pds-ribbon--warning { --_bg: var(--ribbon-warning-bg); --_fg: var(--ribbon-warning-fg); }
+
+.pds-ribbon__body {
+  box-sizing: border-box;
+  display: flex; align-items: center;
+  gap: var(--ribbon-gap);
+  padding: var(--ribbon-pad);
+  border-radius: var(--ribbon-radius);
+  background: var(--_bg);
+  color: var(--_fg);
+}
+.pds-ribbon--warning .pds-ribbon__body { padding: var(--ribbon-pad-warning); }
+.pds-ribbon__text { font: var(--type-12-semibold); text-transform: uppercase; white-space: nowrap; margin: 0; }
+.pds-ribbon__tail { flex: none; display: block; width: var(--ribbon-tail); height: 100%; fill: var(--_bg); }
+/* Show Checkbox: an instance of the Checkbox component (3331:3618), 14px. Checkbox is not in the kit yet. */
+.pds-ribbon__checkbox { flex: none; width: var(--ribbon-checkbox); height: var(--ribbon-checkbox); margin: 0; accent-color: var(--pando-blue); }

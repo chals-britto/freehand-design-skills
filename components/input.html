@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Inputs · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="input.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* inputs page */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.added{display:inline-block;font:500 10.5px var(--pg-ui);letter-spacing:.04em;text-transform:uppercase;color:var(--pg-accent);border:1px solid var(--pg-accent);border-radius:999px;padding:0 6px;margin-left:6px;vertical-align:middle}
+.vgroup{margin-top:18px}
+.vgroup h3{font:600 13.5px var(--pg-ui);margin:0 0 8px}
+.vgroup .gsub{font-size:12.5px;color:var(--pg-muted);margin:-4px 0 8px}
+.vbody{border:1px solid var(--pg-line);border-radius:10px;overflow:visible;background:var(--white);padding:20px;display:flex;flex-wrap:wrap;gap:22px 28px;align-items:flex-start}
+.vbody.dark{background:var(--input-dark-surface);border-color:var(--pg-line)}
+.vbody .vcell{display:flex;flex-direction:column;gap:6px;min-width:0;align-items:flex-start}
+.vbody .lbl{font:500 11px var(--pg-mono);color:var(--text-light);max-width:420px}
+.vbody.dark .lbl{color:var(--dark-input-text)}
+.vbody .lbl b{font-weight:500;color:var(--text-medium)}
+.vbody.dark .lbl b{color:var(--dark-label-text)}
+.stage2{padding:90px 28px 120px;min-height:300px;background:var(--white);border-radius:0 10px 10px 0;display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap}
+.stage2.dark{background:var(--input-dark-surface)}
+.ctrls .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gaps ul,.open ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.gaps{padding:12px 16px;font-size:13.5px}
+.gaps a{color:var(--pg-accent)}
+table.vals{width:100%;border-collapse:collapse;font-size:12.5px}
+table.vals th,table.vals td{text-align:left;padding:8px 12px;border-top:1px solid var(--pg-line);vertical-align:top}
+table.vals th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);background:var(--pg-soft)}
+table.vals code{font:400 11.5px var(--pg-mono)}
+.tablewrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Inputs</h1>
+    <p class="lede">Text Input and Dropdown Input. <span style="opacity:.8">Covers Text Input, Dropdown, Select, Multiselect, Input with Tags, Cell, Inline Input.</span></p>
+    <div class="meta"><span>Status: Reviewed 2026-10-22</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=0-1" target="_blank" rel="noopener">Figma page 0:1 ↗</a><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=7-2" target="_blank" rel="noopener">Input - Text 7:2 ↗</a><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3535-3521" target="_blank" rel="noopener">Input - Dropdown Select 3535:3521 ↗</a><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3352-3688" target="_blank" rel="noopener">Text Area 3352:3688 ↗</a><span>Files: input.css · input.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#added">Added in review</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area="try"><h2>Try it</h2><p class="sub">A live field built with <code>pdsInput.build()</code>. Hover or Tab to the info icon to see the tooltip. Open the dropdown with click, Enter, Space or ↓; Esc closes. Focus ring, helper/error message, read-only and the Required marker on Input - Text are <b>added in review</b>.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls">
+    <label>Type<select id="c-type"><option value="text">Default (text)</option><option value="inline">Inline</option><option value="condition">Condition</option><option value="select">Dropdown Select</option><option value="dark">Dark (sidebar)</option><option value="dark-select">Dark Dropdown</option></select></label>
+    <label>Size<select id="c-size"><option value="200">Standard (200)</option><option value="100">Small (100)</option><option value="250">Medium (250)</option><option value="310">Standard (310)</option><option value="400">Large (400)</option></select></label>
+    <label>Label<input type="text" id="c-label" value="Input Label"></label>
+    <div class="row2"><label class="chk"><input type="checkbox" id="c-icon"> Icon</label><label class="chk"><input type="checkbox" id="c-req"> Required</label></div>
+    <div class="row2"><label class="chk"><input type="checkbox" id="c-info" checked> Info icon</label><label class="chk"><input type="checkbox" id="c-help"> Helper</label></div>
+    <div class="row2"><label class="chk"><input type="checkbox" id="c-err"> Error</label><label class="chk"><input type="checkbox" id="c-dis"> Disabled</label></div>
+    <label class="chk"><input type="checkbox" id="c-ro"> Read-only</label>
+  </form>
+  <div class="stage2" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area="variants"><h2>Variants</h2><p class="sub">Every published variant of <b>Input - Text</b> (46), <b>Input - Dropdown Select</b> (28) and <b>Text Area</b> (1), rendered with the real classes. Each label is the Figma variant and node id. Colours exactly as Figma.</p>
+<div id="vgroups"></div></section>
+
+<section id="added" data-flag-area="added"><h2>Added in review</h2><p class="sub">Built from the review decisions. Everything here except the info icon + tooltip is <b>not in Figma</b>; the visuals follow the build brief. Helper sample text is a placeholder until copy is supplied.</p>
+<div id="addgroups"></div></section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma components. Light fields share one base (<code>.Base Input</code> 3173:1612).</p>
+<div class="panel tablewrap"><table class="vals">
+<thead><tr><th>Part</th><th>Value</th><th>Token / class</th></tr></thead>
+<tbody>
+<tr><td>Field (Default)</td><td>200 × 60 · padding 10 · gap 10 · radius 0 · 1px inside border</td><td><code>--input-h</code> · <code>--space-10</code></td></tr>
+<tr><td>Widths</td><td>Small 100 · Standard 200 · Filter 225 · Medium 250 · Standard 310 · Large 400 · Standard 600 · Auto</td><td><code>.pds-input--w100 … --w600, --wauto</code></td></tr>
+<tr><td>Small (100)</td><td>100 × 52 · padding 8 / 10 · gap 6</td><td><code>.pds-input--small</code></td></tr>
+<tr><td>Border</td><td>Default #E2EAEC · Active/Open #0076DD · Inline hover #B5C3CB dashed 3/3 · Inline active #0076DD dashed 3/3 · Error #E25757</td><td><code>--border-input-light</code> · <code>--pando-blue</code> · <code>--border-blue-grey</code> · <code>--action-red</code></td></tr>
+<tr><td>Fill</td><td>White · Error #FFF8F9 · Disabled #E7E7E7 at 30%</td><td><code>--white</code> · <code>--accent-error-red-light</code> · <code>--grey-light</code> 30%</td></tr>
+<tr><td>Label</td><td>10 Regular, uppercase, 0 tracking, #545454 (error #E25757) · gap to “*” 2</td><td><code>--type-10-regular</code> · <code>--text-medium</code></td></tr>
+<tr><td>Value</td><td>Placeholder 12 Regular #6C6C6C · Filled 12 SemiBold #313131 · Disabled filled #545454</td><td><code>.type-12-regular</code> / <code>.type-12-semibold</code></td></tr>
+<tr><td>Leading icon</td><td>10 × 10 · gap 10 · search #A3A3A3 · calendar #343440</td><td><code>--grey-medium</code> · <code>--dark-light</code></td></tr>
+<tr><td>Dropdown arrow</td><td>8 × 5 · #234357 (50% on Standard Empty/Filled) · disabled #9C9C9C</td><td><code>--pando-dark</code> · <code>--input-muted</code></td></tr>
+<tr><td>Tags</td><td>24 high · padding 4 / 8 · radius 12 · gap 10 · #EEF2F4 (disabled #E2EAEC) · “+N” 2px #E2EAEC border · top 28</td><td><code>--pando-light</code> · <code>--radius-12</code></td></tr>
+<tr><td>Condition</td><td>Label outside (10 Regular #6C6C6C, gap 2) · box 36 high · padding 10 · gap 8 · prefix “$” 12 SemiBold #9C9C9C</td><td><code>.pds-input--condition</code></td></tr>
+<tr><td>Formula</td><td>Header 12 SemiBold #234357 + “Result:” 10 SemiBold caps · gap 5 · box 600 × 36</td><td><code>.pds-input--formula</code></td></tr>
+<tr><td>Open list</td><td>Options 36 (multi-info 52) · padding 10 · bottom padding 5 · hover #E9F1F5 · selected #F9FAFA + #0076DD text</td><td><code>--shadow-3</code> (Dropdown Select) · <code>--shadow-4</code> (Input - Text)</td></tr>
+<tr><td>Dark text input</td><td>310 wide · label 140 (12 caps +0.5 #D5DAF4) · gap 20 · field 150 × 20, padding 2 / 5, radius 2, #484858</td><td><code>.pds-input--dark</code></td></tr>
+<tr><td>Dark dropdown</td><td>Label 140 · gap 10 · value 12 SemiBold +0.5 #CBD4D8 · arrow #8A8A9E · error message gap 6</td><td><code>.pds-input--dark.pds-input--select</code></td></tr>
+<tr><td>Text Area (dark)</td><td>310 × 60 · padding 10 · gap 10 · radius 2 · #484858 · 1px #393945 · count 8px top-right</td><td><code>.pds-input--textarea</code></td></tr>
+<tr><td>Info icon</td><td>12 × 12, top-right inside the padding · circle #EEF2F4, glyph #313131</td><td><code>.pds-input__info</code></td></tr>
+<tr><td>Tooltip</td><td>164 wide · padding 10 · gap 4 · radius 4 · black 80% · title 12 SemiBold, text 12/16 Regular, white · beak 16 × 8 at 5:00</td><td><code>.pds-input__tip</code></td></tr>
+</tbody></table></div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Overview (Figma)</h3><p>Text Input and Dropdown Input.</p><p class="src">Figma documentation blocks 3193:1918 and 3537:4513. Their “Uses” and “Placement &amp; Convention” fields are still the template text, so no usage guidance is published yet.</p></div>
+  <div class="panel card"><h3>Info icon <span class="added">review change</span></h3><ul><li>Place the 12px info icon top-right inside the field.</li><li>Hover or keyboard focus shows the tooltip above it; it hides on leave, blur or Esc.</li><li>Use it for short supporting detail, not for anything needed to fill the field.</li></ul><p class="src">From Figma 11396:3213 and the Tooltip component (Style=Text).</p></div>
+  <div class="panel card"><h3>Messages <span class="added">added in review</span></h3><ul><li>One line under the field. Helper text stays visible while typing.</li><li>On error, the message replaces the helper and says what to fix.</li></ul><p class="src">Sources: <a href="https://carbondesignsystem.com/components/text-input/usage/" target="_blank" rel="noopener">Carbon</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html" target="_blank" rel="noopener">WCAG 3.3.1</a></p></div>
+</div></section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Labels</h3><p>Every field has a real <code>&lt;label for&gt;</code>. Required adds a visual “*” (hidden from screen readers) — also set <code>required</code> / <code>aria-required</code> on the control in product code.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html" target="_blank" rel="noopener">WCAG 3.3.2</a></p></div>
+  <div class="panel card"><h3>Errors and helper</h3><p>Error sets <code>aria-invalid="true"</code>; the message is linked with <code>aria-describedby</code> and announced with <code>role="alert"</code>.</p></div>
+  <div class="panel card"><h3>Focus <span class="added">added in review</span></h3><p>Active keeps the Figma blue border; keyboard focus adds a 2px <code>--pando-blue</code> outline, 2px offset.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html" target="_blank" rel="noopener">WCAG 2.4.7</a></p></div>
+  <div class="panel card"><h3>Tooltip</h3><p>The info icon is a <code>&lt;button aria-label="More information"&gt;</code>; the tooltip has <code>role="tooltip"</code> and is linked by <code>aria-describedby</code>. It shows on hover and focus and closes on Esc.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html" target="_blank" rel="noopener">WCAG 1.4.13</a></p></div>
+  <div class="panel card"><h3>Dropdown</h3><p>The trigger is a <code>&lt;button aria-haspopup="listbox" aria-expanded&gt;</code>; options are <code>role="option"</code> with <code>aria-selected</code>. ↑ ↓ move, Enter/Space pick, Esc closes.</p></div>
+</div></section>
+
+<section id="open" data-flag-area="open"><h2>Open issues</h2>
+<div class="open"><ul>
+  <li>Contrast (a11y pass deferred, values kept): default border #E2EAEC on white 1.22 : 1, inline hover #B5C3CB 1.81 : 1, dark field #484858 on #393945 1.27 : 1 — all below 3 : 1. Error label #E25757 on #FFF8F9 3.5 : 1, dark error #E25757 on #FFEAEE 3.18 : 1, prefix #9C9C9C 2.75 : 1, disabled dropdown #9C9C9C on the disabled fill 2.59 : 1, dark dropdown error #D26568 on #393945 3.15 : 1 — below 4.5 : 1.</li>
+  <li>Off-token colours used as component tokens: #9C9C9C (prefix, disabled dropdown), #484858 (Dark/Input BG, and its 50% disabled), #737373 (formula placeholder; its style is named “Text/Light-#B4B4B4”), #404040 (formula argument colour), black 80% (tooltip).</li>
+  <li>Error state is colour-only in Figma (light): no message. The message line is added in review.</li>
+  <li>Disabled reads like enabled: disabled placeholder is the same #6C6C6C as enabled; disabled filled #545454 is darker than an enabled placeholder. Dark disabled text #F9FAFA is brighter than the enabled placeholder #E2EAEC.</li>
+  <li>Small (100): the LABEL row is 180 wide inside a 100-wide field (overflows in Figma). Built with the label clipped to the field.</li>
+  <li>Large (400) + Icon: Figma's input row is 180 wide, so text truncates at half width. Built full width.</li>
+  <li>Multi-Tag Input: Tags frame has 215 right padding inside a 190-wide frame. Built without it.</li>
+  <li>Tag Input + Icon (200, 4117:7050) shows no tags — identical to Default Filled + Icon. Rendered as Figma.</li>
+  <li>Table (Open) attaches a 400-wide Dropdown list to a 200-wide field. The Table list itself is a dropdown part and is shown as a placeholder here.</li>
+  <li>Dropdown No Label (Open): the list is placed at y 0, over the field. Built under the field.</li>
+  <li>Dropdown Error (288:492) and dark Text Input Disabled (175:180, 177:5) are detached from <code>.Base Input</code>; Inline uses a detached frame inside the instance.</li>
+  <li>Empty dropdown placeholder is italic; Input - Text placeholder is regular. Kept as Figma.</li>
+  <li>Active and Open share the same blue border; Default · Active · Large (3665:3477) also shows the list and a clear ×. Rendered as Figma.</li>
+  <li>Dropdown Condition uses the disabled grey fill (#E7E7E7 30%) and #EFEFEF border even when enabled, with a blue #0076DD value.</li>
+  <li>Dark dropdown has no field box while the dark text input has a #484858 box.</li>
+  <li>Text Area: dark only; no light theme and no Filled / Error / Disabled states. Its variant property is still named “Property 2”.</li>
+  <li>Line heights are Auto in Figma (≈16px for 12px text, 14px for 10px); built with <code>.type-12-*</code> (17px) and <code>.type-10-regular</code> (12px). Field height is fixed, so sizes still match. Label caps use 0 tracking in Figma (V1 caps classes use 0.5px).</li>
+  <li>Helper text colour (<code>--text-light</code>) and the 3px field-to-message gap are build choices — not in Figma for light inputs. Confirm.</li>
+  <li>Read-only has no Figma visual: it looks like Filled and keeps the default border on focus. Confirm a visual.</li>
+  <li>The added focus ring is <code>--pando-blue</code> on the dark surface too (~2.4 : 1). Needs a dark ring colour.</li>
+  <li>Figma documentation blocks: “Uses” and “Placement &amp; Convention” are template text; Dropdown Select overview copies the Text Input overview.</li>
+  <li>Dropdown parts (.Dropdown Option, .Header, .Table Cell, .Custom Add, . Toggle, .Blinking cursor, Dropdown list, Dropdown Light, .Dropdown Dark) live on this page; only what the Open variants show is rendered.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area="gaps"><h2>Industry gaps — not added</h2>
+<div class="panel gaps"><ul>
+  <li>Character count on text inputs (only the dark Text Area has one) — review: Later. <a href="https://ant.design/components/input" target="_blank" rel="noopener">Ant Design</a></li>
+  <li>Clear (×) button on text inputs — review: Later. <a href="https://ant.design/components/input" target="_blank" rel="noopener">Ant Design</a></li>
+  <li>Height sizes (V1 has one 60px height plus Small 52) — review: Later. <a href="https://carbondesignsystem.com/components/text-input/usage/" target="_blank" rel="noopener">Carbon</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include the files, then build fields with <code>pdsInput.build()</code> or write the markup and call <code>pdsInput.init()</code>.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup (Default · Error, with info icon and message):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="input.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const F=[['CALCULATESLAB','fn'],['(','po'],['shipment_package_weight,',''],['”graduate”','str'],[',',''],['Wt_Slab','var'],[')','pc']];
+const GROUPS=[
+ {t:'Input - Text · Default (light)',items:[
+  ['6:2','Default · Empty · 200',{}],
+  ['157:12','Default · Filled · 200',{value:'Some text here'}],
+  ['157:18','Default · Active · 200',{value:'Some text here',state:'active'}],
+  ['157:24','Default · Error · 200',{value:'Some text here',state:'error'}],
+  ['164:137','Default · Empty · Disabled · 200',{placeholder:'Disabled Placeholder',disabled:true}],
+  ['157:30','Default · Filled · Disabled · 200',{value:'Disabled Filled',disabled:true}],
+  ['4117:7023','Default · Empty · Icon · 200',{icon:'search'}],
+  ['4117:7037','Default · Filled · Icon · 200',{icon:'search',value:'Filled Text'}],
+  ['3380:4324','Default · Empty · Small (100)',{size:100,placeholder:'Placeholder'}],
+  ['3380:4326','Default · Filled · Small (100)',{size:100,value:'Some text'}],
+  ['3380:4328','Default · Active · Small (100) — with cancel / confirm',{size:100,value:'Some text here',state:'active',actions:true},{pr:30}],
+  ['140:38','Default · Empty · Large (400)',{size:400}],
+  ['140:44','Default · Filled · Large (400)',{size:400,value:'Filled Text'}],
+  ['4096:14555','Default · Empty · Icon · Large (400)',{size:400,icon:'search'}],
+ ]},
+ {t:'Input - Text · Default · Open and Active with list',items:[
+  ['3674:3550','Default · Open · Icon · 200 · Required',{icon:'search',required:true,placeholder:'Search',state:'open',menu:'multi'},{pb:170}],
+  ['3497:3381','Default · Open · Icon · Large (400) · Required',{size:400,icon:'search',required:true,placeholder:'Search',state:'open',menu:'multi'},{pb:170}],
+  ['3665:3477','Default · Active · Icon · Large (400) · Required (list + clear shown in Figma)',{size:400,icon:'search',required:true,value:'Default Selected',state:'active',clear:true,menu:'multi',menuOpen:true},{pb:170}],
+ ]},
+ {t:'Input - Text · Inline (250)',items:[
+  ['284:0','Inline · Empty',{type:'inline',placeholder:'Placeholder Text'}],
+  ['3262:3683','Inline · Filled',{type:'inline',value:'Input Text'}],
+  ['276:424','Inline · Hover',{type:'inline',value:'Input Text',state:'hover'}],
+  ['3262:3621','Inline · Active',{type:'inline',placeholder:'Placeholder Text',state:'active'}],
+  ['284:12','Inline · Error',{type:'inline',value:'Input Text',state:'error'}],
+  ['3262:3661','Inline · Filled · Disabled',{type:'inline',value:'Input Text',disabled:true}],
+ ]},
+ {t:'Input - Text · Condition (auto)',items:[
+  ['3377:3721','Condition · Empty',{type:'condition',size:'auto'}],
+  ['3380:3734','Condition · Filled',{type:'condition',size:'auto',value:'Value'}],
+  ['10233:6971','Condition · Empty · Icon',{type:'condition',size:'auto',icon:'calendar'}],
+  ['10233:6977','Condition · Filled · Icon',{type:'condition',size:'auto',icon:'calendar',value:'Value'}],
+ ]},
+ {t:'Input - Text · Tag Input, Multi-Tag, Search Tag, Table',items:[
+  ['3168:3165','Tag Input · Filled · Large (400)',{type:'tags',size:400,tags:['Option 1','Option 2 long option','Option 3']}],
+  ['4096:14569','Tag Input · Filled · Icon · Large (400)',{type:'tags',size:400,icon:'search',tags:['Option 1','Option 2 long option'],count:'+ 2'}],
+  ['4096:14733','Tag Input · Filled · Icon · Disabled · Large (400)',{type:'tags',size:400,icon:'search',tags:['Option 1','Option 2 long option'],count:'+ 2',disabled:true}],
+  ['4117:7050','Tag Input · Filled · Icon · 200 (no tags in Figma)',{icon:'search',value:'Filled Text'}],
+  ['3416:3305','Multi-Tag Input · Filled · 200',{type:'tags',tags:['Option 1','Option 2']}],
+  ['3248:3633','Search Tag · Empty',{type:'searchtag',chip:'Name'}],
+  ['3178:2349','Search Tag · Filled',{type:'searchtag',chip:'Name',value:'Filled Text',selected:true}],
+  ['3248:3653','Search Tag · Open',{type:'searchtag',chip:'Name',state:'open',menu:'search'},{pb:70}],
+  ['4414:7025','Table · Open · 200',{type:'searchtag',chip:'Name',state:'open',menu:'table'},{pb:440,pr:200}],
+  ['4096:14955','Table · Open · Icon · Large (400)',{size:400,icon:'search',state:'open',menu:'table'},{pb:440}],
+ ]},
+ {t:'Input - Text · Formula (600)',items:[
+  ['4642:6095','Formula · Empty',{type:'formula',required:true}],
+  ['4642:5834','Formula · Filled',{type:'formula',required:true,result:'True',formula:F}],
+ ]},
+ {t:'Input - Text · Dark (310)',dark:true,items:[
+  ['175:131','Dark · Empty',{theme:'dark'}],
+  ['175:146','Dark · Filled',{theme:'dark',value:'Input Filled'}],
+  ['1914:758','Dark · Empty · Icon',{theme:'dark',icon:'calendar'}],
+  ['1914:772','Dark · Filled · Icon',{theme:'dark',icon:'calendar',value:'Input Filled'}],
+  ['175:180','Dark · Empty · Disabled',{theme:'dark',disabled:true}],
+  ['177:5','Dark · Filled · Disabled',{theme:'dark',value:'Input Filled',disabled:true}],
+  ['177:15','Dark · Error',{theme:'dark',value:'Input Filled',state:'error',errorMessage:'Error Message Here'}],
+ ]},
+ {t:'Input - Dropdown Select · light',items:[
+  ['288:475','Default · Empty · 200',{type:'select',fadedArrow:true}],
+  ['288:467','Default · Filled · 200',{type:'select',value:'Input Data',fadedArrow:true}],
+  ['3160:2961','Default · Active · 200',{type:'select',placeholder:'Select',italic:false,state:'active'}],
+  ['288:492','Default · Error · 200',{type:'select',placeholder:'Select',italic:false,state:'error'}],
+  ['2207:879','Default · Empty · Disabled · 200',{type:'select',disabled:true}],
+  ['2207:886','Default · Filled · Disabled · 200',{type:'select',placeholder:'Select',italic:false,disabled:true}],
+  ['3334:3868','Default · Empty · Large (400)',{type:'select',size:400}],
+  ['3432:3381','Default · Filled · Large (400)',{type:'select',size:400,value:'Filled Text'}],
+  ['3169:3232','Tag Input · Filled · 200',{type:'select-tags',tags:['Option 1','Option 2']}],
+  ['3334:3879','Tag Input · Filled · Large (400)',{type:'select-tags',size:400,tags:['Option 1','Option 2','Option 3']}],
+  ['4475:5448','No Label · Filled · 200',{type:'nolabel',value:'<Label Search>'}],
+  ['3380:3727','Condition · Filled',{type:'select-condition',size:'auto',value:'Input Data'}],
+  ['10233:6952','Condition · Filled · Icon',{type:'select-condition',size:'auto',value:'Input Data',icon:'search',noArrow:true}],
+  ['3380:3747','Condition · Filled · Disabled',{type:'select-condition',size:'auto',value:'Input Data',disabled:true}],
+  ['10233:7013','Condition · Filled · Icon · Disabled',{type:'select-condition',size:'auto',value:'Input Data',icon:'search',noArrow:true,disabled:true}],
+ ]},
+ {t:'Input - Dropdown Select · Open',items:[
+  ['3160:3019','Default · Open · 200',{type:'select',placeholder:'Search',italic:false,state:'open',menu:'single'},{pb:375}],
+  ['3892:3728','Default · Open · Filter (225)',{type:'select',size:225,placeholder:'Search',italic:false,state:'open',menu:'single'},{pb:375}],
+  ['3334:3888','Default · Open · Large (400)',{type:'select',size:400,placeholder:'Search',italic:false,state:'open',menu:'single'},{pb:375}],
+  ['3505:3311','Condition · Open',{type:'select-condition',size:'auto',value:'Input Data',state:'open',menu:'single'},{pb:375,pr:110}],
+  ['4475:5464','No Label · Open',{type:'nolabel',placeholder:'Select',state:'open',menu:'single',menuCount:6},{pb:230}],
+  ['3334:4195','DropUp · Open · Large (400)',{type:'dropup',size:400,placeholder:'Select',italic:false,state:'open',menu:'single'},{pt:375}],
+ ]},
+ {t:'Input - Dropdown Select · Dark (310)',dark:true,items:[
+  ['764:459','Dark · Empty',{theme:'dark',type:'select',placeholder:'Select'}],
+  ['764:454','Dark · Filled',{theme:'dark',type:'select',value:'Input Selection'}],
+  ['1716:556','Dark · Filled · Icon',{theme:'dark',type:'select',value:'10 Jun 2021',icon:'calendar',right:true}],
+  ['212:1','Dark · Empty · Disabled',{theme:'dark',type:'select',placeholder:'Select',disabled:true}],
+  ['212:4','Dark · Error',{theme:'dark',type:'select',value:'Error Text',state:'error',errorMessage:'Error Type here'}],
+  ['6062:5429','Dark · Tag Input · Empty',{theme:'dark',type:'select-tags',tags:['Text Input'],right:true}],
+  ['1819:820','Dark · Open',{theme:'dark',type:'select',placeholder:'Search ',state:'open',menu:'dark'},{pb:300}],
+ ]},
+ {t:'Text Area (dark only)',dark:true,items:[
+  ['175:169','Text Area · Dark · Empty (default: Required, Show Input Text, Show Count off)',{type:'textarea',label:'Label'}],
+  ['175:169','Same variant · Required + Show Input Text + Show Count on',{type:'textarea',label:'Label',required:true,showInput:true,showCount:true}],
+ ]},
+];
+const ADDED=[
+ {t:'Input - Text · added states and parts',items:[
+  ['review','Focus (keyboard) — added in review, not in Figma',{state:'focus'}],
+  ['review','Error + message — added in review, not in Figma',{value:'Some text here',state:'error',errorMessage:'Error Message Here'}],
+  ['review','Helper text — added in review, not in Figma',{message:'Helper text'}],
+  ['review','Read-only — added in review, not in Figma',{value:'Some text here',readonly:true}],
+  ['review','Required on Input - Text — added in review (marker from Figma)',{required:true}],
+  ['11396:3213','Info icon — review change (Figma 11396:3213)',{info:{title:'Tooltip Title',text:'Tooltip content.'}}],
+  ['243:236','Info icon · tooltip shown (Tooltip · Style=Text · Beak=5:00)',{info:{title:'Tooltip Title',text:'Tooltip content.'},tipOpen:true},{pt:84}],
+  ['review','Dropdown · Error + message — added in review',{type:'select',placeholder:'Select',italic:false,state:'error',errorMessage:'Error Message Here'}],
+ ]},
+];
+let count=0;
+function renderGroups(host,groups,countIt){
+ groups.forEach(g=>{const wrap=document.createElement('div');wrap.className='vgroup';wrap.innerHTML=`<h3>${g.t}</h3>`;const body=document.createElement('div');body.className='vbody'+(g.dark?' dark':'');body.inert=true;
+  g.items.forEach(([node,lbl,o,pad])=>{const c=document.createElement('div');c.className='vcell';const p=pad||{};if(p.pb)c.style.paddingBottom=p.pb+'px';if(p.pt)c.style.paddingTop=p.pt+'px';if(p.pr)c.style.paddingRight=p.pr+'px';
+   c.innerHTML=`<span class="lbl"><b>${lbl}</b> · ${node}</span>`;const el=pdsInput.build(Object.assign({static:true},o));if(p.pt)c.prepend(el);else c.appendChild(el);body.appendChild(c);if(countIt)count++});
+  wrap.appendChild(body);host.appendChild(wrap)});
+}
+renderGroups($('#vgroups'),GROUPS,true);
+renderGroups($('#addgroups'),ADDED,false);
+document.documentElement.dataset.variantCount=count;
+
+// try it
+function buildTry(){
+ const t=$('#c-type').value, dark=t.startsWith('dark');
+ const o={size:+$('#c-size').value,label:$('#c-label').value,required:$('#c-req').checked,disabled:$('#c-dis').checked,readonly:$('#c-ro').checked};
+ if(t==='inline')o.type='inline'; if(t==='condition'){o.type='condition';o.size='auto';o.label=$('#c-label').value||'Label'}
+ if(t==='select'||t==='dark-select'){o.type='select';o.menu=dark?'dark':'single'}
+ if(dark){o.theme='dark';o.size=310;}
+ if($('#c-icon').checked)o.icon=(t==='condition'||dark)?'calendar':'search';
+ if($('#c-info').checked&&!dark&&t!=='condition')o.info={title:'Tooltip Title',text:'Tooltip content.'};
+ if($('#c-help').checked)o.message='Helper text';
+ if($('#c-err').checked){o.state='error';o.errorMessage='Error Message Here'}
+ const st=$('#stage');st.className='stage2'+(dark?' dark':'');st.replaceChildren(pdsInput.build(o));
+}
+$('#ctrls').addEventListener('input',buildTry);$('#ctrls').addEventListener('submit',e=>e.preventDefault());buildTry();
+
+// code
+$('#code1').textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/input.css">
+<script src="components/input.js"><\/script>
+
+<script>
+  const field = pdsInput.build({
+    type: 'text',            // text | inline | condition | tags | searchtag | formula
+                             // select | select-tags | dropup | select-condition | nolabel | textarea
+    size: 200,               // 100 | 200 | 225 | 250 | 310 | 400 | 600 | 'auto'
+    label: 'Input Label',
+    placeholder: 'Placeholder Ghost Text',
+    required: true,          // added in review on Input - Text
+    info: { title: 'Tooltip Title', text: 'Tooltip content.' },
+    message: 'Helper text',  // added in review
+    // state: 'error', errorMessage: '…', disabled: true, readonly: true, theme: 'dark'
+  });
+  document.querySelector('#form').append(field);
+<\/script>`;
+$('#code2').textContent=pdsInput.build({static:true,value:'Some text here',state:'error',errorMessage:'Error Message Here',info:{title:'Tooltip Title',text:'Tooltip content.'}}).outerHTML.replace(/></g,">\n<");
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="flag.js"></script>
+</body>
+</html>

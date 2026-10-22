@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Scrollbar · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="scrollbar.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* scrollbar page */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.sgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.scell{display:flex;flex-direction:column;gap:8px;min-width:0}
+.scell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.box{height:220px;border-radius:8px;padding:12px 10px 12px 14px;font:var(--type-12-regular);border:1px solid var(--pg-line)}
+.box.light{background:var(--white);color:var(--text-dark)}
+.box.dark{background:var(--dark-darker);color:var(--dark-label-text);border-color:var(--dark-light)}
+.box p{margin:0 0 8px}
+.wide{white-space:nowrap}
+.redline-wrap{padding:28px 20px 12px;overflow-x:auto}
+.rl2{position:relative;width:360px;height:420px;margin:10px auto 20px}
+.rl2 .track{position:absolute;left:150px;top:0;width:12px;height:400px;border-radius:16px;background:var(--scroll-track-light)}
+.rl2 .thumb{position:absolute;left:150px;top:60px;width:12px;height:200px;border-radius:16px;background:var(--scroll-thumb-light)}
+.rl2 .rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl2 .h{height:0;border-top:1px solid var(--pg-red)}
+.rl2 .v{width:0;border-left:1px solid var(--pg-red)}
+.rl2 .rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:13.5px}
+@media (max-width:760px){.sgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Scrollbar</h1>
+    <p class="lede">The thin custom scrollbar for scrolling panels and menus. One class, <code>.pds-scroll</code>, in a Light and a Dark theme.</p>
+    <div class="meta"><span>Status: Built 2026-10-23 · no review yet (published = Keep)</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=600-2" target="_blank" rel="noopener">Figma component 600:2 ↗</a><span>Files: scrollbar.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#issues">Open issues</a><a href="#code">Code</a></nav>
+
+<section id="variants" data-flag-area="variants"><h2>Variants</h2><p class="sub">Theme = Light and Dark, on real scrolling boxes. Scroll inside each box. In Firefox the bar is the browser’s “thin” bar in the same colours.</p>
+<div class="panel sgrid">
+  <div class="scell"><span class="lbl">Theme=Light · .pds-scroll</span><div class="box light pds-scroll" tabindex="0" role="region" aria-label="Light scrollbar example" id="ex-light"></div></div>
+  <div class="scell"><span class="lbl">Theme=Dark · .pds-scroll .pds-scroll--dark</span><div class="box dark pds-scroll pds-scroll--dark" tabindex="0" role="region" aria-label="Dark scrollbar example" id="ex-dark"></div></div>
+  <div class="scell"><span class="lbl">Horizontal · same values (not drawn in Figma)</span><div class="box light pds-scroll" style="height:96px" tabindex="0" role="region" aria-label="Horizontal scrollbar example"><p class="wide" id="ex-wide"></p></div></div>
+</div></section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma component, drawn at 2× size (track shortened).</p>
+<div class="panel"><div class="redline-wrap"><div class="rl2">
+  <div class="track"></div><div class="thumb"></div>
+  <div class="rl h" style="left:150px;width:12px;top:-14px"><span style="left:-2px;top:-17px">6</span></div>
+  <div class="rl v" style="left:190px;top:0;height:400px"><span style="left:6px;top:190px">track · height = scroll area (500 in Figma)</span></div>
+  <div class="rl v" style="left:120px;top:60px;height:200px"><span style="left:-118px;top:92px">handle 100 (example)</span></div>
+  <div class="rl h" style="left:170px;width:40px;top:404px"><span style="left:0;top:2px">radius 8</span></div>
+</div></div>
+<div class="spec-table">
+  <div><b>Width</b><code>6px</code> · <code>--scroll-size</code></div>
+  <div><b>Radius</b><code>8px</code> track + handle · <code>--scroll-radius</code></div>
+  <div><b>Light track</b><code>--accent-off-white</code> #F8F8F8</div>
+  <div><b>Light handle</b><code>--grey-light</code> #E7E7E7</div>
+  <div><b>Dark track</b><code>--dark-bg</code> #393945</div>
+  <div><b>Dark handle</b>#484858 · off-token (Dark/Input BG)</div>
+  <div><b>Arrows · border · shadow</b>none</div>
+  <div><b>Firefox</b><code>scrollbar-width: thin</code> + colours</div>
+</div></div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Where it goes</h3><p>Add <code>.pds-scroll</code> to the element that scrolls — panels, lists, dropdown menus. Add <code>.pds-scroll--dark</code> on the dark sidebar surfaces.</p></div>
+  <div class="panel card"><h3>In Figma</h3><p>The Figma example places the handle 30px from the top with 10px spacing. That is only the picture; in the browser the handle’s position and length follow the content.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Still a native scrollbar</h3><p>Keyboard, wheel and touch scrolling are unchanged. Make a scrolling region with content reachable by Tab (<code>tabindex="0"</code>) and give it a name.</p></div>
+  <div class="panel card"><h3>Open for the accessibility pass</h3><p>Handle vs track: Light 1.16 : 1, Dark 1.27 : 1 — well below 3 : 1. The 6px bar is a small mouse target. Kept as Figma for now.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html" target="_blank" rel="noopener">WCAG 2.2 · 1.4.11 Non-text contrast</a></p></div>
+</div></section>
+
+<section id="issues" data-flag-area="issues"><h2>Open issues</h2>
+<div class="panel card"><ul class="plain">
+  <li>Dark handle #484858 (Figma style “Dark/Input BG”) is not in tokens.css — kept as a component token.</li>
+  <li>Figma style name says “Dark/Dark-Bg-#393944”, the fill is #393945.</li>
+  <li>Handle-to-track contrast 1.16–1.27 : 1 (below 3 : 1).</li>
+  <li>No hover, active or dragging state, and no horizontal bar in Figma. Horizontal uses the same values.</li>
+  <li>Firefox can’t draw 6px or the 8px radius; it shows the browser’s thin bar (≈8px) in the same colours.</li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include the two files, then add the class to the scrolling element.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+["#ex-light","#ex-dark"].forEach(s=>{const b=$(s);for(let i=1;i<=24;i++){const p=document.createElement('p');p.textContent='Row '+i;b.appendChild(p)}});
+$("#ex-wide").textContent=Array.from({length:30},(_, i)=>`Column ${i+1}`).join('    ');
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/scrollbar.css">
+
+<!-- Light (default) -->
+<div class="pds-scroll" style="max-height: 320px">…</div>
+
+<!-- Dark surfaces -->
+<div class="pds-scroll pds-scroll--dark" style="max-height: 320px">…</div>`;
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="flag.js"></script>
+</body>
+</html>

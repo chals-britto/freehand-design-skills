@@ -1,0 +1,56 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Scrollbar
+   Figma: DS V2 – Atoms › 🟢 Scrollbar › component set "Scrollbar" (600:2)
+   Built 2026-10-23 · no review yet, everything published = Keep.
+   Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Measured from the component */
+  --scroll-size:   6px;   /* track + handle width (Figma: Width 6) */
+  --scroll-radius: 8px;   /* track + handle corner radius (Figma: Border radius 8) */
+
+  /* Theme=Light */
+  --scroll-track-light: var(--accent-off-white);  /* #F8F8F8 · Accent/OffWhite */
+  --scroll-thumb-light: var(--grey-light);        /* #E7E7E7 · Grey/Light */
+
+  /* Theme=Dark */
+  --scroll-track-dark:  var(--dark-bg);           /* #393945 · Dark/Dark-Bg */
+  --scroll-thumb-dark:  #484858;                  /* off-token in Figma — style "Dark/Input BG", not in tokens.css */
+}
+
+/* ── Put .pds-scroll on any element that scrolls ─────────────────── */
+.pds-scroll {
+  --_track: var(--scroll-track-light);
+  --_thumb: var(--scroll-thumb-light);
+  overflow: auto;
+}
+.pds-scroll--light { --_track: var(--scroll-track-light); --_thumb: var(--scroll-thumb-light); }
+.pds-scroll--dark  { --_track: var(--scroll-track-dark);  --_thumb: var(--scroll-thumb-dark); }
+
+/* Chrome, Edge, Safari — exact Figma size and radius */
+.pds-scroll::-webkit-scrollbar {
+  width: var(--scroll-size);     /* vertical bar (the Figma component) */
+  height: var(--scroll-size);    /* horizontal bar — same values, not drawn in Figma */
+}
+.pds-scroll::-webkit-scrollbar-track {
+  background: var(--_track);
+  border-radius: var(--scroll-radius);
+}
+.pds-scroll::-webkit-scrollbar-thumb {
+  background: var(--_thumb);
+  border-radius: var(--scroll-radius);
+}
+.pds-scroll::-webkit-scrollbar-corner { background: transparent; }
+.pds-scroll::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+
+/* Firefox — only the standard properties exist: "thin" is the closest
+   width (≈8px, browser-drawn) and the radius cannot be set.
+   Scoped to browsers without ::-webkit-scrollbar, because Chrome 121+
+   ignores the rules above as soon as scrollbar-width/-color is set. */
+@supports not selector(::-webkit-scrollbar) {
+  .pds-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--_thumb) var(--_track);
+  }
+}

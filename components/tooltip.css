@@ -1,0 +1,90 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Tooltip
+   Figma: DS V2 – Atoms › 🟢 Tooltips › component set "Tooltip" (243:236)
+   Built 2026-10-23 from Figma (no review yet). Style=Text only — the
+   "Custom Content" and "Info + Status (Map Tracking)" styles could not be
+   read (Figma rate limit) and are not built.
+   Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --tooltip-bg: rgb(0 0 0 / .8);   /* off-token in Figma: "Opacity/#000000-Light-80%" (spec text says 70%) */
+  --tooltip-fg: var(--white);
+
+  /* Measured from the component */
+  --tooltip-width: 164px;          /* bubble; Figma master 180 incl. 8px beak padding each side */
+  --tooltip-pad: var(--space-10);
+  --tooltip-gap: 4px;              /* title ↔ text */
+  --tooltip-radius: 4px;
+  --tooltip-lh: 16px;              /* Figma 12px/Heading auto (16px box) and 12px/Body 16px */
+  --tooltip-beak-w: 12px;
+  --tooltip-beak-h: 6px;
+  --tooltip-beak-start: 16px;      /* 11:00 — beak's left edge from the bubble's left */
+  --tooltip-beak-end: 20px;        /* 1:00  — beak's right edge from the bubble's right */
+  --tooltip-beak-center: calc(50% - 8px); /* 12:00 — Figma beak sits 2px left of centre */
+  --tooltip-offset: 8px;           /* bubble ↔ target (Figma master padding) */
+  --tooltip-z: 1000;
+}
+
+.pds-tooltip {
+  box-sizing: border-box;
+  position: relative;
+  width: var(--tooltip-width);
+  display: flex; flex-direction: column; gap: var(--tooltip-gap);
+  padding: var(--tooltip-pad);
+  border-radius: var(--tooltip-radius);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+  font-family: var(--font-family);
+  text-align: left;
+  /* no shadow — as in Figma */
+}
+.pds-tooltip__title { margin: 0; font: var(--type-12-semibold); line-height: var(--tooltip-lh); }
+.pds-tooltip__text  { margin: 0; font: var(--type-12-regular);  line-height: var(--tooltip-lh); }
+
+/* ── Beak ──────────────────────────────────────────────────────────
+   Clock position = where the beak sits on the bubble.
+   11/12/1 top edge (Figma-measured) · 5/6/7 bottom edge · 2/3/4 right
+   edge · 8/9/10 left edge (bottom + side offsets mirror the top ones —
+   inferred, see tooltip.md Open issues). */
+.pds-tooltip::before {
+  content: ""; position: absolute;
+  width: var(--tooltip-beak-w); height: var(--tooltip-beak-h);
+  background: var(--tooltip-bg);
+}
+/* top edge — points up */
+.pds-tooltip--beak-11::before, .pds-tooltip--beak-12::before, .pds-tooltip--beak-1::before {
+  top: calc(-1 * var(--tooltip-beak-h));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.pds-tooltip--beak-11::before { left: var(--tooltip-beak-start); }
+.pds-tooltip--beak-12::before { left: var(--tooltip-beak-center); }
+.pds-tooltip--beak-1::before  { right: var(--tooltip-beak-end); }
+/* bottom edge — points down */
+.pds-tooltip--beak-5::before, .pds-tooltip--beak-6::before, .pds-tooltip--beak-7::before {
+  bottom: calc(-1 * var(--tooltip-beak-h));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.pds-tooltip--beak-7::before { left: var(--tooltip-beak-start); }
+.pds-tooltip--beak-6::before { left: var(--tooltip-beak-center); }
+.pds-tooltip--beak-5::before { right: var(--tooltip-beak-end); }
+/* side edges — beak rotated: 6 wide × 12 tall */
+.pds-tooltip--beak-2::before, .pds-tooltip--beak-3::before, .pds-tooltip--beak-4::before,
+.pds-tooltip--beak-8::before, .pds-tooltip--beak-9::before, .pds-tooltip--beak-10::before {
+  width: var(--tooltip-beak-h); height: var(--tooltip-beak-w);
+}
+.pds-tooltip--beak-2::before, .pds-tooltip--beak-3::before, .pds-tooltip--beak-4::before {
+  right: calc(-1 * var(--tooltip-beak-h));
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.pds-tooltip--beak-8::before, .pds-tooltip--beak-9::before, .pds-tooltip--beak-10::before {
+  left: calc(-1 * var(--tooltip-beak-h));
+  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+}
+.pds-tooltip--beak-2::before, .pds-tooltip--beak-10::before { top: var(--tooltip-beak-start); }
+.pds-tooltip--beak-3::before, .pds-tooltip--beak-9::before  { top: var(--tooltip-beak-center); }
+.pds-tooltip--beak-4::before, .pds-tooltip--beak-8::before  { bottom: var(--tooltip-beak-end); }
+
+/* ── Live (attached) tooltip ────────────────────────────────────── */
+.pds-tooltip--floating { position: fixed; z-index: var(--tooltip-z); pointer-events: auto; }
+.pds-tooltip[hidden] { display: none; }

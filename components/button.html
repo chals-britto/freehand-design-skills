@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Button · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="button.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* button page */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.stage.light{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;padding:32px;background:#fff}
+.stage.dark,.vgroup.dark{background:var(--dark-darker)}
+.vgroup{padding:16px 20px;border-top:1px solid var(--pg-line)}
+.vgroup:first-child{border-top:0;border-radius:10px 10px 0 0}
+.vgroup:last-child{border-radius:0 0 10px 10px}
+.vgroup.light{background:#fff}
+.vgroup h3{font:600 13px var(--pg-ui);margin:0 0 12px;color:var(--pg-ink)}
+.vgroup.light h3{color:#16202a}
+.vgroup.dark h3{color:#e7ecf1}
+.vrow{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:flex-end;margin-bottom:14px}
+.vrow:last-child{margin-bottom:0}
+.vcell{display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:0}
+.vcell .lbl{font:500 10.5px var(--pg-mono);color:#5b6672}
+.vgroup.dark .vcell .lbl{color:#9aa6b2}
+.tag{display:inline-block;font:600 10px var(--pg-ui);letter-spacing:.04em;text-transform:uppercase;color:#8a5a00;background:#fdf1dc;border:1px solid #e6c48a;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.spec-table.wide{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.gaps li{list-style:none;margin-left:-18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Button</h1>
+    <p class="lede">Buttons are clickable elements that are used to trigger actions. Button labels express what action will occur when the user interacts with it.</p>
+    <div class="meta"><span>Status: Reviewed 2026-10-23</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3054-1314" target="_blank" rel="noopener">Figma component set 3054:1314 ↗</a><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=11-12" target="_blank" rel="noopener">Buttons page 11:12 ↗</a><span>Files: button.css · button.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area="try"><h2>Try it</h2><p class="sub">Pick a type, size, theme and tone. Press the button to see Loading: the spinner shows, clicks are ignored for 2 seconds, focus stays on the button. Tab to it to see the focus ring.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls">
+    <label>Type<select id="c-type"><option value="primary">Primary</option><option value="secondary">Secondary</option><option value="text">Text Only</option><option value="action">Action</option><option value="dropdown">Button Dropdown</option></select></label>
+    <label>Size<select id="c-size"><option value="normal">Normal</option><option value="small">Small</option></select></label>
+    <label>Theme<select id="c-theme"><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <label>Tone<select id="c-tone"><option value="">Default</option><option value="danger">Danger (added in review)</option></select></label>
+    <label>Label<input type="text" id="c-label" value="Button Text"></label>
+    <label class="chk"><input type="checkbox" id="c-disabled"> Disabled</label>
+  </form>
+  <div class="stage light" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area="variants"><h2>Variants</h2><p class="sub">Every Light and Dark variant that exists in the Figma set, with the real classes. Dark variants sit on the Figma backdrop (#24242F). States are forced with <code>.is-hover</code> / <code>.is-active</code> / <code>.is-focus</code> for display.</p>
+<div class="panel" id="vwrap"></div></section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="panel"><div class="spec-table wide">
+  <div><b>Text Normal</b><code>30px</code> · pad <code>6 10 8 10</code> · gap <code>10</code> · radius <code>4</code></div>
+  <div><b>Text Small</b><code>24px</code> · pad <code>5 10</code></div>
+  <div><b>Label Normal</b>Bold 12 · 16px LH · UPPER · 0 tracking</div>
+  <div><b>Label Small</b><code>.type-10-bold</code> · UPPER · 0 tracking</div>
+  <div><b>Hover border</b>1px inside (no size change)</div>
+  <div><b>Loading</b>spinner <code>16</code> / <code>14</code> · gap <code>4</code> / <code>10</code></div>
+  <div><b>Text Only</b>pad <code>0</code> · <code>16</code> / <code>14</code> tall</div>
+  <div><b>Action</b><code>22px</code> · pad <code>3 5</code> · gap <code>4</code> · icon <code>10</code> · SemiBold 12</div>
+  <div><b>Icon Circular</b><code>30</code> / <code>20</code> · icon <code>20</code> / <code>14</code> · <code>--shadow-1</code></div>
+  <div><b>Pill</b><code>20px</code> · pad <code>3 9</code> · radius <code>24</code></div>
+  <div><b>Dropdown</b>pad <code>7 10</code> / <code>5 10</code> · caret <code>10×8</code></div>
+  <div><b>Split</b>gap <code>2</code> · caret segment <code>30</code> / <code>26</code></div>
+  <div><b>Dual Icon</b>cells <code>24×24</code> · pad <code>6</code> · gap <code>2</code> · icon <code>12</code></div>
+  <div><b>Dual Circular</b><code>51×24</code> · radius <code>20</code></div>
+  <div><b>AI Copilot</b><code>30px</code> · pad <code>5 8 5 6</code> · gap <code>8</code> · logo <code>20</code> · <code>.type-14-semibold</code></div>
+  <div><b>Show more</b>gap <code>5</code> · arrow <code>14</code></div>
+  <div><b>Focus</b> <span class="tag">added in review</span><br><code>2px solid --pando-blue</code> · offset <code>2</code></div>
+</div></div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Primary</h3><p>For the principal call to action on the page. Primary buttons should only appear once per screen (not including the application header, modal dialog, or side panel).</p></div>
+  <div class="panel card"><h3>Secondary</h3><p>For secondary actions on each page. Secondary buttons can only be used in conjunction with a primary button.</p></div>
+  <div class="panel card"><h3>Text Only</h3><p>As part of a pair, the text button performs the negative action of the set, such as Cancel or Back.</p></div>
+</div>
+<div class="cols" style="margin-top:14px">
+  <div class="panel card"><h3>Other types</h3><ul><li><b>Icon button</b> — the icon gives a visual clue and fits more buttons in a small space. Icon-only buttons need a tooltip.</li><li><b>Button Dropdown</b> — a label with a dropdown icon that opens more options.</li><li><b>Dual icon</b> — two icons in one compact element.</li><li><b>Action button</b> — text that prompts an immediate action.</li></ul></div>
+  <div class="panel card"><h3>Placement &amp; convention</h3><p>Buttons on Pando are generally placed to the right of the screen and should be immediately visible without scrolling. In a contained button the label is always centred.</p></div>
+  <div class="panel card"><h3>Do &amp; don’t</h3><ul><li>Do: emphasise the primary action. If there is no primary action, a default button is the safest choice.</li><li>Don’t: put more than 1 primary button in the same group.</li><li>Don’t: put 2 icons in the same button (conflicts with Dual Icon — open issue).</li></ul><p class="src">Source: Figma “Button” doc frame (5554:25032)</p></div>
+</div>
+<div class="cols" style="margin-top:14px">
+  <div class="panel card"><h3>Danger tone <span class="tag">added in review</span></h3><p>For destructive actions. Uses Figma’s Red treatment on Secondary, Text Only and Action. Disabled wins over the tone. Not on icon-only buttons. No Primary danger yet (no Figma visual).</p><p class="src">Sources: <a href="https://carbondesignsystem.com/components/button/usage/" target="_blank" rel="noopener">Carbon Button</a> · <a href="https://ant.design/components/button" target="_blank" rel="noopener">Ant Design Button</a></p></div>
+  <div class="panel card"><h3>Loading <span class="tag">added in review</span></h3><p>Vector spinner in the label colour. The button is disabled while loading and keeps its label and focus. Call <code>pdsButton.setLoading(btn, true)</code>.</p><p class="src">Sources: <a href="https://carbondesignsystem.com/components/button/usage/" target="_blank" rel="noopener">Carbon Button</a> · <a href="https://ant.design/components/button" target="_blank" rel="noopener">Ant Design Button</a></p></div>
+  <div class="panel card"><h3>Icon-only buttons <span class="tag">added in review</span></h3><p>Always give an <code>aria-label</code> and a tooltip with the same words. <code>pdsButton.check()</code> warns when a name is missing.</p><p class="src">Sources: <a href="https://carbondesignsystem.com/components/button/usage/" target="_blank" rel="noopener">Carbon Button</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html" target="_blank" rel="noopener">WCAG 4.1.2</a></p></div>
+</div>
+</section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Keyboard and focus</h3><p>Use <code>&lt;button type="button"&gt;</code>; Enter and Space press it. Focus ring: 2px <code>--pando-blue</code>, 2px offset <span class="tag">added in review — not in Figma</span></p><p class="src">Sources: <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html" target="_blank" rel="noopener">WCAG 2.4.7</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html" target="_blank" rel="noopener">WCAG 1.4.11</a></p></div>
+  <div class="panel card"><h3>Names and states</h3><ul><li>Icon-only: <code>aria-label</code>; icons are <code>aria-hidden</code>.</li><li>Loading: <code>aria-busy</code> + <code>aria-disabled</code>, focus kept.</li><li>Split caret: <code>aria-haspopup="menu"</code> + <code>aria-expanded</code>.</li></ul></div>
+  <div class="panel card"><h3>Open for the accessibility pass</h3><p>White on #0076DD 4.53:1 · #0076DD on #EEF2F4 4.02:1 · #E25757 on #EEF2F4 3.25:1 · #E25757 on #393945 3.11:1 · Action Green on white 2.02:1 · Action Red on white 3.66:1 · white on #8A8A9E 3.38:1 · #0078DD on white 4.44:1 · #D26568 on #24242F 4.24:1. Kept as Figma.</p></div>
+</div></section>
+
+<section id="open" data-flag-area="open"><h2>Open issues</h2>
+<div class="panel card"><ul class="plain">
+  <li>Hover and Loading look the same; Loading only adds the spinner. Hover inverts instead of darkening; <code>--pando-blue-active</code> is unused.</li>
+  <li>Secondary Hover is the same as Primary Hover.</li>
+  <li>Normal vertical padding is uneven (6 top / 8 bottom); Small is 5 / 5.</li>
+  <li>Secondary “Green” is the Default button plus a #1FCD93 dot at the top-right corner, not a colour tone. Purpose unclear.</li>
+  <li>Red / Green are States in Figma, so they can’t combine with Hover or Disabled. Built here as tone modifiers.</li>
+  <li>Text Only hover fill hugs the text (no padding). Dark Text Only has no Hover.</li>
+  <li>Action Hover and Active are identical; radius 0 at Default, 4 at Hover. Only Normal size.</li>
+  <li>Disabled #9C9C9C (Icon Button, pill) is not in tokens.css.</li>
+  <li>Icon Button: shadow style is named 0-1-3 but is 0 2 3; every circular state carries it (Normal Default twice). No Background Hover’s white circle is invisible on white.</li>
+  <li>Pill “Loading” is a brown-light fill with no indicator — reads as a selected chip. Built as <code>.is-selected</code>; needs a name.</li>
+  <li>Dropdown has no Hover or Disabled. Active variants bake an open menu into the button (menu not built here). Small Loading spinner is 16px. Split Small caret segment is 26 wide (Default) vs 24 (Active).</li>
+  <li>Dual Icon Circular: Normal/Default and Small/Active are the same; padding 10 inside a 24px frame. “Don’t put 2 icons in one button” conflicts with Dual Icon.</li>
+  <li>AI Copilot: gradients (#E03A8A, #FE6505, #FF8C54, #8D00DF, #FF4DA6) and the 14px SemiBold label are not V1 tokens or styles; a hidden “AI-Powered Suggestions” layer sits in Hover.</li>
+  <li>Show more: label #0078DD is off-token; “Show more” vs “Show Less” casing; arrow set has placeholder states “State3” / “State4”.</li>
+  <li>Dark coverage is uneven: no Dark Normal Loading, no Dark Normal Red.</li>
+  <li>Line height: Normal labels use 16px (Figma auto) vs <code>.type-12-bold</code> 14px; Action 16px vs <code>.type-12-semibold</code> 17px.</li>
+  <li>Placement text in Figma is missing a word (“right of the screen should be”).</li>
+  <li>Target size under 24px: Small icon 20, Text Only 14–16, Action 22 (Later).</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area="gaps"><h2>Industry gaps — not added</h2><p class="sub">Decided “Later” in review.</p>
+<div class="panel card"><ul class="plain gaps">
+  <li><b>More sizes</b> — V1 has Normal and Small only; Ant Design has small/medium/large + block, Carbon seven sizes. <a href="https://ant.design/components/button" target="_blank" rel="noopener">Ant Design</a> · <a href="https://carbondesignsystem.com/components/button/usage/" target="_blank" rel="noopener">Carbon</a></li>
+  <li><b>Target size</b> — 24×24 minimum or spacing around smaller targets. <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html" target="_blank" rel="noopener">WCAG 2.5.8</a></li>
+  <li><b>Disabled reason</b> — a tooltip explaining what is unavailable and why. <a href="https://fluent2.microsoft.design/components/web/react/core/button/usage" target="_blank" rel="noopener">Fluent 2</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include the files, then use the classes. <code>button.js</code> is only needed for Loading and the name check.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script src="button.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const I={
+ add:'<svg class="pds-button__icon" viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M10.4919 0.410124C10.4496 0.176875 10.2455 0 10 0C9.72386 0 9.5 0.223858 9.5 0.5V9.5H0.5L0.410124 9.50806C0.176875 9.55039 0 9.75454 0 10C0 10.2761 0.223858 10.5 0.5 10.5H9.5V19.5L9.50806 19.5899C9.55039 19.8231 9.75454 20 10 20C10.2761 20 10.5 19.7761 10.5 19.5V10.5H19.5L19.5899 10.4919C19.8231 10.4496 20 10.2455 20 10C20 9.72386 19.7761 9.5 19.5 9.5H10.5V0.5L10.4919 0.410124Z"/></svg>',
+ del:'<svg class="pds-button__icon" viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M8.01456 0H11.9854C12.2024 0 12.3946 0.139888 12.4612 0.346323L13.2302 2.72703H17.7836H19.5C19.7761 2.72703 20 2.95089 20 3.22703C20 3.47249 19.8231 3.67664 19.5899 3.71897L19.5 3.72703H18.2474L17.0588 19.5414C17.0392 19.8023 16.8219 20.004 16.5602 20.004H3.43984C3.17824 20.004 2.96085 19.8023 2.94125 19.5414L1.75259 3.72703H0.5C0.223858 3.72703 0 3.50317 0 3.22703C0 2.98157 0.176875 2.77742 0.410124 2.73508L0.5 2.72703H2.21642H6.76983L7.53877 0.346323C7.60544 0.139888 7.79763 0 8.01456 0ZM2.7545 3.72703H7.13377H12.8662H17.2445L16.0965 19.0038H3.90248L2.7545 3.72703ZM12.1794 2.72681L11.6214 0.999806H8.37744L7.82044 2.72681H12.1794ZM10.4919 5.92293C10.4496 5.68968 10.2455 5.51281 10 5.51281C9.72386 5.51281 9.5 5.73666 9.5 6.01281V16.5127L9.50806 16.6025C9.55039 16.8358 9.75454 17.0127 10 17.0127C10.2761 17.0127 10.5 16.7888 10.5 16.5127V6.01281L10.4919 5.92293ZM13.793 5.61593C14.0379 5.63305 14.2292 5.82373 14.2552 6.05937L14.257 6.14959L13.5226 16.6511C13.5034 16.9266 13.2644 17.1343 12.989 17.115C12.7441 17.0979 12.5528 16.9072 12.5268 16.6716L12.525 16.5814L13.2594 6.07983C13.2787 5.80436 13.5176 5.59666 13.793 5.61593ZM6.72575 5.8877C6.66672 5.65811 6.45036 5.4964 6.20554 5.51408C5.93011 5.53398 5.72296 5.77338 5.74286 6.04881L6.50128 16.5487L6.51579 16.6377C6.57482 16.8673 6.79118 17.029 7.036 17.0113C7.31142 16.9914 7.51857 16.752 7.49868 16.4766L6.74026 5.97676L6.72575 5.8877Z"/></svg>',
+ caret:'<svg class="pds-button__caret" viewBox="0 0 10 8" aria-hidden="true"><path fill="currentColor" d="M0.244078 1.25105C0.569515 0.916316 1.09715 0.916316 1.42259 1.25105L5 4.93067L8.57741 1.25105C8.90285 0.916316 9.43049 0.916316 9.75592 1.25105C10.0814 1.58579 10.0814 2.1285 9.75592 2.46323L5.58926 6.74895C5.26382 7.08368 4.73618 7.08368 4.41074 6.74895L0.244078 2.46323C-0.0813592 2.1285 -0.0813592 1.58579 0.244078 1.25105Z"/></svg>',
+ act:'<svg class="pds-button__icon" viewBox="0 0 10 10" aria-hidden="true"><path fill="currentColor" d="M4.70983 1.01897C4.44309 0.947503 4.17472 1.08417 4.11039 1.32423L2.01396 9.14823L2.00081 9.22845C1.98737 9.44218 2.14336 9.64878 2.38045 9.71231C2.64719 9.78378 2.91556 9.64711 2.97989 9.40705L5.07632 1.58305L5.08947 1.50283C5.10291 1.2891 4.94692 1.0825 4.70983 1.01897ZM7.01241 1.32669L4.90467 9.14766L4.89131 9.22783C4.87709 9.4414 5.03049 9.64756 5.26474 9.71062C5.52826 9.78157 5.79432 9.64456 5.85899 9.40459L7.96673 1.58362L7.98009 1.50345C7.99431 1.28988 7.84091 1.08372 7.60666 1.02066C7.34313 0.949705 7.07708 1.08672 7.01241 1.32669ZM9.60077 3.5C9.60077 3.22386 9.3993 3 9.15077 3H1.05077L0.969881 3.00806C0.759957 3.05039 0.600769 3.25454 0.600769 3.5C0.600769 3.77614 0.802241 4 1.05077 4H9.15077L9.23166 3.99194C9.44158 3.94961 9.60077 3.74546 9.60077 3.5ZM8.55059 5.98509L0.450592 5.97339L0.369695 5.98123C0.15972 6.02277 0.000291321 6.2243 3.96666e-07 6.46689C-0.000326049 6.7398 0.200881 6.96133 0.449409 6.96169L8.54941 6.97339L8.63031 6.96554C8.84028 6.92401 8.99971 6.72248 9 6.47989C9.00033 6.20697 8.79912 5.98545 8.55059 5.98509Z"/></svg>',
+ close:'<svg class="pds-button__icon" viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="M9.88899 2.11092C9.69373 1.91566 9.37715 1.91566 9.18188 2.11092L5.99989 5.29292L2.81791 2.11093L2.74866 2.05308C2.55379 1.91808 2.28437 1.93737 2.1108 2.11093C1.91554 2.30619 1.91554 2.62278 2.1108 2.81804L5.29279 6.00002L2.11082 9.18199L2.05296 9.25124C1.91797 9.44611 1.93725 9.71553 2.11082 9.8891C2.30608 10.0844 2.62266 10.0844 2.81792 9.8891L5.99989 6.70713L9.18187 9.88911L9.25112 9.94696C9.44599 10.082 9.71541 10.0627 9.88898 9.88911C10.0842 9.69384 10.0842 9.37726 9.88898 9.182L6.707 6.00002L9.88899 2.81803L9.94685 2.74878C10.0818 2.55391 10.0626 2.28449 9.88899 2.11092Z"/></svg>',
+ check:'<svg class="pds-button__icon" viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M11.3536 2.20895C11.5488 2.40421 11.5488 2.72079 11.3536 2.91605L4.47855 9.79105C4.28329 9.98632 3.96671 9.98632 3.77145 9.79105L0.646447 6.66605C0.451184 6.47079 0.451184 6.15421 0.646447 5.95895C0.841709 5.76368 1.15829 5.76368 1.35355 5.95895L4.125 8.73039L10.6464 2.20895C10.8417 2.01368 11.1583 2.01368 11.3536 2.20895Z"/></svg>',
+ rcaret:'<svg class="pds-button__icon" viewBox="0 0 9 14" aria-hidden="true"><path fill="currentColor" d="M6.6354 0.875L7.875 2.18678L3.32491 7L7.87328 11.8141L6.6354 13.125L1.4668 7.65544L0.875 7L1.4668 6.34456L6.6354 0.875Z"/></svg>',
+ arrow:'<svg class="pds-show-more__arrow" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 3v8M11 7.3l-4 4-4-4" fill="none" stroke="currentColor" stroke-width=".7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ logo:(dark)=>`<svg class="pds-button__logo" viewBox="0 0 20 20" aria-hidden="true">${dark?'':'<defs><linearGradient id="aig" x1="6.9" y1="10.5" x2="9.1" y2="16.9" gradientUnits="userSpaceOnUse"><stop stop-color="#E03A8A"/><stop offset="1" stop-color="#FE6505"/></linearGradient><linearGradient id="aig2" x1="13.8" y1="5.2" x2="14.6" y2="7.6" gradientUnits="userSpaceOnUse"><stop stop-color="#E03A8A"/><stop offset="1" stop-color="#FE6505"/></linearGradient></defs>'}<path fill="${dark?'#fff':'url(#aig)'}" d="M14.8416 9.51944H13.3189C11.7328 9.51944 10.4427 8.22939 10.4427 6.64326V5.12057C10.4427 4.97253 10.3158 4.86679 10.1889 4.86679H7.96836C7.82032 4.86679 7.71458 4.99368 7.71458 5.12057V6.64326C7.71458 8.22939 6.42452 9.51944 4.83839 9.51944H3.29455C3.14651 9.51944 3.04077 9.64634 3.04077 9.77322V11.9938C3.04077 12.1418 3.16766 12.2476 3.29455 12.2476H4.81724C6.40337 12.2476 7.69343 13.5376 7.69343 15.1238V16.6465C7.69343 16.7945 7.82032 16.9002 7.94721 16.9002H10.1678C10.3158 16.9002 10.4216 16.7734 10.4216 16.6465V15.1238C10.4216 13.5376 11.7116 12.2476 13.2978 12.2476H14.8205C14.9684 12.2476 15.0742 12.1207 15.0742 11.9938V9.77322C15.0742 9.62518 14.9473 9.51944 14.8205 9.51944H14.8416Z"/><path fill="${dark?'#fff':'url(#aig2)'}" d="M16.8301 4.78968H16.2554C15.6568 4.78968 15.17 4.30282 15.17 3.70422V3.12956C15.17 3.07369 15.1221 3.03378 15.0741 3.03378H14.2361C14.1802 3.03378 14.1403 3.08167 14.1403 3.12956V3.70422C14.1403 4.30282 13.6535 4.78968 13.0549 4.78968H12.4722C12.4164 4.78968 12.3765 4.83758 12.3765 4.88546V5.7235C12.3765 5.77937 12.4244 5.81928 12.4722 5.81928H13.0469C13.6455 5.81928 14.1324 6.30615 14.1324 6.90475V7.47941C14.1324 7.53528 14.1802 7.57519 14.2281 7.57519H15.0662C15.1221 7.57519 15.162 7.5273 15.162 7.47941V6.90475C15.162 6.30615 15.6488 5.81928 16.2474 5.81928H16.8221C16.878 5.81928 16.9179 5.7714 16.9179 5.7235V4.88546C16.9179 4.82959 16.87 4.78968 16.8221 4.78968H16.8301Z"/></svg>`
+};
+const T="Button Text";
+const lbl=t=>`<span class="pds-button__label">${t}</span>`;
+const B=(cls,inner,attrs="")=>`<button type="button" class="pds-button ${cls}" ${attrs}>${inner}</button>`;
+const st=s=>({Hover:"is-hover",Loading:"is-loading",Active:"is-active",Focus:"is-focus",Selected:"is-selected"}[s]||"");
+const dis=s=>s==="Disabled"?"disabled":"";
+const tone=s=>s==="Red"?" pds-button--danger":s==="Green"?" pds-button--green":"";
+const sz=z=>z==="Small"?" pds-button--small":"";
+const spin=s=>s==="Loading"?pdsButton.SPINNER:"";
+const busy=s=>s==="Loading"?'aria-busy="true" aria-disabled="true"':"";
+function textBtn(kind,theme,size,state,label=T){const k=kind==="Primary"?"":kind==="Secondary"?" pds-button--secondary":" pds-button--text";return B(`${k}${sz(size)}${theme==="Dark"?" pds-button--dark":""}${tone(state)} ${st(state)}`,spin(state)+lbl(label),dis(state)+" "+busy(state))}
+const cell=(name,html,tag)=>`<div class="vcell"><span class="lbl">${name}${tag?` <span class="tag">${tag}</span>`:""}</span>${html}</div>`;
+let count=0;
+function group(title,theme,rows){return `<div class="vgroup ${theme==="Dark"?"dark":"light"}"><h3>${title}</h3>${rows.map(r=>`<div class="vrow">${r.map(c=>{count++;return c}).join("")}</div>`).join("")}</div>`}
+const V=[];
+// Text Buttons
+const TB={
+ Light:{Primary:{Normal:["Default","Hover","Loading","Disabled"],Small:["Default","Hover","Disabled"]},Secondary:{Normal:["Default","Hover","Loading","Disabled","Red","Green"],Small:["Default","Hover","Loading","Disabled","Red"]},"Text Only":{Normal:["Default","Hover","Disabled"],Small:["Default","Hover","Disabled"]}},
+ Dark:{Primary:{Normal:["Default","Hover","Disabled"],Small:["Default","Hover","Loading","Disabled"]},Secondary:{Normal:["Default","Hover","Disabled"],Small:["Default","Hover","Disabled","Red"]},"Text Only":{Normal:["Default","Disabled"],Small:["Default","Disabled","Red"]}}
+};
+for(const th of ["Light","Dark"])for(const kind in TB[th]){const rows=[];for(const size in TB[th][kind])rows.push(TB[th][kind][size].map(s=>cell(`${size} · ${s}`,textBtn(kind,th,size,s))));V.push(group(`Text Button / ${kind} / ${th}`,th,rows))}
+// Action
+const act=(th,s)=>B(`pds-button--action${th==="Dark"?" pds-button--dark":""}${tone(s)} ${st(s)}`,I.act+lbl(T),dis(s));
+V.push(group("Action Button / Light","Light",[["Default","Hover","Active","Disabled","Red","Green"].map(s=>cell(`Normal · ${s}`,act("Light",s)))]));
+V.push(group("Action Button / Dark","Dark",[["Default","Hover"].map(s=>cell(`Normal · ${s}`,act("Dark",s)))]));
+// Icon
+const ico=(v,z,s)=>B(`${v==="Circular Background"?"pds-button--icon":"pds-button--icon-plain"}${sz(z)} ${st(s)}`,v==="Circular Background"?I.add:I.del,`aria-label="${v==="Circular Background"?"Add":"Delete"}" ${dis(s)}`);
+V.push(group("Icon Button / Light","Light",["Circular Background","No Background"].flatMap(v=>["Normal","Small"].map(z=>["Default","Hover","Disabled"].map(s=>cell(`${v==="Circular Background"?"Circular":"No Bg"} · ${z} · ${s}`,ico(v,z,s)))))));
+// Pill
+const pill=s=>B(`pds-button--pill ${st(s==="Loading"?"Selected":s)}`,lbl(T),dis(s));
+V.push(group("Text Button / Circular Background (pill) / Light","Light",[["Default","Hover","Disabled","Loading"].map(s=>cell(`Small · ${s}${s==="Loading"?" (.is-selected)":""}`,pill(s)))]));
+// Dropdown
+const dd=(th,z,s)=>B(`pds-button--dropdown${sz(z)}${th==="Dark"?" pds-button--dark":""} ${st(s)}`,spin(s)+lbl("Label")+I.caret,`aria-haspopup="menu" ${s==="Active"?'aria-expanded="true"':'aria-expanded="false"'} ${busy(s)}`);
+V.push(group("Button Dropdown / Secondary / Light","Light",[["Default","Loading","Active"].map(s=>cell(`Normal · ${s}`,dd("Light","Normal",s))),["Default","Loading","Active"].map(s=>cell(`Small · ${s}`,dd("Light","Small",s)))]));
+V.push(group("Button Dropdown / Secondary / Dark","Dark",[["Default","Active"].map(s=>cell(`Small · ${s}`,dd("Dark","Small",s)))]));
+const split=(z,s,label=T)=>`<div class="pds-button-split${z==="Small"?" pds-button-split--small":""}">${B(`pds-button-split__main${sz(z)}`,lbl(label))}${B(`pds-button-split__toggle${sz(z)} ${st(s)}`,I.caret,`aria-label="More options" aria-haspopup="menu" aria-expanded="${s==="Active"}"`)}</div>`;
+V.push(group("Button Dropdown / Split / Light","Light",[["Normal","Small"].flatMap(z=>["Default","Active"].map(s=>cell(`${z} · ${s}`,split(z,s))))]));
+// Dual
+const dual=`<div class="pds-button-dual" role="group" aria-label="Confirm or cancel">${B("pds-button-dual__cancel",I.close,'aria-label="Cancel"')}${B("pds-button-dual__confirm",I.check,'aria-label="Confirm"')}</div>`;
+const dualc=B("pds-button--dual-circular",I.rcaret+I.rcaret,'aria-label="Next"');
+V.push(group("Dual Icon / Light","Light",[[cell("- · Small · Default",dual),cell("Circular · Normal · Default",dualc),cell("Circular · Small · Active",dualc)]]));
+// AI Copilot
+const ai=(th,s)=>B(`pds-button--ai${th==="Dark"?" pds-button--dark":""} ${st(s)}`,I.logo(th==="Dark")+lbl("Ask freehand"));
+V.push(group("AI Copilot Button / Light","Light",[["Default","Hover"].map(s=>cell(`Freehand · ${s}`,ai("Light",s)))]));
+V.push(group("AI Copilot Button / Dark","Dark",[["Default","Hover"].map(s=>cell(`Freehand · ${s}`,ai("Dark",s)))]));
+// Show more
+const sm=(t,s)=>`<div class="pds-show-more${t==="Show less"?" pds-show-more--less":""} ${st(s)}"><span class="pds-show-more__line"></span>${B("pds-button--text pds-button--small",lbl(t==="Show less"?"Show Less":"Show more"),`aria-expanded="${t==="Show less"}"`)}${I.arrow}<span class="pds-show-more__line"></span></div>`;
+V.push(group("Show more / Light","Light",[["Show more","Show less"].flatMap(t=>["Default","Hover"].map(s=>cell(`${t} · ${s}`,sm(t,s))))]));
+// Added in review
+V.push(group("Added in review — not in Figma","Light",[
+ [cell("Primary · Focus",textBtn("Primary","Light","Normal","Focus"),"added in review"),cell("Secondary · Focus",textBtn("Secondary","Light","Normal","Focus"),"added in review"),cell("Icon · Focus",B("pds-button--icon is-focus",I.add,'aria-label="Add"'),"added in review"),cell("Action · Focus",act("Light","Focus"),"added in review")],
+ [cell("Secondary Danger · Hover",B("pds-button--secondary pds-button--danger is-hover",lbl(T)),"added in review"),cell("Secondary Danger · Disabled",B("pds-button--secondary pds-button--danger",lbl(T),"disabled"),"added in review"),cell("Text Only Danger · Light",B("pds-button--text pds-button--danger",lbl(T)),"added in review"),cell("Action Danger · Hover",act("Light","Red").replace("pds-button--danger ","pds-button--danger is-hover "),"added in review")]
+]));
+$("#vwrap").innerHTML=V.join("");
+$("#vwrap").insertAdjacentHTML("beforeend",`<p class="sub" style="padding:0 20px 14px;margin:0">${count} variants and states rendered.</p>`);
+window.__variantCount=count;
+
+// Try it
+function renderTry(){const t=$("#c-type").value,z=$("#c-size").value,th=$("#c-theme").value,tn=$("#c-tone").value,l=$("#c-label").value||T,d=$("#c-disabled").checked;
+ const cls={primary:"",secondary:"pds-button--secondary",text:"pds-button--text",action:"pds-button--action",dropdown:"pds-button--dropdown"}[t];
+ const inner=(t==="action"?I.act:"")+lbl(l.replace(/</g,"&lt;"))+(t==="dropdown"?I.caret:"");
+ const stage=$("#stage");stage.className="stage "+(th==="dark"?"dark":"light");
+ stage.innerHTML=B(`${cls}${z==="small"?" pds-button--small":""}${th==="dark"?" pds-button--dark":""}${tn?" pds-button--"+tn:""}`,inner,`id="try-btn" ${d?"disabled":""}`);
+ $("#try-btn").addEventListener("click",e=>{const b=e.currentTarget;pdsButton.setLoading(b,true);setTimeout(()=>pdsButton.setLoading(b,false),2000)});}
+$("#ctrls").addEventListener("input",renderTry);$("#ctrls").addEventListener("submit",e=>e.preventDefault());renderTry();
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/button.css">
+<script src="components/button.js"><\/script>
+
+<!-- Primary / Secondary / Text Only -->
+<button type="button" class="pds-button">Save</button>
+<button type="button" class="pds-button pds-button--secondary">Export</button>
+<button type="button" class="pds-button pds-button--text">Cancel</button>
+
+<!-- Small, Dark, Danger (added in review) -->
+<button type="button" class="pds-button pds-button--small pds-button--dark">Apply</button>
+<button type="button" class="pds-button pds-button--secondary pds-button--danger">Delete</button>
+
+<!-- Icon-only: aria-label + tooltip -->
+<button type="button" class="pds-button pds-button--icon" aria-label="Add">
+  <svg class="pds-button__icon" aria-hidden="true">…</svg>
+</button>
+
+<!-- Split -->
+<div class="pds-button-split">
+  <button type="button" class="pds-button pds-button-split__main">Button Text</button>
+  <button type="button" class="pds-button pds-button-split__toggle" aria-label="More options"
+          aria-haspopup="menu" aria-expanded="false"><svg class="pds-button__caret" aria-hidden="true">…</svg></button>
+</div>
+
+<script>
+  const btn = document.querySelector('.pds-button');
+  pdsButton.setLoading(btn, true);   // spinner + aria-busy, clicks ignored
+  pdsButton.setLoading(btn, false);
+  pdsButton.check();                 // warns about icon-only buttons with no name
+<\/script>`;
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="flag.js"></script>
+</body>
+</html>

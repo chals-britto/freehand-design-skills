@@ -1,0 +1,350 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Button
+   Figma: DS V2 – Atoms › Buttons (page 11:12) › component set "Button"
+   (3054:1314, Light + Dark themes), plus "AI Copilot Button" (5913:6603)
+   and "Show more" (10888:1735). Reviewed 2026-10-23. Requires ../tokens.css.
+   Not built: Theme=Studio (outdated in review), Draft Workspace, stray nodes.
+   "added in review" = not in Figma (focus ring, danger tone, vector spinner).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colours, Light theme — exactly as the Figma variants use them ── */
+  --button-primary-bg:          var(--pando-blue);          /* #0076DD */
+  --button-primary-fg:          var(--white);
+  --button-secondary-bg:        var(--pando-light);         /* #EEF2F4 */
+  --button-secondary-fg:        var(--pando-blue);
+  --button-hover-bg:            var(--white);               /* Primary + Secondary Hover/Loading */
+  --button-hover-border:        var(--pando-blue);
+  --button-hover-fg:            var(--pando-blue);
+  --button-disabled-bg:         var(--grey-light);          /* #E7E7E7 */
+  --button-disabled-fg:         var(--text-medium);         /* #545454 */
+  --button-red-fg:              var(--action-red);          /* #E25757 — Figma State=Red */
+  --button-green-dot:           var(--dark-highlight-green);/* #1FCD93 — Secondary State=Green dot */
+
+  --button-text-fg:             var(--pando-blue);          /* Text Only */
+  --button-text-hover-bg:       var(--accent-light-highlight); /* #E9F1F5 */
+  --button-text-hover-fg:       var(--pando-dark);          /* #234357 */
+  --button-text-disabled-fg:    var(--grey-medium);         /* #A3A3A3 */
+
+  --button-action-fg:           var(--action-blue);         /* #376F99 */
+  --button-action-red-fg:       var(--action-red);
+  --button-action-green-fg:     var(--action-green);        /* #91C38A */
+  --button-action-disabled-fg:  var(--grey-medium);
+  --button-action-hover-bg:     var(--accent-light-highlight);
+
+  --button-icon-bg:             var(--pando-light);         /* circle */
+  --button-icon-fg:             var(--pando-dark);
+  --button-icon-hover-fg:       var(--action-blue);
+  --button-icon-disabled-bg:    var(--grey-light);
+  --button-icon-disabled-fg:    #9C9C9C;                    /* off-token in Figma */
+  --button-icon-plain-hover-bg: var(--white);               /* No Background hover circle */
+  --button-icon-plain-disabled-fg: var(--grey-medium);
+
+  --button-pill-bg:             var(--white);
+  --button-pill-fg:             var(--pando-dark);
+  --button-pill-hover-bg:       var(--accent-light-highlight);
+  --button-pill-disabled-bg:    var(--grey-light);
+  --button-pill-disabled-fg:    #9C9C9C;                    /* off-token in Figma */
+  --button-pill-loading-bg:     var(--status-brown-light);  /* #FFEEC4 — Figma State=Loading */
+  --button-pill-loading-fg:     var(--text-dark);
+
+  --button-split-gap-bg:        var(--white);               /* frame behind the 2px gap; no style in Figma */
+  --button-split-active-bg:     var(--pando-blue);
+  --button-split-active-fg:     var(--white);
+
+  --button-dual-cancel-bg:      var(--grey-light);
+  --button-dual-cancel-fg:      var(--grey-dark);           /* #515151 */
+  --button-dual-confirm-bg:     var(--pando-blue);
+  --button-dual-confirm-fg:     var(--white);
+  --button-dual-circ-bg:        var(--border-input-light);  /* #E2EAEC */
+  --button-dual-circ-fg:        var(--pando-dark);
+
+  --button-showmore-fg:         #0078DD;                    /* off-token in Figma (override, 2 steps off pando-blue) */
+  --button-showmore-arrow:      var(--border-blue-grey);    /* #B5C3CB */
+  --button-showmore-line:       var(--border-grey);         /* #EFEFEF */
+
+  /* AI Copilot — gradients are all off-token in Figma */
+  --button-ai-bg:               var(--accent-light-blue-bg);/* #F3F6FC */
+  --button-ai-label:            linear-gradient(90deg, #E03A8A, #FE6505);   /* off-token in Figma */
+  --button-ai-hover-border:     linear-gradient(90deg, #FF8C54, #8D00DF);   /* off-token in Figma */
+  --button-ai-dark-bg:          linear-gradient(90deg, #FF4DA6, #FE6505);   /* off-token in Figma */
+  --button-ai-dark-fg:          var(--white);
+
+  /* ── Colours, Dark theme ── */
+  --button-dark-primary-hover-border: var(--highlight-blue-light); /* #9CD2FF */
+  --button-dark-secondary-bg:   var(--dark-bg);             /* #393945 */
+  --button-dark-secondary-hover-bg: var(--dark-darker);     /* #24242F */
+  --button-dark-disabled-bg:    var(--dark-bg);
+  --button-dark-disabled-fg:    var(--grey-medium);
+  --button-dark-fg:             var(--white);
+  --button-dark-text-red-fg:    var(--accent-red-medium);   /* #D26568 — Text Only Red */
+  --button-dark-action-hover-bg: var(--dark-input-text);    /* #8A8A9E */
+  --button-dark-caret:          var(--dark-input-text);     /* dropdown caret, Dark Small Default */
+
+  /* ── Focus (added in review — not in Figma) ── */
+  --button-focus-ring:          var(--pando-blue);
+
+  /* ── Type (Figma text styles) ── */
+  --button-font-normal: 700 12px/16px var(--font-family); /* Button/Normal-Bold — nearest .type-12-bold is 12/14 */
+  --button-font-small:  var(--type-10-bold);               /* Button/Small-Bold = 10/14, tracking 0 */
+  --button-font-action: 600 12px/16px var(--font-family);  /* Button/Action-Semibold — nearest .type-12-semibold is 12/17 */
+  --button-font-ai:     var(--type-14-semibold);           /* AI Copilot label, no style in Figma */
+
+  /* ── Measured from the components ── */
+  --button-radius: 4px;
+  --button-pad-normal: 6px 10px 8px;   /* 30px tall */
+  --button-pad-small: 5px 10px;        /* 24px tall */
+  --button-pad-dropdown: 7px 10px;     /* Dropdown + Split label, Normal */
+  --button-gap: var(--space-10);
+  --button-loading-gap: 4px;           /* Normal: spinner ↔ label (Small uses --button-gap) */
+  --button-spinner: 16px;
+  --button-spinner-small: 14px;
+  --button-caret-w: 10px;
+  --button-caret-h: 8px;
+  --button-action-pad: 3px 5px;        /* 22px tall */
+  --button-action-gap: 4px;
+  --button-action-icon: 10px;
+  --button-icon-size: 30px;  --button-icon-glyph: 20px;
+  --button-icon-size-small: 20px; --button-icon-glyph-small: 14px;
+  --button-pill-pad: 3px 9px;          /* 20px tall */
+  --button-pill-radius: 24px;
+  --button-split-gap: var(--space-2);
+  --button-split-toggle: 30px;
+  --button-split-toggle-small: 26px;
+  --button-dual-cell: 24px;
+  --button-dual-pad: 6px;
+  --button-dual-glyph: 12px;
+  --button-dual-circ-w: 51px;
+  --button-dual-circ-radius: 20px;
+  --button-ai-pad: 5px 8px 5px 6px;
+  --button-ai-pad-dark: 5px 6px;
+  --button-ai-gap: 8px;
+  --button-ai-logo: 20px;
+  --button-showmore-gap: 5px;
+  --button-showmore-arrow-size: 14px;
+}
+
+/* ════ Base: Text Button / Primary / Normal ═══════════════════════ */
+.pds-button {
+  --_bg: var(--button-primary-bg); --_fg: var(--button-primary-fg); --_bd: transparent;
+  box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--button-gap);
+  min-height: 30px;
+  padding: var(--button-pad-normal);
+  border: 0; border-radius: var(--button-radius);
+  background: var(--_bg); color: var(--_fg);
+  box-shadow: inset 0 0 0 1px var(--_bd);   /* Figma strokes are inside: no size change */
+  font: var(--button-font-normal); letter-spacing: 0; text-transform: uppercase;
+  white-space: nowrap; cursor: pointer; text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.pds-button svg { display: block; flex: none; }
+.pds-button--small { min-height: 24px; padding: var(--button-pad-small); font: var(--button-font-small); letter-spacing: 0; }
+
+/* Primary (default) */
+.pds-button:hover:not(:disabled):not([aria-disabled="true"]), .pds-button.is-hover {
+  --_bg: var(--button-hover-bg); --_fg: var(--button-hover-fg); --_bd: var(--button-hover-border);
+}
+.pds-button:disabled, .pds-button[aria-disabled="true"] {
+  --_bg: var(--button-disabled-bg); --_fg: var(--button-disabled-fg); --_bd: transparent; cursor: not-allowed;
+}
+/* Loading = Hover look + spinner (Figma). Comes after Disabled: a loading button is also aria-disabled. */
+.pds-button.is-loading, .pds-button[aria-busy="true"] {
+  --_bg: var(--button-hover-bg); --_fg: var(--button-hover-fg); --_bd: var(--button-hover-border);
+}
+
+/* Secondary */
+.pds-button--secondary { --_bg: var(--button-secondary-bg); --_fg: var(--button-secondary-fg); }
+.pds-button--secondary.pds-button--danger { --_fg: var(--button-red-fg); }
+.pds-button--secondary.pds-button--danger:hover:not(:disabled):not([aria-disabled="true"]),
+.pds-button--secondary.pds-button--danger.is-hover { --_fg: var(--button-red-fg); --_bd: var(--button-red-fg); } /* added in review */
+/* Secondary State=Green: Default look + 8px green dot on the top-right corner */
+.pds-button--secondary.pds-button--green { position: relative; overflow: visible; }
+.pds-button--secondary.pds-button--green::after {
+  content: ""; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; box-sizing: border-box;
+  border-radius: 50%; background: var(--button-green-dot); border: 1px solid var(--white);
+}
+
+/* Text Only */
+.pds-button--text {
+  --_bg: transparent; --_fg: var(--button-text-fg);
+  min-height: 16px; padding: 0; border-radius: 0;
+}
+.pds-button--text.pds-button--small { min-height: 14px; padding: 0; }
+.pds-button--text:hover:not(:disabled):not([aria-disabled="true"]), .pds-button--text.is-hover {
+  --_bg: var(--button-text-hover-bg); --_fg: var(--button-text-hover-fg); --_bd: transparent;
+}
+.pds-button--text:disabled, .pds-button--text[aria-disabled="true"] { --_bg: transparent; --_fg: var(--button-text-disabled-fg); }
+.pds-button--text.pds-button--danger { --_fg: var(--button-red-fg); } /* light Text Only red: added in review */
+
+/* Action Button */
+.pds-button--action {
+  --_bg: transparent; --_fg: var(--button-action-fg);
+  min-height: 22px; padding: var(--button-action-pad); gap: var(--button-action-gap);
+  border-radius: 0; font: var(--button-font-action); letter-spacing: 0;
+}
+.pds-button--action .pds-button__icon { width: var(--button-action-icon); height: var(--button-action-icon); }
+.pds-button--action:hover:not(:disabled):not([aria-disabled="true"]), .pds-button--action.is-hover,
+.pds-button--action.is-active, .pds-button--action[aria-pressed="true"] {
+  --_bg: var(--button-action-hover-bg); --_fg: var(--button-action-fg); --_bd: transparent; border-radius: var(--button-radius);
+}
+.pds-button--action.pds-button--danger { --_fg: var(--button-action-red-fg); }
+.pds-button--action.pds-button--green  { --_fg: var(--button-action-green-fg); }
+.pds-button--action.pds-button--danger:hover:not(:disabled), .pds-button--action.pds-button--danger.is-hover { --_fg: var(--button-action-red-fg); }
+.pds-button--action.pds-button--green:hover:not(:disabled),  .pds-button--action.pds-button--green.is-hover  { --_fg: var(--button-action-green-fg); }
+.pds-button--action:disabled, .pds-button--action[aria-disabled="true"] { --_bg: transparent; --_fg: var(--button-action-disabled-fg); }
+
+/* Icon Button — Circular Background */
+.pds-button--icon {
+  --_bg: var(--button-icon-bg); --_fg: var(--button-icon-fg);
+  width: var(--button-icon-size); height: var(--button-icon-size); min-height: 0;
+  padding: 0; border-radius: 50%;
+  box-shadow: var(--shadow-1);   /* on the circle in every state (Figma) */
+}
+.pds-button--icon .pds-button__icon { width: var(--button-icon-glyph); height: var(--button-icon-glyph); }
+.pds-button--icon.pds-button--small { width: var(--button-icon-size-small); height: var(--button-icon-size-small); padding: 0; }
+.pds-button--icon.pds-button--small .pds-button__icon { width: var(--button-icon-glyph-small); height: var(--button-icon-glyph-small); }
+.pds-button--icon:hover:not(:disabled):not([aria-disabled="true"]), .pds-button--icon.is-hover {
+  --_bg: var(--button-icon-bg); --_fg: var(--button-icon-hover-fg); box-shadow: var(--shadow-1);
+}
+.pds-button--icon:disabled, .pds-button--icon[aria-disabled="true"] {
+  --_bg: var(--button-icon-disabled-bg); --_fg: var(--button-icon-disabled-fg); box-shadow: var(--shadow-1);
+}
+
+/* Icon Button — No Background */
+.pds-button--icon-plain {
+  --_bg: transparent; --_fg: var(--button-icon-fg);
+  width: var(--button-icon-size); height: var(--button-icon-size); min-height: 0; padding: 0; border-radius: 50%;
+}
+.pds-button--icon-plain .pds-button__icon { width: var(--button-icon-glyph); height: var(--button-icon-glyph); }
+.pds-button--icon-plain.pds-button--small { width: var(--button-icon-size-small); height: var(--button-icon-size-small); padding: 0; }
+.pds-button--icon-plain.pds-button--small .pds-button__icon { width: var(--button-icon-glyph-small); height: var(--button-icon-glyph-small); }
+.pds-button--icon-plain:hover:not(:disabled):not([aria-disabled="true"]), .pds-button--icon-plain.is-hover {
+  --_bg: var(--button-icon-plain-hover-bg); --_fg: var(--button-icon-fg); --_bd: transparent;
+}
+.pds-button--icon-plain:disabled, .pds-button--icon-plain[aria-disabled="true"] { --_bg: transparent; --_fg: var(--button-icon-plain-disabled-fg); }
+
+/* Text Button — Circular Background (pill), Small only */
+.pds-button--pill {
+  --_bg: var(--button-pill-bg); --_fg: var(--button-pill-fg);
+  min-height: 20px; padding: var(--button-pill-pad); border-radius: var(--button-pill-radius);
+  font: var(--button-font-small); letter-spacing: 0;
+}
+.pds-button--pill:hover:not(:disabled):not([aria-disabled="true"]), .pds-button--pill.is-hover {
+  --_bg: var(--button-pill-hover-bg); --_fg: var(--button-pill-fg); --_bd: transparent;
+}
+.pds-button--pill:disabled, .pds-button--pill[aria-disabled="true"] { --_bg: var(--button-pill-disabled-bg); --_fg: var(--button-pill-disabled-fg); }
+/* Figma State=Loading on the pill: a brown-light fill, no indicator */
+.pds-button--pill.is-selected, .pds-button--pill[aria-pressed="true"] {
+  --_bg: var(--button-pill-loading-bg); --_fg: var(--button-pill-loading-fg); --_bd: transparent; padding-inline: 10px;
+}
+
+/* Button Dropdown (Secondary only) */
+.pds-button--dropdown { --_bg: var(--button-secondary-bg); --_fg: var(--button-secondary-fg); padding: var(--button-pad-dropdown); }
+.pds-button--dropdown.pds-button--small { padding: var(--button-pad-small); }
+.pds-button--dropdown:hover:not(:disabled):not([aria-disabled="true"]):not(.is-loading) { --_bg: var(--button-secondary-bg); --_fg: var(--button-secondary-fg); --_bd: transparent; } /* no Hover in Figma */
+.pds-button--dropdown.is-loading.pds-button--small, .pds-button--dropdown[aria-busy="true"].pds-button--small { padding-block: 4px; }
+.pds-button__caret { width: var(--button-caret-w); height: var(--button-caret-h); }
+
+/* Split: label segment + caret segment, 2px apart */
+.pds-button-split {
+  display: inline-flex; gap: var(--button-split-gap);
+  background: var(--button-split-gap-bg); border-radius: var(--button-radius);
+}
+.pds-button-split > .pds-button { --_bg: var(--button-secondary-bg); --_fg: var(--button-secondary-fg); }
+.pds-button-split__main { border-radius: var(--button-radius) 0 0 var(--button-radius); padding: var(--button-pad-dropdown); }
+.pds-button-split__toggle { border-radius: 0 var(--button-radius) var(--button-radius) 0; width: var(--button-split-toggle); padding: 0; }
+.pds-button-split--small .pds-button-split__main { padding: var(--button-pad-small); }
+.pds-button-split--small .pds-button-split__toggle { width: var(--button-split-toggle-small); padding: 0; }
+.pds-button-split > .pds-button:hover:not(:disabled) { --_bg: var(--button-secondary-bg); --_fg: var(--button-secondary-fg); --_bd: transparent; } /* no Hover in Figma */
+.pds-button-split__toggle.is-active, .pds-button-split__toggle[aria-expanded="true"] {
+  --_bg: var(--button-split-active-bg); --_fg: var(--button-split-active-fg); --_bd: transparent;
+}
+
+/* Dual Icon — "-" : Cancel above Confirm */
+.pds-button-dual { display: inline-flex; flex-direction: column; gap: var(--button-split-gap); }
+.pds-button-dual .pds-button {
+  width: var(--button-dual-cell); height: var(--button-dual-cell); min-height: 0; padding: var(--button-dual-pad); border-radius: 0;
+}
+.pds-button-dual .pds-button__icon { width: var(--button-dual-glyph); height: var(--button-dual-glyph); }
+.pds-button-dual__cancel, .pds-button-dual__cancel:hover:not(:disabled), .pds-button-dual__cancel.is-hover { --_bg: var(--button-dual-cancel-bg); --_fg: var(--button-dual-cancel-fg); --_bd: transparent; }
+.pds-button-dual__confirm, .pds-button-dual__confirm:hover:not(:disabled), .pds-button-dual__confirm.is-hover { --_bg: var(--button-dual-confirm-bg); --_fg: var(--button-dual-confirm-fg); --_bd: transparent; }
+
+/* Dual Icon — Circular Background: one pill, two right carets */
+.pds-button--dual-circular {
+  --_bg: var(--button-dual-circ-bg); --_fg: var(--button-dual-circ-fg);
+  width: var(--button-dual-circ-w); height: 24px; min-height: 0; padding: 0; border-radius: var(--button-dual-circ-radius);
+}
+.pds-button--dual-circular:hover:not(:disabled), .pds-button--dual-circular.is-hover { --_bg: var(--button-dual-circ-bg); --_fg: var(--button-dual-circ-fg); --_bd: transparent; }
+.pds-button--dual-circular .pds-button__icon { width: 9px; height: 14px; }
+
+/* AI Copilot Button */
+.pds-button--ai {
+  --_bg: var(--button-ai-bg);
+  min-height: 30px; padding: var(--button-ai-pad); gap: var(--button-ai-gap);
+  font: var(--button-font-ai); text-transform: none; box-shadow: none;
+  background: var(--_bg);
+}
+.pds-button--ai .pds-button__logo { width: var(--button-ai-logo); height: var(--button-ai-logo); }
+.pds-button--ai .pds-button__label { background: var(--button-ai-label); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.pds-button--ai:hover:not(:disabled), .pds-button--ai.is-hover {
+  --_bg: var(--button-ai-bg);
+  border: 1px solid transparent; padding: 4px 7px 4px 5px;
+  background: linear-gradient(var(--button-ai-bg), var(--button-ai-bg)) padding-box, var(--button-ai-hover-border) border-box;
+  box-shadow: none;
+}
+.pds-button--ai.pds-button--dark { padding: var(--button-ai-pad-dark); background: var(--button-ai-dark-bg); color: var(--button-ai-dark-fg); }
+.pds-button--ai.pds-button--dark .pds-button__label { background: none; color: var(--button-ai-dark-fg); }
+.pds-button--ai.pds-button--dark:hover:not(:disabled), .pds-button--ai.pds-button--dark.is-hover {
+  padding: 4px 5px; border: 1px solid transparent;
+  background: linear-gradient(var(--dark-bg), var(--dark-bg)) padding-box, var(--button-ai-dark-bg) border-box; /* Figma: no fill; dark surface shows through */
+}
+
+/* Show more / Show less */
+.pds-show-more { display: inline-flex; align-items: center; gap: var(--button-showmore-gap); }
+.pds-show-more .pds-button--text { --_fg: var(--button-showmore-fg); }
+.pds-show-more__line { display: none; width: 32px; height: 0; border-top: 1px solid var(--button-showmore-line); opacity: .4; }
+.pds-show-more__arrow { width: var(--button-showmore-arrow-size); height: var(--button-showmore-arrow-size); color: var(--button-showmore-arrow); }
+.pds-show-more--less .pds-show-more__arrow { transform: rotate(180deg); }
+.pds-show-more:hover .pds-button--text, .pds-show-more.is-hover .pds-button--text { --_bg: var(--button-text-hover-bg); --_fg: var(--button-text-hover-fg); }
+.pds-show-more:hover .pds-show-more__arrow, .pds-show-more.is-hover .pds-show-more__arrow { color: var(--button-text-hover-fg); }
+.pds-show-more:hover .pds-show-more__line, .pds-show-more.is-hover .pds-show-more__line { display: block; }
+
+/* ════ Dark theme ═════════════════════════════════════════════════ */
+.pds-button--dark.pds-button--secondary, .pds-button--dark.pds-button--dropdown { --_bg: var(--button-dark-secondary-bg); --_fg: var(--button-dark-fg); }
+.pds-button--dark.pds-button--dropdown .pds-button__caret { color: var(--button-dark-caret); }
+.pds-button--dark.pds-button--dropdown.is-active .pds-button__caret,
+.pds-button--dark.pds-button--dropdown[aria-expanded="true"] .pds-button__caret { color: var(--button-dark-fg); }
+.pds-button--dark:hover:not(:disabled):not([aria-disabled="true"]), .pds-button--dark.is-hover,
+.pds-button--dark.is-loading, .pds-button--dark[aria-busy="true"] {
+  --_bg: transparent; --_fg: var(--button-dark-fg); --_bd: var(--button-dark-primary-hover-border);
+}
+.pds-button--dark.pds-button--secondary:hover:not(:disabled):not([aria-disabled="true"]), .pds-button--dark.pds-button--secondary.is-hover {
+  --_bg: var(--button-dark-secondary-hover-bg); --_fg: var(--button-dark-fg); --_bd: var(--button-dark-secondary-bg);
+}
+.pds-button--dark.pds-button--secondary.pds-button--danger { --_fg: var(--button-red-fg); }
+.pds-button--dark:disabled, .pds-button--dark[aria-disabled="true"]:not([aria-busy="true"]) {
+  --_bg: var(--button-dark-disabled-bg); --_fg: var(--button-dark-disabled-fg); --_bd: transparent;
+}
+.pds-button--dark.pds-button--text { --_bg: transparent; --_fg: var(--button-dark-fg); --_bd: transparent; }
+.pds-button--dark.pds-button--text:hover:not(:disabled):not([aria-disabled="true"]) { --_bg: transparent; --_fg: var(--button-dark-fg); --_bd: transparent; } /* no Dark Hover in Figma */
+.pds-button--dark.pds-button--text.pds-button--danger { --_fg: var(--button-dark-text-red-fg); }
+.pds-button--dark.pds-button--text:disabled, .pds-button--dark.pds-button--text[aria-disabled="true"] { --_bg: transparent; --_fg: var(--button-dark-disabled-fg); }
+.pds-button--dark.pds-button--action { --_bg: transparent; --_fg: var(--button-dark-fg); --_bd: transparent; }
+.pds-button--dark.pds-button--action:hover:not(:disabled), .pds-button--dark.pds-button--action.is-hover {
+  --_bg: var(--button-dark-action-hover-bg); --_fg: var(--button-dark-fg); --_bd: transparent;
+}
+
+/* ════ Loading (vector spinner — added in review) ════════════════ */
+.pds-button.is-loading, .pds-button[aria-busy="true"] { gap: var(--button-loading-gap); cursor: progress; }
+.pds-button--small.is-loading, .pds-button--small[aria-busy="true"] { gap: var(--button-gap); }
+.pds-button__spinner { width: var(--button-spinner); height: var(--button-spinner); animation: pds-button-spin .8s linear infinite; }
+.pds-button--small .pds-button__spinner { width: var(--button-spinner-small); height: var(--button-spinner-small); }
+.pds-button--dropdown .pds-button__spinner { width: var(--button-spinner); height: var(--button-spinner); } /* 16px in both sizes (Figma) */
+@keyframes pds-button-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .pds-button__spinner { animation-duration: 2.4s; } }
+
+/* ════ Focus (added in review — not in Figma) ════════════════════ */
+.pds-button:focus-visible, .pds-button.is-focus { outline: 2px solid var(--button-focus-ring); outline-offset: 2px; }
+.pds-button:focus:not(:focus-visible):not(.is-focus) { outline: none; }
