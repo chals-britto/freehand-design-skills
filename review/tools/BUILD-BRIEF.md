@@ -19,12 +19,23 @@ Every component you build gets the same four files (JS only if it has behaviour)
 5. Accessibility fixes are deferred: keep Figma colours even when contrast fails; list the failures under Open issues.
 6. Spacing: use `--space-*` / `--radius-*` from tokens.css when the value exists; otherwise use the px value in a component token. Report every px value you used so Claude can grow the spacing scale.
 
+## Page wiring (every component page)
+Keep these two lines just before `</body>`, in this order: `<script src="nav.js"></script>` then `<script src="flag.js"></script>` (shared sidebar + Flag buttons). Copy `<head>` and page CSS from `components/toast.html`. Claude adds the page to the sidebar list and the library index — you don't.
+
+## Molecules and Organisms (files `rd3gmPnjhPo1d2GAlNSJOn` and `fYULgtmiblAXtbHsoVL1Yf`, also V1)
+They are built from Atoms. **Reuse the kit** — link `button.css`, `input.css`, `checkbox.css`, `tag.css`, `status.css`, `icons.css` etc. from your page and use their classes/JS for every atom inside; never re-implement an atom. Icons: use the SVGs in `components/icons/` (manifest `icons/icons-data.js`, look up by Figma name). If a molecule uses an atom variant the kit doesn't have, build only that piece inside your component and list it under Open issues ("atom variant missing in kit").
+No review exists for these: treat every published item as Keep; list industry gaps as "not added" (Carbon / Fluent 2 / Ant usage pages via WebFetch, only URLs you actually read).
+
+## Figma call budget
+The Figma MCP has a per-seat call limit shared by all builders. Plan reads: one inventory call for your page/set, then targeted reads. If you hit the limit, stop, keep what you built, and report exactly what is unread.
+Use your own scratch subfolder named after your component id; never shared file names.
+
 ## Verify before reporting
 Open your `<id>.html` in headless Chrome and confirm no console errors and that every variant renders:
 `node` script using `require("/Users/Charles-Pando/Documents/Claude Code/node_modules/playwright")` with `chromium.launch({channel:'chrome'})`, `page.goto('file://...')`, collect `pageerror`. Take one screenshot to your scratch folder and look at it once; fix what's visibly wrong, once.
 
 ## Don't touch
-`tokens.css`, `index.html`, `skill/`, other components' files, git. Claude integrates and commits.
+`tokens.css`, `index.html`, `skill/`, `components/nav.js`, `components/flag.js`, other components' files (you may READ and LINK them), git. Claude integrates and commits.
 
 ## Report back (only this)
 Files written · variant/state count rendered · new component tokens with off-token hex · px values used (spacing/radius) · top 3 open issues · anything you could not read.
