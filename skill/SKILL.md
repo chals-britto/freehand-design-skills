@@ -26,44 +26,18 @@ If it's unclear which, ask before building.
 5. Follow the `build-rules` skill (confirm-before-build, Artifact output, desktop-only, no invented copy).
 
 ## Components in the kit
-All Atoms are built (2026-10-23). Each has `components/<id>.css` (+ `.js` if interactive), `<id>.md` (read this first), `<id>.html` (live spec page).
+**Everything in the three V1 Figma files is built** (2026-10-28): 20 Atoms, 40 Molecules, 15 Organisms. The authoritative list — id, name, level, status — is **`components/registry.js`**; read it to find a component. For each id there is:
+- `components/<id>.md` — read this first: variants with exact values + tokens, anatomy, behaviour, usage, accessibility, **Open issues**, Not adopted.
+- `components/<id>.css` (+ `<id>.js` if interactive, exposing `window.pds<Name>`) — reuse these exactly; molecules/organisms already compose the atoms.
+- `components/<id>.html` — the live spec page.
 
-| Component | id | JS | Status |
-|---|---|---|---|
-| Toast | `toast` | `pdsToast` | Reviewed |
-| Buttons | `button` | `pdsButton` | Reviewed (Batch A) |
-| Inputs | `input` | `pdsInput` | Reviewed (Batch A) |
-| Dropdown | `dropdown` | `pdsDropdown` | Reviewed (Batch A) — closed trigger = Inputs › Dropdown Select |
-| Checkbox | `checkbox` | `pdsCheckbox` | Reviewed (Batch A) |
-| Radio Buttons | `radio` | native | Reviewed (Batch A) |
-| Toggle (switch, toggle tab, icon tab) | `toggle` | `pdsToggle` | As in Figma |
-| Range (3 slider sets — ask which) | `range` | `pdsRange` | As in Figma |
-| Accordion | `accordion` | `pdsAccordion` | As in Figma |
-| Breadcrumb | `breadcrumb` | — | As in Figma |
-| Badges, Callout, Ribbon | `badge` | — | As in Figma |
-| Avatars | `avatar` | — | As in Figma |
-| Tags | `tag` | — | As in Figma |
-| Status | `status` | — | As in Figma |
-| Tooltips | `tooltip` | `pdsTooltip` | As in Figma (Text, Custom Content, Map Tracking) |
-| Icons (431) | `icons` | manifest `components/icons/icons-data.js`, files `components/icons/*.svg` | As in Figma |
-| Scrollbar | `scrollbar` | — | As in Figma |
-| Dropdown Menus (open lists) | `menu` | `pdsMenu` | As in Figma — general-purpose menu = Dropdown Light · Single-Info |
-| Label Readonly Text | `readonly` | — | As in Figma |
-| Brand (Pi-Avatar, Pando-Logo) | `brand` | files `components/brand/*.svg` | As in Figma |
-
-**Molecules** (file `rd3gmPnjhPo1d2GAlNSJOn`; build plan `review/molecules-inventory.md`) — reuse atoms inside them:
-
-| Molecule | id | JS | Status |
-|---|---|---|---|
-| Button Group | `button-group` | — | As in Figma |
-| Skeleton | `skeleton` | — | As in Figma |
-| Tab Group | `tabs` | `pdsTabs` | As in Figma |
-| Progress Indicator | `progress` | `pdsProgress` | As in Figma |
-
-The full, current list of pages is `components/registry.js`. Organisms plan: `review/organisms-inventory.md`.
-
-Alerts: Figma page is empty — use Toast or Callout (`badge`) and ask.
-"As in Figma" pages have an **Open issues** section; respect it and don't silently fix. Not built yet: Molecules, Organisms (read from Figma when needed). Gaps in Atoms: see `review/atoms-audit.md`.
+Rules:
+- Build screens by composing kit components (e.g. page shell = `side-nav` + `top-header` + `subheader`; data = `table` / `list`; overlays = `modal` / `slideout` / `toast`). Never re-derive a kit component from Figma or screenshots.
+- Status "Reviewed" = Charles approved it; "As in Figma" = built without review — check its Open issues and tell Charles when a choice depends on one.
+- Some pages carry a Figma-status notice (OLD, To BE REVIEWED, built from loose frames, legacy, two sets — pick one). Prefer the current/primary option and say so.
+- Icons: 432 SVGs, manifest `components/icons/icons-data.js` (look up by Figma name). Brand: `components/brand/*.svg`. Empty-state art: `components/empty-state/`. Loaders: `components/loader/`.
+- Alerts: the Figma page is empty — use Toast or Callout (`badge`) and ask.
+- Anything genuinely not in the kit: read it from Figma via the MCP, build it from kit tokens, and tell Charles it's outside the kit.
 
 ## Shipping kit code inside an Artifact
 Artifacts can't reach local files. Either inline the CSS/JS from the repo into the page, or publish them as supporting `files` (e.g. `tokens.css`, `components/toast.css`) and link them relatively. Never retype values by hand.

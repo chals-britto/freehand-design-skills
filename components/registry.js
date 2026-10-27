@@ -75,6 +75,7 @@ window.PDS_REGISTRY = [
   { id: 'ai-insights', name: 'AI Insights',      level: 'Organisms', desc: 'Insight cards, artifacts', status: 'As in Figma' },
   { id: 'ai-chat-window', name: 'AI Chat Window', level: 'Organisms', desc: 'Light & dark window, suggestion cards', status: 'As in Figma' },
   { id: 'ai-action-popup', name: 'AI Action Popup', level: 'Organisms', desc: 'Options, AI input, responding animation', status: 'As in Figma' },
+  { id: 'ai-slideout-chat', name: 'AI Slideout Chat', level: 'Organisms', desc: 'Full AI drawer: insights, actions, input', status: 'As in Figma' },
 ];
 window.PDS_EMPTY = [
   { name: 'Alerts', level: 'Atoms', note: 'The Figma page is empty — nothing to build yet.' },
