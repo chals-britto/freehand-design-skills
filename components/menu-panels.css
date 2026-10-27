@@ -1,0 +1,167 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Subheader Menu + Sort (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ Dropdown (2312:4660)
+     · component set "Subheader Menu" (2312:5082) — 3 · Active = Option 1 | 2 | 3
+     · component     "Sort-1"         (2312:5216) — 1 · dark "Filter By" panel
+   Built 2026-10-28 · no review file — every published variant kept as in Figma.
+   Requires ../tokens.css, menu.css (+ menu.js) for the Subheader list,
+   toggle.css (+ toggle.js) for the Delivery Type Toggle Tab, icons.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Subheader Menu ──────────────────────────────────────────── */
+  --menu-panels-sub-bg:          var(--white);
+  --menu-panels-sub-border:      var(--accent-light-highlight); /* #E9F1F5, 1px inside */
+  --menu-panels-sub-fg:          var(--pando-blue);             /* #0076DD */
+  --menu-panels-sub-arrow:       var(--pando-dark);             /* #234357 Navigation/Dropdown-Arrow */
+  --menu-panels-sub-w:           216px;
+  --menu-panels-sub-h:           50px;   /* padding 15.5 + 19 text + 15.5 */
+  --menu-panels-sub-pad-x:       20px;
+  --menu-panels-sub-gap:         20px;   /* label ↔ arrow */
+  --menu-panels-sub-list-w:      215px;
+  --menu-panels-sub-list-shadow: var(--shadow-2);               /* 0 2 4 6% */
+  --menu-panels-sub-list-pad-b:  1px;
+  --menu-panels-sub-option-pad:  var(--space-10) 20px;
+  --menu-panels-sub-option-ls:   .3px;
+  --menu-panels-sub-active-bg:   var(--accent-light-highlight); /* #E9F1F5 Active=Option N row */
+  --menu-panels-sub-active-fg:   var(--text-dark);              /* #313131 — text stays dark */
+  --menu-panels-sub-max-h:       289px;  /* 8 option slots in Figma (5 hidden) × 36 + 1 */
+  --menu-panels-arrow-w:         8px;
+  --menu-panels-arrow-h:         5px;
+
+  /* ── Sort-1 (dark Filter By panel) ───────────────────────────── */
+  --menu-panels-sort-bg:         var(--dark-darker);            /* #24242F panel + tab */
+  --menu-panels-sort-shadow:     var(--shadow-3);               /* 0 2 14 10% */
+  --menu-panels-sort-w:          240px;
+  --menu-panels-sort-radius:     4px;    /* panel 0/4/4/4 · tab 4/4/0/0 */
+  --menu-panels-sort-pad-y:      var(--space-10);
+  --menu-panels-sort-gap:        6px;    /* between section / grid / toggle rows */
+  --menu-panels-tab-w:           86px;
+  --menu-panels-tab-h:           20px;
+  --menu-panels-tab-pad:         3px var(--space-10);
+  --menu-panels-tab-gap:         14px;   /* "FILTER BY" ends at 61, arrow at 75 */
+  --menu-panels-tab-fg:          var(--white);
+  --menu-panels-tab-arrow:       var(--dark-highlight-green);   /* #1FCD93, 1px line + arrow head */
+  --menu-panels-section-bg:      var(--dark-bg);                /* #393945 */
+  --menu-panels-section-fg:      var(--dark-label-text);        /* #D5DAF4 */
+  --menu-panels-section-h:       20px;
+  --menu-panels-section-pad:     4px var(--space-10);
+  --menu-panels-col-w:           120px;
+  --menu-panels-row-gap:         8px;
+  --menu-panels-option-h:        26px;
+  --menu-panels-option-pad:      5px var(--space-10);
+  --menu-panels-option-gap:      var(--space-10);
+  --menu-panels-option-fg:       var(--dark-label-text);        /* #D5DAF4 */
+  --menu-panels-option-lh:       16px;   /* Figma auto line-height; .type-12-semibold is 17 */
+  --menu-panels-option-icon:     var(--dark-input-text);        /* #8A8A9E Status/Indent Type */
+  --menu-panels-option-selected-fg: var(--white);               /* borrowed from loose "Sort Dropdown" 2312:5531 — not in Sort-1 */
+  --menu-panels-toggle-pad:      0 var(--space-10);
+
+  --menu-panels-focus: 2px solid var(--pando-blue);             /* added — not in Figma */
+}
+
+/* ═══ Subheader Menu (2312:5082) ═══════════════════════════════════ */
+.pds-menu-panels--subheader {
+  position: relative;
+  display: inline-flex; flex-direction: column;
+  width: var(--menu-panels-sub-w);
+  font-family: var(--font-family);
+}
+.pds-menu-panels__trigger {
+  box-sizing: border-box;
+  display: flex; align-items: center; gap: var(--menu-panels-sub-gap);
+  width: 100%; height: var(--menu-panels-sub-h);
+  margin: 0; padding: 0 var(--menu-panels-sub-pad-x);
+  background: var(--menu-panels-sub-bg);
+  border: 0;
+  box-shadow: inset 0 0 0 1px var(--menu-panels-sub-border); /* Figma stroke is inside: takes no space */
+  color: var(--menu-panels-sub-fg);
+  font: var(--type-14-semibold); letter-spacing: 1px; text-transform: uppercase; /* .type-14-semibold.caps */
+  text-align: left; cursor: pointer;
+}
+.pds-menu-panels__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pds-menu-panels__arrow { flex: none; display: block; width: var(--menu-panels-arrow-w); height: var(--menu-panels-arrow-h); color: var(--menu-panels-sub-arrow); }
+.pds-menu-panels__arrow--up { display: none; }
+.pds-menu-panels__trigger[aria-expanded="true"] .pds-menu-panels__arrow--down { display: none; }
+.pds-menu-panels__trigger[aria-expanded="true"] .pds-menu-panels__arrow--up { display: block; }
+.pds-menu-panels__trigger:focus-visible { outline: var(--menu-panels-focus); outline-offset: 2px; }
+
+/* The list is a menu.css .pds-menu (type 'single') with these token overrides */
+.pds-menu.pds-menu-panels__list {
+  --menu-w: var(--menu-panels-sub-list-w);
+  --menu-shadow: var(--menu-panels-sub-list-shadow);
+  --menu-pad-b: var(--menu-panels-sub-list-pad-b);
+  --menu-option-pad: var(--menu-panels-sub-option-pad);
+  --menu-option-selected-bg: var(--menu-panels-sub-active-bg);
+  --menu-option-selected-fg: var(--menu-panels-sub-active-fg);
+  --menu-max-h: var(--menu-panels-sub-max-h);
+  position: absolute; top: 100%; left: 0; z-index: 10;
+}
+.pds-menu-panels--static .pds-menu-panels__list { position: static; }
+.pds-menu-panels__list .pds-menu__option { text-transform: uppercase; letter-spacing: var(--menu-panels-sub-option-ls); }
+.pds-menu-panels__list .pds-menu__option.is-active { outline: var(--menu-panels-focus); outline-offset: -2px; } /* added — hover and Active share #E9F1F5 */
+
+/* ═══ Sort-1 (2312:5216) ═══════════════════════════════════════════ */
+.pds-menu-panels--sort {
+  position: relative;
+  display: inline-flex; flex-direction: column; align-items: flex-start;
+  width: var(--menu-panels-sort-w);
+  font-family: var(--font-family);
+}
+.pds-menu-panels--sort *, .pds-menu-panels--sort *::before, .pds-menu-panels--sort *::after { box-sizing: border-box; }
+.pds-menu-panels__tab {
+  display: flex; align-items: center; gap: var(--menu-panels-tab-gap);
+  width: var(--menu-panels-tab-w); height: var(--menu-panels-tab-h);
+  margin: 0; padding: var(--menu-panels-tab-pad);
+  border: 0; border-radius: var(--menu-panels-sort-radius) var(--menu-panels-sort-radius) 0 0;
+  background: var(--menu-panels-sort-bg);
+  box-shadow: var(--menu-panels-sort-shadow);
+  color: var(--menu-panels-tab-fg);
+  font: var(--type-10-semibold); line-height: 14px; letter-spacing: .5px; text-transform: uppercase;
+  white-space: nowrap; cursor: pointer;
+}
+.pds-menu-panels__tab svg { flex: none; width: 7px; height: 8px; color: var(--menu-panels-tab-arrow); }
+.pds-menu-panels__tab:focus-visible { outline: var(--menu-panels-focus); outline-offset: 2px; }
+.pds-menu-panels__panel {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: var(--menu-panels-sort-gap);
+  width: 100%;
+  padding: var(--menu-panels-sort-pad-y) 0;
+  background: var(--menu-panels-sort-bg);
+  border-radius: 0 var(--menu-panels-sort-radius) var(--menu-panels-sort-radius) var(--menu-panels-sort-radius);
+  box-shadow: var(--menu-panels-sort-shadow);
+}
+.pds-menu-panels__panel[hidden] { display: none; }
+.pds-menu-panels__section {
+  display: flex; align-items: center;
+  height: var(--menu-panels-section-h);
+  padding: var(--menu-panels-section-pad);
+  background: var(--menu-panels-section-bg);
+  color: var(--menu-panels-section-fg);
+  font: var(--type-10-regular); letter-spacing: .5px; text-transform: uppercase; /* .type-10-regular.caps */
+  white-space: nowrap;
+}
+.pds-menu-panels__grid {
+  display: grid;
+  grid-template-columns: repeat(2, var(--menu-panels-col-w));
+  grid-template-rows: repeat(var(--rows, 2), var(--menu-panels-option-h));
+  grid-auto-flow: column;            /* Figma: two vertical columns */
+  row-gap: var(--menu-panels-row-gap);
+}
+.pds-menu-panels__option {
+  display: flex; align-items: center; gap: var(--menu-panels-option-gap);
+  height: var(--menu-panels-option-h); min-width: 0;
+  margin: 0; padding: var(--menu-panels-option-pad);
+  border: 0; background: none;
+  color: var(--menu-panels-option-fg);
+  font: var(--type-12-semibold); line-height: var(--menu-panels-option-lh);
+  text-align: left; white-space: nowrap; cursor: pointer;
+}
+.pds-menu-panels__option > span:last-child { overflow: hidden; text-overflow: ellipsis; }
+.pds-menu-panels__option .pds-icon { color: var(--menu-panels-option-icon); }
+.pds-menu-panels__option[aria-checked="true"] { color: var(--menu-panels-option-selected-fg); }
+.pds-menu-panels__option:focus-visible { outline: var(--menu-panels-focus); outline-offset: -2px; }
+.pds-menu-panels__toggle { padding: var(--menu-panels-toggle-pad); }
+/* Delivery Type uses the Atoms Toggle Tab (toggle.css). The instance hugs its text (40 / 41 wide); the kit option is 69 fixed. */
+.pds-menu-panels__toggle .pds-toggle-tab { --toggle-tab-option-w: auto; }
+.pds-menu-panels__toggle .pds-toggle-tab__option:focus-visible { outline: var(--menu-panels-focus); outline-offset: 2px; }

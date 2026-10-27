@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Condition · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="input.css">
+<link rel="stylesheet" href="tag.css">
+<link rel="stylesheet" href="condition.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* condition page */
+.cstage{background:#fff;padding:24px 20px 260px;overflow-x:auto;border-radius:0 10px 10px 0}
+.vlist{display:flex;flex-direction:column;gap:22px;padding:20px}
+.vlist .vcell .ex{background:#fff;border:1px solid var(--pg-line);border-radius:8px;padding:16px;overflow-x:auto}
+.ctrls .row2{display:flex;gap:8px;flex-wrap:wrap}
+.ctrls .btn[disabled]{opacity:.45;cursor:not-allowed}
+.note{font-size:12px;color:var(--pg-muted)}
+.spec-table td,.spec-table th{text-align:left}
+table.vt{width:100%;border-collapse:collapse;font-size:12.5px}
+table.vt th,table.vt td{border-top:1px solid var(--pg-line);padding:8px 12px;vertical-align:top;text-align:left}
+table.vt th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted)}
+table.vt code{font:400 12px var(--pg-mono)}
+.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+@media (max-width:760px){.cstage{border-radius:0 0 10px 10px}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Condition</h1>
+    <p class="lede">A rule row built from condition fields: field, operator and value. Rows can be linked, wrapped in brackets, or joined under an And/Or tag.</p>
+    <div class="meta"><span>Status: Built from Figma, not reviewed</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=2384-6520" target="_blank" rel="noopener">Figma component set 2384:6520 ↗</a><span>Files: condition.css · condition.js · uses input.css/js, tag.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Pick a type. On Linked and And/Or, add or remove rows and switch the tag between And and Or. Open any blue field to pick from the kit list. The controls on the left are page controls, not part of the component. Figma shows no add or remove control.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls" onsubmit="return false">
+    <label>Type<select id="c-type"><option value="single">Single</option><option value="linked">Linked</option><option value="andor" selected>And/Or</option><option value="brackets">Brackets</option></select></label>
+    <label>Logic tag<select id="c-logic"><option>And</option><option>Or</option></select></label>
+    <div class="row2"><button class="btn" type="button" id="c-add">Add row</button><button class="btn ghost" type="button" id="c-remove">Remove row</button></div>
+    <p class="note" id="c-note"></p>
+  </form>
+  <div class="cstage" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Theme = Light × Type. All four Figma variants with Figma's sample text.</p>
+<div class="panel vlist" id="vlist"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma component. The fields are kit atoms. Their values live in <a href="input.html">Inputs</a>.</p>
+<div class="panel">
+<table class="vt">
+<tr><th>Type</th><th>Layout</th><th>Fields (Figma order)</th></tr>
+<tr><td>Single</td><td>One row, fields edge to edge (gap −1, borders overlap). Each field has a 14px label slot (empty in Figma) + 2 gap → 52 high.</td><td>Condition · operator (disabled) · Condition · Condition · operator (disabled) · <code>$</code> Value (text) · Value (disabled)</td></tr>
+<tr><td>Linked</td><td>Rows 10 apart, no label slot (36 high). Bracket 10 wide, 1px <code>--border-blue-grey</code> #B5C3CB, ticks 15px from the top of the first row and 14px from the bottom of the last. Rows start 9px in.</td><td>Row 1: Condition · operator · Condition · Condition · operator · <code>$</code> Value<br>Row 2: Condition · operator · Value</td></tr>
+<tr><td>And/Or</td><td>Linked group at 30, 36. Tag (Nimbus, Default) at 11, 5. 1px #B5C3CB connector at x 30 from y 26, 25 long, meets the bracket.</td><td>Tag “And” (shown in capitals by the tag) + Linked</td></tr>
+<tr><td>Brackets</td><td>Padding 10, items centred. “(” and “)” 10 Bold, line-height 14, #000000, in 14-wide cells (5 side padding), level with the field box.</td><td>( Condition·Label · operator · Condition · Condition·Label · <code>$</code> Value ) operator · <code>$</code> Value·Label</td></tr>
+</table>
+<div class="spec-table">
+  <div><b>Field</b><code>Input - Dropdown Select</code> / <code>Input - Text</code> · Type=Condition · Size=Auto</div>
+  <div><b>Field height</b><code>36px</code> box · <code>52px</code> with label slot</div>
+  <div><b>Field overlap</b><code>-1px</code></div>
+  <div><b>Row gap</b><code>10px</code> (<code>--space-10</code>)</div>
+  <div><b>Link line</b><code>1px</code> <code>--border-blue-grey</code></div>
+  <div><b>Logic tag</b><code>.pds-tag--nimbus.pds-tag--default</code></div>
+  <div><b>Bracket</b><code>.type-10-bold</code> #000000</div>
+  <div><b>Brackets padding</b><code>10px</code></div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Types</h3><ul><li><b>Single</b>: one rule.</li><li><b>Linked</b>: several rules that belong together, joined by the bracket.</li><li><b>And/Or</b>: a Linked group with the logic shown in a tag above it.</li><li><b>Brackets</b>: part of a rule grouped in round brackets.</li></ul></div>
+  <div class="panel card"><h3>Behaviour</h3><ul><li>Each field behaves like its kit input: click or Enter/Space/↓ opens the list, ↑ ↓ move, Enter picks, Esc or a click outside closes.</li><li>The operator field is disabled in every Figma sample.</li><li>A Linked group keeps at least one row. With one row the bracket is hidden.</li></ul></div>
+  <div class="panel card"><h3>Figma documentation</h3><p>The page's <code>.documentation</code> card is a copy of the Calendar card (“An interactive calendar for date selection experiences…”). It says nothing about Condition, so no usage text is taken from it.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Grouping</h3><p>Each row is <code>role="group"</code> named “Condition”. The And/Or wrapper is named “Conditions joined by AND” (or OR). Brackets are <code>aria-hidden</code>.</p></div>
+  <div class="panel card"><h3>Field names</h3><p>Fields with no visible label get an <code>aria-label</code> (Field, Operator, Value). Added in build, not in Figma.</p></div>
+  <div class="panel card"><h3>Keyboard</h3><p>All from <code>input.js</code>. Disabled operators are skipped by Tab.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul class="plain">
+  <li>The Figma <code>.documentation</code> card on this page is the Calendar card. There's no Condition description.</li>
+  <li>No add-row, remove-row, add-group or And/Or switch control exists in Figma. The Try it uses page buttons only.</li>
+  <li>The operator dropdown is disabled in every sample, so an operator can never be picked. Is that intended?</li>
+  <li>The rows repeat “Condition” three times and end with a second Value dropdown (Single). The field order looks like placeholder content, not a real rule.</li>
+  <li>Labels are uneven: Single keeps empty 14px label slots, and Brackets shows “Label” on only 3 of 7 fields.</li>
+  <li>Brackets: the first bracket cell holds two “(” texts, one 4px tall, so only one shows. The page renders one. The bracket colour is pure #000000, which is off-token.</li>
+  <li>The Linked bracket ticks sit at 15 / 14px, not at the 18px field centre.</li>
+  <li>The label colour in Figma is #737373. The kit's Condition label uses <code>--text-light</code> #6C6C6C. The kit value is kept.</li>
+  <li>The list options are the kit's “Default Option”. Figma has no option list for Condition.</li>
+  <li>Contrast below 4.5:1 (kept as Figma): blue value #0076DD on the field fill (#E7E7E7 30% ≈ #F8F8F8) is 4.27:1, prefix “$” #A3A3A3 on white is 2.52:1, and the disabled arrow #A3A3A3 is 2.38:1. Placeholder “Value” #737373 is 4.74:1 and passes.</li>
+  <li>Only Theme=Light exists.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<ul class="plain">
+  <li>Add and remove controls per row, and add-group, are common in rule builders. Not in Figma, not added.</li>
+  <li>A clear-all action for the applied rules. <a href="https://carbondesignsystem.com/patterns/filtering/" target="_blank" rel="noopener">Carbon · Filtering</a> asks for one on multi-category filters. Not added.</li>
+  <li>Nested groups (a group inside a group). Figma only nests Single → Linked → And/Or. Not added.</li>
+</ul></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Link the atoms, then build.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup of one Single row (what <code>condition.js</code> produces; list options left out):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="input.js"></script>
+<script src="condition.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const stage=$("#stage");let cur=null;
+function render(){const t=$("#c-type").value;stage.replaceChildren();cur=pdsCondition.build({type:t,logic:$("#c-logic").value});stage.appendChild(cur);sync()}
+function sync(){const t=$("#c-type").value;const grp=t==="linked"||t==="andor";$("#c-add").disabled=!grp;$("#c-remove").disabled=!grp||cur.querySelectorAll(".pds-condition--linked > .pds-condition__row, .pds-condition--linked.pds-condition > .pds-condition__row").length<=1;$("#c-logic").disabled=t!=="andor";
+ $("#c-note").textContent=grp?`${cur.querySelectorAll(".pds-condition__row").length} row(s).`:"Add/remove applies to Linked and And/Or."}
+$("#c-type").addEventListener("change",render);
+$("#c-logic").addEventListener("change",()=>{pdsCondition.setLogic(cur,$("#c-logic").value)});
+$("#c-add").addEventListener("click",()=>{pdsCondition.addRow(cur);sync()});
+$("#c-remove").addEventListener("click",()=>{pdsCondition.removeRow(cur);sync()});
+render();
+
+const V=[["Theme=Light, Type=Single","single"],["Theme=Light, Type=Linked","linked"],["Theme=Light, Type=And/Or","andor"],["Theme=Light, Type=Brackets","brackets"]];
+V.forEach(([n,t])=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${n}</span><div class="ex"></div>`;c.querySelector(".ex").appendChild(pdsCondition.build({type:t}));$("#vlist").appendChild(c)});
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/input.css">
+<link rel="stylesheet" href="components/tag.css">
+<link rel="stylesheet" href="components/condition.css">
+<script src="components/input.js"><\/script>
+<script src="components/condition.js"><\/script>
+
+<script>
+  const c = pdsCondition.build({ type: 'andor', logic: 'And' }); // single | linked | andor | brackets
+  container.appendChild(c);
+  pdsCondition.addRow(c);          // Condition · operator · Value
+  pdsCondition.removeRow(c);       // removes the last row, keeps one
+  pdsCondition.setLogic(c, 'Or');
+<\/script>`;
+{const s=pdsCondition.build({type:"single",static:true});s.querySelectorAll(".pds-input__menu").forEach(m=>m.replaceChildren());$("#code2").textContent=s.outerHTML.replace(/></g,">\n<")}
+
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

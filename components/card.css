@@ -1,0 +1,263 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Card
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ Card (77:4761)
+     · "Card"             component set 2339:6863 (7 variants)
+     · "Card/Consignment" component set 419:3564  (2)
+     · "Card/Settings"    component      2339:5833 (1)
+   No review file — every published variant kept as in Figma.
+   Requires ../tokens.css + kit atoms: avatar.css, tag.css, badge.css,
+   input.css, button.css, icons.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Card (set 2339:6863) ── */
+  --card-w:               250px;
+  --card-radius:          var(--space-2);           /* 2px */
+  --card-shadow:          var(--shadow-2);          /* 0 2px 4px rgb(0 0 0 / .06) */
+  --card-pad:             var(--space-10);          /* header / section / stats */
+  --card-header-gap:      8px;                      /* avatar · text · warning */
+  --card-text-w:          170px;                    /* text column, fixed in Figma */
+  --card-empty-text-gap:  4px;                      /* Empty: heading ↔ description */
+  --card-doc-gap:         9px;                      /* Documents: between blocks */
+  --card-input-gap:       4px;                      /* Documents: input ↔ input */
+  --card-stat-gap:        6px;                      /* tag ↔ value */
+  --card-stats-gap:       9px;
+  --card-taginfo-gap:     var(--space-10);
+  --card-tagpair-gap:     4px;                      /* tag ↔ value in Tag Info */
+  --card-warning:         12px;
+
+  --card-bg:              var(--white);
+  --card-heading:         var(--text-dark);         /* #313131 */
+  --card-sub:             var(--text-dark);
+  --card-active-bg:       var(--accent-light-highlight); /* #E9F1F5 — header / highlight section */
+  --card-active-heading:  var(--pando-blue-active); /* #005399 */
+  --card-empty-heading:   var(--dark-highlight-green); /* #1FCD93 — both themes */
+  --card-empty-desc:      var(--grey-medium);       /* #A3A3A3 */
+  --card-empty-border:    var(--border-blue-grey);  /* #B5C3CB, 1px inside */
+  --card-stat-value:      var(--text-medium);       /* #545454 */
+  --card-taginfo-value:   #5A6277;                  /* off-token in Figma */
+
+  --card-dark-bg:            var(--dark-light);      /* #343440 — Dark Default */
+  --card-dark-active-bg:     var(--dark-darker);     /* #24242F — Dark Active */
+  --card-dark-text:          var(--dark-label-text); /* #D5DAF4 */
+  --card-dark-active-heading:var(--dark-highlight-green); /* #1FCD93 */
+  --card-dark-indicator-bg:  var(--dark-light);      /* #343440 ellipse */
+  --card-dark-indicator-fg:  var(--status-blue-light); /* #D9E6FF */
+  --card-dark-empty-bg:      var(--dark-darker);     /* #24242F */
+  --card-dark-empty-border:  var(--dark-input-text); /* #8A8A9E */
+  --card-dark-empty-desc:    var(--dark-input-text);
+
+  /* Attachment tile, State=Filled · Type=Image (variant missing in kit) */
+  --card-thumb:           40px;
+  --card-thumb-img:       36px;
+  --card-thumb-img-bg:    #C4C4C4;                  /* off-token in Figma (mask rectangle under the image) */
+  --card-thumb-badge-x:   30px;
+  --card-thumb-badge-y:   -6px;
+
+  /* ── Card/Consignment (419:3564) ── */
+  --card-cons-w:          330px;
+  --card-cons-h:          50px;
+  --card-cons-pad-x:      var(--space-10);
+  --card-cons-border-w:   .5px;                     /* centre stroke */
+  --card-cons-border:     var(--border-blue-grey);  /* #B5C3CB */
+  --card-cons-border-hover: var(--pando-blue);      /* #0076DD */
+  --card-cons-col1:       110px;
+  --card-cons-col2:       130px;
+  --card-cons-col-gap:    4px;
+  --card-cons-strong:     #404040;                  /* off-token in Figma */
+  --card-cons-carrier:    var(--text-light);        /* #6C6C6C */
+  --card-cons-time:       var(--text-medium);       /* #545454 */
+
+  /* ── Card/Settings (2339:5833) ── */
+  --card-set-w:           397px;
+  --card-set-radius:      4px;
+  --card-set-pad-y:       var(--space-10);
+  --card-set-gap:         5px;
+  --card-set-head-pad:    0 var(--space-15) 5px var(--space-15);
+  --card-set-head-gap:    var(--space-15);
+  --card-set-heading:     var(--pando-dark);        /* #234357 */
+  --card-set-cols-pad:    5px 20px 0 20px;
+  --card-set-cols-gap:    var(--space-10);
+  --card-set-cols-fg:     var(--pando-blue-active); /* #005399 */
+  --card-set-col2-w:      153px;
+  --card-set-rules-pad:   0 var(--space-10);
+  --card-set-rules-gap:   var(--space-2);
+
+  /* Remote parts (not in kit) — built here only as far as the card needs */
+  --card-unit-w:          150px;                    /* Unit/Small */
+  --card-unit-pad:        .5px 2px;
+  --card-unit-radius:     var(--space-2);
+  --card-unit-fg:         var(--pando-dark);        /* #234357 */
+  --card-rule-pad:        8px var(--space-10);      /* Rule */
+  --card-rule-gap:        var(--space-10);
+  --card-rule-bg:         var(--accent-alternate-white); /* #F9FAFA — odd rows */
+  --card-rule-bg-alt:     var(--white);                  /* even rows */
+  --card-rule-value:      var(--text-dark);
+  --card-indicator:       30px;                     /* Circular Indicator */
+  --card-indicator-pad:   8px;
+  --card-indicator-bg:    color-mix(in srgb, var(--status-blue-light) 70%, transparent); /* #D9E6FF @ 70% */
+  --card-indicator-fg:    var(--pando-dark);
+}
+
+/* ════ Card ════ */
+.pds-card {
+  --_bg: var(--card-bg); --_head-bg: transparent;
+  --_heading: var(--card-heading); --_sub: var(--card-sub);
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  width: var(--card-w);
+  background: var(--_bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  font-family: var(--font-family);
+  color: var(--_heading);
+}
+.pds-card *, .pds-card *::before, .pds-card *::after { box-sizing: border-box; }
+
+.pds-card__header {
+  display: flex; align-items: flex-start; gap: var(--card-header-gap);
+  padding: var(--card-pad);
+  background: var(--_head-bg);
+}
+.pds-card__text { display: flex; flex-direction: column; width: var(--card-text-w); min-width: 0; }
+.pds-card__heading {
+  margin: 0; font: var(--type-12-semibold); letter-spacing: 0; color: var(--_heading);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pds-card__sub {
+  margin: 0; font: var(--type-10-regular); letter-spacing: .5px; color: var(--_sub);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pds-card__warning { flex: none; width: var(--card-warning); height: var(--card-warning); }
+
+/* Dark Active uses a plain ellipse + icon instead of the Icon Avatar */
+.pds-card__indicator-dot {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: var(--card-indicator); height: var(--card-indicator); border-radius: 50%;
+  background: var(--card-dark-indicator-bg); color: var(--card-dark-indicator-fg);
+}
+
+/* Stat layers (booleans "Show Stat Layer 1 / 2", default off) */
+.pds-card__stats {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: var(--card-stats-gap);
+  padding: var(--card-pad);
+}
+.pds-card__stat { display: inline-flex; align-items: center; justify-content: flex-end; gap: var(--card-stat-gap); }
+.pds-card__stat-value { font: var(--type-12-regular); color: var(--card-stat-value); }
+
+/* State=Active (Light) */
+.pds-card--active { --_head-bg: var(--card-active-bg); --_heading: var(--card-active-heading); }
+
+/* State=Empty — a bordered highlight section, no icon */
+.pds-card--empty .pds-card__section {
+  display: flex; flex-direction: column; padding: var(--card-pad);
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: inset 0 0 0 1px var(--card-empty-border);
+}
+.pds-card--empty .pds-card__text { gap: var(--card-empty-text-gap); }
+.pds-card--empty .pds-card__heading { color: var(--card-empty-heading); }
+.pds-card--empty .pds-card__sub { color: var(--card-empty-desc); }
+
+/* Theme=Dark */
+.pds-card--dark { --_bg: var(--card-dark-bg); --_heading: var(--card-dark-text); --_sub: var(--card-dark-text); }
+.pds-card--dark.pds-card--active { --_bg: var(--card-dark-active-bg); --_head-bg: transparent; --_heading: var(--card-dark-active-heading); }
+.pds-card--dark.pds-card--empty { --_bg: var(--card-bg); } /* outer fill stays white in Figma; section covers it */
+.pds-card--dark.pds-card--empty .pds-card__section {
+  background: var(--card-dark-empty-bg);
+  box-shadow: inset 0 0 0 1px var(--card-dark-empty-border);
+}
+.pds-card--dark.pds-card--empty .pds-card__sub { color: var(--card-dark-empty-desc); }
+
+/* ── Type=Documents ── */
+.pds-card--documents { gap: var(--card-doc-gap); }
+.pds-card--documents .pds-card__section {
+  display: flex; flex-direction: column; gap: var(--card-pad);
+  padding: var(--card-pad); background: var(--card-active-bg); border-radius: var(--card-radius);
+}
+.pds-card--documents .pds-card__header { padding: 0; background: none; }
+.pds-card__attachments { display: flex; align-items: flex-end; gap: var(--card-pad); }
+.pds-card__thumb { position: relative; display: block; width: var(--card-thumb); height: var(--card-thumb); flex: none; }
+.pds-card__thumb > .pds-icon { position: absolute; inset: 0; }
+.pds-card__thumb-img {
+  position: absolute; left: 2px; top: 1px; width: var(--card-thumb-img); height: var(--card-thumb-img);
+  background: var(--card-thumb-img-bg); object-fit: cover; display: block;
+}
+.pds-card__thumb > .pds-badge { position: absolute; left: var(--card-thumb-badge-x); top: var(--card-thumb-badge-y); }
+.pds-card__body { display: flex; flex-direction: column; gap: var(--space-2); padding: 0 var(--card-pad); }
+.pds-card__body-title { margin: 0; font: var(--type-12-semibold); color: var(--card-heading); }
+.pds-card__body-text  { margin: 0; font: 400 12px/16px var(--font-family); color: var(--card-heading); }
+.pds-card__inputs { display: flex; flex-direction: column; gap: var(--card-input-gap); }
+.pds-card__inputs .pds-input { --_w: 100%; }
+.pds-card__taginfo { display: flex; flex-direction: column; gap: var(--card-taginfo-gap); padding: 0 var(--card-pad) var(--card-pad); }
+.pds-card__tagrow { display: flex; justify-content: space-between; gap: var(--card-taginfo-gap); }
+.pds-card__tagpair { display: inline-flex; align-items: center; gap: var(--card-tagpair-gap); }
+.pds-card__tagpair-value { font: var(--type-12-regular); color: var(--card-taginfo-value); }
+
+/* ════ Card/Consignment ════ */
+.pds-card--consignment {
+  position: relative;
+  flex-direction: row; align-items: center; justify-content: space-between; gap: 3px;
+  width: var(--card-cons-w); height: var(--card-cons-h);
+  padding: 0 var(--card-cons-pad-x);
+  background: transparent; box-shadow: none;
+  border-radius: var(--card-radius);
+  border: var(--card-cons-border-w) solid var(--card-cons-border);
+}
+.pds-card--consignment:hover, .pds-card--consignment.is-hover { border-color: var(--card-cons-border-hover); }
+.pds-card__col { display: flex; flex-direction: column; gap: var(--card-cons-col-gap); min-width: 0; }
+.pds-card__col--id   { width: var(--card-cons-col1); }
+.pds-card__col--event{ width: var(--card-cons-col2); }
+.pds-card__strong { margin: 0; font: var(--type-12-semibold); color: var(--card-cons-strong); white-space: nowrap; }
+.pds-card__meta   { margin: 0; font: var(--type-10-regular); letter-spacing: .5px; white-space: nowrap; }
+.pds-card__meta--carrier { color: var(--card-cons-carrier); }
+.pds-card__meta--time    { color: var(--card-cons-time); }
+
+/* ════ Card/Settings ════ */
+.pds-card--settings {
+  width: var(--card-set-w);
+  padding: var(--card-set-pad-y) 0;
+  gap: var(--card-set-gap);
+  border-radius: var(--card-set-radius);
+  box-shadow: none;
+}
+.pds-card__set-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: var(--card-set-head-pad);
+}
+.pds-card__set-title { display: flex; align-items: center; gap: var(--card-set-head-gap); min-width: 0; }
+.pds-card__set-heading {
+  margin: 0; font: var(--type-12-semibold); letter-spacing: .5px; text-transform: uppercase; color: var(--card-set-heading);
+}
+.pds-card__set-cols {
+  display: flex; align-items: center; gap: var(--card-set-cols-gap);
+  padding: var(--card-set-cols-pad);
+}
+.pds-card__set-cols .pds-card__unit,
+.pds-card__set-col {
+  font: var(--type-10-semibold); letter-spacing: .5px; text-transform: uppercase; color: var(--card-set-cols-fg);
+}
+.pds-card__set-col { width: var(--card-set-col2-w); }
+.pds-card__rules { display: flex; flex-direction: column; gap: var(--card-set-rules-gap); padding: var(--card-set-rules-pad); margin: 0; list-style: none; }
+
+/* Remote part: Circular Indicator (Color=Cyan, Type=Depot Manager) */
+.pds-card__indicator {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: var(--card-indicator); height: var(--card-indicator); padding: var(--card-indicator-pad);
+  border-radius: 50%; background: var(--card-indicator-bg); color: var(--card-indicator-fg);
+}
+/* Remote part: Unit/Small */
+.pds-card__unit {
+  display: inline-flex; align-items: center; flex: none;
+  width: var(--card-unit-w); padding: var(--card-unit-pad); border-radius: var(--card-unit-radius);
+  font: var(--type-12-semibold); color: var(--card-unit-fg);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Remote part: Rule */
+.pds-card__rule {
+  display: flex; align-items: center; gap: var(--card-rule-gap);
+  padding: var(--card-rule-pad);
+  background: var(--card-rule-bg);
+}
+.pds-card__rule:nth-child(even) { background: var(--card-rule-bg-alt); }
+.pds-card__rule-value { font: 400 12px/16px var(--font-family); color: var(--card-rule-value); white-space: nowrap; }

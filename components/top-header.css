@@ -1,0 +1,173 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Top Header (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟢 Header (0:1)
+   › component set "Top Header" (423:77), 4 variants:
+     Brand=Freehand, Type=Shipper   (1:1107)
+     Brand=Freehand, Type=Gradiant  (5117:2993)  — "Gradiant" is Figma's spelling
+     Brand=Pando,    Type=Transporter (423:76)
+     Brand=Pando,    Type=Consignee (1110:4346)
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css, icons.css, button.css, button-group.css.
+   Logo + header icons are kit icons (components/icons/), the AI Copilot
+   button and the Button Group are the kit atoms/molecules — not redrawn here.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colours ── */
+  --top-header-bg:          var(--color-header-bg);    /* #153F69 — Figma style "Primary/Freehand-Dark" */
+  --top-header-bg-gradient: linear-gradient(90deg, var(--freehand-dark), var(--pando-blue-active)); /* #153F69 → #005399, left → right; no Figma style */
+  --top-header-fg:          var(--white);
+  --top-header-divider:     rgb(156 179 191 / .5);     /* #9CB3BF @ 50% — off-token in Figma */
+
+  /* Logo colour per Type (the kit logo SVG is single-colour, currentColor) */
+  --top-header-logo-freehand:    var(--freehand-orange);      /* #FE6505 — Shipper + Gradiant */
+  --top-header-logo-transporter: var(--status-brown-medium);  /* #FAAE3C */
+  --top-header-logo-consignee:   var(--status-cyan-medium);   /* #63EBF8 */
+
+  /* Header icons (Inactive icons are single-colour; Active Global Search is multi-colour) */
+  --top-header-icon-inactive: var(--accent-blue-grey);        /* #CBD4D8 */
+
+  /* Support tab */
+  --top-header-support-bg: var(--accent-off-white);           /* #F8F8F8 */
+  --top-header-support-fg: var(--status-cyan-dark);           /* #006265 */
+
+  /* ── Type ── */
+  --top-header-font-client: 600 16px/22px var(--font-family); /* Open Sans SemiBold 16 / auto — no .type-16-semibold in kit */
+  --top-header-font-module: var(--type-16-regular);           /* Figma style "16px/Regular/Top-Header" */
+  --top-header-font-support: var(--type-12-semibold);         /* Open Sans SemiBold 12 / auto (kit 12/17) */
+
+  /* ── Measured from the components ── */
+  --top-header-height:     50px;
+  --top-header-pad-x:      20px;
+  --top-header-gap:        var(--space-10);  /* Left ↔ Right (space-between) */
+  --top-header-left-gap:   20px;             /* logo ↔ divider ↔ title */
+  --top-header-title-gap:  4px;              /* client ↔ "-" ↔ module */
+  --top-header-logo-w:     27px;
+  --top-header-logo-h:     28px;
+  --top-header-divider-h:  32px;
+  --top-header-right-gap:  20px;             /* icons ↔ support ↔ AI / button group */
+  --top-header-icons-pad:  var(--space-10);  /* 10px all round */
+  --top-header-icons-gap:  20px;
+  --top-header-icon:       var(--icon-size-24);
+  --top-header-slot-pad:   var(--space-10);  /* AI Copilot wrapper: 10px all round */
+  --top-header-support-h:  32px;
+  --top-header-support-pad: 8px var(--space-15);
+  --top-header-support-radius: 0 0 6px 6px;
+}
+
+/* ── Bar ───────────────────────────────────────────────────────── */
+.pds-top-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--top-header-gap);
+  width: 100%;
+  height: var(--top-header-height);
+  padding: 0 var(--top-header-pad-x);
+  background: var(--top-header-bg);
+  color: var(--top-header-fg);
+  box-sizing: border-box;
+  --_logo: var(--top-header-logo-freehand);
+}
+.pds-top-header--gradient    { background: var(--top-header-bg-gradient); }
+/* Brand=Pando: left-aligned (Figma primary axis MIN), no right section */
+.pds-top-header--transporter { justify-content: flex-start; --_logo: var(--top-header-logo-transporter); }
+.pds-top-header--consignee   { justify-content: flex-start; --_logo: var(--top-header-logo-consignee); }
+
+/* ── Left: logo · divider · title ─────────────────────────────── */
+.pds-top-header__left {
+  display: flex;
+  align-items: center;
+  gap: var(--top-header-left-gap);
+  height: 100%;
+  min-width: 0;
+}
+.pds-top-header__logo {
+  flex: none;
+  width: var(--top-header-logo-w);
+  height: var(--top-header-logo-h);
+  color: var(--_logo);
+  line-height: 0;
+}
+.pds-top-header__logo > svg { display: block; width: 100%; height: 100%; }
+.pds-top-header__divider {
+  flex: none;
+  width: 0;
+  height: var(--top-header-divider-h);
+  border-left: 1px solid var(--top-header-divider);
+  margin: 0 0.5px;               /* Figma: 2px-wide box, 1px centred stroke */
+}
+.pds-top-header__title {
+  display: flex;
+  gap: var(--top-header-title-gap);
+  margin: 0;
+  min-width: 0;
+  white-space: nowrap;
+  color: var(--top-header-fg);
+}
+.pds-top-header__client { font: var(--top-header-font-client); }
+.pds-top-header__sep,
+.pds-top-header__module { font: var(--top-header-font-module); }
+
+/* ── Right: icons · support · AI Copilot / Button Group ───────── */
+.pds-top-header__right {
+  display: flex;
+  align-items: flex-start;       /* Shipper: counter-axis MIN — Support tab hangs from the top edge */
+  justify-content: flex-end;
+  gap: var(--top-header-right-gap);
+  height: 100%;
+}
+.pds-top-header--gradient .pds-top-header__right { align-items: center; } /* Gradiant: counter-axis CENTER */
+.pds-top-header__right > [hidden] { display: none; }
+
+.pds-top-header__icons {
+  display: flex;
+  align-items: center;
+  gap: var(--top-header-icons-gap);
+  padding: var(--top-header-icons-pad);
+  height: 100%;
+  box-sizing: border-box;
+}
+.pds-top-header__icon {
+  display: inline-flex;
+  width: var(--top-header-icon);
+  height: var(--top-header-icon);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--top-header-icon-inactive);
+  cursor: pointer;
+  line-height: 0;
+}
+.pds-top-header__icon > svg { display: block; width: 100%; height: 100%; }
+
+.pds-top-header__support {
+  display: inline-flex;
+  align-items: center;
+  height: var(--top-header-support-h);
+  padding: var(--top-header-support-pad);
+  border: 0;
+  border-radius: var(--top-header-support-radius);
+  background: var(--top-header-support-bg);
+  color: var(--top-header-support-fg);
+  font: var(--top-header-font-support);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* Wrapper around the kit AI Copilot button (Figma frame "AI Copilot Button", 10px padding) */
+.pds-top-header__slot {
+  display: flex;
+  align-items: center;
+  padding: var(--top-header-slot-pad);
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Focus — added in review, not in Figma (kit focus rule) */
+.pds-top-header__icon:focus-visible,
+.pds-top-header__support:focus-visible {
+  outline: 2px solid var(--pando-blue);
+  outline-offset: 2px;
+}

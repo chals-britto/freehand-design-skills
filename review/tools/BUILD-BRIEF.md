@@ -28,7 +28,7 @@ No review exists for these: treat every published item as Keep; list industry ga
 
 ## Figma call budget
 The Figma MCP has a per-seat call limit shared by all builders. Plan reads: one inventory call for your page/set, then targeted reads. If you hit the limit, stop, keep what you built, and report exactly what is unread.
-Use your own scratch subfolder named after your component id; never shared file names.
+Use your own scratch subfolder named after your component id, **under `/private/tmp/claude-503/-Users-Charles-Pando-Documents-Claude-Code-V-2/8ba6e50e-028d-4b2d-976f-5256055803fe/scratchpad/<id>/` — never inside the repo** (no `review/scratch/`); never shared file names.
 
 ## Verify before reporting
 Open your `<id>.html` in headless Chrome and confirm no console errors and that every variant renders:

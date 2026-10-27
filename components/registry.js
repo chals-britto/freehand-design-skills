@@ -35,6 +35,16 @@ window.PDS_REGISTRY = [
   { id: 'empty-state', name: 'Empty State',      level: 'Molecules', desc: '38 illustrations, light & dark', status: 'As in Figma' },
   { id: 'search-input', name: 'Search Input',    level: 'Molecules', desc: 'Field + filtering option list', status: 'As in Figma' },
   { id: 'timepicker', name: 'Timepicker',        level: 'Molecules', desc: '24-hour, keyboard, Cancel/Apply', status: 'As in Figma' },
+  { id: 'calendar',   name: 'Calendar',          level: 'Molecules', desc: 'Single, range, multi date, presets', status: 'As in Figma' },
+  { id: 'comment-thread', name: 'Comments',      level: 'Molecules', desc: 'Comment, chat comment, user tag', status: 'As in Figma' },
+  { id: 'chat-input', name: 'Chat Input Box',    level: 'Molecules', desc: '10 variants, tags, attachments', status: 'As in Figma' },
+  { id: 'card',       name: 'Card',              level: 'Molecules', desc: 'Card, Consignment, Settings', status: 'As in Figma' },
+  { id: 'condition',  name: 'Condition',         level: 'Molecules', desc: 'Rule rows: single, linked, and/or, brackets', status: 'As in Figma' },
+  { id: 'top-header', name: 'Top Header',        level: 'Molecules', desc: 'Shipper, Gradient, Transporter, Consignee', status: 'As in Figma' },
+  { id: 'file-upload', name: 'File Upload',      level: 'Molecules', desc: 'Not uploaded, uploaded, verified', status: 'As in Figma' },
+  { id: 'subheader',  name: 'Subheader',         level: 'Molecules', desc: '6 variants: main, breadcrumb, back, light & dark', status: 'As in Figma' },
+  { id: 'menu-panels', name: 'Subheader Menu + Sort', level: 'Molecules', desc: 'Subheader menu, Filter-by panel', status: 'As in Figma' },
+  { id: 'column-picker', name: 'Column Picker',  level: 'Molecules', desc: 'Toggle, pin, advanced, reorder', status: 'As in Figma' },
 ];
 window.PDS_EMPTY = [
   { name: 'Alerts', level: 'Atoms', note: 'The Figma page is empty — nothing to build yet.' },

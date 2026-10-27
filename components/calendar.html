@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Calendar · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="input.css">
+<link rel="stylesheet" href="timepicker.css">
+<link rel="stylesheet" href="calendar.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* calendar page */
+.cal-stage{padding:24px;min-height:420px;background:var(--pg-soft);border-radius:0 10px 10px 0;display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start;overflow-x:auto}
+.cal-stage .lbl,.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.cal-out{font:500 12px var(--pg-mono);color:var(--pg-ink);word-break:break-word}
+.vlist{display:flex;flex-direction:column;gap:22px;padding:20px}
+.vrow{display:flex;flex-wrap:wrap;gap:22px 28px;align-items:flex-start}
+.vcell .box{background:var(--pg-soft);border-radius:8px;padding:20px;display:flex;align-items:flex-start;justify-content:flex-start;overflow-x:auto;max-width:100%}
+.vcell .box.dk{background:#3a3a46}
+.vcell .note{font-size:11.5px;color:var(--pg-muted);max-width:640px}
+.parts{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.parts .pc{display:flex;flex-direction:column;align-items:center;gap:4px}
+.parts .pc span{font:500 10.5px var(--pg-mono);color:var(--pg-muted)}
+.parts .pds-calendar-part{border:1px dashed var(--pg-line)}
+.open-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+h3.vh{font-size:14px;margin:6px 0 0}
+@media (max-width:760px){.cal-stage{border-radius:0 0 10px 10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>Calendar</h1>
+    <p class="lede">An interactive calendar for date selection experiences. The calendar component provides a way to render dates for selection or presentation purposes.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · not reviewed</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=164-3009" target="_blank" rel="noopener">Figma set 164:3009 ↗</a><span>Files: calendar.css · calendar.js · uses button.css, input.css, timepicker.css, icons</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#parts">Parts</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Click the field (or press ↓ in it) to open the calendar. Arrow keys move by day / week, PageUp / PageDown by month (Shift: year), Enter picks, Esc cancels. Apply writes the value into the field.</p>
+<div class="panel play">
+  <div class="ctrls">
+    <label>Type<select id="c-type">
+      <option value="month-1-single" selected>Month · Single (+ time)</option>
+      <option value="month-2-single">Month · Double</option>
+      <option value="month-2-range">Month · Double · Range</option>
+      <option value="year-1-single">Year</option>
+      <option value="day-1-single">Day · Single</option>
+      <option value="day-2-range">Day · Double · Range (presets)</option>
+      <option value="multi-2-range">Multi Date</option>
+      <option value="multi-2-range-time">Multi Date · With Time</option>
+    </select></label>
+    <label>Theme<select id="c-theme"><option value="light" selected>Light</option><option value="dark">Dark (Month only in Figma)</option></select></label>
+    <label class="chk"><input type="checkbox" id="c-time" checked> Show Time (Month · Single)</label>
+    <label class="chk"><input type="checkbox" id="c-min"> Disable dates before today</label>
+    <div class="cal-out">Last event: <span id="c-out">—</span></div>
+  </div>
+  <div class="cal-stage">
+    <div><div class="lbl" style="margin-bottom:6px">Attached to the kit input</div><div id="try-field"></div></div>
+  </div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">All 11 published variants of <code>Calendar</code> (164:3009), drawn with Figma’s sample data (October / November 2025, 13 selected, range 13 Oct → 22 Nov). Grids are real months, so weekday positions follow the real 2025 calendar, not Figma’s sample layout.</p>
+<div class="panel vlist" id="vlist"></div></section>
+
+<section id="parts" data-flag-area><h2>Parts</h2><p class="sub">The private sets the variants are made from: <code>.Single Date</code> (12), <code>.Weekdays &amp; Weeks</code> (6), <code>.Date Selector</code> (2).</p>
+<div class="panel vlist" id="plist"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from 164:3009, 2353:7563, 2353:9160, 1935:4981.</p>
+<div class="panel">
+<div class="spec-table">
+  <div><b>Single panel</b>padding <code>10 15</code>, gap <code>10</code>, radius <code>4px</code>, <code>--shadow-4</code></div>
+  <div><b>Double panel</b>padding 0, radius 0, gap <code>10</code> · header bar <code>36</code> high, padding <code>10</code>, <code>--accent-alternate-white</code></div>
+  <div><b>Title</b><code>.type-12-semibold</code> line 16, +0.3 tracking, uppercase · <code>--pando-dark</code></div>
+  <div><b>Carets</b>Navigation/Right-Caret 7.5 × 12, prev mirrored · <code>--pando-dark</code></div>
+  <div><b>Month grid</b>242 × 165: weekday row 32-wide labels, gap <code>2</code>, padding <code>0 2 10</code>; 7 × 34 × 28 cells</div>
+  <div><b>Weekday</b><code>.type-11-regular</code> uppercase · <code>--text-dark</code> (dark: 12 Regular +0.5, <code>--dark-label-text</code>, padding-bottom 15)</div>
+  <div><b>Day</b><code>.type-12-semibold</code> line 16 · <code>--text-dark</code></div>
+  <div><b>Selected</b>28 circle <code>--pando-blue</code>, white text</div>
+  <div><b>Range</b>cell fill <code>--accent-light-highlight</code> (dark <code>--dark-label-text</code> 50%)</div>
+  <div><b>Outside month</b>text <code>--accent-blue-grey</code> (dark <code>--dark-input-text</code>)</div>
+  <div><b>Disabled</b>fill <code>--border-grey</code>, text <code>--grey-medium</code> (dark #8A8A9E 50% / #8A8A9E)</div>
+  <div><b>Double months</b>gap <code>15</code>, padding <code>0 10</code>, row 200, 1px divider <code>--border-grey</code></div>
+  <div><b>Wide grid</b> (Day, Multi Date) 284 wide: 32 cells, gap <code>10</code>, rows 30 (+1), circle 30, band radius 20</div>
+  <div><b>Year grid</b>4 × 70 cells, rows 38, 20 years per page</div>
+  <div><b>Cell Input Field</b>120 × 34, padding <code>9 10</code>, 1px <code>--border-input-light</code> inside · 12 SemiBold #616161 (off-token)</div>
+  <div><b>.Date Selector</b>24 high, padding <code>4 8</code>, radius 2 · Selected <code>--pando-dark</code> 10% / #18283B · Default white / <code>--text-medium</code></div>
+  <div><b>Actions</b>Reset · Now / Today (Text Only Small, gap 20) ↔ Apply (Primary Small) · double: Cancel ↔ Apply, padding <code>0 15 10</code></div>
+  <div><b>Dark</b>panel <code>--dark-darker</code>, header bar / divider / fields #484858 (off-token), double shadow <code>--shadow-2</code></div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>From Figma (.documentation)</h3><ul><li>Select single date</li><li>Select Range of dates</li><li>Choose between date types for Filtering</li><li>Choose a single day</li><li>Choose from Day options</li></ul><p class="src">Placement &amp; convention: “Placed below date input field or a date selector”.</p></div>
+  <div class="panel card"><h3>Which variant</h3><ul><li><b>Month · Single</b> — one date, with optional Date / Time fields (Show Time).</li><li><b>Month · Double</b> — two months side by side; Range Selected = a start–end range.</li><li><b>Year</b> — pick a year, 20 per page.</li><li><b>Day · Single</b> — a day of the month (1–31 or Last Day of Month).</li><li><b>Day · Double</b> — range with Next 3 Days / 7 Days / 1 Month.</li><li><b>Multi Date</b> — date-type tabs above a range calendar (filters).</li></ul></div>
+  <div class="panel card"><h3>Opening from a field</h3><ul><li><code>pdsCalendar.attach(input, options)</code> opens the panel under a kit input.</li><li>Apply writes <code>DD-MM-YYYY</code> (Figma’s format), or <code>DD-MM-YYYY – DD-MM-YYYY</code> for a range.</li><li>Cancel, Esc or a click outside leave the field unchanged.</li></ul><p class="src">Attach and keyboard added in review — Figma shows panels only.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Roles</h3><p>Each month is a <code>grid</code> labelled with its month; days are <code>gridcell</code>s with <code>aria-selected</code> and a button labelled “13 October 2025”. Today has <code>aria-current="date"</code>. Disabled and outside days are <code>aria-disabled</code>. Multi Date tabs are a <code>tablist</code>. The attached panel is a <code>dialog</code>; the field gets <code>aria-haspopup</code>, <code>aria-expanded</code>, <code>aria-controls</code>.</p></div>
+  <div class="panel card"><h3>Keyboard (added in review)</h3><ul><li>One tab stop per grid (roving <code>tabindex</code>).</li><li>← → ↑ ↓ day / week (year: ±1 / ±4), Home / End week row.</li><li>PageUp / PageDown month, Shift for year (year view: 20 years).</li><li>Enter / Space picks, Esc cancels and returns focus to the field.</li><li>← → switch Multi Date tabs.</li></ul></div>
+  <div class="panel card"><h3>For the accessibility pass</h3><ul><li>Focus ring 2px <code>--pando-blue</code> on days, carets, tabs, fields — added in review, not in Figma.</li><li>Outside days #CBD4D8 on white 1.5 : 1; disabled #A3A3A3 on #EFEFEF 2.1 : 1 (intentionally faint, but still below 4.5).</li><li>Range #313131 on #E9F1F5 passes; dark day #D5DAF4 on #24242F passes.</li><li>Field value #616161 on white 6.2 : 1 passes. Carets are 7.5 × 12 targets (below 24 × 24).</li></ul></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul class="open-list">
+  <li><b>Atom variant missing in kit:</b> “Cell Input Field” (remote, Size=Small) — 34px label-less field, padding 9 / 10, 1px #E2EAEC inside, 12 SemiBold #616161 (dark: #484858, no stroke, white). <code>input.css</code> has no 34px field without a label, so it is built inside the calendar as <code>.pds-calendar__field</code>.</li>
+  <li>Day and Multi Date variants are drawn by hand (detached frames: 32px cells, gap 10, 30px rows, weekday 12 Regular +0.5), not from <code>.Weekdays &amp; Weeks</code>. Built as a second “wide” grid. In those drawings the range band has no fill on Multi Date, leading days are white text, and Day · Double uses #0078DD (off-token) for the ends — built with <code>--pando-blue</code> and the Day · Double band (#E9F1F5, radius 20).</li>
+  <li>No today marker, hover, focus or pressed state on day cells in Figma. Today is only announced (<code>aria-current</code>); “Now” / “Today” buttons jump to it.</li>
+  <li>Selected year cell size was not read (assumed a 28px-high pill, padding 0 10, like the day dot).</li>
+  <li>Figma always draws 5 week rows; real months that need 6 rows get a 6th (panel grows by 28px).</li>
+  <li>Time field: Figma shows “10:00 AM”; the kit Timepicker it opens is 24-hour and writes “HH:MM”. “Now” fills the current time in the same 24-hour format. Confirm the time format.</li>
+  <li>Multi Date · With Time: “Select Time” + three time fields (10:00 AM, 12:00 PM, 3:30 PM) — their purpose is not described; built as editable fields returned with Apply.</li>
+  <li>Day · Double presets (Next 3 Days / 7 Days / 1 Month) are Cell Input Fields in Figma; built as buttons that set the range from today (added in review). Active preset gets the blue field border (added in review).</li>
+  <li>Dark theme exists for Month variants only; Year, Day and Multi Date have no dark design. Dark Apply keeps the Light primary button (as Figma).</li>
+  <li>Inconsistencies kept as Figma: Light · Double · Range uses Cancel at Normal size (others Small); Light · Double no-range is 524 wide with 10 gap (others 534 / 15); dark double panels use <code>--shadow-2</code>, light <code>--shadow-4</code>; dark single caret #EEF2F4 vs double white.</li>
+  <li>Off-token colours: #18283B (selected .Date Selector text), #616161 (field value), #484858 (dark header bar, divider, fields).</li>
+  <li>Line heights: Figma uses auto (16px) for 12px text; <code>.type-12-*</code> is 17px — overridden to 16px. Weekday 11 Regular auto (15) matches <code>.type-11-regular</code>.</li>
+  <li>Kit buttons render uppercase (RESET, NOW, APPLY) — Figma shows the same Bold 10 uppercase, so this matches here.</li>
+  <li>Range text format in the field (“DD-MM-YYYY – DD-MM-YYYY”) and all behaviour (keyboard, attach, Reset/Now/Today actions, tab memory per date type) are not in Figma.</li>
+  <li>Year view has a hidden Search Input in Figma (not built).</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>Range hover preview while picking the end date. <span class="src"><a href="https://ant.design/components/date-picker" target="_blank" rel="noopener">Ant DatePicker</a></span></li>
+  <li>Week, month and quarter pickers. <span class="src"><a href="https://ant.design/components/date-picker" target="_blank" rel="noopener">Ant</a></span></li>
+  <li>Clear (×) on the field; placement options (top / right). <span class="src"><a href="https://ant.design/components/date-picker" target="_blank" rel="noopener">Ant</a></span></li>
+  <li>Error / warning / read-only / skeleton states on the field. <span class="src"><a href="https://carbondesignsystem.com/components/date-picker/usage/" target="_blank" rel="noopener">Carbon Date picker</a></span></li>
+  <li>Format hint next to the label (e.g. “DD-MM-YYYY”) and separate Start / End labels for ranges. <span class="src"><a href="https://carbondesignsystem.com/components/date-picker/usage/" target="_blank" rel="noopener">Carbon</a></span></li>
+  <li>Opening on field focus (here it opens on click or ↓). <span class="src"><a href="https://carbondesignsystem.com/components/date-picker/usage/" target="_blank" rel="noopener">Carbon</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the files, build a kit input, then attach the calendar.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup of one day cell and a header (what <code>calendar.js</code> produces):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="button.js"></script>
+<script src="input.js"></script>
+<script src="timepicker.js"></script>
+<script src="calendar.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const out=t=>{$("#c-out").textContent=t};
+const TODAY=new Date();const tIso=`${TODAY.getFullYear()}-${String(TODAY.getMonth()+1).padStart(2,"0")}-${String(TODAY.getDate()).padStart(2,"0")}`;
+
+// try it
+function mountTry(){
+  const [type,months,mode,time]=$("#c-type").value.split("-");
+  const f=pdsInput.build({label:"Date",icon:"calendar",placeholder:"DD-MM-YYYY"});
+  $("#try-field").replaceChildren(f);
+  pdsCalendar.attach(f.querySelector("input"),{
+    type,months:+months,mode,theme:$("#c-theme").value,
+    showTime:type==="month"?$("#c-time").checked:time==="time",
+    min:$("#c-min").checked?tIso:null,
+    onApply:v=>out("Apply "+JSON.stringify(v)),onCancel:()=>out("Cancel"),onChange:v=>out("Change "+JSON.stringify(v))
+  });
+}
+["#c-type","#c-theme","#c-time","#c-min"].forEach(s=>$(s).addEventListener("change",mountTry));
+mountTry();
+
+// variants (static, Figma sample data)
+const S={static:true,today:"2025-10-13",view:"2025-10"};
+const V=[
+ {lbl:"Light · Single · Month · With Time",id:"164:3001",o:{type:"month",value:"2025-10-13",time:"10:00 AM"}},
+ {lbl:"Dark · Single · Month · With Time",id:"164:3010",dark:1,o:{type:"month",theme:"dark",value:"2025-10-13",time:"10:00 AM"}},
+ {lbl:"Light · Single · Year",id:"4527:1844",o:{type:"year",value:2024}},
+ {lbl:"Light · Single · Day",id:"2353:6629",o:{type:"day",value:15}},
+ {lbl:"Light · Double · Month",id:"164:3006",o:{type:"month",months:2,value:null}},
+ {lbl:"Light · Double · Month · Range",id:"164:3005",o:{type:"month",months:2,mode:"range",value:["2025-10-13","2025-11-22"],cancelSize:"normal"}},
+ {lbl:"Dark · Double · Month",id:"164:3389",dark:1,o:{type:"month",months:2,theme:"dark",value:"2025-10-13"}},
+ {lbl:"Dark · Double · Month · Range",id:"164:3267",dark:1,o:{type:"month",months:2,mode:"range",theme:"dark",value:["2025-10-13","2025-11-19"]}},
+ {lbl:"Light · Double · Day · Range",id:"2353:6632",o:{type:"day",months:2,mode:"range",value:["2025-10-08","2025-10-16"]},note:"Presets: Next 3 Days · Next 7 Days · Next 1 Month"},
+ {lbl:"Light · Double · Multi Date",id:"1935:4994",o:{type:"multi",value:["2025-10-08","2025-10-16"]},note:"Figma draws the band without a fill here; built with the Day · Double band"},
+ {lbl:"Light · Double · Multi Date · With Time",id:"2970:598",o:{type:"multi",showTime:true,value:["2025-10-08","2025-10-16"]}},
+];
+V.forEach(v=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${v.lbl} · ${v.id}</span>`;const b=document.createElement("div");b.className="box"+(v.dark?" dk":"");b.appendChild(pdsCalendar.build(Object.assign({},S,v.o)));c.appendChild(b);if(v.note)c.insertAdjacentHTML("beforeend",`<span class="note">${v.note}</span>`);$("#vlist").appendChild(c)});
+
+// parts
+function part(theme,html){const w=document.createElement("div");w.className="pds-calendar pds-calendar-part"+(theme==="dark"?" pds-calendar--dark":"");w.innerHTML=html;return w}
+const cell=(cls,n=1)=>`<div class="pds-calendar__cell ${cls}"><button type="button" class="pds-calendar__day" tabindex="-1">${n}</button></div>`;
+const SD=[["Default",""],["Selected","is-selected"],["Range · Selected","is-range is-selected"],["Range","is-range"],["Disabled","is-outside"],["Disabled · Range","is-disabled"]];
+{const h=document.createElement("h3");h.className="vh";h.textContent=".Single Date — 12 (Light / Dark)";$("#plist").appendChild(h);
+ ["light","dark"].forEach(th=>{const r=document.createElement("div");r.className="parts";SD.forEach(([l,c])=>{const p=document.createElement("div");p.className="pc";p.appendChild(part(th,cell(c)));p.insertAdjacentHTML("beforeend",`<span>${th} · ${l}</span>`);r.appendChild(p)});$("#plist").appendChild(r)});}
+{const h=document.createElement("h3");h.className="vh";h.textContent=".Weekdays & Weeks — 6 (Simple / Range / Disabled × Light / Dark)";$("#plist").appendChild(h);
+ const r=document.createElement("div");r.className="vrow";
+ [["light","Simple",{value:"2025-10-13"}],["light","Range",{mode:"range",value:["2025-10-08","2025-10-16"]}],["light","Disabled",{value:"2025-10-13",min:"2025-10-12"}],["dark","Simple",{value:"2025-10-13"}],["dark","Range",{mode:"range",value:["2025-10-08","2025-10-16"]}],["dark","Disabled",{value:"2025-10-13",min:"2025-10-12"}]].forEach(([th,t,o])=>{
+  const cal=pdsCalendar.build(Object.assign({},S,{theme:th,showTime:false},o));const m=cal.querySelector(".pds-calendar__month");
+  const p=part(th,"");p.appendChild(m);const c=document.createElement("div");c.className="pc vcell";c.innerHTML=`<span class="lbl">${th} · ${t}</span>`;const b=document.createElement("div");b.className="box"+(th==="dark"?" dk":"");b.appendChild(p);c.appendChild(b);r.appendChild(c)});
+ $("#plist").appendChild(r);}
+{const h=document.createElement("h3");h.className="vh";h.textContent=".Date Selector — 2";$("#plist").appendChild(h);
+ const r=document.createElement("div");r.className="parts";
+ r.innerHTML=`<div class="pc"><button type="button" class="pds-calendar__selector" aria-selected="true" tabindex="-1">Creation Date</button><span>Selected</span></div><div class="pc"><button type="button" class="pds-calendar__selector" aria-selected="false" tabindex="-1">Creation Date</button><span>Default</span></div><div class="pc"><button type="button" class="pds-calendar__selector pds-calendar__selector--chip" aria-pressed="false" tabindex="-1">Last Day of Month</button><span>Day chip (fill override)</span></div>`;
+ const w=part("light","");w.style.padding="10px";w.style.background="#fff";w.appendChild(r);$("#plist").appendChild(w);}
+
+// code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/input.css">
+<link rel="stylesheet" href="components/timepicker.css">   <!-- optional: Time field -->
+<link rel="stylesheet" href="components/calendar.css">
+<script src="components/input.js"><\/script>
+<script src="components/timepicker.js"><\/script>          <!-- optional -->
+<script src="components/calendar.js"><\/script>
+
+<script>
+  const field = pdsInput.build({ label: 'Date', icon: 'calendar' });
+  form.appendChild(field);
+  pdsCalendar.attach(field.querySelector('input'), {
+    type: 'month',            // 'month' | 'year' | 'day' | 'multi'
+    months: 1,                // 2 = Double
+    mode: 'single',           // 'range'
+    showTime: true,
+    min: '2025-10-01',        // earlier dates: Disabled
+    onApply: v => { /* { date, text: '13-10-2025', time } */ },
+    onCancel: () => {}
+  });
+
+  // or standalone
+  const cal = pdsCalendar.build({ months: 2, mode: 'range', value: ['2025-10-13', '2025-11-22'] });
+  host.appendChild(cal);
+  pdsCalendar.init(cal, { onApply: v => {}, onCancel: () => {}, onChange: v => {} });
+<\/script>`;
+{const c=pdsCalendar.build(Object.assign({},S,{value:"2025-10-13"}));$("#code2").textContent=c.querySelector(".pds-calendar__head").outerHTML.replace(/<svg[\s\S]*?<\/svg>/g,"<svg…/>")+"\n\n"+c.querySelector(".is-selected").outerHTML;}
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>
