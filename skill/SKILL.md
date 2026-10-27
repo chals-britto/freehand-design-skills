@@ -44,12 +44,12 @@ All Atoms are built (2026-10-23). Each has `components/<id>.css` (+ `.js` if int
 | Avatars | `avatar` | — | As in Figma |
 | Tags | `tag` | — | As in Figma |
 | Status | `status` | — | As in Figma |
-| Tooltips | `tooltip` | `pdsTooltip` | Partial: Custom Content + Map Tracking styles not yet read |
+| Tooltips | `tooltip` | `pdsTooltip` | As in Figma (Text, Custom Content, Map Tracking) |
 | Icons (430) | `icons` | manifest `components/icons/icons-data.js`, files `components/icons/*.svg` | As in Figma |
 | Scrollbar | `scrollbar` | — | As in Figma |
 
 Alerts: Figma page is empty — use Toast or Callout (`badge`) and ask.
-"As in Figma" pages have an **Open issues** section; respect it and don't silently fix. Not built yet: Molecules, Organisms (read from Figma when needed).
+"As in Figma" pages have an **Open issues** section; respect it and don't silently fix. Not built yet: Molecules, Organisms (read from Figma when needed). Gaps in Atoms: see `review/atoms-audit.md`.
 
 ## Shipping kit code inside an Artifact
 Artifacts can't reach local files. Either inline the CSS/JS from the repo into the page, or publish them as supporting `files` (e.g. `tokens.css`, `components/toast.css`) and link them relatively. Never retype values by hand.

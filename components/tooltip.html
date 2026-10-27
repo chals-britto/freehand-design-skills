@@ -7,6 +7,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="status.css">
 <link rel="stylesheet" href="tooltip.css">
 <style>
 :root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
@@ -99,6 +100,11 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 .vgrid.tt{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:28px 20px;padding:28px 20px}
 .vgrid.tt .vcell{align-items:flex-start}
 .vgrid.tt .pds-tooltip{margin:8px}
+.vgrid.tt.wide{grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.vhd{font:600 13px var(--pg-ui);margin:0;padding:18px 20px 0}
+.vhd + .vgrid{padding-top:14px}
+.ddc .ex{padding:28px 20px}
+.ddc .ex .pds-tooltip b{font-weight:600}
 .redline-tt{position:relative;width:656px;margin:56px auto 40px}
 .redline-tt .pds-tooltip{transform:scale(4);transform-origin:top left;margin-bottom:180px}
 .rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
@@ -111,7 +117,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
     <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
     <h1>Tooltip</h1>
     <p class="lede">Tooltips display additional information upon hover or focus that is contextual, helpful, and nonessential while providing the ability to communicate and give clarity to a user</p>
-    <div class="meta"><span>Status: Built from Figma 2026-10-23 · not yet reviewed</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=243-236" target="_blank" rel="noopener">Figma component 243:236 ↗</a><span>Files: tooltip.css · tooltip.js</span></div>
+    <div class="meta"><span>Status: Built from Figma 2026-10-23 · not yet reviewed</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=243-236" target="_blank" rel="noopener">Figma component 243:236 ↗</a><span>Files: tooltip.css · tooltip.js (+ status.css for Map Tracking)</span></div>
   </div>
   <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
 </header>
@@ -121,6 +127,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 <section id="try" data-flag-area><h2>Try it</h2><p class="sub">Hover or Tab to the button. The tooltip stays while the pointer is over it; it closes on mouse-out, blur or Esc.</p>
 <div class="panel play">
   <form class="ctrls" id="ctrls" onsubmit="return false">
+    <label>Style<select id="c-style"><option value="text" selected>Text</option><option value="custom">Custom Content</option><option value="track">Info + Status (Map Tracking)</option></select></label>
     <label>Beak position<select id="c-beak"></select></label>
     <label>Title<input type="text" id="c-title" value="Tooltip Title"></label>
     <label>Text<input type="text" id="c-text" value="Tooltip content."></label>
@@ -129,8 +136,12 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
   <div class="stage tt" id="stage"><button type="button" class="trg" id="trg" aria-label="Info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><rect x="11" y="10" width="2" height="7" rx="1" fill="currentColor"/><circle cx="12" cy="7.2" r="1.3" fill="currentColor"/></svg></button></div>
 </div></section>
 
-<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Style=Text × 12 beak positions, plus Show Title = false. Custom Content and Info + Status (Map Tracking) are not built — see Open issues.</p>
-<div class="panel vgrid tt" id="vgrid"></div></section>
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">3 styles × 12 beak positions = all 36 Figma variants, plus Show Title = false on Style=Text.</p>
+<div class="panel">
+  <h3 class="vhd">Style = Text</h3><div class="vgrid tt" id="vgrid"></div>
+  <h3 class="vhd">Style = Custom Content</h3><div class="vgrid tt wide" id="vgrid-custom"></div>
+  <h3 class="vhd">Style = Info + Status (Map Tracking)</h3><div class="vgrid tt wide" id="vgrid-track"></div>
+</div></section>
 
 <section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma component (Beak=11:00), drawn at 4× size.</p>
 <div class="panel"><div class="spec" id="spec-box"><div class="redline-tt" id="rl"></div></div>
@@ -142,7 +153,13 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
   <div><b>Fill</b>#000000 @ 80% · <code>--tooltip-bg</code></div>
   <div><b>Title</b><code>.type-12-semibold</code> · white · line-height <code>16px</code></div>
   <div><b>Text</b><code>.type-12-regular</code> · white · line-height <code>16px</code></div>
-  <div><b>Beak</b><code>12×6</code> · inset <code>16px</code> start / <code>20px</code> end / <code>50% − 8px</code> centre</div>
+  <div><b>Beak · top (11/12/1)</b><code>12×6</code> · <code>16px</code> from left / <code>50% − 8px</code> (2px left of centre) / <code>20px</code> from right</div>
+  <div><b>Beak · bottom (7/6/5)</b><code>16×8</code> · <code>16px</code> from left / centred / <code>16px</code> from right</div>
+  <div><b>Beak · sides (10/9/8, 2/3/4)</b><code>8×16</code> · Text: <code>8px</code> from top (2:00 <code>9px</code>) / centred / <code>8px</code> from bottom · Custom, Map Tracking: <code>16px</code> / centred / <code>16px</code></div>
+  <div><b>Custom Content</b>bubble hugs <code>190px</code> · padding <code>10px</code> · slot <code>170px</code>, fill <code>--pando-light</code>, padding <code>10px</code>, gap <code>4px</code>, no radius</div>
+  <div><b>Custom slot content</b>icon <code>20px</code> + gap <code>8px</code> + title <code>.type-12-semibold</code> <code>--pando-dark</code> · body <code>.type-12-regular</code> #000000 (off-token), width <code>150px</code></div>
+  <div><b>Map Tracking</b>width <code>234px</code> · padding <code>10px</code> · gap <code>4px</code> · fill #000000 @ 80% (no style linked)</div>
+  <div><b>Map Tracking content</b><code>.pds-status--dark.pds-status--blue</code> (140px) · 5 rows: label <code>.type-12-regular</code>, “:” , value <code>.type-12-semibold</code>, all <code>--dark-label-text</code>, gap <code>4px</code>, line-height <code>16px</code></div>
   <div><b>Offset to target</b><code>8px</code></div>
   <div><b>Shadow / border</b>none</div>
 </div></div></section>
@@ -150,8 +167,12 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 <section id="usage" data-flag-area><h2>Usage</h2>
 <div class="cols">
   <div class="panel card"><h3>When to use</h3><ul><li>To expose names of controls, like icon buttons, that lack visual labels</li><li>When an element can take focus and supplying additional information is useful in helping a user make decisions</li><li>When an element needs more context or explanation</li><li>Use when defining a term or inline item</li></ul></div>
-  <div class="panel card"><h3>When not to use</h3><ul><li>Since a tooltip disappears when a user hovers away, do not include information for the user to complete their task. Use helper text that is always visible and accessible for vital information such as required fields.</li><li>Do not include interactive elements within a tooltip. Interactive elements in tooltips are inaccessible for some users and are hard to use for all users since tooltips do not receive […]</li></ul></div>
+  <div class="panel card"><h3>When not to use</h3><ul><li>Since a tooltip disappears when a user hovers away, do not include information for the user to complete their task. Use helper text that is always visible and accessible for vital information such as required fields.</li><li>Do not include interactive elements within a tooltip. Interactive elements in tooltips are inaccessible for some users and are hard to use for all users since tooltips do not receive focus. If images, buttons, or links need to be included in supplemental information, use the toggletip component and the disclosure pattern that allows for better tabbing and focus structure, improving the experience for all users.</li></ul></div>
   <div class="panel card"><h3>Placement &amp; convention</h3><p>Tooltips can be placed to the top, bottom, left or right of their related content. For top or bottom tooltips, the placement can be more specifically aligned to top left, top right, bottom left or bottom right. Additionally the placement can be set to automatically adjust position to avoid being cut off by a container or browser edge.</p></div>
+  <div class="panel card" style="grid-column:1/-1;padding:0;border:0;background:none"><div class="dd">
+    <div class="panel ddc"><div class="ex" id="ex-do"></div><div class="cap"><b>Do</b><span class="ex-note">Figma shows this tooltip above an info icon. No caption text in Figma.</span></div></div>
+    <div class="panel ddc dont"><div class="ex" id="ex-dont"></div><div class="cap"><b>Don’t</b><span class="ex-note">Figma shows this tooltip above a red warning icon. No caption text in Figma.</span></div></div>
+  </div></div>
   <div class="panel card"><h3>Behaviour</h3><p>Tooltips are triggered on hover or focus of the target component and dismissed on blur or mouse-out of the target or tooltip container.</p><p class="ex-note" style="margin-top:6px">Added in review — not in Figma: Esc closes it; flips to the opposite side at the viewport edge.</p></div>
 </div></section>
 
@@ -159,18 +180,25 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 <div class="cols">
   <div class="panel card"><h3>Linked to the trigger</h3><p><code>role="tooltip"</code> on the bubble and <code>aria-describedby</code> on the trigger. <code>tooltip.js</code> sets both.</p><p class="src">Source: <a href="https://fluent2.microsoft.design/components/web/react/core/tooltip/usage" target="_blank" rel="noopener">Fluent 2 Tooltip</a></p></div>
   <div class="panel card"><h3>Keyboard and hover</h3><p>Opens on focus, closes on blur and Esc. The pointer can move onto the tooltip without it closing.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html" target="_blank" rel="noopener">WCAG 2.2 · 1.4.13</a></p></div>
-  <div class="panel card"><h3>Contrast</h3><p>White on 80% black ≈ 12.6 : 1 over a white page — passes.</p></div>
+  <div class="panel card"><h3>Contrast</h3><p>Text style: white on 80% black ≈ 12.6 : 1 over a white page — passes. Map Tracking “Delayed” label ≈ 4.1 : 1 — fails (see Open issues).</p></div>
 </div></section>
 
 <section id="open" data-flag-area><h2>Open issues</h2>
 <div class="open"><ul style="margin:0;padding-left:18px">
-  <li>Fill is 80% black (Figma style); the Specs section says 70%. Built at 80%.</li>
-  <li>Not read (Figma rate limit): Custom Content and Info + Status (Map Tracking) styles, <code>.Track Content</code> and <code>.Swappable Content</code>, the Do / Don’t examples, the end of the “When not to use” text.</li>
-  <li>Bottom and side beak positions are inferred by mirroring the measured top ones.</li>
-  <li>Hidden side/bottom beak layers in the master use #373D3F (“Base/Gray 02”), 8×16 — not used.</li>
-  <li>12:00 beak sits 2px left of centre in Figma — kept.</li>
-  <li>Line-height 16px (Figma) vs 17px in <code>.type-12-*</code> — overridden.</li>
-  <li>Fixed 164px width; no max-width or long-text rule in Figma.</li>
+  <li>Fill: every visible bubble and beak uses 80% black (style “Opacity/#000000-Light-80%”); 70% appears only on hidden/clipped beak copies. The Specs section says 70%. Built at 80%.</li>
+  <li>Map Tracking: the bubble fill is #000000 @ 80% but not linked to the opacity style.</li>
+  <li>Beak sizes differ per edge in Figma: top 12×6, bottom 16×8, sides 8×16. 12:00 sits 2px left of centre; 6:00 is centred; 1:00 is 20px from the right, 5:00 is 16px.</li>
+  <li>Style=Text side beaks: 2:00 is 9px from the top, 10:00 is 8px — kept.</li>
+  <li>Style=Text side variants (2/3/4, 8/9/10): text area is fixed 160px inside a 164px bubble with 10px padding, so it overflows by 16px in Figma. Built at the 144px text area of the other variants.</li>
+  <li>Custom Content: the bubble (190) is wider than its component frame (180) on all variants except 6:00 / 7:00 (frame 206).</li>
+  <li>Custom Content: body text is #000000 with no colour style; the refresh-line icon fill in the instance could not be resolved (master exports black) — built black.</li>
+  <li>Custom Content: the slot (“.Swappable Content”) is a placeholder; Figma does not say what content may go in it.</li>
+  <li>Map Tracking: rows and status are fixed (5 rows, one Delayed chip); no rule for fewer/more rows or long values.</li>
+  <li>Do / Don’t examples have no captions in Figma; the reason for each is not written down. Do: a Map Tracking tooltip (264px wide, wider than the 234px variant) whose text starts with a bold “Waterfall :” (bold read from the render, not the text node). Don’t: an error message in a tooltip.</li>
+  <li>Hidden side/bottom beak layers in the master use #373D3F (“Base/Gray 02”) — not used.</li>
+  <li>Line-height: 16px (Figma) vs 17px in <code>.type-12-*</code> — overridden.</li>
+  <li>Fixed widths (Text 164, Map Tracking 234); no max-width or long-text rule in Figma.</li>
+  <li>Contrast: Map Tracking “Delayed” #6397F8 on #393945 @ 70% over the 80% black bubble (on white) ≈ 4.1 : 1 — <b>fails 4.5 : 1</b> for 12px text. Rows #D5DAF4 ≈ 9.1 : 1, Custom title #234357 on #EEF2F4 ≈ 9.3 : 1, body #000000 ≈ 18.6 : 1 — pass.</li>
 </ul></div></section>
 
 <section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
@@ -198,13 +226,19 @@ BEAKS.forEach(b=>{const o=document.createElement("option");o.value=b;o.textConte
 
 let tip=null;
 function rebuild(){const trg=$("#trg");if(tip){tip.remove();trg.removeAttribute("aria-describedby")}
- tip=pdsTooltip.attach(trg,{beak:$("#c-beak").value,title:$("#c-title").value,text:$("#c-text").value,showTitle:$("#c-showtitle").checked})}
-["#c-beak","#c-title","#c-text","#c-showtitle"].forEach(s=>$(s).addEventListener("input",rebuild));
+ const st=$("#c-style").value;["#c-title","#c-text","#c-showtitle"].forEach(s=>$(s).disabled=st!=="text");
+ tip=pdsTooltip.attach(trg,{style:st,beak:$("#c-beak").value,title:$("#c-title").value,text:$("#c-text").value,showTitle:$("#c-showtitle").checked})}
+["#c-style","#c-beak","#c-title","#c-text","#c-showtitle"].forEach(s=>$(s).addEventListener("input",rebuild));
 rebuild();
 
 // variants
 BEAKS.forEach(b=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">Style=Text, Beak=${b}:00</span>`;c.appendChild(pdsTooltip.build({beak:b,title:"Tooltip Title",text:"Tooltip content."}));$("#vgrid").appendChild(c)});
 {const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">Beak=12:00, Show Title=false</span>`;c.appendChild(pdsTooltip.build({beak:"12",title:"Tooltip Title",text:"Tooltip content.",showTitle:false}));$("#vgrid").appendChild(c)}
+[["custom","Custom Content","#vgrid-custom"],["track","Info + Status (Map Tracking)","#vgrid-track"]].forEach(([st,nm,g])=>BEAKS.forEach(b=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">Style=${nm}, Beak=${b}:00</span>`;c.appendChild(pdsTooltip.build({style:st,beak:b}));$(g).appendChild(c)}));
+
+// Do / Don't (Figma doc examples, Style=Map Tracking, Beak=5:00, status hidden)
+{const d=pdsTooltip.build({style:"track",beak:"5",status:null,rows:[]});d.style.width="264px";const p=document.createElement("p");p.className="pds-tooltip__row";p.innerHTML="<span><b>Waterfall :</b> Auto tender the carrier based on lowest cost. if the first carrier rejects the second carrier will be auto assigned</span>";d.appendChild(p);$("#ex-do").appendChild(d);
+ const n=pdsTooltip.build({style:"track",beak:"5",status:null,rows:[[null,"Failed to connect server Visit help center for more information."]]});$("#ex-dont").appendChild(n)}
 
 // redline 4x
 (function(){const r=$("#rl");const t=pdsTooltip.build({beak:"11",title:"Tooltip Title",text:"Tooltip content."});r.appendChild(t);
@@ -233,6 +267,13 @@ $("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
     beak: 12,            // 1–12, clock position of the beak
     showTitle: true
   });
+
+  // Style = Custom Content: your own node replaces the ".Swappable Content" slot
+  pdsTooltip.attach(trigger2, { style: 'custom', beak: 6, content: myNode });
+
+  // Style = Info + Status (Map Tracking) — also include components/status.css
+  pdsTooltip.attach(trigger3, { style: 'track', beak: 9,
+    status: 'Delayed', rows: [['Label Text', 'Information Text']] });
 <\/script>`;
 $("#code2").textContent=pdsTooltip.build({beak:"12",title:"Tooltip Title",text:"Tooltip content."}).outerHTML.replace(/></g,">\n<");
 

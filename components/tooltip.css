@@ -1,14 +1,14 @@
 /* ════════════════════════════════════════════════════════════════════
    Pando DS V1 — Tooltip
    Figma: DS V2 – Atoms › 🟢 Tooltips › component set "Tooltip" (243:236)
-   Built 2026-10-23 from Figma (no review yet). Style=Text only — the
-   "Custom Content" and "Info + Status (Map Tracking)" styles could not be
-   read (Figma rate limit) and are not built.
-   Requires ../tokens.css.
+   Built 2026-10-23 from Figma (no review yet); completed 2026-10-27 with
+   Style = Custom Content and Info + Status (Map Tracking), and the real
+   bottom / side beak geometry.
+   Requires ../tokens.css. Style=Track also needs status.css (#Status chip).
    ════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --tooltip-bg: rgb(0 0 0 / .8);   /* off-token in Figma: "Opacity/#000000-Light-80%" (spec text says 70%) */
+  --tooltip-bg: rgb(0 0 0 / .8);   /* off-token in Figma: "Opacity/#000000-Light-80%" — every visible bubble + beak in all 36 variants is 80%; 70% only on hidden/clipped beak copies (Specs text says 70%) */
   --tooltip-fg: var(--white);
 
   /* Measured from the component */
@@ -17,13 +17,36 @@
   --tooltip-gap: 4px;              /* title ↔ text */
   --tooltip-radius: 4px;
   --tooltip-lh: 16px;              /* Figma 12px/Heading auto (16px box) and 12px/Body 16px */
-  --tooltip-beak-w: 12px;
+  /* Beak — measured per edge in all 36 variants */
+  --tooltip-beak-w: 12px;          /* top edge (11/12/1): 12 × 6 */
   --tooltip-beak-h: 6px;
   --tooltip-beak-start: 16px;      /* 11:00 — beak's left edge from the bubble's left */
   --tooltip-beak-end: 20px;        /* 1:00  — beak's right edge from the bubble's right */
-  --tooltip-beak-center: calc(50% - 8px); /* 12:00 — Figma beak sits 2px left of centre */
+  --tooltip-beak-center: calc(50% - 8px); /* 12:00 — 2px left of centre; 6:00 — exactly centred (16 wide) */
+  --tooltip-beak-lg-w: 16px;       /* bottom edge (5/6/7): 16 × 8; side edges: 8 × 16 */
+  --tooltip-beak-lg-h: 8px;
+  --tooltip-beak-bottom-inset: 16px; /* 7:00 from the left, 5:00 from the right */
+  --tooltip-beak-side-inset: 8px;  /* Text: 10:00/8:00/4:00 8px from top/bottom (2:00 is 9px) */
   --tooltip-offset: 8px;           /* bubble ↔ target (Figma master padding) */
   --tooltip-z: 1000;
+
+  /* Style = Custom Content */
+  --tooltip-custom-beak-side-inset: 16px;
+  --tooltip-swap-bg: var(--pando-light);   /* "Primary/Pando Light-#EEF2F4" */
+  --tooltip-swap-pad: var(--space-10);
+  --tooltip-swap-gap: 4px;                 /* title row ↔ body */
+  --tooltip-swap-title-gap: 8px;           /* icon ↔ title */
+  --tooltip-swap-icon: 20px;
+  --tooltip-swap-title: var(--pando-dark); /* "Primary/Pando Dark-#234357" */
+  --tooltip-swap-text: #000000;            /* off-token in Figma: body text #000000, no style */
+  --tooltip-swap-text-w: 150px;            /* body text fixed width (card hugs → 170) */
+
+  /* Style = Info + Status (Map Tracking) */
+  --tooltip-track-width: 234px;            /* bubble; content fixed 214 + 2 × 10 padding */
+  --tooltip-track-bg: rgb(0 0 0 / .8);     /* off-token in Figma: #000000 @ 80% with NO style linked */
+  --tooltip-track-gap: 4px;                /* status ↔ rows ↔ rows */
+  --tooltip-track-row-gap: 4px;            /* label ↔ ":" ↔ value */
+  --tooltip-track-fg: var(--dark-label-text); /* "Dark/Label-Text-#D5DAF4" */
 }
 
 .pds-tooltip {
@@ -44,13 +67,12 @@
 
 /* ── Beak ──────────────────────────────────────────────────────────
    Clock position = where the beak sits on the bubble.
-   11/12/1 top edge (Figma-measured) · 5/6/7 bottom edge · 2/3/4 right
-   edge · 8/9/10 left edge (bottom + side offsets mirror the top ones —
-   inferred, see tooltip.md Open issues). */
+   11/12/1 top edge (12×6) · 5/6/7 bottom edge (16×8) · 2/3/4 right edge
+   (8×16) · 8/9/10 left edge (8×16). All measured in Figma. */
 .pds-tooltip::before {
   content: ""; position: absolute;
   width: var(--tooltip-beak-w); height: var(--tooltip-beak-h);
-  background: var(--tooltip-bg);
+  background: var(--tooltip-beak-bg, var(--tooltip-bg));
 }
 /* top edge — points up */
 .pds-tooltip--beak-11::before, .pds-tooltip--beak-12::before, .pds-tooltip--beak-1::before {
@@ -60,30 +82,68 @@
 .pds-tooltip--beak-11::before { left: var(--tooltip-beak-start); }
 .pds-tooltip--beak-12::before { left: var(--tooltip-beak-center); }
 .pds-tooltip--beak-1::before  { right: var(--tooltip-beak-end); }
-/* bottom edge — points down */
+/* bottom edge — points down, 16 × 8 */
 .pds-tooltip--beak-5::before, .pds-tooltip--beak-6::before, .pds-tooltip--beak-7::before {
-  bottom: calc(-1 * var(--tooltip-beak-h));
+  width: var(--tooltip-beak-lg-w); height: var(--tooltip-beak-lg-h);
+  bottom: calc(-1 * var(--tooltip-beak-lg-h));
   clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
-.pds-tooltip--beak-7::before { left: var(--tooltip-beak-start); }
-.pds-tooltip--beak-6::before { left: var(--tooltip-beak-center); }
-.pds-tooltip--beak-5::before { right: var(--tooltip-beak-end); }
-/* side edges — beak rotated: 6 wide × 12 tall */
+.pds-tooltip--beak-7::before { left: var(--tooltip-beak-bottom-inset); }
+.pds-tooltip--beak-6::before { left: calc(50% - var(--tooltip-beak-lg-w) / 2); }
+.pds-tooltip--beak-5::before { right: var(--tooltip-beak-bottom-inset); }
+/* side edges — 8 wide × 16 tall */
 .pds-tooltip--beak-2::before, .pds-tooltip--beak-3::before, .pds-tooltip--beak-4::before,
 .pds-tooltip--beak-8::before, .pds-tooltip--beak-9::before, .pds-tooltip--beak-10::before {
-  width: var(--tooltip-beak-h); height: var(--tooltip-beak-w);
+  width: var(--tooltip-beak-lg-h); height: var(--tooltip-beak-lg-w);
 }
 .pds-tooltip--beak-2::before, .pds-tooltip--beak-3::before, .pds-tooltip--beak-4::before {
-  right: calc(-1 * var(--tooltip-beak-h));
+  right: calc(-1 * var(--tooltip-beak-lg-h));
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 .pds-tooltip--beak-8::before, .pds-tooltip--beak-9::before, .pds-tooltip--beak-10::before {
-  left: calc(-1 * var(--tooltip-beak-h));
+  left: calc(-1 * var(--tooltip-beak-lg-h));
   clip-path: polygon(100% 0, 100% 100%, 0 50%);
 }
-.pds-tooltip--beak-2::before, .pds-tooltip--beak-10::before { top: var(--tooltip-beak-start); }
-.pds-tooltip--beak-3::before, .pds-tooltip--beak-9::before  { top: var(--tooltip-beak-center); }
-.pds-tooltip--beak-4::before, .pds-tooltip--beak-8::before  { bottom: var(--tooltip-beak-end); }
+.pds-tooltip--beak-2::before, .pds-tooltip--beak-10::before { top: var(--tooltip-beak-side-inset); }
+.pds-tooltip--beak-3::before, .pds-tooltip--beak-9::before  { top: calc(50% - var(--tooltip-beak-lg-w) / 2); }
+.pds-tooltip--beak-4::before, .pds-tooltip--beak-8::before  { bottom: var(--tooltip-beak-side-inset); }
+.pds-tooltip--text.pds-tooltip--beak-2::before { top: calc(var(--tooltip-beak-side-inset) + 1px); } /* Figma: 9px on 2:00 only */
+
+/* ── Style = Custom Content ─────────────────────────────────────────
+   Dark bubble (10px padding) around a swappable slot. Figma's slot
+   placeholder is ".Swappable Content" (3212:3437). Bubble hugs: 190. */
+.pds-tooltip--custom { width: max-content; --tooltip-beak-side-inset: var(--tooltip-custom-beak-side-inset); }
+.pds-tooltip__swap {
+  display: flex; flex-direction: column; justify-content: center; gap: var(--tooltip-swap-gap);
+  padding: var(--tooltip-swap-pad);
+  background: var(--tooltip-swap-bg);           /* no radius in Figma */
+}
+.pds-tooltip__swap-title {
+  display: flex; align-items: center; gap: var(--tooltip-swap-title-gap);
+  margin: 0; font: var(--type-12-semibold); line-height: var(--tooltip-lh);
+  color: var(--tooltip-swap-title);
+}
+.pds-tooltip__swap-title svg { flex: none; width: var(--tooltip-swap-icon); height: var(--tooltip-swap-icon); fill: currentColor; }
+.pds-tooltip__swap-icon { display: flex; color: #000000; } /* refresh-line master exports black; instance fill not resolved — see Open issues */
+.pds-tooltip__swap-text {
+  margin: 0; width: var(--tooltip-swap-text-w);
+  font: var(--type-12-regular); line-height: var(--tooltip-lh);
+  color: var(--tooltip-swap-text);
+}
+
+/* ── Style = Info + Status (Map Tracking) ───────────────────────────
+   Dark #Status chip (status.css, Theme=Dark Color=Blue) + label rows
+   ("Label Readonly Text / Theme=Dark", 3212:3375). */
+.pds-tooltip--track {
+  width: var(--tooltip-track-width);
+  gap: var(--tooltip-track-gap);
+  background: var(--tooltip-track-bg);
+  --tooltip-beak-bg: var(--tooltip-track-bg);
+  --tooltip-beak-side-inset: var(--tooltip-custom-beak-side-inset);
+  color: var(--tooltip-track-fg);
+}
+.pds-tooltip__row { display: flex; gap: var(--tooltip-track-row-gap); margin: 0; font: var(--type-12-regular); line-height: var(--tooltip-lh); }
+.pds-tooltip__row-value { font-weight: 600; }  /* "12px/Heading" — SemiBold */
 
 /* ── Live (attached) tooltip ────────────────────────────────────── */
 .pds-tooltip--floating { position: fixed; z-index: var(--tooltip-z); pointer-events: auto; }
