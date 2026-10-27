@@ -1,0 +1,162 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Search panel (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟡 Search (60:273)
+          › component set "Search" (4894:18073) — Property 1, 16 variants
+   Built 2026-10-28 · no review — every published variant kept as in Figma.
+
+   Requires ../tokens.css and the kit pieces it is made of — nothing here
+   re-implements them:
+     tabs.css        Tab Group (Light, Background=No) — lane / vendor
+     search-input.css  Search Input (Light, Empty) — the 36px field
+     toggle-tab.css  Toggle Tab "Single Selection with Description" — the
+                     Type row (.Header › Toggle Tab) and the sub-type row
+                     (remote "Search Header" › ". Toggle" › ".Active Toggle Tab")
+     tag.css         Input Tag (Text Tag, Remove=Yes) · Multiselect Tag
+     menu.css        .pds-menu__row / __cell (remote "Dropdown Option" ›
+                     ".Table Cell") · table header · "Dropdown Light Type=Table"
+     checkbox.css    row checkboxes (via menu.css)
+     button.css + button-group.css   Clear (Text Only Small) · Apply (Primary Small)
+     icons.css       Navigation/Search-10px · Navigation/Close-Tag
+   Built here: the "secondary" chip look (Search Header Property 1=secondary),
+   inactive chips that keep their label, the tip line and the panel frame.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Frame (component root) */
+  --search-panel-w:          647px;
+  --search-panel-bg:         var(--white);                 /* #FFFFFF */
+  --search-panel-radius:     var(--space-2);               /* 2px */
+  --search-panel-shadow:     var(--shadow-4);              /* 0 14 28 #000 6% */
+  --search-panel-pad-top:    5px;
+
+  /* Search frame (tab panel top) */
+  --search-panel-search-pad: var(--space-10) var(--space-10) 5px var(--space-10);  /* 10 / 10 / 5 / 10 */
+  --search-panel-tags-gap:   5px;                          /* Input Tags inside the field (x 40 → 169 → 278 → 349) */
+  --search-panel-value-weight: 600;                        /* typed text is 12 SemiBold #313131 in every variant (kit Filled = Regular) */
+
+  /* Type row (.Header) */
+  --search-panel-row-h:      44px;
+  --search-panel-header-pad: 0 var(--space-10);
+  --search-panel-header-bg:  var(--white);
+  --search-panel-header-rule: var(--pando-light);          /* #EEF2F4, 1px bottom, inside */
+  --search-panel-chips-pad:  var(--space-10) 0;            /* Options frame 10 / 0 */
+
+  /* Chips (Search Header) — kit Toggle Tab steps; label always shown here */
+  --search-panel-chip-pad:   5px var(--space-10);          /* 5 / 10 → 24 high */
+  --search-panel-chip-radius: 14px;
+  --search-panel-chip-secondary-bg: var(--accent-light-blue-bg);  /* #F3F6FC — Property 1=secondary */
+  --search-panel-chip-secondary-fg: var(--pando-dark);            /* #234357 */
+
+  /* Sub-type row (Options) */
+  --search-panel-subs-pad:   var(--space-10);
+  --search-panel-subs-gap:   var(--space-10);
+
+  /* Result rows (Dropdown Option › .Table Cell, full width) */
+  --search-panel-row-pad:    var(--space-10);              /* 10 all round (kit table cell is 10 / 5) */
+
+  /* Vendor table (Table frame) */
+  --search-panel-table-pad:  5px var(--space-10);          /* 5 / 10 / 5 / 10 */
+
+  /* Footer (tip + Button Group) */
+  --search-panel-foot-pad-left: var(--space-10);
+  --search-panel-tip-fg:     #737373;                      /* off-token in Figma (same as --menu-hint-fg) */
+  --search-panel-tip-font:   400 10px/12px var(--font-family);  /* Regular 10/12; "Tip" SemiBold 10 line Auto */
+  --search-panel-buttons-pad: var(--space-10);             /* Button Group padding 10 → 44 high */
+
+  --search-panel-focus: 2px solid var(--pando-blue);       /* added — not in Figma (keyboard focus) */
+}
+
+.pds-search-panel, .pds-search-panel *, .pds-search-panel *::before, .pds-search-panel *::after { box-sizing: border-box; }
+
+/* ══ Frame ═══════════════════════════════════════════════════════ */
+.pds-search-panel {
+  display: flex; flex-direction: column;
+  width: var(--search-panel-w);
+  max-width: 100%;
+  padding-top: var(--search-panel-pad-top);
+  background: var(--search-panel-bg);
+  border-radius: var(--search-panel-radius);
+  box-shadow: var(--search-panel-shadow);
+  font-family: var(--font-family);
+}
+
+/* Tab Group fills the width (Figma instance is 647 wide, rule spans it) */
+.pds-search-panel__tabs { display: flex; width: 100%; }
+.pds-search-panel__panel { display: flex; flex-direction: column; outline: 0; }
+.pds-search-panel__panel[hidden] { display: none; }
+.pds-search-panel__panel:focus-visible { outline: var(--search-panel-focus); outline-offset: -2px; }
+
+/* ══ Search frame ════════════════════════════════════════════════ */
+.pds-search-panel__search { padding: var(--search-panel-search-pad); }
+.pds-search-panel__search .pds-search-input { --search-input-w: 100%; width: 100%; }
+.pds-search-panel__search .pds-search-input__input:not(:placeholder-shown) { font-weight: var(--search-panel-value-weight); }
+.pds-search-panel__tags { flex: none; display: flex; align-items: center; gap: var(--search-panel-tags-gap); }
+.pds-search-panel__tags:empty { display: none; }
+
+/* ══ Type row (.Header › Toggle Tab) ═════════════════════════════ */
+.pds-search-panel__header {
+  display: flex; align-items: center;
+  min-height: var(--search-panel-row-h);
+  padding: var(--search-panel-header-pad);
+  background: var(--search-panel-header-bg);
+  box-shadow: inset 0 -1px 0 var(--search-panel-header-rule);
+}
+.pds-search-panel__header .pds-toggle-tabs__options { flex-wrap: nowrap; padding: var(--search-panel-chips-pad); }
+
+/* Sub-type row (Options) */
+.pds-search-panel__subs { display: flex; min-height: var(--search-panel-row-h); padding: var(--search-panel-subs-pad); }
+.pds-search-panel__subs .pds-toggle-tabs__options { flex-wrap: wrap; gap: var(--search-panel-subs-gap); }
+
+/* Chips: kit .Individual Tab steps, but every chip shows its label (Search Header) */
+.pds-search-panel .pds-toggle-tabs--steps .pds-toggle-tabs__option {
+  padding: var(--search-panel-chip-pad);
+  border-radius: var(--search-panel-chip-radius);
+}
+.pds-search-panel .pds-toggle-tabs--steps .pds-toggle-tabs__label {
+  position: static; width: auto; height: auto; overflow: visible; clip: auto;
+}
+/* Property 1=secondary — no kit look: light blue fill, no shadow */
+.pds-search-panel .pds-toggle-tabs__option.pds-search-panel__chip--secondary[aria-checked="false"] {
+  background: var(--search-panel-chip-secondary-bg);
+  color: var(--search-panel-chip-secondary-fg);
+  box-shadow: none;
+}
+.pds-search-panel .pds-tag__remove { cursor: pointer; }
+
+/* ══ Result rows (Dropdown Option › .Table Cell) — kit menu row/cell ═ */
+.pds-search-panel__results {
+  --menu-cell-w-main: 100%;
+  --menu-cell-pad: var(--search-panel-row-pad);
+  display: flex; flex-direction: column;
+}
+.pds-search-panel__results .pds-menu__row { width: 100%; }
+.pds-search-panel__results .pds-menu__row[hidden],
+.pds-search-panel__table .pds-menu__row[hidden] { display: none; }
+
+/* ══ Vendor table (.Header Type=Table + Dropdown Light Type=Table) ═ */
+.pds-search-panel__table {
+  --menu-w-table: 100%;
+  display: flex; flex-direction: column;
+  padding: var(--search-panel-table-pad);
+}
+.pds-search-panel__table .pds-menu__head { box-shadow: none; }
+.pds-search-panel__table .pds-menu--table { width: 100%; }
+.pds-search-panel__table .pds-menu__row { width: 100%; background: var(--menu-cell-bg); }
+.pds-search-panel__table .pds-menu__row--alt { background: var(--menu-cell-alt-bg); }
+/* Selected rows keep their fill in Figma — only the checkbox changes */
+.pds-search-panel__table .pds-menu__row[aria-selected="true"] .pds-menu__cell {
+  background: var(--menu-cell-bg);
+  box-shadow: inset 0 -.5px 0 var(--menu-cell-border);
+  color: var(--menu-cell-fg);
+}
+.pds-search-panel__table .pds-menu__row--alt[aria-selected="true"] .pds-menu__cell { background: var(--menu-cell-alt-bg); }
+
+/* ══ Footer ══════════════════════════════════════════════════════ */
+.pds-search-panel__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-10);
+  min-height: var(--search-panel-row-h);
+  padding-left: var(--search-panel-foot-pad-left);
+}
+.pds-search-panel__tip { margin: 0; min-width: 0; font: var(--search-panel-tip-font); color: var(--search-panel-tip-fg); }
+.pds-search-panel__tip b { font-weight: 600; }
+.pds-search-panel__buttons { flex: none; padding: var(--search-panel-buttons-pad); min-height: 0; }

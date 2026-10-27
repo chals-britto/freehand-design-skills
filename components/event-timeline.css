@@ -1,0 +1,218 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Event Timeline
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › Timeline (60:272)
+     · "Event Timeline"           component set 303:3265 (18 variants)
+     · ".Timeline-SLA"            component     432:3588 (1, private part)
+     · "Timeline with Status-Tag" component     5618:5738 (1)
+   No review file — every published variant kept as in Figma.
+   Requires ../tokens.css + kit atoms: icons.css (Navigation/Selected),
+   input.css (Inline input, Edit state), tag.css (Status-Tag).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Row ── */
+  --event-timeline-w:            350px;                    /* fixed in Figma */
+  --event-timeline-gap:          var(--space-10);          /* date · rail · text */
+  --event-timeline-pad-y:        var(--space-10);          /* date + text columns, top / bottom */
+  --event-timeline-date-w:       65px;                     /* Date/Time Stamp hugs "13 Oct 2025" */
+  --event-timeline-text-gap:     4px;                      /* between text lines */
+  --event-timeline-link-gap:     4px;                      /* link text ↔ (hidden) New Tab icon */
+
+  /* ── Rail + marker ── */
+  --event-timeline-rail-w:       14px;                     /* Timeline column */
+  --event-timeline-line-w:       1px;
+  --event-timeline-line-top:     13px;                     /* line above the marker */
+  --event-timeline-marker:       14px;                     /* Outer Node */
+  --event-timeline-marker-ring:  2px;                      /* Outer 14 − white Oval 10 */
+  --event-timeline-dot:          6px;                      /* Inner Node + Light Opacity */
+  --event-timeline-check:        8px;                      /* Navigation/Selected in Done */
+  --event-timeline-dash:         4px;                      /* Estimated: dash = gap (≈3.94 on the long line) */
+
+  /* ── Colours by type ── */
+  --event-timeline-default-line: var(--status-purple-light);  /* #F2E7FE */
+  --event-timeline-default-dot:  var(--status-purple-dark);   /* #2D0645 */
+  --event-timeline-issue-line:   var(--status-red-light);     /* #FFEAEE */
+  --event-timeline-issue-dot:    var(--status-orange-dark);   /* #F94200 */
+  --event-timeline-done-line:    var(--status-green-light);   /* #D5F9D1 — also fills the Oval */
+  --event-timeline-done-check:   var(--accent-green-highlight); /* #008D5E */
+  --event-timeline-oval:         var(--white);
+  --event-timeline-dot-overlay:  color-mix(in srgb, var(--grey-light) 30%, transparent); /* Opacity/E7E7E7-Light-30 */
+
+  /* ── Text ── */
+  --event-timeline-text:         var(--text-dark);         /* #313131 date, time, heading, body, small */
+  --event-timeline-link:         var(--action-blue);       /* #376F99 */
+  --event-timeline-date-font:    600 10px/14px var(--font-family); /* 10px/Semibold/Normal, line-height auto */
+  --event-timeline-heading-font: 600 12px/16px var(--font-family); /* 12 semibold, line-height auto */
+
+  /* ── Hover / Edit surface ── */
+  --event-timeline-active-bg:    var(--accent-light-highlight); /* #E9F1F5 (style named …#EFF3F5) */
+  --event-timeline-active-radius: 4px;
+  --event-timeline-hover-shadow: var(--shadow-2);          /* 0 2px 4px rgb(0 0 0 / .06) */
+
+  /* ── Edit: Text Input Field (remote) → kit Inline input ── */
+  --event-timeline-input-w:      225px;
+  --event-timeline-input-bg:     var(--accent-alternate-white); /* #F9FAFA */
+  --event-timeline-input-border: var(--border-blue-grey);  /* #B5C3CB dashed 3/3 at rest */
+
+  /* ── SLA (.Timeline-SLA 432:3588) ── */
+  --event-timeline-sla-gap:      4px;
+  --event-timeline-sla-font:     600 8px/11px var(--font-family); /* 8px/Semibold - All Caps, no type class */
+  --event-timeline-sla-label:    var(--action-red);        /* #E25757 "SLA BREACH" */
+  --event-timeline-sla-unit-bg:  var(--status-red-light);  /* #FFEAEE */
+  --event-timeline-sla-unit-fg:  var(--status-red-dark);   /* #FF0000 */
+  --event-timeline-sla-unit-pad: .5px 2px;                 /* Unit/Small */
+  --event-timeline-sla-unit-radius: var(--space-2);        /* 2px */
+
+  /* ── Timeline with Status-Tag (5618:5738) ── */
+  --event-timeline-tagged-w:     510px;
+  --event-timeline-tagged-pad-r: 20px;                     /* right padding of the timeline instance */
+  --event-timeline-tagged-date:  var(--pando-blue-active); /* #005399 date + time */
+  --event-timeline-tag-pad-t:    var(--space-10);
+}
+
+/* ── Row ─────────────────────────────────────────────────────────── */
+.pds-event-timeline {
+  --_line: var(--event-timeline-default-line);
+  --_outer: var(--event-timeline-default-line);
+  --_oval: var(--event-timeline-oval);
+  --_dot: var(--event-timeline-default-dot);
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  gap: var(--event-timeline-gap);
+  width: var(--event-timeline-w);
+  max-width: 100%;
+  font-family: var(--font-family);
+  color: var(--event-timeline-text);
+}
+.pds-event-timeline *, .pds-event-timeline *::before, .pds-event-timeline *::after { box-sizing: border-box; }
+
+/* Date / time — right-aligned column */
+.pds-event-timeline__stamp {
+  flex: none;
+  display: flex; flex-direction: column; align-items: flex-end;
+  min-width: var(--event-timeline-date-w);
+  padding: var(--event-timeline-pad-y) 0;
+  text-align: right;
+}
+.pds-event-timeline__date { font: var(--event-timeline-date-font); margin: 0; white-space: nowrap; }
+.pds-event-timeline__time { font: var(--type-10-regular); letter-spacing: .5px; margin: 0; white-space: nowrap; }
+
+/* Rail: line · marker · line */
+.pds-event-timeline__rail {
+  flex: none;
+  display: flex; flex-direction: column; align-items: center;
+  width: var(--event-timeline-rail-w);
+}
+.pds-event-timeline__line { flex: none; width: var(--event-timeline-line-w); background: var(--_line); }
+.pds-event-timeline__line--top { height: var(--event-timeline-line-top); }
+.pds-event-timeline__line--bottom { flex: 1; }
+
+.pds-event-timeline__marker {
+  position: relative; flex: none;
+  display: grid; place-items: center;
+  width: var(--event-timeline-marker); height: var(--event-timeline-marker);
+  border-radius: 50%;
+  background: var(--_oval);
+  box-shadow: inset 0 0 0 var(--event-timeline-marker-ring) var(--_outer);
+}
+.pds-event-timeline__marker::before,
+.pds-event-timeline__marker::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: var(--event-timeline-dot); height: var(--event-timeline-dot);
+  margin: calc(var(--event-timeline-dot) / -2) 0 0 calc(var(--event-timeline-dot) / -2);
+  border-radius: 50%;
+}
+.pds-event-timeline__marker::before { background: var(--_dot); }                       /* Inner Node */
+.pds-event-timeline__marker::after  { background: var(--event-timeline-dot-overlay); } /* Light Opacity */
+.pds-event-timeline__marker .pds-icon { --_icon: var(--event-timeline-check); color: var(--event-timeline-done-check); }
+
+/* Text column */
+.pds-event-timeline__body {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  gap: var(--event-timeline-text-gap);
+  padding: var(--event-timeline-pad-y) 0;
+}
+.pds-event-timeline__body > * { max-width: 100%; }
+.pds-event-timeline__heading { font: var(--event-timeline-heading-font); margin: 0; }
+.pds-event-timeline__desc    { font: var(--type-11-regular); margin: 0; }
+.pds-event-timeline__link {
+  display: inline-flex; align-items: center; gap: var(--event-timeline-link-gap);
+  font: var(--type-11-regular); color: var(--event-timeline-link); text-decoration: none;
+}
+.pds-event-timeline__link:hover { text-decoration: underline; } /* added in review — not in Figma */
+.pds-event-timeline__link:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+.pds-event-timeline__small { font: var(--type-10-regular); letter-spacing: .5px; margin: 0; }
+
+/* SLA — .Timeline-SLA (private part) */
+.pds-event-timeline__sla {
+  display: inline-flex; align-items: center; gap: var(--event-timeline-sla-gap);
+  font: var(--event-timeline-sla-font); text-transform: uppercase;
+}
+.pds-event-timeline__sla-label { color: var(--event-timeline-sla-label); }
+/* Remote part: Unit/Small (red override) — atom missing in kit */
+.pds-event-timeline__sla-unit {
+  display: inline-flex; align-items: center;
+  padding: var(--event-timeline-sla-unit-pad);
+  border-radius: var(--event-timeline-sla-unit-radius);
+  background: var(--event-timeline-sla-unit-bg);
+  color: var(--event-timeline-sla-unit-fg);
+}
+
+/* ── Location ─────────────────────────────────────────────────────── */
+/* First: 10px top padding on the row, no line above the marker */
+.pds-event-timeline--first { padding-top: var(--event-timeline-pad-y); }
+.pds-event-timeline--first .pds-event-timeline__stamp,
+.pds-event-timeline--first .pds-event-timeline__body { padding-top: 0; }
+.pds-event-timeline--first .pds-event-timeline__line--top { display: none; }
+/* Last: no line below the marker */
+.pds-event-timeline--last .pds-event-timeline__line--bottom { visibility: hidden; }
+
+/* ── Type ─────────────────────────────────────────────────────────── */
+/* Issue = Yes (State Default): red-light rail, orange dot */
+.pds-event-timeline--issue { --_line: var(--event-timeline-issue-line); --_outer: var(--event-timeline-issue-line); --_dot: var(--event-timeline-issue-dot); }
+/* Estimated: dashed rail, no inner dot (Light Opacity stays) */
+.pds-event-timeline--estimated .pds-event-timeline__marker::before { display: none; }
+.pds-event-timeline--estimated .pds-event-timeline__line {
+  background: repeating-linear-gradient(to bottom, var(--_line) 0 var(--event-timeline-dash), transparent var(--event-timeline-dash) calc(var(--event-timeline-dash) * 2));
+}
+/* Done: green rail + filled green oval + check */
+.pds-event-timeline--done { --_line: var(--event-timeline-done-line); --_outer: var(--event-timeline-done-line); --_oval: var(--event-timeline-done-line); }
+.pds-event-timeline--done .pds-event-timeline__marker::before,
+.pds-event-timeline--done .pds-event-timeline__marker::after { display: none; }
+
+/* ── State ────────────────────────────────────────────────────────── */
+.pds-event-timeline--hover,
+.pds-event-timeline--interactive:hover {
+  background: var(--event-timeline-active-bg);
+  border-radius: var(--event-timeline-active-radius);
+  box-shadow: var(--event-timeline-hover-shadow);
+}
+.pds-event-timeline--edit {
+  background: var(--event-timeline-active-bg);
+  border-radius: var(--event-timeline-active-radius);
+}
+/* Edit: kit Inline input; Figma shows it at rest with the dashed border + #F9FAFA fill (atom variant missing in kit) */
+.pds-event-timeline--edit .pds-input { --_w: var(--event-timeline-input-w); }
+.pds-event-timeline--edit .pds-input--inline .pds-input__box {
+  background: var(--event-timeline-input-bg);
+  border: 1px dashed var(--event-timeline-input-border);
+}
+.pds-event-timeline--edit .pds-input--inline .pds-input__box:focus-within { border-color: var(--input-border-active); }
+
+/* ── Timeline with Status-Tag ─────────────────────────────────────── */
+.pds-event-timeline-tagged {
+  box-sizing: border-box;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  width: var(--event-timeline-tagged-w); max-width: 100%;
+}
+.pds-event-timeline-tagged > .pds-event-timeline {
+  flex: 1; width: auto; min-width: 0;
+  padding-right: var(--event-timeline-tagged-pad-r);
+}
+.pds-event-timeline-tagged .pds-event-timeline__stamp { color: var(--event-timeline-tagged-date); }
+.pds-event-timeline-tagged__tags {
+  flex: none; display: flex; flex-direction: column; gap: var(--space-10);
+  padding-top: var(--event-timeline-tag-pad-t);
+}

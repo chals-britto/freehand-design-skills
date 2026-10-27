@@ -1,0 +1,262 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Filter Light / Dark (filter panel molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn)
+          › page "Filter - To BE REVIEWED" (4304:2485)
+          › Filter Light 4271:4345 (Single · Multiple)
+          › Filter Dark  4227:2584 (Left · Multiple)
+          › .group light 4216:5580 · .group dark 4736:7858
+          › .options light 4225:2352 · .options dark 4736:7791
+   Figma page is named "To BE REVIEWED" — built as published; confirm
+   before treating as standard. Built 2026-10-28, no review.
+   Requires ../tokens.css and the kit atoms/molecules it is made of:
+   icons.css · checkbox.css · accordion.css · button.css ·
+   button-group.css · search-input.css · scrollbar.css
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Light ─────────────────────────────────────────────────────── */
+  --filter-panel-light-bg:            var(--white);              /* panel + Options frame */
+  --filter-panel-light-bar-border:    var(--border-grey);        /* #EFEFEF header bottom stroke (Multiple) */
+  --filter-panel-light-title:         var(--text-dark);          /* #313131 "Filter" */
+  --filter-panel-icon:                var(--dark-highlight-green); /* #1FCD93 Navigation/Filter-10px (both themes) */
+  --filter-panel-light-groups-bg:     var(--accent-off-white);   /* #F8F8F8 accordion column */
+  --filter-panel-light-section-bg:    var(--pando-light);        /* #EEF2F4 .group Section Header */
+  --filter-panel-light-section-fg:    var(--text-dark);          /* #313131 */
+  --filter-panel-light-option-fg:     var(--text-dark);          /* #313131 option label */
+  --filter-panel-light-option-hover:  var(--pando-light);        /* #EEF2F4 State=Hover */
+  --filter-panel-light-option-on:     var(--pando-blue);         /* #0076DD State=Selected label */
+  --filter-panel-light-acc-open-fg:   #404040;                   /* off-token in Figma — open accordion heading override */
+  --filter-panel-light-count-bg:      #0078DD;                   /* off-token in Figma — count badge */
+  --filter-panel-light-count-fg:      var(--white);
+
+  /* ── Dark ──────────────────────────────────────────────────────── */
+  --filter-panel-dark-bg:             var(--dark-bg);            /* #393945 header tab, main section, Multiple header */
+  --filter-panel-dark-title:          var(--white);              /* "Filter" */
+  --filter-panel-dark-groups-bg:      var(--dark-light);         /* #343440 accordion column */
+  --filter-panel-dark-pane-bg:        var(--dark-darker);        /* #24242F options pane (Multiple) */
+  --filter-panel-dark-section-bg:     var(--dark-light);         /* #343440 .group Section Header */
+  --filter-panel-dark-section-fg:     var(--dark-label-text);    /* #D5DAF4 */
+  --filter-panel-dark-option-fg:      var(--dark-label-text);    /* #D5DAF4 */
+  --filter-panel-dark-option-hover:   var(--dark-darker);        /* #24242F State=Hover */
+  --filter-panel-dark-option-on:      var(--highlight-blue-light); /* #9CD2FF State=Selected label + check */
+  --filter-panel-dark-search-bg:      #484858;                   /* off-token in Figma — Dark/Input BG on the Search Input instance */
+  --filter-panel-dark-search-fg:      var(--dark-label-text);    /* #D5DAF4 placeholder + search icon override */
+  --filter-panel-dark-footer-bg:      rgb(72 72 88 / .6);        /* off-token in Figma — #484858 @ 60% (Left footer) */
+  --filter-panel-dark-footer-shadow:  0 -3px 10px rgb(36 36 47 / .4); /* off-token in Figma — #24242F @ 40%, y −3, blur 10 */
+  --filter-panel-dark-count-bg:       var(--dark-highlight-green); /* #1FCD93 */
+  --filter-panel-dark-count-fg:       var(--text-dark);          /* #313131 */
+
+  /* ── Shared ────────────────────────────────────────────────────── */
+  --filter-panel-shadow:              var(--shadow-3);           /* 0 2 14 10% — Options (Light Single), Main Section (Dark Left) */
+  --filter-panel-radius:              4px;
+
+  /* ── Measured ──────────────────────────────────────────────────── */
+  --filter-panel-w-multiple:   500px;
+  --filter-panel-w-single:     200px;   /* Filter Light Single */
+  --filter-panel-w-left:       240px;   /* Filter Dark Left */
+  --filter-panel-w-group:      250px;   /* .group / .options as components */
+  --filter-panel-w-groups:     200px;   /* accordion column */
+  --filter-panel-bar-h:        34px;    /* Multiple header */
+  --filter-panel-bar-pad:      5px var(--space-10);
+  --filter-panel-tab-h:        24px;    /* Dark Left header tab */
+  --filter-panel-gap:          var(--space-10);
+  --filter-panel-pane-pad:     var(--space-10);
+  --filter-panel-list-max-h:   288px;   /* 8 rows × 36 — scroll beyond is added, not in Figma */
+  --filter-panel-section-pad-light: 4px var(--space-10);   /* Section Header 22 tall */
+  --filter-panel-section-pad-dark:  5px var(--space-10);   /* Section Header 24 tall */
+  --filter-panel-section-gap:  5px;
+  --filter-panel-section-lh:   14px;    /* Figma 10/Auto = 14; .type-10-semibold is 10/12 */
+  --filter-panel-section-track: .5px;
+  --filter-panel-group-top-dark: var(--space-10); /* .group dark Header frame padding-top */
+  --filter-panel-options-pad-y: 5px;    /* Options frame padding (Light Single) */
+  --filter-panel-option-pad:   var(--space-10);  /* Multiple rows: 36 tall */
+  --filter-panel-option-pad-single: 8px var(--space-10); /* Light Single rows: 32 tall */
+  --filter-panel-option-lh:    16px;    /* Figma 12/Auto = 16; .type-12-regular is 12/17 */
+  --filter-panel-title-track:  .3px;    /* Light Multiple "Filter" 12 SemiBold */
+  --filter-panel-footer-pad:   8px var(--space-10);
+  --filter-panel-count:        14px;
+  --filter-panel-count-pad:    0 4px;
+  --filter-panel-count-radius: 10px;
+  --filter-panel-check-w:      10px;    /* System-Status/Selected-Multi 10×8 */
+  --filter-panel-check-h:      8px;
+
+  --filter-panel-focus: 2px solid var(--pando-blue); /* added in review — not in Figma */
+}
+
+/* ── Root ───────────────────────────────────────────────────────── */
+.pds-filter-panel {
+  --_bg: var(--filter-panel-light-bg);
+  --_title: var(--filter-panel-light-title);
+  --_section-bg: var(--filter-panel-light-section-bg);
+  --_section-fg: var(--filter-panel-light-section-fg);
+  --_option-fg: var(--filter-panel-light-option-fg);
+  --_option-hover: var(--filter-panel-light-option-hover);
+  --_option-on: var(--filter-panel-light-option-on);
+  --_count-bg: var(--filter-panel-light-count-bg);
+  --_count-fg: var(--filter-panel-light-count-fg);
+  display: inline-flex; flex-direction: column;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  text-align: left;
+}
+.pds-filter-panel *, .pds-filter-panel *::before, .pds-filter-panel *::after { box-sizing: border-box; }
+.pds-filter-panel--dark {
+  --_bg: var(--filter-panel-dark-bg);
+  --_title: var(--filter-panel-dark-title);
+  --_section-bg: var(--filter-panel-dark-section-bg);
+  --_section-fg: var(--filter-panel-dark-section-fg);
+  --_option-fg: var(--filter-panel-dark-option-fg);
+  --_option-hover: var(--filter-panel-dark-option-hover);
+  --_option-on: var(--filter-panel-dark-option-on);
+  --_count-bg: var(--filter-panel-dark-count-bg);
+  --_count-fg: var(--filter-panel-dark-count-fg);
+}
+.pds-filter-panel [hidden] { display: none !important; }
+
+/* ── Header bar (Multiple) ──────────────────────────────────────── */
+.pds-filter-panel__bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--filter-panel-gap);
+  min-height: var(--filter-panel-bar-h);
+  padding: var(--filter-panel-bar-pad);
+  background: var(--_bg);
+}
+.pds-filter-panel--light .pds-filter-panel__bar { box-shadow: inset 0 -1px 0 var(--filter-panel-light-bar-border); }
+.pds-filter-panel--dark .pds-filter-panel__bar { border-radius: var(--filter-panel-radius) var(--filter-panel-radius) 0 0; }
+
+.pds-filter-panel__heading { display: flex; align-items: center; gap: var(--filter-panel-gap); margin: 0; }
+.pds-filter-panel__icon { --_icon: var(--icon-size-10); color: var(--filter-panel-icon); }
+.pds-filter-panel__title {
+  margin: 0; color: var(--_title); text-transform: uppercase; white-space: nowrap;
+  font: var(--type-10-semibold); line-height: var(--filter-panel-section-lh); letter-spacing: var(--filter-panel-section-track);
+}
+/* Light Multiple uses 12 SemiBold, +0.3px */
+.pds-filter-panel--light .pds-filter-panel__title { font: var(--type-12-semibold); line-height: var(--filter-panel-option-lh); letter-spacing: var(--filter-panel-title-track); }
+
+/* Button Group instance: gap overridden to 10 in Figma (kit default 20) */
+.pds-filter-panel .pds-button-group { gap: var(--filter-panel-gap); min-height: 0; }
+.pds-filter-panel--dark .pds-filter-panel__bar .pds-button-group { flex: 1; }
+
+/* ── Body (Multiple): accordion column + options pane ───────────── */
+.pds-filter-panel--multiple { width: var(--filter-panel-w-multiple); background: var(--filter-panel-light-bg); }
+.pds-filter-panel--dark.pds-filter-panel--multiple { background: none; }
+.pds-filter-panel__body { display: flex; align-items: stretch; }
+.pds-filter-panel__groups {
+  flex: none; width: var(--filter-panel-w-groups);
+  display: flex; flex-direction: column;
+  background: var(--filter-panel-light-groups-bg);
+}
+.pds-filter-panel--dark .pds-filter-panel__groups { background: var(--filter-panel-dark-groups-bg); border-radius: 0 0 0 var(--filter-panel-radius); }
+/* Accordion instance overrides (Figma): Light open heading #404040; closed groups show no arrow */
+.pds-filter-panel .pds-accordion:not(.is-open) .pds-accordion__icon { visibility: hidden; }
+.pds-filter-panel--light .pds-accordion--slideout.is-open .pds-accordion__header { --_fg: var(--filter-panel-light-acc-open-fg); }
+
+.pds-filter-panel__pane {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column;
+  padding: var(--filter-panel-pane-pad);
+  background: var(--filter-panel-light-bg);
+  border-radius: 0 0 var(--filter-panel-radius) var(--filter-panel-radius);
+}
+.pds-filter-panel--dark .pds-filter-panel__pane {
+  gap: var(--filter-panel-gap);
+  background: var(--filter-panel-dark-pane-bg);
+  border-radius: 0 0 var(--filter-panel-radius) 0;
+}
+
+/* Search Input instance (kit, Theme=Light/Empty) filling the pane */
+.pds-filter-panel__search .pds-search-input { width: 100%; }
+.pds-filter-panel--dark .pds-search-input__field { background: var(--filter-panel-dark-search-bg); }
+.pds-filter-panel--dark .pds-search-input__icon { color: var(--filter-panel-dark-search-fg); }
+.pds-filter-panel--dark .pds-search-input__input { color: var(--filter-panel-dark-search-fg); }
+.pds-filter-panel--dark .pds-search-input__input::placeholder { color: var(--filter-panel-dark-search-fg); }
+.pds-filter-panel--dark .pds-search-input__clear { color: var(--filter-panel-dark-search-fg); }
+
+.pds-filter-panel__list { display: flex; flex-direction: column; max-height: var(--filter-panel-list-max-h); }
+.pds-filter-panel__list:not(.pds-scroll) { overflow: auto; }
+
+/* Count badge on the accordion header — atom variant missing in kit (badge.css count is #B5C3CB, 16px) */
+.pds-filter-panel__count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: var(--filter-panel-count); height: var(--filter-panel-count);
+  padding: var(--filter-panel-count-pad);
+  border-radius: var(--filter-panel-count-radius);
+  background: var(--_count-bg); color: var(--_count-fg);
+  font: var(--type-10-semibold); line-height: var(--filter-panel-count); letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+/* ── .group ─────────────────────────────────────────────────────── */
+.pds-filter-panel__group { display: flex; flex-direction: column; width: var(--filter-panel-w-group); }
+.pds-filter-panel--dark .pds-filter-panel__group { padding-top: var(--filter-panel-group-top-dark); }
+.pds-filter-panel__section {
+  display: flex; align-items: center; gap: var(--filter-panel-section-gap);
+  margin: 0; padding: var(--filter-panel-section-pad-light);
+  background: var(--_section-bg); color: var(--_section-fg);
+  font: var(--type-10-semibold); line-height: var(--filter-panel-section-lh); letter-spacing: var(--filter-panel-section-track);
+  text-transform: uppercase;
+}
+.pds-filter-panel--dark .pds-filter-panel__section { padding: var(--filter-panel-section-pad-dark); gap: var(--filter-panel-gap); }
+.pds-filter-panel__options { display: flex; flex-direction: column; margin: 0; padding: 0 0 var(--filter-panel-options-pad-y); background: var(--filter-panel-light-bg); }
+.pds-filter-panel--dark .pds-filter-panel__options { padding: 0; background: none; }
+
+/* ── .options row ───────────────────────────────────────────────── */
+.pds-filter-panel__option {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--filter-panel-gap);
+  width: 100%;
+  margin: 0; padding: var(--filter-panel-option-pad);
+  border: 0; background: none;
+  color: var(--_option-fg);
+  font: var(--type-12-regular); line-height: var(--filter-panel-option-lh);
+  text-align: left; cursor: pointer;
+}
+.pds-filter-panel__option:hover, .pds-filter-panel__option.is-hover { background: var(--_option-hover); }
+/* Multiple: the kit Checkbox fills the row so the whole row is the click target */
+.pds-filter-panel__option > .pds-checkbox { flex: 1; min-width: 0; color: var(--_option-fg); line-height: var(--filter-panel-option-lh); }
+.pds-filter-panel__option > .pds-checkbox:has(.pds-checkbox__input:checked) { color: var(--_option-on); }
+/* Single: text only; Light rows are 32 tall */
+.pds-filter-panel__option--single { padding: var(--filter-panel-option-pad-single); }
+.pds-filter-panel--dark .pds-filter-panel__option--single { padding: var(--filter-panel-option-pad); }
+.pds-filter-panel__option--single[aria-checked="true"] { color: var(--_option-on); }
+.pds-filter-panel__check { display: none; color: var(--_option-on); }
+.pds-filter-panel__check svg { display: block; width: var(--filter-panel-check-w); height: var(--filter-panel-check-h); }
+.pds-filter-panel__option--single[aria-checked="true"] .pds-filter-panel__check { display: inline-flex; }
+.pds-filter-panel__option--single:focus-visible { outline: var(--filter-panel-focus); outline-offset: -2px; } /* added in review — not in Figma */
+/* Dark Multiple rows come from an unpublished ".options light/Dark/Multiple/Default" with 0 left padding */
+.pds-filter-panel--dark.pds-filter-panel--multiple .pds-filter-panel__option { padding-left: 0; }
+
+/* ── Light Single (200 wide) ────────────────────────────────────── */
+.pds-filter-panel--single { width: var(--filter-panel-w-single); background: var(--filter-panel-light-bg); }
+.pds-filter-panel--single .pds-filter-panel__group { width: 100%; }
+.pds-filter-panel--single .pds-filter-panel__section { border-radius: var(--filter-panel-radius) var(--filter-panel-radius) 0 0; }
+.pds-filter-panel--single .pds-filter-panel__options {
+  padding: var(--filter-panel-options-pad-y) 0;
+  border-radius: 0 0 var(--filter-panel-radius) var(--filter-panel-radius);
+  box-shadow: var(--filter-panel-shadow);
+}
+
+/* ── Dark Left (240 wide): header tab + main section + footer ───── */
+.pds-filter-panel--left { width: var(--filter-panel-w-left); }
+.pds-filter-panel__tab {
+  align-self: flex-start;
+  display: flex; align-items: center; gap: var(--filter-panel-gap);
+  min-height: var(--filter-panel-tab-h);
+  padding: var(--filter-panel-bar-pad);
+  background: var(--_bg);
+  border-radius: var(--filter-panel-radius) var(--filter-panel-radius) 0 0;
+}
+.pds-filter-panel__main {
+  display: flex; flex-direction: column;
+  background: var(--_bg);
+  border-radius: 0 var(--filter-panel-radius) var(--filter-panel-radius) var(--filter-panel-radius);
+  box-shadow: var(--filter-panel-shadow);
+}
+.pds-filter-panel--left .pds-filter-panel__group { width: 100%; }
+.pds-filter-panel__footer {
+  justify-content: space-between;
+  padding: var(--filter-panel-footer-pad);
+  background: var(--filter-panel-dark-footer-bg);
+  box-shadow: var(--filter-panel-dark-footer-shadow);
+  border-radius: 0 0 var(--filter-panel-radius) var(--filter-panel-radius);
+}

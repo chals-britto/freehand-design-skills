@@ -1,0 +1,131 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Filter Row  (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟢 Filter Row (OLD) 1:558
+     · "Filter Row" component set (4:276)       → .pds-filter-row  (Theme = Light | Dark Blue)
+     · ".Filter-Button" component set (2320:6326) → .pds-filter-row__button (State = Default | Active)
+   ⚠ Figma marks this page OLD — confirm whether it is still in use.
+   Built 2026-10-28 from Figma (no review — everything published = Keep).
+   Reuses kit atoms: badge.css (.pds-badge--count), icons/nav-filter-10.svg.
+   The remote "Filter / Type=Tag-Light" chip has no kit equivalent → built here
+   as .pds-filter-row__filter (see filter-row.md › Open issues).
+   Requires ../tokens.css, badge.css, icons.css. No behaviour, so no JS.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Row ─────────────────────────────────────────────────────── */
+  --filter-row-height:       28px;
+  --filter-row-gap:          14px;                     /* button · chips */
+
+  /* ── .Filter-Button ──────────────────────────────────────────── */
+  --filter-row-btn-width:    84px;                     /* fixed in Figma (content is 79 + 20 padding — overflows) */
+  --filter-row-btn-height:   28px;
+  --filter-row-btn-pad:      6px var(--space-10);      /* 6 10 */
+  --filter-row-btn-gap:      8px;                      /* icon · label · badge */
+  --filter-row-btn-radius:   var(--space-2);           /* 2px */
+  --filter-row-btn-bg:       var(--pando-dark);        /* #234357 — Default fill */
+  --filter-row-btn-fg:       var(--white);             /* #FFFFFF — Default label + icon */
+  --filter-row-btn-active-bg:     transparent;         /* Active: no fill */
+  --filter-row-btn-active-border: var(--pando-dark);   /* #234357, 1px inside */
+  --filter-row-btn-active-fg:     var(--pando-dark);   /* #234357 */
+  --filter-row-btn-icon:     10px;
+  --filter-row-btn-type:     400 12px/16px var(--font-family); /* Figma 12/16 · nearest .type-12-regular is 12/17 */
+
+  /* Badge inside the button: kit .pds-badge--count, recoloured to what this
+     Figma instance shows ("Color=Blue" renders blue here, grey in the Atoms kit). */
+  --filter-row-badge-bg:     var(--pando-blue);        /* #0076DD */
+  --filter-row-badge-fg:     var(--white);             /* #FFFFFF */
+
+  /* ── Filter chip (remote "Filter / Type=Tag-Light") ──────────── */
+  --filter-row-chip-height:  24px;
+  --filter-row-chip-pad:     4px var(--space-10);      /* 4 10 */
+  --filter-row-chip-radius:  var(--radius-12);         /* 12px */
+  --filter-row-chip-bg:      transparent;              /* #E3EFFA fill exists but is hidden in Figma */
+  --filter-row-chip-border:  var(--border-grey);       /* #EFEFEF, 1px inside */
+  --filter-row-chip-fg:      var(--text-dark);         /* #313131 */
+  --filter-row-chip-type:    400 11px/16px var(--font-family); /* Figma 11/16 · nearest .type-11-regular is 11/15 */
+
+  /* ── Theme = Dark Blue ───────────────────────────────────────── */
+  --filter-row-dark-surface:      #20354E;             /* off-token in Figma — page rectangle behind the variant, not part of the component */
+  --filter-row-dark-chip-border:  #495A6B;             /* off-token in Figma */
+  --filter-row-dark-chip-fg:      var(--white);        /* #FFFFFF */
+}
+
+/* ════ Row ═════════════════════════════════════════════════════════ */
+.pds-filter-row {
+  display: flex;
+  align-items: center;
+  gap: var(--filter-row-gap);
+  min-height: var(--filter-row-height);
+  font-family: var(--font-family);
+}
+
+/* ════ .Filter-Button ══════════════════════════════════════════════ */
+.pds-filter-row__button {
+  --_bg: var(--filter-row-btn-bg);
+  --_fg: var(--filter-row-btn-fg);
+  --_bd: transparent;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--filter-row-btn-gap);
+  box-sizing: border-box;
+  width: var(--filter-row-btn-width);
+  height: var(--filter-row-btn-height);
+  padding: var(--filter-row-btn-pad);
+  margin: 0;
+  border: 1px solid var(--_bd);
+  border-radius: var(--filter-row-btn-radius);
+  background: var(--_bg);
+  color: var(--_fg);
+  font: var(--filter-row-btn-type);
+  text-transform: none;
+  white-space: nowrap;
+  overflow: visible;           /* clipsContent = false in Figma */
+  cursor: pointer;
+}
+.pds-filter-row__button--active {
+  --_bg: var(--filter-row-btn-active-bg);
+  --_fg: var(--filter-row-btn-active-fg);
+  --_bd: var(--filter-row-btn-active-border);
+}
+.pds-filter-row__button .pds-icon {
+  --_icon: var(--filter-row-btn-icon);
+  color: currentColor;
+}
+.pds-filter-row__button .pds-badge--count {
+  --badge-count-bg: var(--filter-row-badge-bg);
+  --badge-count-fg: var(--filter-row-badge-fg);
+  flex: none;
+}
+/* Focus — added in review, not in Figma */
+.pds-filter-row__button:focus-visible {
+  outline: 2px solid var(--pando-blue);
+  outline-offset: 2px;
+}
+
+/* ════ Filter chip (built here — remote "Filter" part) ═════════════ */
+.pds-filter-row__filter {
+  --_bd: var(--filter-row-chip-border);
+  --_fg: var(--filter-row-chip-fg);
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--filter-row-chip-height);
+  padding: var(--filter-row-chip-pad);
+  border: 1px solid var(--_bd);
+  border-radius: var(--filter-row-chip-radius);
+  background: var(--filter-row-chip-bg);
+  color: var(--_fg);
+  font: var(--filter-row-chip-type);
+  white-space: nowrap;
+}
+
+/* ════ Theme = Dark Blue ═══════════════════════════════════════════ */
+/* The component has no fill; place it on a dark surface.
+   .pds-filter-row-surface--dark reproduces the Figma page rectangle. */
+.pds-filter-row--dark .pds-filter-row__filter {
+  --_bd: var(--filter-row-dark-chip-border);
+  --_fg: var(--filter-row-dark-chip-fg);
+}
+.pds-filter-row-surface--dark { background: var(--filter-row-dark-surface); }

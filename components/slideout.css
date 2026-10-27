@@ -1,0 +1,245 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Slideout (drawer) · organism
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 Slide out (0:1)
+   › component set "Slideout" (17:117), 8 variants:
+     Theme (Light · Dark) × Type (Slide Overlay · Push Section) × Size (Small · Large · XL)
+     — only 8 of the 12 combinations exist (no Dark Push, no Light Push XL).
+   › component set ".Panel - Swappable with Local" (2527:4746) = .pds-panel-slot
+     (the swappable body; shared with the Actions organism).
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css, button.css, button-group.css, scrollbar.css,
+   icons.css (Navigation/Close-Tag). Toast (toast.css/js) for the CTA demo.
+   "added" = not in Figma (overlay colour, focus ring, motion timing).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Widths of the "Sidebar" frame, per variant ── */
+  --slideout-w-light-small: 440px;
+  --slideout-w-light-large: 740px;
+  --slideout-w-light-xl:    800px;
+  --slideout-w-dark-small:  350px;
+  --slideout-w-dark-large:  640px;
+  --slideout-w-dark-xl:     700px;
+  --slideout-w-push-small:  342px;
+  --slideout-w-push-large:  404px;
+
+  /* ── Colours ── */
+  --slideout-light-bg:          var(--white);
+  --slideout-light-header-bg:   transparent;                  /* Light overlay header has no fill (sits on white) */
+  --slideout-light-heading:     var(--pando-blue-active);     /* #005399 */
+  --slideout-light-shadow:      var(--shadow-3);              /* 0 2 14 #000 @10% — Light overlay only */
+  --slideout-dark-bg:           var(--dark-bg);               /* #393945 */
+  --slideout-dark-header-bg:    var(--dark-darker);           /* #24242F */
+  --slideout-dark-heading:      var(--white);
+  --slideout-push-header-bg:    var(--accent-light-blue-bg);  /* #F3F6FC */
+  --slideout-close-bg:          var(--pando-blue);            /* #0076DD */
+  --slideout-close-fg:          var(--white);
+  --slideout-overlay:           var(--color-overlay);         /* Pando Dark @ 20% — added: Figma says "background overlay" but does not draw it */
+
+  /* ── Measured ── */
+  --slideout-header-h:          48px;
+  --slideout-header-pad:        var(--space-12) 20px;         /* overlay variants: 12 / 20 */
+  --slideout-header-pad-push:   var(--space-12) var(--space-15); /* Push Section: 12 / 15 */
+  --slideout-header-gap:        var(--space-10);
+  --slideout-push-actions-gap:  var(--space-10);              /* Push Section Button Group gap 10 (kit Type=Buttons is 20) */
+  --slideout-close-size:        24px;                         /* Close-Btn square, radius 0 */
+  --slideout-close-pad:         6px;
+  --slideout-close-icon:        var(--icon-size-12);
+
+  /* ── Placement & motion (Figma: Overlay = bottom right, below the main header) ── */
+  --header-height: 56px;                                       /* same variable toast.css uses; set per product */
+  --slideout-z: 900;                                           /* under the toaster (1000) */
+  --slideout-motion: 240ms cubic-bezier(.2, 0, 0, 1);          /* added — Figma names the direction only */
+
+  /* ── .Panel - Swappable with Local (.pds-panel-slot) ── */
+  --panel-slot-pad:             10px 8px 10px var(--space-15); /* 10 / 8 / 10 / 15 */
+  --panel-slot-gap:             var(--space-10);
+  --panel-slot-ph-light-bg:     var(--accent-alternate-white); /* #F9FAFA */
+  --panel-slot-ph-light-title:  var(--pando-dark);             /* #234357 */
+  --panel-slot-ph-light-text:   #000000;                       /* off-token in Figma */
+  --panel-slot-ph-dark-bg:      #484858;                       /* off-token in Figma — "Dark/Input BG" (same as scrollbar.css) */
+  --panel-slot-ph-dark-title:   var(--white);
+  --panel-slot-ph-dark-text:    var(--dark-label-text);        /* #D5DAF4 */
+  --panel-slot-ph-pad:          var(--space-10);
+  --panel-slot-ph-gap:          4px;
+  --panel-slot-ph-title-gap:    8px;
+  --panel-slot-ph-icon:         var(--icon-size-20);
+}
+
+/* ════ Slideout ═══════════════════════════════════════════════════ */
+/* Figma: horizontal auto-layout [Close-Btn][Sidebar], both top-aligned. */
+.pds-slideout {
+  --_w:  var(--slideout-w-light-small);
+  --_bg: var(--slideout-light-bg);
+  --_hd-bg: var(--slideout-light-header-bg);
+  --_heading: var(--slideout-light-heading);
+  --_shadow: var(--slideout-light-shadow);
+  --_hd-pad: var(--slideout-header-pad);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  height: 100%;
+  font-family: var(--font-family);
+}
+.pds-slideout *, .pds-slideout *::before, .pds-slideout *::after { box-sizing: border-box; }
+
+/* Theme */
+.pds-slideout--dark {
+  --_bg: var(--slideout-dark-bg);
+  --_hd-bg: var(--slideout-dark-header-bg);
+  --_heading: var(--slideout-dark-heading);
+  --_shadow: none;                     /* Dark variants have no shadow in Figma */
+}
+
+/* Size (Slide Overlay) */
+.pds-slideout--small            { --_w: var(--slideout-w-light-small); }
+.pds-slideout--large            { --_w: var(--slideout-w-light-large); }
+.pds-slideout--xl               { --_w: var(--slideout-w-light-xl); }
+.pds-slideout--dark.pds-slideout--small { --_w: var(--slideout-w-dark-small); }
+.pds-slideout--dark.pds-slideout--large { --_w: var(--slideout-w-dark-large); }
+.pds-slideout--dark.pds-slideout--xl    { --_w: var(--slideout-w-dark-xl); }
+
+/* Type = Push Section (Light only in Figma): tinted header, 15px side padding,
+   no shadow, no Close-Btn, Button Group = Text Only + Primary, 10 apart. */
+.pds-slideout--push {
+  --_hd-bg: var(--slideout-push-header-bg);
+  --_hd-pad: var(--slideout-header-pad-push);
+  --_shadow: none;
+}
+.pds-slideout--push.pds-slideout--small { --_w: var(--slideout-w-push-small); }
+.pds-slideout--push.pds-slideout--large { --_w: var(--slideout-w-push-large); }
+.pds-slideout--push .pds-slideout__close { display: none; }
+.pds-slideout--push .pds-button-group { gap: var(--slideout-push-actions-gap); }
+
+/* Close-Btn — blue 24px square hanging off the left edge, top-aligned */
+.pds-slideout__close {
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--slideout-close-size); height: var(--slideout-close-size);
+  padding: var(--slideout-close-pad);
+  border: 0; border-radius: 0;
+  background: var(--slideout-close-bg); color: var(--slideout-close-fg);
+  cursor: pointer;
+}
+.pds-slideout__close .pds-icon { --_icon: var(--slideout-close-icon); color: inherit; }
+.pds-slideout__close svg { display: block; width: var(--slideout-close-icon); height: var(--slideout-close-icon); }
+.pds-slideout__close[hidden] { display: none; }   /* Close = false */
+
+/* Sidebar */
+.pds-slideout__panel {
+  flex: none;
+  width: var(--_w);
+  max-width: 100%;
+  height: 100%;
+  display: flex; flex-direction: column;
+  background: var(--_bg);
+  box-shadow: var(--_shadow);
+  min-height: 0;
+}
+
+/* Header — 48 tall: Heading (fills) + Button Group (hugs, right-aligned) */
+.pds-slideout__header {
+  flex: none;
+  display: flex; align-items: center;
+  gap: var(--slideout-header-gap);
+  min-height: var(--slideout-header-h);
+  padding: var(--_hd-pad);
+  background: var(--_hd-bg);
+}
+.pds-slideout__heading {
+  flex: 1; min-width: 0;
+  margin: 0;
+  font: var(--type-14-semibold);       /* Figma: Open Sans SemiBold 14 / line 16 */
+  line-height: 16px;
+  color: var(--_heading);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pds-slideout__header .pds-button-group { flex: none; min-height: 0; }
+.pds-slideout__header .pds-button-group[hidden] { display: none; }   /* Actions = false */
+
+/* Body: the swappable panel fills the rest and scrolls */
+.pds-slideout__panel > .pds-panel-slot { flex: 1; min-height: 0; }
+
+/* Focus ring — added, not in Figma */
+.pds-slideout__close:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; }
+.pds-slideout__panel:focus { outline: none; }
+
+/* ════ Overlay layer (Type = Slide Overlay, live) ════════════════ */
+/* <div class="pds-slideout-layer" hidden><div class="pds-slideout-layer__scrim"></div><aside class="pds-slideout …"></aside></div> */
+.pds-slideout-layer {
+  position: fixed;
+  inset: var(--header-height) 0 0 0;   /* below the main header */
+  z-index: var(--slideout-z);
+  display: flex; justify-content: flex-end;   /* bottom right */
+  overflow: hidden;
+}
+.pds-slideout-layer[hidden] { display: none; }
+.pds-slideout-layer__scrim {
+  position: absolute; inset: 0;
+  background: var(--slideout-overlay);
+  opacity: 0; transition: opacity var(--slideout-motion);
+}
+.pds-slideout-layer > .pds-slideout {
+  position: relative;
+  max-width: 100%;
+  transform: translateX(100%);          /* In: right → left · Out: left → right */
+  transition: transform var(--slideout-motion);
+}
+.pds-slideout-layer.is-open .pds-slideout-layer__scrim { opacity: 1; }
+.pds-slideout-layer.is-open > .pds-slideout { transform: none; }
+
+/* Push Section, live: sits beside the page content, which narrows */
+.pds-slideout-push-host { display: flex; align-items: stretch; min-height: 0; overflow: hidden; }
+.pds-slideout-push-host > .pds-slideout-push-main { flex: 1; min-width: 0; }
+.pds-slideout-push-host > .pds-slideout--push {
+  transition: margin-right var(--slideout-motion);
+}
+.pds-slideout-push-host > .pds-slideout--push[aria-hidden="true"] {
+  margin-right: calc(-1 * var(--_w));
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pds-slideout-layer__scrim,
+  .pds-slideout-layer > .pds-slideout,
+  .pds-slideout-push-host > .pds-slideout--push { transition: none; }
+}
+
+/* ════ .Panel - Swappable with Local ══════════════════════════════ */
+/* The body slot. Swap .pds-panel-slot__placeholder for real content.
+   Add .pds-scroll (+ --light/--dark) from scrollbar.css for the scrollbar. */
+.pds-panel-slot {
+  display: flex; flex-direction: column;
+  gap: var(--panel-slot-gap);
+  padding: var(--panel-slot-pad);
+  overflow: auto;
+  min-height: 0;
+}
+.pds-panel-slot__placeholder {
+  display: flex; flex-direction: column;
+  gap: var(--panel-slot-ph-gap);
+  padding: var(--panel-slot-ph-pad);
+  background: var(--panel-slot-ph-light-bg);
+  font-family: var(--font-family);
+}
+.pds-panel-slot__title {
+  display: flex; align-items: center;
+  gap: var(--panel-slot-ph-title-gap);
+  margin: 0;
+  font: var(--type-12-semibold);        /* Figma: SemiBold 12, line auto */
+  color: var(--panel-slot-ph-light-title);
+}
+.pds-panel-slot__title svg { flex: none; width: var(--panel-slot-ph-icon); height: var(--panel-slot-ph-icon); }
+.pds-panel-slot__text {
+  margin: 0;
+  font: var(--type-12-regular);         /* Figma: Regular 12 / line 16 */
+  line-height: 16px;
+  color: var(--panel-slot-ph-light-text);
+}
+.pds-panel-slot--dark .pds-panel-slot__placeholder,
+.pds-slideout--dark .pds-panel-slot__placeholder { background: var(--panel-slot-ph-dark-bg); }
+.pds-panel-slot--dark .pds-panel-slot__title,
+.pds-slideout--dark .pds-panel-slot__title { color: var(--panel-slot-ph-dark-title); }
+.pds-panel-slot--dark .pds-panel-slot__text,
+.pds-slideout--dark .pds-panel-slot__text { color: var(--panel-slot-ph-dark-text); }

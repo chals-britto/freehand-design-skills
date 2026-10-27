@@ -1,0 +1,131 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Location Timeline (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › Timeline (60:272)
+          › component set "Location Timeline" (5751:2574) · State=Default 5751:2575
+          › component set ".Leg Movement" (5753:421) · State=Default 5752:896 · State=Edit 5753:445
+   Built 2026-10-28 (no review yet: every published item treated as Keep).
+   Requires ../tokens.css, icons.css, readonly.css (the Label Readonly Text atom).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Root row */
+  --location-timeline-pad-x: var(--space-15);   /* 0 15 padding */
+  --location-timeline-gap:   var(--space-12);   /* leg ↔ details */
+
+  /* .Leg Movement */
+  --location-timeline-leg-gap:      var(--space-10); /* mode ↔ timeline rail */
+  --location-timeline-mode-width:   24px;            /* icon column */
+  --location-timeline-mode-pad-y:   var(--space-10);
+  --location-timeline-leg-height:   66px;            /* standalone .Leg Movement height */
+  --location-timeline-icon-color:   var(--icon-indicator);   /* #234357 Indicator Icon/Road */
+  --location-timeline-marker-size:  6px;
+  --location-timeline-marker-fill:  var(--white);            /* #FFFFFF */
+  --location-timeline-marker-border:var(--grey-dark);        /* #515151, 1px */
+  --location-timeline-line-width:   1.5px;                   /* Default rail */
+  --location-timeline-line-color:   var(--pando-blue);       /* #0076DD style Primary/Pando-Blue */
+  --location-timeline-edit-line-width: 1px;                  /* Edit rail */
+  --location-timeline-edit-line-color: var(--border-blue-grey); /* #B5C3CB */
+  --location-timeline-edit-dash:    2px;                     /* dash pattern 2 on … */
+  --location-timeline-edit-gap:     4px;                     /* … 4 off */
+
+  /* Details + card */
+  --location-timeline-details-pad-y: var(--space-10);
+  --location-timeline-card-fill:   color-mix(in srgb, var(--border-blue) 40%, transparent); /* #E9F1F5 @ 40% */
+  --location-timeline-card-radius: 4px;
+  --location-timeline-card-pad:    var(--space-15) var(--space-10);
+  --location-timeline-card-gap:    var(--space-10);  /* row ↔ row */
+  --location-timeline-row-gap:     var(--space-10);  /* min gap between the two pairs */
+  --location-timeline-label-color: #404040;          /* off-token in Figma (label + ":" override on Label Readonly Text) */
+  --location-timeline-value-color: var(--text-dark); /* #313131 */
+}
+
+/* ── Location Timeline: leg rail + details card ─────────────────── */
+.pds-location-timeline {
+  display: flex;
+  align-items: stretch;
+  gap: var(--location-timeline-gap);
+  padding: 0 var(--location-timeline-pad-x);
+  margin: 0;
+  font-family: var(--font-family);
+}
+
+/* ── .Leg Movement: mode icon + marker / line / marker ─────────── */
+.pds-location-timeline__leg {
+  display: flex;
+  flex: none;
+  align-items: stretch;
+  gap: var(--location-timeline-leg-gap);
+  min-height: var(--location-timeline-leg-height);
+}
+.pds-location-timeline__mode {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--location-timeline-mode-width);
+  padding: var(--location-timeline-mode-pad-y) 0;
+  color: var(--location-timeline-icon-color);
+}
+.pds-location-timeline__rail {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  width: var(--location-timeline-marker-size);
+}
+.pds-location-timeline__marker {
+  flex: none;
+  box-sizing: border-box;
+  width: var(--location-timeline-marker-size);
+  height: var(--location-timeline-marker-size);
+  border-radius: 50%;
+  background: var(--location-timeline-marker-fill);
+  border: 1px solid var(--location-timeline-marker-border);
+}
+.pds-location-timeline__line {
+  flex: 1 1 auto;
+  width: var(--location-timeline-line-width);
+  background: var(--location-timeline-line-color);
+}
+/* State=Edit — dashed 2/4 rail in Border/Blue-Grey */
+.pds-location-timeline__leg--edit .pds-location-timeline__line {
+  width: var(--location-timeline-edit-line-width);
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--location-timeline-edit-line-color) 0 var(--location-timeline-edit-dash),
+    transparent var(--location-timeline-edit-dash) calc(var(--location-timeline-edit-dash) + var(--location-timeline-edit-gap))
+  );
+}
+
+/* ── Details ───────────────────────────────────────────────────── */
+.pds-location-timeline__details {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--location-timeline-details-pad-y) 0;
+}
+.pds-location-timeline__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--location-timeline-card-gap);
+  margin: 0;
+  padding: var(--location-timeline-card-pad);
+  border-radius: var(--location-timeline-card-radius);
+  background: var(--location-timeline-card-fill);
+}
+.pds-location-timeline__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--location-timeline-row-gap);
+}
+
+/* Overrides Figma applies on the Label Readonly Text instances */
+.pds-location-timeline .pds-readonly__label,
+.pds-location-timeline .pds-readonly__sep { color: var(--location-timeline-label-color); }
+.pds-location-timeline .pds-readonly__value { color: var(--location-timeline-value-color); }
+/* Empty value “NA” — Input/Regular/Italic. Atom variant missing in kit (readonly has only SemiBold value). */
+.pds-location-timeline .pds-readonly__value--empty { font-weight: 400; font-style: italic; }
+/* ETA value in Figma is #404040 SemiBold (not #313131) — kept as Figma */
+.pds-location-timeline .pds-readonly__value--muted { color: var(--location-timeline-label-color); }

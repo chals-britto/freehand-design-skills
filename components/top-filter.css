@@ -1,0 +1,153 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Top Filter (organism-sized molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › Filter w/Metrics (3027:387)
+     · Top Filter      3103:8433  (Type: Default | Filter at bottom | Only stats | No Stats | Swappable)
+     · .Filter-Actions 3033:9089  (1)                 → .pds-filter-actions
+   Built 2026-10-28 · no review yet, every published variant = Keep.
+   COMPOSES, never re-implements:
+     metrics-widgets.css  (.pds-metric, .pds-metric-group)
+     filter-by.css        (.pds-filter-more, .pds-filter-by, .pds-filter-date)
+     icons.css, button.css (+ the atoms filter-by needs)
+   This file only adds the background, the layout glue, the
+   “Source → Movement” read-out, the Swappable slot placeholder,
+   per-instance overrides Figma applies to the composed metrics,
+   and .Filter-Actions.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Background (two stacked rectangles in Figma) ───────────────── */
+  --top-filter-bg-from:   #3F6ABF;   /* off-token in Figma — light stop of --gradient-ink-blue */
+  --top-filter-bg-to:     #18283B;   /* off-token in Figma — dark stop of --gradient-ink-blue */
+  --top-filter-bg:        linear-gradient(180deg, var(--top-filter-bg-from) -3.3%, var(--top-filter-bg-to) 163.3%);
+  --top-filter-veil:      color-mix(in srgb, var(--white) 80%, transparent);   /* white 80% on top */
+  --top-filter-glow:      inset 0 0 80px rgb(255 255 255 / .47);               /* Inner shadow white 47%, blur 80 */
+
+  /* ── Layout (measured) ──────────────────────────────────────────── */
+  --top-filter-pad:        var(--space-10) 20px;   /* Default · Filter at bottom · No Stats · Swappable */
+  --top-filter-pad-stats:  var(--space-15) 20px;   /* Only stats */
+  --top-filter-min-h:      46px;                   /* single-row types (No Stats, Swappable) */
+  --top-filter-col-gap:    var(--space-10);        /* Left column: filters ↔ widgets */
+  --top-filter-filters-gap: 20px;                  /* Filters row: source ↔ More Filters */
+  --top-filter-widgets-gap: var(--space-10);       /* Left Widgets row: groups ↔ .Filter-Actions */
+  --top-filter-right-gap:  17px;                   /* Right column (space-between, min 17) */
+  --top-filter-right-top:  4px;                    /* date sits at y14 against the filters row at y10 */
+
+  /* ── Source + Movement ──────────────────────────────────────────── */
+  --top-filter-source-fg:    #18283B;              /* off-token in Figma */
+  --top-filter-source-font:  700 14px/18px var(--font-family);  /* “<Source>” Bold 14 / 18, Title Case */
+  --top-filter-dest-font:    700 14px/10px var(--font-family);  /* “All Consignees” Bold 14 / 10, Title Case */
+  --top-filter-source-gap:   var(--space-10);
+  --top-filter-move-w:       30px;
+  --top-filter-move-h:       7px;
+  --top-filter-move-line:    color-mix(in srgb, #36577E 50%, transparent);  /* #36577E @ 50% — off-token in Figma */
+  --top-filter-move-from:    var(--accent-red-medium);      /* #D26568 */
+  --top-filter-move-to:      var(--dark-highlight-green);   /* #1FCD93 */
+  --top-filter-move-dot:     5px;                           /* 5×5 squares rotated 45° */
+
+  /* ── Overrides Figma applies to the composed metrics ────────────── */
+  --top-filter-hl-brown:  var(--status-brown-medium);   /* #FAAE3C — Highlight Line, 1st group */
+  --top-filter-hl-blue:   var(--status-blue-medium);    /* #6397F8 — Highlight Line, 3rd group */
+  --top-filter-num-red:   linear-gradient(180deg, #E96262 -4.15%, #873232 162%);  /* stops of --gradient-rejection-red */
+  --top-filter-num-green: linear-gradient(180deg, #19A476 -4.15%, #006265 162%);  /* stops of --gradient-forest-green */
+  --top-filter-label-box: 20px;                         /* metric label box; long labels wrap upward */
+
+  /* ── Swappable slot placeholder (.Swappable Content) ────────────── */
+  --top-filter-slot-bg:    var(--pando-light);    /* #EEF2F4 */
+  --top-filter-slot-title: var(--pando-dark);     /* #234357 */
+  --top-filter-slot-text:  #000000;               /* off-token in Figma */
+  --top-filter-slot-pad:   3px var(--space-10);
+  --top-filter-slot-gap:   20px;
+  --top-filter-slot-font:  400 12px/18px var(--font-family);
+
+  /* ── .Filter-Actions ────────────────────────────────────────────── */
+  --filter-actions-size:    20px;
+  --filter-actions-pad:     5px;
+  --filter-actions-bg:      color-mix(in srgb, var(--white) 65%, transparent);
+  --filter-actions-radius:  2px;
+  --filter-actions-divider: var(--border-input-light);  /* #E2EAEC, 0.5 centre */
+  --filter-actions-icon:    var(--pando-dark);          /* #234357 — Widgets, Add */
+  --filter-actions-fetch:   var(--action-blue);         /* #376F99 — Fetch (Reset View) */
+}
+
+/* ════════════════════════ Shell ════════════════════════ */
+.pds-top-filter {
+  position: relative; box-sizing: border-box;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+  width: 100%;
+  padding: var(--top-filter-pad);
+  background: linear-gradient(var(--top-filter-veil), var(--top-filter-veil)), var(--top-filter-bg);
+  box-shadow: var(--top-filter-glow);
+  font-family: var(--font-family);
+}
+.pds-top-filter__left  { display: flex; flex-direction: column; gap: var(--top-filter-col-gap); min-width: 0; }
+.pds-top-filter__filters { display: flex; align-items: center; gap: var(--top-filter-filters-gap); min-height: 24px; }
+.pds-top-filter__widgets { display: flex; align-items: flex-start; gap: var(--top-filter-widgets-gap); }
+.pds-top-filter__right {
+  display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between;
+  gap: var(--top-filter-right-gap); align-self: stretch;
+  padding-top: var(--top-filter-right-top); flex: none;
+}
+.pds-top-filter [hidden] { display: none !important; }
+
+/* Type=Only stats — widgets only, 15px top/bottom */
+.pds-top-filter--stats { padding: var(--top-filter-pad-stats); }
+.pds-top-filter--stats .pds-top-filter__right { padding-top: 0; align-self: flex-start; }
+/* Type=No Stats · Swappable — one row, 46 tall, centred */
+.pds-top-filter--no-stats,
+.pds-top-filter--swappable { align-items: center; min-height: var(--top-filter-min-h); }
+.pds-top-filter--no-stats .pds-top-filter__right,
+.pds-top-filter--swappable .pds-top-filter__right { padding-top: 0; align-self: center; justify-content: center; }
+/* Type=Filter at bottom — the open More Filters has no close × in Figma */
+.pds-top-filter--filter-bottom .pds-filter-more__close { display: none; }
+
+/* ════════════════════════ Source + Movement ════════════════════════ */
+.pds-top-filter__source { display: inline-flex; align-items: center; gap: var(--top-filter-source-gap); color: var(--top-filter-source-fg); white-space: nowrap; }
+.pds-top-filter__from { font: var(--top-filter-source-font); text-transform: capitalize; }
+.pds-top-filter__to   { font: var(--top-filter-dest-font);   text-transform: capitalize; }
+.pds-top-filter__move { position: relative; flex: none; width: var(--top-filter-move-w); height: var(--top-filter-move-h); }
+.pds-top-filter__move::before {       /* Line 150: 20 long, 1px */
+  content: ""; position: absolute; left: 5px; right: 5px; top: 50%; height: 1px; transform: translateY(-50%);
+  background: var(--top-filter-move-line);
+}
+.pds-top-filter__move::after,
+.pds-top-filter__move > i {
+  content: ""; position: absolute; top: 50%; width: var(--top-filter-move-dot); height: var(--top-filter-move-dot);
+  transform: translateY(-50%) rotate(45deg);
+}
+.pds-top-filter__move > i { left: 1px; background: var(--top-filter-move-from); }
+.pds-top-filter__move::after { right: 1px; background: var(--top-filter-move-to); }
+
+/* ════════════════════════ Composed metrics: Figma instance overrides ════════════════════════ */
+.pds-top-filter__group--brown .pds-metric { --metric-highlight: var(--top-filter-hl-brown); }
+.pds-top-filter__group--blue  .pds-metric { --metric-highlight: var(--top-filter-hl-blue); }
+.pds-top-filter .pds-top-filter__num--red   { --_num: var(--top-filter-num-red); }
+.pds-top-filter .pds-top-filter__num--green { --_num: var(--top-filter-num-green); }
+/* Labels sit at the bottom of a 20px box and wrap upward (“Total Weight (LBS)”) — kit label is one line */
+.pds-top-filter .pds-metric__label {
+  display: flex; align-items: flex-end; box-sizing: border-box;
+  height: var(--top-filter-label-box); padding-top: 0; white-space: normal;
+}
+
+/* ════════════════════════ Swappable slot ════════════════════════ */
+.pds-top-filter__slot {
+  display: inline-flex; align-items: center; gap: var(--top-filter-slot-gap);
+  padding: var(--top-filter-slot-pad); background: var(--top-filter-slot-bg);
+  font: var(--top-filter-slot-font); color: var(--top-filter-slot-text); white-space: nowrap;
+}
+.pds-top-filter__slot-title { color: var(--top-filter-slot-title); }
+
+/* ════════════════════════ .Filter-Actions ════════════════════════ */
+.pds-filter-actions { display: inline-flex; flex-direction: column; flex: none; width: var(--filter-actions-size); }
+.pds-filter-actions__btn {
+  box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+  width: var(--filter-actions-size); height: var(--filter-actions-size); padding: var(--filter-actions-pad);
+  margin: 0; border: 0; border-radius: 0; background: var(--filter-actions-bg);
+  color: var(--filter-actions-icon); cursor: pointer;
+}
+.pds-filter-actions__btn .pds-icon { width: 10px; height: 10px; }
+/* Figma radii, as drawn: 1st 0 0 2 2 · 2nd 2 2 0 0 · 3rd none */
+.pds-filter-actions__btn:nth-child(1) { border-radius: 0 0 var(--filter-actions-radius) var(--filter-actions-radius); }
+.pds-filter-actions__btn:nth-child(2) { border-radius: var(--filter-actions-radius) var(--filter-actions-radius) 0 0; color: var(--filter-actions-fetch); }
+/* 0.5px #E2EAEC line between buttons (centre stroke at each boundary) */
+.pds-filter-actions__btn + .pds-filter-actions__btn { box-shadow: inset 0 .5px 0 var(--filter-actions-divider); }
+.pds-filter-actions__btn:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; position: relative; z-index: 1; } /* added in review — not in Figma */

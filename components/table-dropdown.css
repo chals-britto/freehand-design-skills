@@ -1,0 +1,130 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Table Dropdown
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟢 Table › component set
+   "Table Dropdown" (2711:10723). Private copy ".Table Dropdown" 2343:6642 not built.
+   Built 2026-10-28. Requires ../tokens.css, menu.css (+ scrollbar.css),
+   checkbox.css, tag.css. The open list is a pdsMenu list restyled here.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Component tokens — colours exactly as the Figma variants use them */
+  --table-dropdown-fg:                var(--text-dark);          /* #313131 placeholder + value, Light */
+  --table-dropdown-arrow:             var(--pando-dark);         /* #234357 Navigation/Dropdown-Arrow, Light */
+  --table-dropdown-dark-placeholder:  var(--dark-label-text);    /* #D5DAF4 */
+  --table-dropdown-dark-fg:           var(--white);              /* #FFFFFF filled value, Dark */
+  --table-dropdown-dark-arrow:        var(--dark-input-text);    /* #8A8A9E */
+
+  --table-dropdown-option-bg:         var(--white);              /* #FFFFFF */
+  --table-dropdown-option-fg:         var(--text-dark);          /* #313131 */
+  --table-dropdown-option-hover-bg:   var(--accent-light-bg);    /* #FAFAFA "Hover" row */
+  --table-dropdown-option-selected-fg:var(--pando-blue);         /* #0076DD single "Selected" row text */
+  --table-dropdown-check:             var(--pando-blue);         /* #0076DD System-Status/Selected-Multi */
+  --table-dropdown-menu-shadow:       none;                      /* Figma: no shadow, no fill on the list */
+
+  /* Measured from the component */
+  --table-dropdown-gap:          20px;              /* value ↔ arrow (Small, Large Filled) */
+  --table-dropdown-arrow-w:      8px;
+  --table-dropdown-arrow-h:      5px;
+  --table-dropdown-open-pad-x:   var(--space-10);   /* Open: trigger row padding 0 / 10 */
+  --table-dropdown-menu-offset:  var(--space-10);   /* trigger ↔ list (list at y 26 under a 16 trigger) */
+  --table-dropdown-large-h:      35px;              /* Large · Empty */
+  --table-dropdown-large-pad:    9px var(--space-10);
+  --table-dropdown-tags-h:       24px;              /* Large · Filled · Multi-Selected */
+  --table-dropdown-tags-gap:     var(--space-10);   /* between Input Tags / Multiselect Tag */
+  --table-dropdown-option-h:     28px;
+  --table-dropdown-option-pad:   6px var(--space-10);
+  --table-dropdown-option-gap:   5px;               /* checkbox ↔ text, text ↔ ✓ */
+  --table-dropdown-w-single:     199px;             /* Type=None list */
+  --table-dropdown-w-check:      151px;             /* Type=Checkbox list */
+  --table-dropdown-w-multi:      215px;             /* Type=Multi-Selected list */
+  --table-dropdown-check-w:      10px;
+  --table-dropdown-check-h:      8px;
+
+  --table-dropdown-focus: 2px solid var(--pando-blue); /* added in review — not in Figma */
+}
+
+/* ── Root ──────────────────────────────────────────────────────── */
+.pds-table-dropdown {
+  --_fg: var(--table-dropdown-fg); --_ph: var(--table-dropdown-fg); --_arrow: var(--table-dropdown-arrow);
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  font-family: var(--font-family);
+}
+.pds-table-dropdown *, .pds-table-dropdown *::before, .pds-table-dropdown *::after { box-sizing: border-box; }
+.pds-table-dropdown--dark {
+  --_fg: var(--table-dropdown-dark-fg); --_ph: var(--table-dropdown-dark-placeholder); --_arrow: var(--table-dropdown-dark-arrow);
+}
+
+/* ── Trigger (the closed field) ─────────────────────────────────── */
+.pds-table-dropdown__trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--table-dropdown-gap);
+  min-width: 0; max-width: 100%;
+  margin: 0; padding: 0; border: 0; background: none;
+  color: var(--_fg);
+  font: var(--type-12-semibold);
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;              /* Figma clips content */
+}
+.pds-table-dropdown__trigger:focus-visible { outline: var(--table-dropdown-focus); outline-offset: 2px; }
+.pds-table-dropdown__value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pds-table-dropdown__value.is-placeholder { font: italic 400 12px/17px var(--font-family); color: var(--_ph); }
+.pds-table-dropdown__arrow {
+  flex: none; width: var(--table-dropdown-arrow-w); height: var(--table-dropdown-arrow-h);
+  color: var(--_arrow); display: block;
+}
+/* Open: arrow flips (Orientation=Dropdown Arrow Inverse) and the row takes 0/10 padding */
+.pds-table-dropdown__trigger[aria-expanded="true"] { padding: 0 var(--table-dropdown-open-pad-x); justify-content: flex-start; }
+.pds-table-dropdown__trigger[aria-expanded="true"] .pds-table-dropdown__arrow { transform: scaleY(-1); }
+
+/* Size=Large · Empty — fills the cell, 35 high, padding 9 / 10 */
+.pds-table-dropdown--large { display: flex; width: 100%; }
+.pds-table-dropdown--large .pds-table-dropdown__trigger { width: 100%; height: var(--table-dropdown-large-h); padding: var(--table-dropdown-large-pad); }
+
+/* Filled multi (Multi-Selected / Checkbox): Input Tags + Multiselect Tag "+ n", no padding, 24 high */
+.pds-table-dropdown__tags { display: flex; align-items: center; gap: var(--table-dropdown-tags-gap); min-width: 0; overflow: hidden; }
+.pds-table-dropdown__trigger.has-tags { font: var(--type-12-regular); }
+.pds-table-dropdown--large .pds-table-dropdown__trigger.has-tags { height: var(--table-dropdown-tags-h); padding: 0; }
+.pds-table-dropdown__tags .pds-tag__remove { cursor: pointer; }
+
+/* ── Open list (pdsMenu list, restyled to the Table Dropdown rows) ── */
+.pds-menu.pds-table-dropdown__menu {
+  position: absolute; z-index: 20;
+  top: calc(100% + var(--table-dropdown-menu-offset)); left: 0;
+  width: max-content;                   /* Figma widths are minimums; long labels widen the list */
+  min-width: var(--table-dropdown-w-single);
+  max-height: none;                     /* Figma sets no max height */
+  padding: 0;
+  background: none;
+  box-shadow: var(--table-dropdown-menu-shadow);
+}
+.pds-table-dropdown__menu--check { min-width: var(--table-dropdown-w-check); }
+.pds-table-dropdown__menu--multi { min-width: var(--table-dropdown-w-multi); }
+.pds-table-dropdown__menu .pds-menu__option {
+  height: var(--table-dropdown-option-h);
+  padding: var(--table-dropdown-option-pad);
+  gap: var(--table-dropdown-option-gap);
+  font: var(--type-12-regular);
+  color: var(--table-dropdown-option-fg);
+  background: var(--table-dropdown-option-bg);
+}
+.pds-table-dropdown__menu .pds-menu__option:hover,
+.pds-table-dropdown__menu .pds-menu__option.is-hover,
+.pds-table-dropdown__menu .pds-menu__option.is-active { background: var(--table-dropdown-option-hover-bg); }
+/* Single: selected row keeps white, text turns blue */
+.pds-table-dropdown__menu .pds-menu__option[aria-selected="true"] { background: var(--table-dropdown-option-bg); color: var(--table-dropdown-option-selected-fg); }
+.pds-table-dropdown__menu .pds-menu__option[aria-selected="true"]:hover,
+.pds-table-dropdown__menu .pds-menu__option[aria-selected="true"].is-hover,
+.pds-table-dropdown__menu .pds-menu__option[aria-selected="true"].is-active { background: var(--table-dropdown-option-hover-bg); }
+/* Multi-Selected: text stays dark, ✓ on the right */
+.pds-table-dropdown__menu--multi .pds-menu__option[aria-selected="true"] { color: var(--table-dropdown-option-fg); }
+.pds-table-dropdown__check {
+  flex: none; width: var(--table-dropdown-check-w); height: var(--table-dropdown-check-h);
+  color: var(--table-dropdown-check); visibility: hidden;
+}
+.pds-table-dropdown__menu .pds-menu__option[aria-selected="true"] .pds-table-dropdown__check { visibility: visible; }
+/* Checkbox: kit checkbox, 5px to the text; text stays dark */
+.pds-table-dropdown__menu .pds-checkbox { --_gap: var(--table-dropdown-option-gap); font: var(--type-12-regular); }
+.pds-table-dropdown__menu--check .pds-menu__option[aria-selected="true"] { color: var(--table-dropdown-option-fg); }

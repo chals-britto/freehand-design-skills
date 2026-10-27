@@ -29,7 +29,7 @@
     const syncClear = () => { if (clear) clear.hidden = !input.value; };
     syncClear();
     if (clear) clear.addEventListener('click', () => {
-      input.value = ''; syncClear(); filter(); input.focus();
+      input.value = ''; syncClear(); if (panel) filter(); input.focus();
       root.dispatchEvent(new Event('input', { bubbles: true }));
     });
     if (!panel) { input.addEventListener('input', syncClear); return; }

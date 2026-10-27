@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Table · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="scrollbar.css">
+<link rel="stylesheet" href="checkbox.css">
+<link rel="stylesheet" href="skeleton.css">
+<link rel="stylesheet" href="empty-state.css">
+<link rel="stylesheet" href="table-cell.css">
+<link rel="stylesheet" href="table.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+
+
+/* table page */
+.tb-stage{background:var(--pg-soft);border-radius:0 10px 10px 0;padding:24px;min-height:340px;min-width:0}
+.tb-out{font:400 12px var(--pg-mono);color:var(--pg-muted);margin-top:12px}
+.vgroups{display:flex;flex-direction:column;gap:26px;padding:20px;min-width:0}
+.vgroups h3{font:500 11.5px var(--pg-mono);color:var(--pg-muted);margin:0 0 8px}
+.vgroups .note{font-size:12px;color:var(--pg-muted);margin:6px 0 0}
+.vrow{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.vrow > div{min-width:0;max-width:100%}
+.added{display:inline-block;font:500 10.5px var(--pg-ui);letter-spacing:.04em;text-transform:uppercase;color:#7a4b00;background:#fdf1dc;border:1px solid #e6c27a;border-radius:4px;padding:0 5px;margin-left:6px}
+:root[data-theme="dark"] .added{color:#f2d7a8;background:#3a2c14;border-color:#8a6420}
+.issues li,.gaps li{font-size:13.5px;margin:0 0 6px}
+.issues,.gaps{margin:0;padding:16px 18px 16px 34px}
+.play{grid-template-columns:240px minmax(0,1fr)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>Table</h1>
+    <p class="lede">Tables display tabular data in a basic grid composed of cells, columns, and rows. This format makes it easy for users to scan and compare large amounts of data.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · no review file</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=2379-13135" target="_blank" rel="noopener">Figma Table - FOR REFERENCE 2379:13135 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=104-363" target="_blank" rel="noopener">Row 104:363 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=211-52" target="_blank" rel="noopener">Column 211:52 ↗</a><span>Files: table.css · table.js · built from <a href="table-cell.html">Table Cell</a></span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#issues">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Table - FOR REFERENCE · Using Columns: 8 columns of 148, the first one Input Text. Tick rows (the header box goes indeterminate), sort a column (type values in the first column to see rows move), scroll sideways, switch to Loading or Empty. Selection, sort states, sticky header, loading and empty are added — Figma’s reference tables are static.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls">
+    <label>Theme<select id="c-theme"><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <label>State<select id="c-state"><option value="data">Data</option><option value="loading">Loading (Skeleton)</option><option value="empty">Empty (No Records)</option></select></label>
+    <label class="chk"><input type="checkbox" id="c-check" checked> Select rows (Show Checkbox)</label>
+    <label class="chk"><input type="checkbox" id="c-sort" checked> Sort (header Sort)</label>
+    <label class="chk"><input type="checkbox" id="c-sticky" checked> Sticky header (5 rows high)</label>
+    <label class="chk"><input type="checkbox" id="c-dis" checked> Disable row 3</label>
+    <label class="chk"><input type="checkbox" id="c-child"> Child row under row 2 (Light only)</label>
+  </form>
+  <div class="tb-stage" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Every Figma reference set, rendered with kit Table Cells and Figma’s sample text, then the compositions added for this build (marked).</p>
+<div class="panel vgroups" id="vgroups"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from Table - FOR REFERENCE and Column. Cell values (heights, padding, colours) are on <a href="table-cell.html">Table Cell</a>.</p>
+<div class="panel"><div class="spec-table">
+  <div><b>Frame</b><code>1px</code> inside stroke <code>--border-grey</code> #EFEFEF · radius <code>2px</code> · clips content</div>
+  <div><b>Frame fill</b><code>--white</code> · Dark (added) <code>--dark-light</code></div>
+  <div><b>Column</b><code>148px</code> · vertical, gap 0 · Header + 10 cells (534 high)</div>
+  <div><b>Row reference</b><code>100px</code> cells × 8 = 800 · gap 0</div>
+  <div><b>Header row</b><code>34px</code> · Table Cell Header</div>
+  <div><b>Body row</b><code>50px</code> · Table Cell Text / Input Text</div>
+  <div><b>Striping</b>first body row Alternate <code>#F9FAFA</code>, then Default <code>#FFFFFF</code></div>
+  <div><b>Child row</b>Background=Child <code>#EEF2F4</code>, no top line</div>
+  <div><b>Row dividers</b>each cell’s 1px top line <code>#EFEFEF</code></div>
+  <div><b>Sticky header</b>added · <code>position: sticky</code> in the scroll area</div>
+  <div><b>Scrollbar</b>kit Scrollbar <code>6px</code>, radius 8</div>
+  <div><b>Loading</b>kit Skeleton Size 120 (148 col) / 80 (100 col)</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Overview</h3><p>Tables display tabular data in a basic grid composed of cells, columns, and rows. This format makes it easy for users to scan and compare large amounts of data.</p><p class="src">Source: Figma .documentation (2385:6833)</p></div>
+  <div class="panel card"><h3>Uses</h3><ul><li>Display tabular data for comparison.</li><li>Display structured content, where each entry has the same attributes.</li><li>Let users review, enter, edit, or filter granular data sets.</li><li>Display a data set that will continue to grow</li></ul><p class="src">Source: Figma .documentation</p></div>
+  <div class="panel card"><h3>Placement &amp; convention</h3><p>Table cell can be used to individually place text, dropdown values or tags.</p><p class="src">Source: Figma .documentation</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Real table markup</h3><p>Use <code>&lt;table&gt;</code>, <code>&lt;th scope="col"&gt;</code> and <code>&lt;td&gt;</code>. The scroll area is a focusable <code>role="region"</code> with a label, so keyboard users can scroll it with the arrow keys (focus outline added in review — not in Figma).</p></div>
+  <div class="panel card"><h3>Selection &amp; sort</h3><p>Every row checkbox has a label (“Select row 1”), the header one “Select all rows”. Selected rows get <code>aria-selected</code>. Sort buttons are labelled “Sort by …” and the sorted <code>&lt;th&gt;</code> carries <code>aria-sort</code>.</p></div>
+  <div class="panel card"><h3>Loading &amp; empty</h3><p>While loading, the grid has <code>aria-busy="true"</code> and the skeletons are hidden from assistive tech. The empty art uses its Figma hidden text as <code>alt</code> (“no records”).</p></div>
+  <div class="panel card"><h3>Open for the accessibility pass</h3><p>Inherited from Table Cell: Dark header text #8A8A9E on #343440 ≈ 4.0 : 1; Dark disabled #8A8A9E on #393945 ≈ 3.8 : 1. Sort icon Default #E7E7E7 / #B5C3CB on white is under 3 : 1 (non-text). Selected rows have no visual other than the ticked box.</p></div>
+</div></section>
+
+<section id="issues" data-flag-area><h2>Open issues</h2>
+<div class="panel"><ul class="issues">
+  <li><b>Row and Table sets are marked “FOR REFERENCE”.</b> Built as a composed pattern (<code>.pds-table</code>), not as a component with its own cell styling.</li>
+  <li><b>No Dark table in Figma.</b> The Dark composition is built from the Dark Table Cell variants; frame border = the Dark cell line (#8A8A9E @ 50%) — not in Figma.</li>
+  <li><b>Selection, sort states, sticky header, horizontal scroll, loading and empty are added</b> — none is drawn on the Table page. No selected-row, hover or focus-row style exists; selected rows look the same as unselected ones.</li>
+  <li>Sorted states use the kit icons <code>Navigation/Sort · Ascending (Small -&gt; Big)</code> / <code>Decending (Big -&gt; Small)</code>; Table Cell itself only uses Sort Default.</li>
+  <li>Figma sample data is “Some Text” everywhere, so sorting the reference data shows no change. The demo’s first column is Input Text (as in Using Columns) — type in it to see rows move.</li>
+  <li>Row reference frame fills look swapped: <code>Type=Row</code> frame is #F9FAFA and <code>Type=Alternate-Row</code> frame is #FFFFFF, while their cells are Default and Alternate. Invisible (cells cover the frame); built from the cells.</li>
+  <li>Disabled exists only for Text and Input Text cells, so a disabled row with Tag or Dropdown cells has no Figma look. Dark disabled rows differ from Dark Alternate rows by text colour only.</li>
+  <li>Child only exists for Light Text cells — no Dark Child row and no Child Input Text.</li>
+  <li>Empty state: Figma has no table empty layout; the kit art sits centred with 15px padding (added). The art has no title or body text (see Empty State).</li>
+  <li>Loading: no table skeleton in Figma; the kit Skeleton (38 high, two bars) sits in each 50px Text cell.</li>
+  <li>Line heights inherited from Table Cell: 12px text 16 (type scale 17); header 10 SemiBold ≈ 14 (type scale 12).</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel"><ul class="gaps">
+  <li>Sticky (frozen) first column when scrolling sideways — not shown in Figma, not built.</li>
+  <li>Row hover always on, to help scan across a row — <a href="https://carbondesignsystem.com/components/data-table/usage/" target="_blank" rel="noopener">Carbon Data table</a></li>
+  <li>Batch-actions toolbar that appears when rows are selected — <a href="https://carbondesignsystem.com/components/data-table/usage/" target="_blank" rel="noopener">Carbon Data table</a></li>
+  <li>Unsorted arrows shown only on hover; only the sorted column shows its icon — <a href="https://carbondesignsystem.com/components/data-table/usage/" target="_blank" rel="noopener">Carbon Data table</a></li>
+  <li>Pagination at the bottom, sized to the row height — <a href="https://carbondesignsystem.com/components/data-table/usage/" target="_blank" rel="noopener">Carbon Data table</a></li>
+  <li>Expandable rows (Figma has a Child row but no expand control) — <a href="https://carbondesignsystem.com/components/data-table/usage/" target="_blank" rel="noopener">Carbon Data table</a></li>
+  <li>Column picker (kit <a href="column-picker.html">Column Picker</a>) — not drawn with the table in Figma, not wired here.</li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the files, write the table with Table Cell classes, then call <code>pdsTable.init()</code>.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Markup (one header cell with checkbox + sort, one body row):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="checkbox.js"></script>
+<script src="table-cell.js"></script>
+<script src="table.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+/* kit glyphs — same markup as table-cell.html */
+const SORT='<svg class="pds-table-cell__sort" viewBox="0 0 8 12" aria-hidden="true"><path d="M0 5L8 5L4 0Z" fill="#E7E7E7"/><path d="M8 7L0 7L4 12Z" fill="#B5C3CB"/></svg>'; /* icons/nav-sort-default.svg */
+const CHECKMARK='<svg class="pds-checkbox__mark" viewBox="0 0 10 8" aria-hidden="true"><path d="M3.28 5.72L8.74.09c.12-.12.3-.12.41 0l.76.78c.12.12.12.32 0 .44L3.48 7.91c-.11.12-.3.12-.41 0L.09 4.85c-.12-.12-.12-.32 0-.44l.74-.78c.12-.12.3-.12.42 0z"/></svg>';
+const cb=(dark,label,o={})=>`<label class="pds-checkbox${dark?" pds-checkbox--dark":""}"><input type="checkbox" class="pds-checkbox__input" aria-label="${label}"${o.on?" checked":""}${o.dis?" disabled":""}><span class="pds-checkbox__box" aria-hidden="true">${CHECKMARK}<span class="pds-checkbox__dash"></span></span></label>`;
+const cls=(type,o)=>["pds-table-cell","pds-table-cell--"+type,o.dark&&"pds-table-cell--dark",o.alt&&"pds-table-cell--alt",o.child&&"pds-table-cell--child",o.dis&&"pds-table-cell--disabled"].filter(Boolean).join(" ");
+const C={
+ th:o=>`<th scope="col" class="${cls("header",o)}"><div class="pds-table-cell__content">${o.check?cb(o.dark,"Select all rows"):""}<span class="pds-table-cell__label">Header Text</span>${o.sort?`<button type="button" class="pds-table-cell__sort-btn" aria-label="Sort by Header Text ${o.n}">${SORT}</button>`:""}</div></th>`,
+ text:o=>`<td class="${cls("text",o)}"><div class="pds-table-cell__content">${o.check?cb(o.dark,"Select row "+o.r,{on:o.on,dis:o.dis}):""}<div class="pds-table-cell__text"><span class="pds-table-cell__primary">Some Text</span><span class="pds-table-cell__secondary">Some Text</span></div></div></td>`,
+ input:o=>`<td class="${cls("input",o)}"><div class="pds-table-cell__content">${o.check?cb(o.dark,"Select row "+o.r,{on:o.on,dis:o.dis}):""}<div class="pds-table-cell__text"><input class="pds-table-cell__input" type="text" aria-label="Header Text 1, row ${o.r}" placeholder="Enter Text"${o.dis?" disabled":""}></div></div></td>`
+};
+/* o: dark, cols, w, first ('input'|'text'), rows, check, sort, sticky, dis[], child[], on[], label, inline, head(false = no thead), body(false), only ('row'|'alt'|'child') */
+function T(o){
+  o=Object.assign({cols:8,w:148,first:"text",rows:10,dis:[],child:[],on:[],head:true,body:true},o);
+  const d=!!o.dark;
+  const cols=Array.from({length:o.cols},(_,i)=>i);
+  let head=o.head?`<thead><tr>${cols.map(i=>C.th({dark:d,check:o.check&&i===0,sort:o.sort,n:i+1})).join("")}</tr></thead>`:"";
+  let rows="",k=0;
+  for(let r=1;r<=o.rows;r++){
+    const child=o.child.includes(r);
+    const dis=o.dis.includes(r);
+    const alt=o.only?o.only==="alt":(!child&&(k++%2===0));
+    const ch=o.only==="child"||child;
+    rows+=`<tr${child?' class="pds-table__row--child"':dis?' class="pds-table__row--disabled"':""}>`+cols.map(i=>{
+      const p={dark:d,alt:alt&&!ch,child:ch,dis,r,check:o.check&&i===0,on:o.on.includes(r)};
+      return (i===0&&o.first==="input"&&!ch)?C.input(p):C.text(p);
+    }).join("")+"</tr>";
+  }
+  const body=o.body?`<tbody>${rows}</tbody>`:"";
+  return `<div class="pds-table${d?" pds-table--dark":""}${o.inline?" pds-table--inline":""}${o.sticky?" pds-table--sticky":""}"${o.maxH?` style="--table-max-h:${o.maxH}px"`:""}><div class="pds-table__scroll pds-scroll" role="region" tabindex="0" aria-label="${o.label||"Table"}"><table class="pds-table__grid"><colgroup>${cols.map(()=>`<col style="width:${o.w}px">`).join("")}</colgroup>${head}${body}</table></div></div>`;
+}
+
+// ── Try it
+function mountTry(){
+  const dark=$("#c-theme").value==="dark";
+  $("#stage").innerHTML=T({label:"Try it table",dark,first:"input",check:$("#c-check").checked,sort:$("#c-sort").checked,sticky:$("#c-sticky").checked,maxH:$("#c-sticky").checked?286:0,dis:$("#c-dis").checked?[3]:[],child:(!dark&&$("#c-child").checked)?[3]:[],rows:10})+`<div class="tb-out" id="out">Nothing selected · no sort.</div>`;
+  const t=$("#stage .pds-table");
+  pdsTable.init(t);
+  const st=$("#c-state").value;
+  if(st==="loading")pdsTable.loading(t);
+  if(st==="empty")pdsTable.empty(t,{src:`empty-state/no-records-${dark?"dark":"light"}.png`});
+  t.addEventListener("pds-table-select",e=>{$("#out").textContent=`pds-table-select · ${e.detail.count} selected`});
+  t.addEventListener("pds-table-sort",e=>{$("#out").textContent=`pds-table-sort · column ${e.detail.column+1} · ${e.detail.direction}`});
+}
+$("#ctrls").addEventListener("change",mountTry);mountTry();
+
+// ── Variants
+let n=0;const V=[];
+const add=(name,html,opt={})=>{n++;V.push(`<div><h3>${name}${opt.added?'<span class="added">added</span>':""}</h3>${html}${opt.note?`<p class="note">${opt.note}</p>`:""}</div>`)};
+const row=(html)=>V.push(`<div class="vrow">${html}</div>`);
+add("Row - FOR REFERENCE · Type=Header",T({label:"Type=Header",w:100,body:false,inline:1}));
+add("Row - FOR REFERENCE · Type=Row",T({label:"Type=Row",w:100,head:false,rows:1,only:"row",inline:1}));
+add("Row - FOR REFERENCE · Type=Alternate-Row",T({label:"Type=Alternate-Row",w:100,head:false,rows:1,only:"alt",inline:1}));
+add("Row - FOR REFERENCE · Type=Child",T({label:"Type=Child",w:100,head:false,rows:1,only:"child",inline:1}));
+add("Table - FOR REFERENCE · Property 1=Using Rows",T({label:"Using Rows",w:100,rows:8,inline:1}));
+add("Table - FOR REFERENCE · Property 1=Using Columns",T({label:"Using Columns",w:148,first:"input",rows:10}),{note:"1184 wide — scrolls sideways inside the frame (kit Scrollbar)."});
+add("Column",T({label:"Column",cols:1,w:148,rows:10,inline:1}));
+add("Dark composition · Using Rows",T({label:"Dark table",dark:1,w:100,rows:5,inline:1}),{added:1,note:"Built from Dark Table Cells — Figma has no Dark table."});
+add("Disabled row (Light) · row 2 = Text / Input Text Disabled=Yes",T({label:"Disabled row light",cols:4,w:148,first:"input",rows:3,dis:[2],check:1,inline:1}),{added:1});
+add("Disabled row (Dark)",T({label:"Disabled row dark",dark:1,cols:4,w:148,first:"input",rows:3,dis:[2],check:1,inline:1}),{added:1});
+add("Selection (Light) · header indeterminate, rows 1 + 3 ticked",T({label:"Selection light",cols:4,w:148,rows:4,check:1,on:[1,3],inline:1}),{added:1});
+add("Selection (Dark) · all rows ticked",T({label:"Selection dark",dark:1,cols:4,w:148,rows:4,check:1,on:[1,2,3,4],inline:1}),{added:1});
+add("Sort · column 1 Ascending",T({label:"Sorted table",cols:4,w:148,first:"input",rows:3,sort:1,inline:1}),{added:1,note:"Press a header’s sort icon: Default → Ascending → Decending → Default."});
+add("Sticky header · scroll area 5 rows high",T({label:"Sticky header table",cols:4,w:148,rows:10,sticky:1,maxH:286,inline:1}),{added:1});
+add("Loading (Light) · kit Skeleton",T({label:"Loading light",cols:4,w:148,rows:3,inline:1}),{added:1});
+add("Loading (Dark)",T({label:"Loading dark",dark:1,cols:4,w:148,rows:3,inline:1}),{added:1});
+add("Empty (Light) · kit Empty State “No Records”",T({label:"Empty light",cols:4,w:148,rows:1,inline:1}),{added:1});
+add("Empty (Dark)",T({label:"Empty dark",dark:1,cols:4,w:148,rows:1,inline:1}),{added:1});
+$("#vgroups").innerHTML=V.join("");
+pdsTable.init($("#vgroups"));
+const tables=[...document.querySelectorAll("#vgroups .pds-table")];
+const byLabel=l=>tables.find(t=>t.querySelector(`[aria-label="${l}"]`));
+pdsTable.sort(byLabel("Sorted table"),0,"ascending");
+pdsTable.loading(byLabel("Loading light"),3);
+pdsTable.loading(byLabel("Loading dark"),3);
+pdsTable.empty(byLabel("Empty light"),{src:"empty-state/no-records-light.png"});
+pdsTable.empty(byLabel("Empty dark"),{src:"empty-state/no-records-dark.png"});
+window.__variantCount=n;
+
+// ── Code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/scrollbar.css">
+<link rel="stylesheet" href="components/checkbox.css">
+<link rel="stylesheet" href="components/skeleton.css">     <!-- loading -->
+<link rel="stylesheet" href="components/empty-state.css">  <!-- empty -->
+<link rel="stylesheet" href="components/table-cell.css">
+<link rel="stylesheet" href="components/table.css">
+<script src="components/checkbox.js"><\/script>
+<script src="components/table.js"><\/script>
+<script>
+  pdsTable.init();                                   // select all + sort
+  const t = document.querySelector('.pds-table');
+  pdsTable.loading(t);                               // skeleton rows
+  pdsTable.empty(t, { src: 'components/empty-state/no-records-light.png', alt: 'no records' });
+  pdsTable.restore(t);                               // back to the data rows
+  t.addEventListener('pds-table-select', e => e.detail.count);
+  t.addEventListener('pds-table-sort', e => [e.detail.column, e.detail.direction]);
+<\/script>`;
+$("#code2").textContent=`<div class="pds-table pds-table--sticky" style="--table-max-h:286px">
+  <div class="pds-table__scroll pds-scroll" role="region" tabindex="0" aria-label="Invoices">
+    <table class="pds-table__grid">
+      <colgroup><col style="width:148px"> …</colgroup>
+      <thead><tr>
+        <th scope="col" class="pds-table-cell pds-table-cell--header">
+          <div class="pds-table-cell__content">
+            <label class="pds-checkbox"><input type="checkbox" class="pds-checkbox__input" aria-label="Select all rows"><span class="pds-checkbox__box" aria-hidden="true">…</span></label>
+            <span class="pds-table-cell__label">Header Text</span>
+            <button type="button" class="pds-table-cell__sort-btn" aria-label="Sort by Header Text"><svg …/></button>
+          </div>
+        </th> …
+      </tr></thead>
+      <tbody>
+        <tr>  <!-- first body row = Alternate -->
+          <td class="pds-table-cell pds-table-cell--text pds-table-cell--alt">
+            <div class="pds-table-cell__content">
+              <label class="pds-checkbox">…aria-label="Select row 1"…</label>
+              <div class="pds-table-cell__text"><span class="pds-table-cell__primary">Some Text</span><span class="pds-table-cell__secondary">Some Text</span></div>
+            </div>
+          </td> …
+        </tr>
+        <tr class="pds-table__row--child"> <!-- cells: pds-table-cell--child --> </tr>
+        <tr class="pds-table__row--disabled"> <!-- cells: pds-table-cell--disabled, checkbox disabled --> </tr>
+      </tbody>
+    </table>
+  </div>
+</div>`;
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

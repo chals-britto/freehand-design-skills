@@ -1,0 +1,109 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Subheader Menu (organism) · id subheader-nav
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟢 Subheader Menu (2263:700)
+     · component     "Subheader Menu"        (2263:3752) — trigger + two-level Flyout
+     · component set ".Secondary menu items" (2263:947)  — 6 · Type Secondary | Tertiary × State Default | Hover | Active
+   Built 2026-10-28 · no review file — every published variant kept as in Figma.
+   Requires ../tokens.css and menu-panels.css: the trigger IS the Molecules Subheader Menu
+   trigger (.pds-menu-panels__trigger / __label / __arrow); only its border token is overridden here.
+   The flyout and its rows are new in this organism (not menu.css rows — different colours,
+   hover and semantics). Icons inlined from icons/ (currentColor).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Trigger (reused from menu-panels.css) ───────────────────── */
+  --subheader-nav-trigger-border: var(--border-input-light);   /* #E2EAEC — Molecules version uses #E9F1F5 */
+
+  /* ── Flyout ─────────────────────────────────────────────────── */
+  --subheader-nav-flyout-bg:      var(--white);
+  --subheader-nav-flyout-shadow:  var(--shadow-3);              /* 0 2 14 10% */
+  --subheader-nav-col-w:          216px;                        /* Level 1 / Level 2 columns, flyout 432 */
+
+  /* ── .Secondary menu items ──────────────────────────────────── */
+  --subheader-nav-item-h:         36px;
+  --subheader-nav-item-pad-x:     20px;
+  --subheader-nav-item-pad-y:     var(--space-10);
+  --subheader-nav-item-fg:        var(--pando-dark);            /* #234357 Default */
+  --subheader-nav-item-hover-bg:  var(--pando-light);           /* #EEF2F4 Hover */
+  --subheader-nav-item-hover-fg:  var(--pando-blue);            /* #0076DD Hover */
+  --subheader-nav-item-active-fg: var(--pando-blue);            /* #0076DD Active (no fill) */
+  --subheader-nav-item-lh:        16px;                         /* Figma auto; .type-12-semibold is 17 */
+  --subheader-nav-item-ls:        .3px;
+  --subheader-nav-caret:          var(--pando-dark);            /* #234357 Navigation/Right-Caret */
+  --subheader-nav-caret-w:        5px;
+  --subheader-nav-caret-h:        8px;
+  --subheader-nav-sep:            var(--border-blue-grey);      /* #B5C3CB Tertiary separator, 1px × 36 */
+  --subheader-nav-sep-w:          1px;
+  --subheader-nav-tert-gap:       20px;                         /* separator ↔ text */
+  --subheader-nav-item-solo-w:    204px;                        /* component-set master width (in the flyout rows fill 216) */
+
+  --subheader-nav-focus: 2px solid var(--pando-blue);           /* added in review — not in Figma */
+}
+
+/* ═══ Root + trigger ═══════════════════════════════════════════════ */
+.pds-subheader-nav {
+  --menu-panels-sub-border: var(--subheader-nav-trigger-border);
+  position: relative;
+}
+.pds-subheader-nav *, .pds-subheader-nav *::before, .pds-subheader-nav *::after { box-sizing: border-box; }
+
+/* ═══ Flyout (2263:3696) ═══════════════════════════════════════════ */
+.pds-subheader-nav__flyout {
+  position: absolute; top: 100%; left: 0; z-index: 10;
+  display: flex; align-items: flex-start;
+  background: var(--subheader-nav-flyout-bg);
+  box-shadow: var(--subheader-nav-flyout-shadow);
+}
+.pds-subheader-nav__flyout[hidden] { display: none; }
+.pds-subheader-nav--static .pds-subheader-nav__flyout { position: static; align-self: flex-start; width: max-content; }
+.pds-subheader-nav__col {
+  flex: none; width: var(--subheader-nav-col-w);
+  margin: 0; padding: 0; list-style: none;
+}
+.pds-subheader-nav__col[hidden] { display: none; }
+.pds-subheader-nav__col li { margin: 0; padding: 0; }
+
+/* ═══ .Secondary menu items (2263:947) ═════════════════════════════ */
+.pds-subheader-nav__item {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; height: var(--subheader-nav-item-h);
+  margin: 0; padding: var(--subheader-nav-item-pad-y) var(--subheader-nav-item-pad-x);
+  border: 0; background: transparent;
+  color: var(--subheader-nav-item-fg);
+  font: var(--type-12-semibold); line-height: var(--subheader-nav-item-lh);
+  letter-spacing: var(--subheader-nav-item-ls); text-transform: uppercase;
+  text-align: left; text-decoration: none; cursor: pointer;
+}
+.pds-subheader-nav__text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pds-subheader-nav__caret {
+  flex: none; display: block;
+  width: var(--subheader-nav-caret-w); height: var(--subheader-nav-caret-h);
+  color: var(--subheader-nav-caret);
+}
+
+/* Type = Tertiary — 1px separator line, 20 gap, text */
+.pds-subheader-nav__item--tertiary {
+  justify-content: flex-start; gap: var(--subheader-nav-tert-gap);
+  padding: 0 var(--subheader-nav-item-pad-x);
+}
+.pds-subheader-nav__item--tertiary::before {
+  content: ""; flex: none; align-self: stretch;
+  width: var(--subheader-nav-sep-w);
+  background: var(--subheader-nav-sep);
+}
+
+/* State = Hover (also shown on keyboard focus — added) */
+.pds-subheader-nav__item:hover,
+.pds-subheader-nav__item.is-hover,
+.pds-subheader-nav__item:focus-visible {
+  background: var(--subheader-nav-item-hover-bg);
+  color: var(--subheader-nav-item-hover-fg);
+}
+/* State = Active */
+.pds-subheader-nav__item[aria-current="true"],
+.pds-subheader-nav__item.is-active { color: var(--subheader-nav-item-active-fg); }
+
+.pds-subheader-nav__item:focus-visible { outline: var(--subheader-nav-focus); outline-offset: 2px; position: relative; z-index: 1; }
+
+/* Standalone item (documentation of the component set) */
+.pds-subheader-nav__item--solo { width: var(--subheader-nav-item-solo-w); font-family: var(--font-family); }

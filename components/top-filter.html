@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Top Filter · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="toggle.css">
+<link rel="stylesheet" href="tag.css">
+<link rel="stylesheet" href="dropdown.css">
+<link rel="stylesheet" href="timepicker.css">
+<link rel="stylesheet" href="calendar.css">
+<link rel="stylesheet" href="filter-by.css">
+<link rel="stylesheet" href="metrics-widgets.css">
+<link rel="stylesheet" href="top-filter.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* top-filter page additions */
+.wrap{max-width:1340px}
+.tstage{padding:20px;display:flex;flex-direction:column;gap:14px;background:var(--pg-soft);border-radius:0 10px 10px 0;min-height:300px;overflow-x:auto;min-width:0}
+.tstage .host{min-width:1280px}
+.log{font:400 11.5px var(--pg-mono);color:var(--pg-muted);min-height:16px;white-space:pre-wrap}
+.vlist{display:flex;flex-direction:column;gap:18px;padding:20px}
+.vlist .vcell .box{overflow-x:auto;background:#fff;padding:10px;border-radius:6px}
+.vlist .vcell .box > *{min-width:1280px}
+.vlist .vcell .box.small > *{min-width:0}
+.play{grid-template-columns:240px minmax(0,1fr)}
+@media (max-width:760px){.play{grid-template-columns:1fr}.tstage{border-radius:0 0 10px 10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>Top Filter</h1>
+    <p class="lede">The full-width band above a list: the source → destination read-out, More Filters, the metric Widget Groups with their view actions, and the date on the right. Built entirely from the kit’s Metrics and Filter By pieces; only the background, the layout and .Filter-Actions are new.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · no review yet (all published = Keep)</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/?node-id=3103-8433" target="_blank" rel="noopener">Figma Top Filter 3103:8433 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/?node-id=3033-9089" target="_blank" rel="noopener">.Filter-Actions 3033:9089 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/?node-id=3027-387" target="_blank" rel="noopener">Page Filter w/Metrics 3027:387 ↗</a><span>Files: top-filter.css · top-filter.js</span><span>Composes: <a href="metrics-widgets.html">Metrics + Widgets</a> · <a href="filter-by.html">Filter By</a></span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Click a metric to make it Active (click again to clear). Open More Filters (funnel) and pick a value: the pill turns Filled. Press the middle .Filter-Actions button (Reset View) to clear both. The log shows the <code>pds-top-filter-change</code> state. Option lists are the kit Filter Dropdown’s Figma samples.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls">
+    <label>Type<select id="c-type"><option value="default">Default</option><option value="filter-bottom">Filter at bottom</option><option value="stats">Only stats</option><option value="no-stats">No Stats</option><option value="swappable">Swappable</option></select></label>
+    <label class="chk"><input type="checkbox" id="c-filters" checked> Show Filters</label>
+    <label class="chk"><input type="checkbox" id="c-date" checked> Show Date Selection Filter</label>
+    <label class="chk"><input type="checkbox" id="c-time"> Show Additional Time</label>
+    <p class="ex-note" style="margin:0">Show Action Button is not built — its button text could not be read from Figma (see Open issues).</p>
+  </form>
+  <div class="tstage"><div class="host" id="host"></div><div class="log" id="log" aria-live="polite"></div></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">All 5 Types at full width, with Figma’s sample content and instance overrides (Pending Active, On Hold red number, brown / purple / blue highlight lines, green numbers on the right group). Booleans at their defaults. Then .Filter-Actions on its own.</p>
+<div class="panel vlist" id="vlist"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma component set (1280 wide per variant; built fluid at 100%).</p>
+<div class="panel"><div class="spec-table">
+  <div><b>Heights</b>Default / Filter at bottom <code>124</code> · Only stats <code>100</code> · No Stats / Swappable <code>46</code></div>
+  <div><b>Padding</b><code>10px 20px</code> · Only stats <code>15px 20px</code></div>
+  <div><b>Background</b>gradient <code>#3F6ABF → #18283B</code> (vertical) under white 80% · inner glow white 47% blur 80 · no radius</div>
+  <div><b>Left column</b>gap <code>10px</code> filters row ↔ widgets row</div>
+  <div><b>Filters row</b>gap <code>20px</code> · Source + Movement · More Filters</div>
+  <div><b>Widgets row</b>gap <code>10px</code> · Widget Groups (2, 2, 3) · .Filter-Actions</div>
+  <div><b>Right column</b>right-aligned · date on top (<code>4px</code> lower than the filters row) · right Widget Group at the bottom · min gap <code>17px</code></div>
+  <div><b>Source + Movement</b>“&lt;Source&gt;” Bold 14 / 18 · “All Consignees” Bold 14 / 10 · <code>#18283B</code> · Title Case · gap <code>10px</code></div>
+  <div><b>Movement</b>30×7 · 5×5 diamonds <code>--accent-red-medium</code> → <code>--dark-highlight-green</code> · 20px line <code>#36577E</code> 50%</div>
+  <div><b>Metric overrides</b>highlight <code>--status-brown-medium</code> / kit purple / <code>--status-blue-medium</code> · numbers <code>--gradient-rejection-red</code> and <code>--gradient-forest-green</code> stops</div>
+  <div><b>.Filter-Actions</b>3 × <code>20px</code> buttons stacked · padding 5 · 10px icons · white 65% · 0.5px <code>--border-input-light</code> between · radii 0 0 2 2 / 2 2 0 0 / 0</div>
+  <div><b>Action icons</b>Widgets, Add <code>--pando-dark</code> · Fetch <code>--action-blue</code></div>
+  <div><b>Swappable slot</b>fill <code>--pando-light</code> · padding 3 10 · gap 20 · 12 Regular · title <code>--pando-dark</code>, text <code>#000</code></div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Types</h3><ul><li><b>Default</b> — source → destination, More Filters, three Widget Groups, date and a right Widget Group.</li><li><b>Filter at bottom</b> — widgets first, the open More Filters under them.</li><li><b>Only stats</b> — widgets and date, no filters.</li><li><b>No Stats</b> — one row: source, open More Filters, date.</li><li><b>Swappable</b> — one row with a slot for product content, More Filters, date.</li></ul></div>
+  <div class="panel card"><h3>Booleans</h3><ul><li>Show Filters (default on) — More Filters.</li><li>Show Date Selection Filter (default on).</li><li>Show Additional Time (default off) — “Bid Ends 0:00:00”, the kit .Date and Time Type=Time.</li><li>Show Action Button (default off) — not built, see Open issues.</li></ul></div>
+  <div class="panel card"><h3>Not in Figma</h3><p>Figma has no usage text for Top Filter. The wiring here — metric click toggles Active, filters fill through the kit, Reset View clears both, any change reports the applied state — is the build’s reading and needs confirming.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Composed controls keep their roles</h3><p>Metrics are kit <code>&lt;button aria-pressed&gt;</code> tiles; pills, More Filters and the date trigger are the kit Filter By buttons. Each Widget Group is a <code>role="group"</code> named “Widget Type”.</p></div>
+  <div class="panel card"><h3>.Filter-Actions</h3><p>Three icon buttons in a group named “View actions”, labelled from the Figma frame names: “All Widgets”, “Reset View”, “Add View”. Focus ring <code>2px --pando-blue</code>, offset 2 — added in review, not in Figma.</p></div>
+  <div class="panel card"><h3>Read-outs</h3><p>The movement mark is <code>role="img"</code> named “to”, so the source reads “&lt;Source&gt; to All Consignees”. The right group is No Click metrics (text only, no buttons).</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+  <li>Show Action Button: its Text Button (with an Indicator Icon/Details 14) is hidden in every variant and its label text could not be read. Not built. The Swappable variant also hides a Primary Button whose text could not be read.</li>
+  <li>Behaviour is not written in Figma: single vs multiple Active metrics, what All Widgets / Add View / Reset View do, whether metric clicks and filters combine. Built as described under Usage.</li>
+  <li>Filter at bottom: the open More Filters has no close ×, so it can’t be collapsed. Kept as Figma.</li>
+  <li>Off-token colours: background stops <code>#3F6ABF</code> / <code>#18283B</code> (gradient angle differs from <code>--gradient-ink-blue</code>), source text <code>#18283B</code>, movement line <code>#36577E</code>, slot text <code>#000000</code>; number gradients reuse the stops of <code>--gradient-rejection-red</code> / <code>--gradient-forest-green</code> at the kit metric angle.</li>
+  <li>Kit metric label is one line with ellipsis; Figma wraps “Total Weight (LBS)” onto two lines. Overridden inside <code>.pds-top-filter</code> (label bottom-aligned in a 20px box).</li>
+  <li>Atom variant missing in kit: the Swappable slot’s “refresh-line” icon is not in the icon set — the slot renders without it. The slot is a placeholder (.Swappable Content), not a component.</li>
+  <li>Line heights: “All Consignees” 14 / 10 and “&lt;Source&gt;” 14 / 18 have no type token.</li>
+  <li>Background blur 100 on the white veil is not built (it only blurs the gradient under it, no visible effect). Inner shadow is not one of <code>--shadow-1..4</code>.</li>
+  <li>Small offsets: No Stats left row sits at y 11 (Figma 10) inside the 46 band; Only stats date at y 15 (Figma 14). .Filter-Actions dividers are drawn inside (Figma 0.5 centre stroke).</li>
+  <li>No responsive behaviour in Figma (1280 only). The band does not wrap; the doc page draws it at Figma’s 1280 and scrolls sideways when narrower.</li>
+  <li>Hidden layers not built: Movement Indicator (Status/Movement Type), the 4th and 5th Widget Groups, the second right Widget Group.</li>
+  <li>Contrast (deferred): number gradients are light at the top — red <code>#E96262</code> end ≈ 3.0 : 1 and green <code>#19A476</code> end ≈ 2.9 : 1 on the metric tile (dark ends pass); on the right group (no tile fill) ≈ 2.3 : 1 against the band. Active label white on <code>#3F6ABF</code> 5.2 : 1 passes.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>Applied-filter count on the closed More Filters button, clearable without reopening. <a href="https://carbondesignsystem.com/patterns/filtering/" target="_blank" rel="noopener">Carbon · Filtering</a></li>
+  <li>One “clear all” control across every category in the band (here only Reset View, by our reading). <a href="https://carbondesignsystem.com/patterns/filtering/" target="_blank" rel="noopener">Carbon · Filtering</a></li>
+  <li>Choice of instant vs batch “Apply” when several selections reload slow data. <a href="https://carbondesignsystem.com/patterns/filtering/" target="_blank" rel="noopener">Carbon · Filtering</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include tokens, the composed kit files, then build.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">.Filter-Actions markup:</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="button.js"></script>
+<script src="toggle.js"></script>
+<script src="dropdown.js"></script>
+<script src="timepicker.js"></script>
+<script src="calendar.js"></script>
+<script src="filter-by.js"></script>
+<script src="metrics-widgets.js"></script>
+<script src="top-filter.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const T=pdsTopFilter;
+// Kit Filter Dropdown sample options (dropdown.html)
+const G=[{label:"Region",options:[{label:"North Region"},{label:"South Region"},{label:"East Region"},{label:"West Region"}]},{label:"City",options:[{label:"Bangalore"},{label:"Chennai Depot"},{label:"Depot City"},{label:"Salem Depot"}]}];
+const clone=o=>JSON.parse(JSON.stringify(o));
+
+/* Try it */
+function render(){
+  const tf=T.build({type:$("#c-type").value,showFilters:$("#c-filters").checked,showDate:$("#c-date").checked,showTime:$("#c-time").checked,filters:[{groups:clone(G)}]});
+  $("#host").replaceChildren(tf);
+  $("#log").textContent="state → "+JSON.stringify(T.state(tf));
+}
+$("#host").addEventListener("pds-top-filter-change",e=>{$("#log").textContent="pds-top-filter-change → "+JSON.stringify(e.detail)});
+$("#host").addEventListener("pds-top-filter-action",e=>{if(e.detail.action!=="reset-view")$("#log").textContent="pds-top-filter-action → "+JSON.stringify(e.detail)});
+$("#ctrls").addEventListener("change",render);
+render();
+
+/* Variants */
+function cell(lbl,node,small){const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${lbl}</span>`;const b=document.createElement("div");b.className="box"+(small?" small":"");b.appendChild(node);c.appendChild(b);$("#vlist").appendChild(c)}
+[["default","Default"],["filter-bottom","Filter at bottom"],["stats","Only stats"],["no-stats","No Stats"],["swappable","Swappable"]].forEach(([t,n])=>cell(`Type=${n}`,T.build({type:t,static:true})));
+const fa=document.createElement("div");fa.className="pds-top-filter";fa.style.cssText="width:auto;display:inline-flex";fa.innerHTML=T.build({type:"stats",static:true}).querySelector(".pds-filter-actions").outerHTML;
+cell(".Filter-Actions (3033:9089) — on the Top Filter background",fa,true);
+
+/* Code */
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/toggle.css">
+<link rel="stylesheet" href="components/tag.css">
+<link rel="stylesheet" href="components/dropdown.css">
+<link rel="stylesheet" href="components/timepicker.css">
+<link rel="stylesheet" href="components/calendar.css">
+<link rel="stylesheet" href="components/filter-by.css">
+<link rel="stylesheet" href="components/metrics-widgets.css">
+<link rel="stylesheet" href="components/top-filter.css">
+<script src="components/icons/icons-data.js"><\/script>
+<script src="components/toggle.js"><\/script>
+<script src="components/dropdown.js"><\/script>
+<script src="components/timepicker.js"><\/script>
+<script src="components/calendar.js"><\/script>
+<script src="components/filter-by.js"><\/script>
+<script src="components/metrics-widgets.js"><\/script>
+<script src="components/top-filter.js"><\/script>
+
+<script>
+  const groups = [{ label: 'Region', options: [{ label: 'North Region' }, { label: 'South Region' }] }];
+  const tf = pdsTopFilter.build({
+    type: 'default',                       // 'filter-bottom' | 'stats' | 'no-stats' | 'swappable'
+    source: '<Source>', destination: 'All Consignees',
+    groups: [{ highlight: 'brown', metrics: [{ label: 'Pending', value: '25' }, { label: 'On Hold', value: '00', num: 'red' }] }],
+    right: { num: 'green', metrics: [{ label: 'Selected Count', value: '00' }] },
+    filters: [{ label: 'Region', groups }],
+    showTime: false
+  });
+  document.querySelector('#top').appendChild(tf);
+  tf.addEventListener('pds-top-filter-change', e => console.log(e.detail));   // { metrics:[…], filters:[…] }
+  tf.addEventListener('pds-top-filter-action', e => console.log(e.detail));   // { action: 'all-widgets' | 'reset-view' | 'add-view' }
+<\/script>`;
+$("#code2").textContent=fa.innerHTML.replace(/></g,">\n<").replace(/<svg[\s\S]*?<\/svg>/g,"<svg …/>");
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>
