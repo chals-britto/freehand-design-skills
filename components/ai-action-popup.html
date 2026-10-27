@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI Action Popup · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="radio.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="button-group.css">
+<link rel="stylesheet" href="input.css">
+<link rel="stylesheet" href="comment-thread.css">
+<link rel="stylesheet" href="ai-chat-composer.css">
+<link rel="stylesheet" href="ai-action-popup.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* ai-action-popup page */
+.vstack{display:flex;flex-direction:column;gap:22px;padding:20px}
+.vrow{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.vcell.w364{width:364px;max-width:100%}
+.vcell.w256{width:256px;max-width:100%}
+.vcell.w740{width:740px;max-width:100%}
+.vcell.w760{width:760px;max-width:100%}
+.surface{background:var(--white);border-radius:8px;padding:16px;overflow-x:auto}
+.stage.ai{display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px;background:var(--white);border-radius:0 10px 10px 0;overflow-x:auto}
+.stage.ai>*{width:760px;max-width:100%}
+.log{font:500 11.5px var(--pg-mono);color:var(--pg-muted);min-height:16px}
+ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+h3.vh{margin:0;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Organisms</div>
+    <h1>AI Action popup, input and options</h1>
+    <p class="lede">The confirm / clarify popup the AI shows inside the chat, its option rows and free-text field, the prompt bar with its Skipped and Tagged states, and the “Processing” responding text.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · not reviewed</span><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4514-13504" target="_blank" rel="noopener">Action - popup 4514:13504 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4514-10881" target="_blank" rel="noopener">.Option 4514:10881 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4514-13465" target="_blank" rel="noopener">.Input 4514:13465 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4519-6595" target="_blank" rel="noopener">.Input - Text 4519:6595 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4524-7918" target="_blank" rel="noopener">.Responding_Text animation 4524:7918 ↗</a><span>Files: ai-action-popup.css · ai-action-popup.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Pick an option, or type in “Something else in mind” (that clears the option). <b>Confirm</b> or <b>Enter</b> sends the answer, then the popup shows the Responding text for a moment. Hover an option for its Hover state. The prompt bar is the live kit composer.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls" onsubmit="return false">
+    <label>Popup type<select id="c-type"><option value="option">Type=Option</option><option value="default">Type=Default</option></select></label>
+    <label>Input variant<select id="c-input"><option value="default">Default</option><option value="skipped">Skipped Action</option><option value="tagged">Tagged</option></select></label>
+    <button type="button" class="btn ghost" id="c-reset">Reset</button>
+    <div class="log" id="log" aria-live="polite"></div>
+  </form>
+  <div class="stage ai" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">All 13 published variants, with the Figma sample text. Colours exactly as in Figma.</p>
+<div class="panel vstack">
+  <h3 class="vh">Action - popup — Type × State</h3>
+  <div class="vrow surface" id="v-popup"></div>
+  <h3 class="vh">.Option — State (master, 364 wide) · and as used in the popup (Radio, SemiBold)</h3>
+  <div class="vrow surface" id="v-opt"></div>
+  <h3 class="vh">.Input - Text — Property 1</h3>
+  <div class="vrow surface" id="v-it"></div>
+  <h3 class="vh">.Input — Property 1</h3>
+  <div class="vrow surface" id="v-input"></div>
+  <h3 class="vh">.Responding_Text animation — 4 frames, and the loop</h3>
+  <div class="vrow surface" id="v-resp"></div>
+</div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="panel"><div class="spec-table">
+  <div><b>Popup card</b>760 wide · padding <code>20</code> · gap <code>20</code> · radius <code>8</code> · 1px <code>--status-brown-medium</code> inside · shadow <code>0 0 42 −12 #000 16%</code></div>
+  <div><b>Heading</b>Open Sans SemiBold <code>16/auto</code> · <code>--status-brown-dark</code> · header padding <code>0 / 5</code></div>
+  <div><b>Body gap</b>Default <code>10</code> · Option <code>15</code></div>
+  <div><b>Summary</b>padding <code>10</code> · radius <code>4</code> · <code>#FFF7ED → white</code> at 80% · 0.1px <code>--highlight-orange</code> · bullet list</div>
+  <div><b>Summary text</b>label SemiBold 12 <code>--text-dark</code> · from 13 <code>--dark-input-text</code> · “→” 13 <code>#1E2939</code> · to 13 <code>--freehand-orange</code> · LH 22</div>
+  <div><b>Actions</b>kit Button Group, space-between, gap <code>10</code> · Skip = Secondary, label <code>#041F04 → #343440</code> · Confirm = Primary, fill same gradient</div>
+  <div><b>Footer</b>Regular <code>9.5/12</code> <code>--text-medium</code> · padding <code>10 10 0</code> · centred</div>
+  <div><b>.Option</b>36 tall · padding <code>10</code> · gap <code>10</code> · 0.5px bottom <code>--border-input-light</code> · Regular 12 <code>--text-dark</code></div>
+  <div><b>.Option hover</b>white · radius <code>4</code> · text <code>--freehand-orange</code> · Filter Arrow 10 → right</div>
+  <div><b>.Option selected (popup)</b>kit Radio 14, ring <code>--freehand-orange</code> · summary gradient · SemiBold 12</div>
+  <div><b>.Input - Text</b>kit Input - Text, no label · <code>42</code> tall · padding <code>10</code> · radius <code>4</code> · Edit 10 <code>--pando-dark</code> · placeholder <code>--text-light</code></div>
+  <div><b>.Input - Text hover</b>border <code>--pando-blue</code> (Input State=Active) · caret <code>#295EFF</code> at x 22</div>
+  <div><b>.Input bar</b>kit composer · padding <code>15 15 10 15</code> · gap <code>15</code> · radius <code>8</code> · 1px <code>--border-grey</code> · <code>--shadow-3</code> · placeholder <code>#737373</code></div>
+  <div><b>Prompt chip</b>padding <code>6 12 6 8</code> · gap <code>8</code> · radius <code>14</code> · <code>--accent-alternate-white</code> + 1px <code>--border-input-light</code> · Regular 10/12</div>
+  <div><b>.send / Add</b>.send scaled to <code>28</code> (glyph 18.67) · Add 14 <code>--text-light</code></div>
+  <div><b>Skipped message</b>outer padding <code>0 10</code> · inner <code>6 15 12 15</code> · radius <code>12 12 0 0</code> · <code>#FFF7ED</code> · overlaps the bar by <code>7</code></div>
+  <div><b>Tagged</b>inner padding <code>5 10</code> · radius <code>6</code> · gap to bar <code>4</code> · Close-Tag 10 <code>--grey-dark</code></div>
+  <div><b>Responding</b>spinner <code>12</code> · gap <code>4</code> · SemiBold 12/16 · frames 2–3 gradient <code>#A3A3A3 → #DCDCDC</code> · 4 × 300 ms ease-out</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Composition</h3><ul><li>Popup = card + kit Radio, kit Input - Text, kit Button Group (Skip, Confirm) + disclaimer.</li><li>.Input = the kit composer bar with a Prompt chip in front of +, and an optional Skipped message or Tagged context above it.</li><li>The Slideout Chat composes these classes.</li></ul></div>
+  <div class="panel card"><h3>Two popup types</h3><ul><li><b>Default</b>: confirm a set of field changes (“from → to”).</li><li><b>Option</b>: the AI offers interpretations; the person picks one or writes their own.</li></ul></div>
+  <div class="panel card"><h3>Text from Figma</h3><p>Figma has no usage notes for these components. Nothing else is added here.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Popup</h3><p>A <code>&lt;section&gt;</code> named by its heading. Options are a <code>&lt;fieldset&gt;</code> of native radios, so arrow keys move the choice. Enter in the text field confirms. Focus rings added in review — not in Figma.</p></div>
+  <div class="panel card"><h3>Prompt bar</h3><p>From the composer: <code>&lt;textarea&gt;</code> named “Ask Freehand”, Add and Send buttons. The chip, the Skipped link and the Tagged × (“Remove context”) are buttons.</p></div>
+  <div class="panel card"><h3>Responding</h3><p><code>role="status"</code> so “Processing” is announced once; the dots are hidden from screen readers. Reduced motion holds frame 1 and stops the spinner.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul class="plain">
+  <li><b>Motion decision needed</b>: .Responding_Text animation is 4 frames chained with After delay 1–10 ms + Smart animate 300 ms ease-out. Built as a 1.2 s CSS loop; reduced motion holds frame 1. Confirm speed, and whether it should loop at all.</li>
+  <li>The spinner in Responding is a 32 px animated GIF (blue ramp, darkest #047ADC) scaled to 12. Rebuilt with the kit Button spinner vector in <code>--pando-blue</code> so reduced motion can stop it.</li>
+  <li>Cursor/Typing is a 24 px GIF used as a mask with a <code>#295EFF</code> colour layer. Drawn as a CSS caret (1.5 × 13, blinking); only shown on the static Hover variant — a live field shows the real caret.</li>
+  <li>Prompt chip (<code>Prompt · Theme=Light, State=Default, Type=Simple</code>, set 3572:14750) is not in the kit yet (ai-chat-window, Batch 3). Built inside this component: atom variant missing in kit. Its Hover and Dark variants are not built here.</li>
+  <li>Instance overrides: Radio Selected ring/dot <code>#FE6505</code> (kit <code>#0076DD</code>); Confirm fill and Skip label are a <code>#041F04 → #343440</code> gradient (kit Primary <code>#0076DD</code>; Skip uses the Theme=Studio button, excluded from the kit, so the kit Secondary is used with the label override).</li>
+  <li>.Option master uses Regular 12 and no radio; every popup instance shows the Radio and SemiBold 12. Selected row (gradient + 0.1px orange stroke) is an override on the first instance, not a published state.</li>
+  <li>0.1px strokes (Summary, selected option) are drawn as a 0.1px inset shadow — practically invisible, as in Figma.</li>
+  <li>Off-token colours: <code>#FFF7ED</code>, <code>#1E2939</code>, <code>#737373</code>, <code>#DCDCDC</code>, <code>#295EFF</code>, shadow <code>0 0 42 −12 16%</code>, gradient <code>#041F04 → #343440</code> (both ends are tokens).</li>
+  <li>Type not in tokens: SemiBold 16/auto (heading), Regular 9.5/12 (disclaimer), SemiBold 13/22 (summary values). 12/auto built at 16 (tokens 12/17); 10/12 without the 0.5px tracking.</li>
+  <li>Hidden in Figma, not built: Close-Tag in the popup header, the “Slot” under the body, the Divider above the actions, the bar’s divider, the right-hand Add and the “stop_responce” button.</li>
+  <li>No Figma behaviour for Skip, Confirm, the chip, the Skipped link or the Tagged ×; the events here are added in review. No disabled / loading state on Confirm.</li>
+  <li>Contrast: placeholder <code>#737373</code> on white 4.7:1 (passes); Summary “from” <code>#8A8A9E</code> 3.4:1; Option hover text <code>#FE6505</code> on white 3.0:1; Responding frames 2–3 grey text ≈ 1.6–2.5:1; disclaimer 9.5px <code>#545454</code> 7.5:1 but below 10px. Kept as Figma.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul class="plain">
+  <li>Suggested prompts can be disabled, carry a description line, and nest into sub-lists. None of these exist here. <a href="https://x.ant.design/components/prompts" target="_blank" rel="noopener">Ant Design X Prompts</a></li>
+  <li>Inline loading pairs the indicator with short status text and temporarily disables related actions while it runs. Here Skip/Confirm have no disabled state during Responding. <a href="https://carbondesignsystem.com/components/loading/usage/" target="_blank" rel="noopener">Carbon Loading</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the kit atoms, the composer and this component, then build with <code>pdsAiPopup</code>.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup of an Option-type popup (what <code>ai-action-popup.js</code> produces, icons shortened):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="ai-chat-composer.js"></script>
+<script src="ai-action-popup.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const P=window.pdsAiPopup;
+const cell=(lbl,node,cls)=>{const c=document.createElement("div");c.className="vcell "+(cls||"");c.innerHTML=`<span class="lbl">${lbl}</span>`;c.appendChild(node);return c};
+
+// Try it
+let timer;
+function renderTry(){clearTimeout(timer);const st=$("#stage");st.replaceChildren();$("#log").textContent="";
+ const pop=P.popup({type:$("#c-type").value});const inp=P.input({variant:$("#c-input").value});
+ st.append(pop,inp);P.bind(st)}
+const log=t=>{$("#log").textContent=t};
+$("#stage").addEventListener("pds-ai-popup:select",e=>log("select → "+e.detail.value));
+$("#stage").addEventListener("pds-ai-popup:confirm",e=>{const d=e.detail;log("confirm → "+(d.text?'text "'+d.text+'"':d.option?'option "'+d.option+'"':"nothing chosen"));
+ const acts=e.target.querySelector(".pds-ai-popup__actions");const r=P.responding({live:true});acts.replaceWith(r);timer=setTimeout(renderTry,3600)});
+$("#stage").addEventListener("pds-ai-popup:skip",()=>log("skip"));
+$("#stage").addEventListener("pds-ai-composer:send",e=>log('send → "'+e.detail.text+'"'));
+$("#stage").addEventListener("pds-ai-input:chip",e=>log("chip → "+e.detail.text));
+$("#stage").addEventListener("pds-ai-input:suggest",()=>log("show suggested actions"));
+$("#stage").addEventListener("pds-ai-input:untag",()=>log("context removed"));
+["#c-type","#c-input"].forEach(s=>$(s).addEventListener("change",renderTry));$("#c-reset").addEventListener("click",renderTry);renderTry();
+
+// Variants
+$("#v-popup").appendChild(cell("Type=Default, State=Default",P.popup({type:"default"}),"w760"));
+$("#v-popup").appendChild(cell("Type=Option, State=Default",P.popup({type:"option"}),"w760"));
+$("#v-opt").appendChild(cell("State=default",P.option({}),"w364"));
+$("#v-opt").appendChild(cell("State=Hover",P.option({state:"hover"}),"w364"));
+$("#v-opt").appendChild(cell("in popup · Radio Selected=Yes",P.option({radio:true,checked:true,text:P.SAMPLE.options[0],name:"vopt1"}),"w364"));
+$("#v-opt").appendChild(cell("in popup · Radio Selected=No",P.option({radio:true,text:P.SAMPLE.options[1],name:"vopt2"}),"w364"));
+$("#v-it").appendChild(cell("Property 1=Default",P.inputText({}),"w256"));
+$("#v-it").appendChild(cell("Property 1=Hover",P.inputText({state:"hover"}),"w256"));
+$("#v-input").appendChild(cell("Property 1=Default",P.input({}),"w740"));
+$("#v-input").appendChild(cell("Property 1=Skipped Action",P.input({variant:"skipped"}),"w740"));
+$("#v-input").appendChild(cell("Property 1=Tagged",P.input({variant:"tagged"}),"w740"));
+[1,2,3,4].forEach(f=>$("#v-resp").appendChild(cell("Property 1="+(f===1?"Default":f),P.responding({frame:f}))));
+$("#v-resp").appendChild(cell("Loop (reduced motion holds Default)",P.responding({live:true})));
+P.bind(document.querySelector("#variants"));
+
+// Code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/radio.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/button-group.css">
+<link rel="stylesheet" href="components/input.css">
+<link rel="stylesheet" href="components/ai-chat-composer.css">
+<link rel="stylesheet" href="components/ai-action-popup.css">
+<script src="components/icons/icons-data.js"><\/script>
+<script src="components/ai-chat-composer.js"><\/script>
+<script src="components/ai-action-popup.js"><\/script>
+
+<script>
+  const popup = pdsAiPopup.popup({
+    type: 'option',                      // 'default' → summary: [[label, from, to], …]
+    heading: 'I found a few possible interpretations : Are you looking for ',
+    options: ['Overdue invoices (unpaid past due date)', 'Items with overdue contract renewals'],
+    selected: 0
+  });
+  const bar = pdsAiPopup.input({ variant: 'tagged', tag: { label: 'Context : ', value: 'Tariff Name Mismatch' } });
+  chat.append(popup, bar);
+  pdsAiPopup.bind(chat);
+  chat.addEventListener('pds-ai-popup:confirm', e => { /* e.detail = { option, text } */ });
+  // also: pdsAiPopup.option({ text, state }), inputText({ state }), responding({ live: true })
+<\/script>`;
+$("#code2").textContent=P.popup({type:"option"}).outerHTML.replace(/<svg[\s\S]*?<\/svg>/g,"<svg>…</svg>").replace(/></g,">\n<");
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

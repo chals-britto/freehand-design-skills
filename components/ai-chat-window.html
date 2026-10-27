@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI Chat window · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="avatar.css">
+<link rel="stylesheet" href="comment-thread.css">
+<link rel="stylesheet" href="ai-chat-bubbles.css">
+<link rel="stylesheet" href="ai-chat-composer.css">
+<link rel="stylesheet" href="ai-chat-window.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+</style>
+<style>
+/* page-only */
+.stage{min-height:0;border-radius:0 10px 10px 0;padding:20px;display:flex;justify-content:center;overflow:auto}
+.play{grid-template-columns:240px minmax(0,1fr)}
+.log{font:400 11.5px/1.5 var(--pg-mono);color:var(--pg-muted);background:var(--pg-bg);border:1px solid var(--pg-line);border-radius:6px;padding:6px 8px;min-height:90px;max-height:160px;overflow:auto;white-space:pre-wrap}
+.demo-note{font-size:12px;color:var(--pg-muted);margin:0}
+.wgrid{display:grid;grid-template-columns:1fr;gap:24px;padding:20px}
+.wcell{display:flex;flex-direction:column;gap:6px;min-width:0;overflow-x:auto}
+.wcell .lbl,.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.box{padding:16px;background:#f0f0f0;border-radius:6px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.box.on-dark{background:#24242f}
+.vgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.open ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+table.vt{width:100%;border-collapse:collapse;font-size:12.5px}
+table.vt th,table.vt td{text-align:left;padding:8px 12px;border-top:1px solid var(--pg-line);vertical-align:top}
+table.vt th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted)}
+table.vt code{font:400 12px var(--pg-mono)}
+@media (max-width:760px){.vgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>AI Chat window</h1>
+    <p class="lede">The full AI chat panel: header, conversation area and the prompt bar. Two themes in Figma — Light “Chat” and Dark “AI Chat” — each in three content variants (Prompt, Swappable, Conversation), plus the “Prompt” suggestion cards. Figma has no description text on these sets.</p>
+    <div class="meta"><span>Status: Built 2026-10-28, not reviewed</span><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=2859-12233" target="_blank" rel="noopener">Figma Chat 2859:12233 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=3542-14373" target="_blank" rel="noopener">AI Chat 3542:14373 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=3572-14750" target="_blank" rel="noopener">Prompt 3572:14750 ↗</a><span>Files: ai-chat-window.css · ai-chat-window.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Type and press Enter (or click a suggestion card to fill the bar first). Your message appears as a user bubble, the loader shows, then a <b>canned demo reply</b> appears, outlined with a dashed line. No AI is connected. Header buttons only fire events — see the log.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls" onsubmit="return false">
+    <label>Theme<select id="c-theme"><option value="light">Light — “Chat”</option><option value="dark">Dark — “AI Chat”</option></select></label>
+    <label>Start from<select id="c-variant"><option value="prompt">Prompt</option><option value="swappable">Swappable</option><option value="conversation">Conversation</option></select></label>
+    <button class="btn ghost" type="button" id="c-reset">Reset window</button>
+    <p class="demo-note">Demo reply text is Figma’s sample “Input text here”.</p>
+    <label>Events<div class="log" id="evlog" aria-live="polite"></div></label>
+  </form>
+  <div class="stage" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Every published variant with the real classes: 3 Light windows, 3 Dark windows, 6 suggestion cards. Windows are 720 wide as in Figma (scroll sideways on small screens).</p>
+<div class="panel wgrid" id="v-windows"></div>
+<h3 style="font-size:14px;margin:18px 0 8px">Prompt — suggestion cards (Theme × State × Type, 6)</h3>
+<div class="panel vgrid" id="v-cards"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Values read from the Figma variants.</p>
+<div class="panel" style="overflow-x:auto"><table class="vt">
+<tr><th>Part</th><th>Light “Chat”</th><th>Dark “AI Chat”</th></tr>
+<tr><td>Window</td><td><code>720 × 710</code> · radius <code>4 4 0 0</code> · <code>#EBF1FA → white</code> top→bottom (off-token) · <code>--shadow-4</code> · padding-bottom 15</td><td><code>720 × 760</code> · radius 0 · <code>--gradient-pi-green</code> · gap 15 header ↔ content</td></tr>
+<tr><td>Header</td><td>44 tall · padding <code>15 15 10 15</code> · fill #EBF1FA · 1px bottom <code>--border-input-light</code> · shadow 0 1 9 10% (off-token) · title “Pi” SemiBold 14 uppercase <code>--text-dark</code> · actions gap 20, <code>--pando-dark</code>: More Actions 14 · New Tab 10 · Close-Tag 14</td><td>58 tall · padding 15 · gap 15 · same gradient, radius 12 · title = kit PI (Dark) without arrow, “Chat” Bold 14/16 #FFA600 · right gap 10: Action Button “New” (10px/Add, white, uppercase) · divider 1 × 16 #484858 · Close-Tag 14</td></tr>
+<tr><td>Content</td><td>padding <code>0 15</code> · gap 10 · bottom-aligned</td><td>padding <code>0 15 15</code> · gap 10</td></tr>
+<tr><td>Prompt</td><td>composer Prompt (intro uppercase, left-aligned, cards 157 × 58, padding 5 10) + Loading bubble + <code>.Bottom Bar</code> Default Light</td><td>kit Loader 174 · “How can I help you today?” Regular 16 <code>--dark-label-text</code> · 8 Prompt cards, wrap, centred, gap 10, padding 15 0 · Chat frame padding-bottom 90 · Chat Bar Default Dark</td></tr>
+<tr><td>Swappable</td><td>Swappable Content slot 170 + Loading bubble + bar</td><td>Swappable Content slot 170 + Chat Bar</td></tr>
+<tr><td>Conversation</td><td>Conv frame padding-top 10, gap 10 · User / AI “Vertical” bubbles (built here) + Loading</td><td>Chat frame padding 10 0, gap 10 · kit Chat bubble Dark (User / AI), time off</td></tr>
+<tr><td>Light bubble</td><td colspan="2">padding 15 · radius 12 (User <code>12 0 12 12</code>, AI <code>0 12 12 12</code>) · User <code>--status-skyblue-light</code>, AI <code>--accent-light-highlight</code> · text SemiBold 12 (User /auto→16, AI /18) <code>--text-dark</code> · time 10/12 <code>--text-light</code> · “Pi” row: icon 14 + SemiBold 12 <code>--accent-green-highlight</code>, gap 8 · stack gap 5 · typing light padding 8 24</td></tr>
+<tr><td>Prompt card</td><td colspan="2">radius 4 · Regular 12/16 · Dark padding 10, #484858 50% / hover <code>--dark-input-text</code> + 1px <code>--dark-label-text</code>, text white · Light padding 6 8, <code>--accent-alternate-white</code> + 1px <code>--border-input-light</code>, text <code>--text-medium</code> / hover <code>--pando-light</code>, text <code>--text-dark</code> · Icon type: Icon Avatar 30 (Purple → Active Card Dark on hover), gap 10, no fill by default</td></tr>
+</table></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>From Figma</h3><p>No usage guidance in Figma. The two themes are separate sets with different headers (Light: More Actions · New Tab · Close; Dark: New · Close).</p></div>
+  <div class="panel card"><h3>Built behaviour</h3><ul><li>Send adds a user bubble, then a Loading bubble, then a canned AI bubble (demo only).</li><li>The first message replaces the Prompt / Swappable content with the conversation.</li><li>Suggestion cards fill the bar; they do not send.</li><li>Header buttons fire <code>pds-ai-chat-window:*</code> events; no destinations in Figma.</li></ul></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="panel card"><ul>
+<li>Window is a <code>&lt;section&gt;</code> named by its title; the title is an <code>&lt;h2&gt;</code>. Messages sit in a <code>role="log"</code> with <code>aria-live="polite"</code>.</li>
+<li>Icon buttons are named: “More actions”, “Open in new tab”, “Close”. Suggestion cards are buttons in a list.</li>
+<li>Focus <code>2px solid --pando-blue</code>, offset 2 on header buttons and cards — added in review, not in Figma.</li>
+<li>Contrast for the accessibility pass: Dark title #FFA600 on the header gradient 6.3–8.9:1 · Light card text #545454 on #F9FAFA 7.2:1 · Dark card white on #484858 50% 10.5–13:1 · <b>Dark card hover white on #8A8A9E 3.4:1</b> · <b>Light “Pi” label #008D5E on white 4.2:1</b> · Light time #6C6C6C on #EBF1FA–white 4.6–5.3:1 · Dark divider #484858 1.4–1.9:1 (decorative).</li>
+</ul></div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ol>
+<li>The Light window’s bubbles are instances of “Chat Bubble/User|AI|Loading/No/Light/Vertical” (2817:5262…) whose main component is no longer in the file — it differs from the kit Chat bubble (Pi label row above the bubble, radius 12, padding 15, User #B5E4FF, time #6C6C6C). Built inside this component — atom variant missing in kit.</li>
+<li>Light uses the older <code>.Bottom Bar</code>, Dark uses <code>Chat Bar</code> — the two themes use different bar generations.</li>
+<li>Light Prompt overrides the composer Prompt: intro “Ask Pando AI about your &lt;placeholder text here&gt;” uppercase, left-aligned; cards 157 × 58, padding 5/10 (composer 56, 4/8). The second set named “Prompt” (3572:14750) is a different card: radius 4, 12/16, own Light/Dark colours — two suggestion styles exist.</li>
+<li>Close-Tag and “New” glyph colours in the Dark header were not readable (nested in remote instances); built white from the screenshot. “New” is the Light Action Button with white text; its hover on dark is the kit Dark Action hover — not in Figma.</li>
+<li>Off-token: #EBF1FA (window gradient + Light header), header shadow 0 1 9 10%, #FFA600, #484858 (divider, Dark card 50%).</li>
+<li>Line heights: Light bubble 12/auto → 16; Prompt card 12/16 (<code>.type-12-regular</code> is 12/17); heading 16/auto → 22; time tracking not read.</li>
+<li>Light “Pi” label icon is inlined from the Figma vectors (ring + sparkle, stroke #006265 → #19A476); no kit icon. Star fill not read.</li>
+<li>No states in Figma for: sending/disabled while the AI responds, errors, empty history, scroll, minimise, resize. Header buttons have no destinations.</li>
+<li>Dark Prompt: the Loader and prompts sit in a 90px-bottom-padded frame; exact vertical position approximated (centred).</li>
+<li>Light Prompt card “Icon” type is Dark only — no Light + Icon variant; Light cards have hidden Comment icon + caret layers.</li>
+</ol></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+<li>Auto-scroll control, streaming / typewriter text, error and abort states per message — <a href="https://x.ant.design/components/bubble" target="_blank" rel="noopener">Ant Design X Bubble</a></li>
+<li>Copy / retry actions on AI messages — <a href="https://x.ant.design/components/bubble" target="_blank" rel="noopener">Ant Design X Bubble</a></li>
+<li>Suggestion title, description line, disabled items, vertical layout, nested items — <a href="https://x.ant.design/components/prompts" target="_blank" rel="noopener">Ant Design X Prompts</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the files, then build a window.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="ai-chat-composer.js"></script>
+<script src="ai-chat-window.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+// Try it
+const evlog=$("#evlog");
+const logEv=t=>{evlog.textContent=(new Date().toLocaleTimeString()+"  "+t+"\n"+evlog.textContent).slice(0,2000)};
+function mount(){const st=$("#stage");st.innerHTML="";st.classList.toggle("on-dark",$("#c-theme").value==="dark");
+  const w=pdsAiChatWindow.build({theme:$("#c-theme").value,variant:$("#c-variant").value,live:true});st.appendChild(w)}
+["close","new-tab","new","more","send"].forEach(n=>$("#stage").addEventListener("pds-ai-chat-window:"+n,e=>logEv(n+(e.detail&&e.detail.text?" · “"+e.detail.text+"”":""))));
+$("#c-theme").addEventListener("change",mount);$("#c-variant").addEventListener("change",mount);$("#c-reset").addEventListener("click",mount);
+mount();
+// Variants
+[["light","Chat"],["dark","AI Chat"]].forEach(([t,set])=>{
+  const order=t==="light"?["prompt","swappable","conversation"]:["prompt","conversation","swappable"];
+  order.forEach(v=>{const c=document.createElement("div");c.className="wcell";const key=t==="light"?"Variant":"Type";
+    c.innerHTML=`<span class="lbl">${set} · ${key}=${v[0].toUpperCase()+v.slice(1)}</span>`;
+    c.appendChild(pdsAiChatWindow.build({theme:t,variant:v}));$("#v-windows").appendChild(c)})});
+[["dark","simple",false],["light","simple",false],["dark","simple",true],["light","simple",true],["dark","icon",false],["dark","icon",true]].forEach(([t,y,h])=>{
+  const c=document.createElement("div");c.className="vcell";
+  c.innerHTML=`<span class="lbl">Theme=${t==="dark"?"Dark":"Light"}, State=${h?"Hover":"Default"}, Type=${y==="icon"?"Icon":"Simple"}</span><div class="box${t==="dark"?" on-dark":""}"></div>`;
+  c.querySelector(".box").appendChild(pdsAiChatWindow.suggestion({theme:t,type:y,hover:h}));$("#v-cards").appendChild(c)});
+// Code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/brand.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/avatar.css">
+<link rel="stylesheet" href="components/comment-thread.css">
+<link rel="stylesheet" href="components/ai-chat-bubbles.css">
+<link rel="stylesheet" href="components/ai-chat-composer.css">
+<link rel="stylesheet" href="components/ai-chat-window.css">
+<script src="components/icons/icons-data.js"><\/script>
+<script src="components/ai-chat-composer.js"><\/script>
+<script src="components/ai-chat-window.js"><\/script>
+
+<script>
+  const win = pdsAiChatWindow.build({ theme: 'dark', variant: 'prompt', live: true });
+  document.body.appendChild(win);
+  win.addEventListener('pds-ai-chat-window:close', () => win.remove());
+  win.addEventListener('pds-ai-chat-window:send', e => console.log(e.detail.text));
+  // live use: replace the demo loop — add replies yourself
+  // pdsAiChatWindow.addMessage(win, { from: 'ai', text: '…', time: '10:39 AM' });
+<\/script>`;
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

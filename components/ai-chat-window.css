@@ -1,0 +1,239 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — AI Chat window (Chat / AI Chat / Prompt suggestions)
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 AI Chat (2814:5163)
+     · "Chat"     2859:12233 (3) — Light window: Variant=Prompt / Swappable / Conversation
+     · "AI Chat"  3542:14373 (3) — Dark window:  Type=Prompt / Conversation / Swappable
+     · "Prompt"   3572:14750 (6) — suggestion cards (Theme × State × Type)
+   Composes the kit — never re-implemented here:
+     ai-chat-composer.css/js (Chat Bar, .Bottom Bar, Prompt intro), ai-chat-bubbles.css
+     (dark Chat bubble, typing dots, PI, Loader), button.css (Action Button),
+     avatar.css (Icon Avatar), comment-thread.css (Swappable Content slot), icons.css.
+   Built here only: the window shell (header + content), the suggestion card, and the
+   Light "Vertical" chat bubble (its main component is not in the file — see md).
+   Requires ../tokens.css. Built 2026-10-28, not reviewed.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Window ── */
+  --ai-window-w:             720px;
+  --ai-window-light-h:       710px;
+  --ai-window-dark-h:        760px;
+  --ai-window-light-bg:      linear-gradient(180deg, #EBF1FA, var(--white)); /* #EBF1FA → #FFFFFF top → bottom; off-token in Figma (--gradient-light-blue is the reverse, 45% stop) */
+  --ai-window-light-radius:  4px 4px 0 0;
+  --ai-window-light-shadow:  var(--shadow-4);             /* 0 14 28 6% */
+  --ai-window-dark-bg:       var(--gradient-pi-green);    /* #041F04 → #343440, 90deg */
+  --ai-window-pad-x:         var(--space-15);
+  --ai-window-pad-b:         var(--space-15);
+  --ai-window-gap:           var(--space-10);             /* content rows */
+
+  /* ── Header ── */
+  --ai-window-light-hd-h:    44px;
+  --ai-window-light-hd-pad:  var(--space-15) var(--space-15) var(--space-10); /* 15 15 10 15 */
+  --ai-window-light-hd-bg:   #EBF1FA;                     /* off-token in Figma (only inside --gradient-light-blue) */
+  --ai-window-light-hd-line: var(--border-input-light);   /* #E2EAEC, 1px bottom */
+  --ai-window-light-hd-shadow: 0 1px 9px rgb(0 0 0 / .10); /* off-token in Figma (no shadow token 0-1-9-10%) */
+  --ai-window-light-title:   var(--text-dark);            /* #313131 "Pi", SemiBold 14 uppercase */
+  --ai-window-light-icon:    var(--pando-dark);           /* #234357 More Actions · New Tab · Close */
+  --ai-window-light-actions-gap: 20px;
+  --ai-window-dark-hd-h:     58px;
+  --ai-window-dark-hd-pad:   var(--space-15);
+  --ai-window-dark-hd-gap:   var(--space-15);
+  --ai-window-dark-hd-radius: var(--radius-12);
+  --ai-window-dark-title:    #FFA600;                     /* off-token in Figma (same as --ai-pi-dark-fg) */
+  --ai-window-dark-right-gap: var(--space-10);
+  --ai-window-dark-new-fg:   var(--white);                /* Action Button override: "New" uppercase white */
+  --ai-window-dark-divider:  #484858;                     /* off-token in Figma (= --ai-shade) · 1 × 16 */
+  --ai-window-dark-divider-h: 16px;
+  --ai-window-dark-icon:     var(--white);                /* Close-Tag glyph — colour not readable in Figma, matched to the screenshot */
+
+  /* ── Content ── */
+  --ai-window-dark-chat-pb:  90px;                        /* Type=Prompt: Chat frame padding-bottom */
+  --ai-window-dark-conv-pad: var(--space-10) 0;           /* Type=Conversation: Chat frame 10 0 */
+  --ai-window-light-conv-pt: var(--space-10);             /* Variant=Conversation: Conv frame padding-top */
+  --ai-window-dark-heading:  var(--dark-label-text);      /* #D5DAF4 "How can I help you today?" Regular 16 */
+  --ai-window-prompts-gap:   var(--space-10);             /* card ↔ card, row ↔ row (wrap) */
+  --ai-window-prompts-pad:   var(--space-15) 0;
+  --ai-window-light-prompt-card-h:   58px;                /* window instance override of the composer Prompt (56) */
+  --ai-window-light-prompt-card-pad: 5px var(--space-10); /* window instance override (composer 4 8) */
+
+  /* ── Light "Vertical" chat bubble (main component missing — built here) ── */
+  --ai-window-msg-gap:       5px;                         /* Pi row ↔ bubble ↔ time */
+  --ai-window-msg-pad:       var(--space-15);
+  --ai-window-msg-radius:    var(--radius-12);
+  --ai-window-msg-user-bg:   var(--status-skyblue-light); /* #B5E4FF */
+  --ai-window-msg-ai-bg:     var(--accent-light-highlight); /* #E9F1F5 */
+  --ai-window-msg-fg:        var(--text-dark);            /* #313131 */
+  --ai-window-msg-time:      var(--text-light);           /* #6C6C6C, 10/12 */
+  --ai-window-pi-fg:         var(--accent-green-highlight); /* #008D5E "Pi" SemiBold 12 */
+  --ai-window-pi-gap:        8px;
+  --ai-window-pi-icon:       14px;                        /* ring stroke #006265 → #19A476 (= --gradient-forest-green stops) */
+  --ai-window-loading-gap:   var(--space-10);
+  --ai-window-typing-pad:    8px 24px;                    /* .typing light instance in the window (kit 8 15) */
+
+  /* ── Prompt suggestion card (set 3572:14750) ── */
+  --ai-suggest-radius:       4px;
+  --ai-suggest-gap:          var(--space-10);             /* Icon Avatar ↔ text */
+  --ai-suggest-font:         400 12px/16px var(--font-family); /* Open Sans Regular 12/16 (.type-12-regular is 12/17) */
+  --ai-suggest-dark-pad:     var(--space-10);
+  --ai-suggest-dark-bg:      rgb(72 72 88 / .5);          /* #484858 @ 50% — off-token in Figma */
+  --ai-suggest-dark-fg:      var(--white);
+  --ai-suggest-dark-hover-bg: var(--dark-input-text);     /* #8A8A9E */
+  --ai-suggest-dark-hover-border: var(--dark-label-text); /* #D5DAF4, 1px inside */
+  --ai-suggest-light-pad:    6px 8px;
+  --ai-suggest-light-bg:     var(--accent-alternate-white); /* #F9FAFA */
+  --ai-suggest-light-border: var(--border-input-light);   /* #E2EAEC, 1px inside */
+  --ai-suggest-light-fg:     var(--text-medium);          /* #545454 */
+  --ai-suggest-light-hover-bg: var(--pando-light);        /* #EEF2F4 */
+  --ai-suggest-light-hover-fg: var(--text-dark);          /* #313131 */
+}
+
+/* ══ Window ═════════════════════════════════════════════════════ */
+.pds-ai-chat-window {
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  width: 100%; max-width: var(--ai-window-w);
+  height: var(--ai-window-light-h);
+  padding-bottom: var(--ai-window-pad-b);
+  overflow: hidden;
+  border-radius: var(--ai-window-light-radius);
+  background: var(--ai-window-light-bg);
+  box-shadow: var(--ai-window-light-shadow);
+  font-family: var(--font-family);
+}
+.pds-ai-chat-window--dark {
+  height: var(--ai-window-dark-h);
+  gap: var(--space-15);                                   /* Type=* frame itemSpacing 15 */
+  border-radius: 0;
+  background: var(--ai-window-dark-bg);
+  box-shadow: none;
+}
+
+/* ── Header ── */
+.pds-ai-chat-window__header {
+  box-sizing: border-box; flex: none;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-10);
+  height: var(--ai-window-light-hd-h);
+  padding: var(--ai-window-light-hd-pad);
+  background: var(--ai-window-light-hd-bg);
+  border-bottom: 1px solid var(--ai-window-light-hd-line);
+  box-shadow: var(--ai-window-light-hd-shadow);
+  position: relative; z-index: 1;
+}
+.pds-ai-chat-window__title {
+  margin: 0; font: var(--type-14-semibold); text-transform: uppercase;
+  color: var(--ai-window-light-title);
+}
+.pds-ai-chat-window__actions { display: flex; align-items: center; gap: var(--ai-window-light-actions-gap); }
+.pds-ai-chat-window__icon-btn {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 14px; height: 14px; margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--ai-window-light-icon);
+}
+.pds-ai-chat-window__icon-btn .pds-icon { width: 100%; height: 100%; }
+.pds-ai-chat-window__icon-btn--10 { width: 10px; height: 10px; }
+
+.pds-ai-chat-window--dark .pds-ai-chat-window__header {
+  height: var(--ai-window-dark-hd-h);
+  padding: var(--ai-window-dark-hd-pad);
+  gap: var(--ai-window-dark-hd-gap);
+  background: var(--ai-window-dark-bg);
+  border-bottom: 0; box-shadow: none;
+  border-radius: var(--ai-window-dark-hd-radius);
+}
+/* Dark title = kit PI (ai-chat-bubbles) without the dropdown arrow, label "Chat" */
+.pds-ai-chat-window__pi.pds-ai-pi { cursor: default; background: none; }
+.pds-ai-chat-window__pi .pds-ai-pi__label { color: var(--ai-window-dark-title); }
+.pds-ai-chat-window__right { display: flex; align-items: center; gap: var(--ai-window-dark-right-gap); }
+.pds-ai-chat-window__new.pds-button--action { --_fg: var(--ai-window-dark-new-fg); text-transform: uppercase; }
+.pds-ai-chat-window__new.pds-button--action:hover:not(:disabled) { --_fg: var(--ai-window-dark-new-fg); --_bg: var(--button-dark-action-hover-bg); }
+.pds-ai-chat-window__divider { flex: none; width: 1px; height: var(--ai-window-dark-divider-h); background: var(--ai-window-dark-divider); }
+.pds-ai-chat-window--dark .pds-ai-chat-window__icon-btn { color: var(--ai-window-dark-icon); }
+
+/* ── Content ── */
+.pds-ai-chat-window__content {
+  box-sizing: border-box; flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch;
+  gap: var(--ai-window-gap);
+  padding: 0 var(--ai-window-pad-x);
+}
+.pds-ai-chat-window__content > .pds-ai-composer { flex: none; }
+.pds-ai-chat-window__content > .pds-comment-thread__slot { align-self: flex-start; width: 170px; }
+
+/* Message list (Conversation) — scrolls, newest at the bottom */
+.pds-ai-chat-window__log {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; gap: var(--ai-window-gap);
+  overflow-y: auto; overscroll-behavior: contain;
+  padding-top: var(--ai-window-light-conv-pt);
+}
+.pds-ai-chat-window__log > :first-child { margin-top: auto; }
+.pds-ai-chat-window--dark .pds-ai-chat-window__log { padding: var(--ai-window-dark-conv-pad); }
+
+/* Light Prompt — composer Prompt, left-aligned as the window instance */
+.pds-ai-chat-window .pds-ai-composer-prompt { max-width: none; padding: 0; }
+.pds-ai-chat-window .pds-ai-composer-prompt__inner { align-items: flex-start; }
+.pds-ai-chat-window .pds-ai-composer-prompt__intro { text-transform: uppercase; }
+.pds-ai-chat-window .pds-ai-composer__card { height: var(--ai-window-light-prompt-card-h); padding: var(--ai-window-light-prompt-card-pad); }
+
+/* Dark Prompt — Loader + heading + suggestion cards, centred */
+.pds-ai-chat-window__hello {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ai-window-gap);
+  padding-bottom: var(--ai-window-dark-chat-pb);
+}
+.pds-ai-chat-window__heading { margin: 0; font: var(--type-16-regular); color: var(--ai-window-dark-heading); text-align: center; }
+.pds-ai-chat-window__prompts {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--ai-window-prompts-gap);
+  margin: 0; padding: var(--ai-window-prompts-pad); list-style: none;
+}
+
+/* ══ Light "Vertical" chat bubble ═══════════════════════════════ */
+.pds-ai-chat-window__msg {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--ai-window-msg-gap);
+  font-family: var(--font-family);
+}
+.pds-ai-chat-window__msg--user { align-items: flex-end; }
+.pds-ai-chat-window__bubble {
+  box-sizing: border-box; max-width: 80%;
+  padding: var(--ai-window-msg-pad);
+  border-radius: 0 var(--ai-window-msg-radius) var(--ai-window-msg-radius) var(--ai-window-msg-radius);
+  background: var(--ai-window-msg-ai-bg); color: var(--ai-window-msg-fg);
+}
+.pds-ai-chat-window__msg--user .pds-ai-chat-window__bubble {
+  border-radius: var(--ai-window-msg-radius) 0 var(--ai-window-msg-radius) var(--ai-window-msg-radius);
+  background: var(--ai-window-msg-user-bg);
+}
+.pds-ai-chat-window__text { margin: 0; font: 600 12px/16px var(--font-family); overflow-wrap: anywhere; } /* User 12/auto */
+.pds-ai-chat-window__msg--ai .pds-ai-chat-window__text { line-height: 18px; }                          /* AI 12/18 */
+.pds-ai-chat-window__time { font: var(--type-10-regular); color: var(--ai-window-msg-time); }          /* 10/12, tracking not read */
+.pds-ai-chat-window__who { display: inline-flex; align-items: center; gap: var(--ai-window-pi-gap); font: 600 12px/16px var(--font-family); color: var(--ai-window-pi-fg); }
+.pds-ai-chat-window__who svg { display: block; width: var(--ai-window-pi-icon); height: var(--ai-window-pi-icon); flex: none; }
+.pds-ai-chat-window__msg--loading { gap: var(--ai-window-msg-gap); }
+.pds-ai-chat-window__msg--loading .pds-ai-bubble { display: block; }
+.pds-ai-chat-window__msg--loading .pds-ai-bubble__typing { padding: var(--ai-window-typing-pad); }
+.pds-ai-chat-window [data-demo] .pds-ai-chat-window__bubble,
+.pds-ai-chat-window [data-demo] .pds-ai-bubble__message { outline: 1px dashed currentColor; outline-offset: 2px; } /* demo reply marker — page only, not in Figma */
+
+/* ══ Prompt suggestion card ═════════════════════════════════════ */
+.pds-ai-suggest {
+  --_bg: var(--ai-suggest-dark-bg); --_fg: var(--ai-suggest-dark-fg); --_bd: transparent;
+  box-sizing: border-box;
+  display: inline-flex; align-items: center; gap: var(--ai-suggest-gap);
+  margin: 0; padding: var(--ai-suggest-dark-pad);
+  border: 0; border-radius: var(--ai-suggest-radius);
+  background: var(--_bg); color: var(--_fg);
+  box-shadow: inset 0 0 0 1px var(--_bd);
+  font: var(--ai-suggest-font); text-align: left; white-space: nowrap; cursor: pointer;
+}
+.pds-ai-suggest:hover, .pds-ai-suggest.is-hover { --_bg: var(--ai-suggest-dark-hover-bg); --_bd: var(--ai-suggest-dark-hover-border); }
+.pds-ai-suggest--icon { --_bg: transparent; }
+.pds-ai-suggest--light { --_bg: var(--ai-suggest-light-bg); --_fg: var(--ai-suggest-light-fg); --_bd: var(--ai-suggest-light-border); padding: var(--ai-suggest-light-pad); }
+.pds-ai-suggest--light:hover, .pds-ai-suggest--light.is-hover { --_bg: var(--ai-suggest-light-hover-bg); --_fg: var(--ai-suggest-light-hover-fg); --_bd: var(--ai-suggest-light-border); }
+/* Icon type: Icon Avatar Purple (Default) → Active Card · Blue · Dark (Hover) — avatar.css classes */
+.pds-ai-suggest--icon:hover .pds-avatar, .pds-ai-suggest--icon.is-hover .pds-avatar { --_bg: var(--avatar-dark-active-bg); --_fg: var(--avatar-dark-active-glyph); }
+
+/* ── Focus (added in review — not in Figma) ── */
+.pds-ai-suggest:focus-visible,
+.pds-ai-chat-window__icon-btn:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) { .pds-ai-chat-window * { scroll-behavior: auto !important; } }
