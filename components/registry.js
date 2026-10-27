@@ -65,6 +65,14 @@ window.PDS_REGISTRY = [
   { id: 'subheader-nav', name: 'Subheader Menu', level: 'Organisms', desc: 'Two-level fly-out', status: 'As in Figma' },
   { id: 'left-panel', name: 'Left Menu Panel',   level: 'Organisms', desc: 'Stages, menu, header (in progress in Figma)', status: 'As in Figma' },
   { id: 'modal',      name: 'Modal',             level: 'Organisms', desc: '6 variants, focus trap, Esc', status: 'As in Figma' },
+  { id: 'slideout',   name: 'Slideout',          level: 'Organisms', desc: '8 variants, overlay & push, CTA → toast', status: 'As in Figma' },
+  { id: 'action-panel', name: 'Actions',         level: 'Organisms', desc: 'Two published sets — pick one', status: 'As in Figma' },
+  { id: 'main-menu',  name: 'Main Menu',         level: 'Organisms', desc: '9 types, rail + fly-out, 3 levels', status: 'As in Figma' },
+  { id: 'main-menu-legacy', name: 'Old Menu',    level: 'Organisms', desc: 'Legacy 240px menu — confirm if used', status: 'As in Figma' },
+  { id: 'ai-chat-bubbles', name: 'AI Chat Bubbles', level: 'Organisms', desc: 'Bubbles, AI card, PI, loader', status: 'As in Figma' },
+  { id: 'ai-chat-composer', name: 'AI Chat Composer', level: 'Organisms', desc: 'Chat bar, send, typing', status: 'As in Figma' },
+  { id: 'ai-sidebar', name: 'AI Side Bar',       level: 'Organisms', desc: 'Chat history, open & closed', status: 'As in Figma' },
+  { id: 'ai-insights', name: 'AI Insights',      level: 'Organisms', desc: 'Insight cards, artifacts', status: 'As in Figma' },
 ];
 window.PDS_EMPTY = [
   { name: 'Alerts', level: 'Atoms', note: 'The Figma page is empty — nothing to build yet.' },

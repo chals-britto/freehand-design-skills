@@ -1,0 +1,116 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Old Menu (legacy 240px menu, organism)
+   LEGACY — superseded by New Main Menu? Confirm whether still used.
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟢 Menu (32:0)
+     › component "Old Menu" (38:994) — 1 variant, 240 × 718
+     › uses .Menu-Item (803:709) with its hidden "Text" label switched on,
+       Menu/* icons and Navigation/Close-Tag.
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css, icons.css, avatar.css, main-menu.css (for .pds-menu-item).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colours ── */
+  --menu-legacy-bg:          var(--white);                   /* "Old Menu" frame #FFFFFF */
+  --menu-legacy-head-bg:     var(--accent-alternate-white);  /* "Frame 2" (user block) #F9FAFA */
+  --menu-legacy-close:       var(--grey-dark);               /* Navigation/Close-Tag #515151 */
+  --menu-legacy-name-fg:     var(--pando-dark);              /* "Firstname Lastname", "User Role" #234357 */
+  --menu-legacy-rule:        var(--border-blue);             /* "Line 1" #E9F1F5, 1px */
+  --menu-legacy-logout-bg:   var(--accent-light-bg);         /* "Rectangle 15" #FAFAFA */
+  --menu-legacy-logout-fg:   var(--pando-dark);              /* "Log Out" #234357 */
+  --menu-legacy-label-fg:    var(--action-blue);             /* .Menu-Item "Text" #376F99 */
+  --menu-legacy-focus:       var(--pando-blue);              /* added in review — not in Figma */
+
+  /* ── Measured from the component ── */
+  --menu-legacy-w:           240px;
+  --menu-legacy-height:      718px;  /* Figma sample height; in a shell the menu fills its container */
+  --menu-legacy-head-pad:    var(--space-10);   /* "Frame 2" padding 10 all round */
+  --menu-legacy-close-size:  14px;              /* Close-Tag instance 14 × 14 */
+  --menu-legacy-user-gap:    var(--space-10);   /* avatar ↔ details ↔ line */
+  --menu-legacy-details-gap: 4px;               /* name ↔ role */
+  --menu-legacy-logout-h:    24px;              /* "Logout" group 220 × 24 */
+  --menu-legacy-item-gap:    20px;              /* .Menu-Item icon ↔ Text */
+  --menu-legacy-label-ls:    1px;               /* .Menu-Item Text letter-spacing */
+  --menu-legacy-z:           900;
+}
+
+.pds-menu-legacy {
+  position: relative;
+  z-index: var(--menu-legacy-z);
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  width: var(--menu-legacy-w); height: 100%;
+  background: var(--menu-legacy-bg);
+  font-family: var(--font-family);
+  overflow: hidden;                 /* Figma clips content */
+}
+.pds-menu-legacy[hidden] { display: none; }
+
+/* "Frame 2": Close · user · Log Out */
+.pds-menu-legacy__head {
+  box-sizing: border-box; flex: none;
+  display: flex; flex-direction: column; align-items: flex-end;
+  padding: var(--menu-legacy-head-pad);
+  background: var(--menu-legacy-head-bg);
+}
+.pds-menu-legacy__close {
+  box-sizing: border-box; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--menu-legacy-close-size); height: var(--menu-legacy-close-size);
+  margin: 0; padding: 0; border: 0; background: none;
+  color: var(--menu-legacy-close); cursor: pointer;
+}
+.pds-menu-legacy__close .pds-icon { --_icon: var(--menu-legacy-close-size); }
+
+/* "Frame 1": avatar · details · line */
+.pds-menu-legacy__user {
+  box-sizing: border-box; align-self: stretch;
+  display: flex; flex-direction: column; align-items: center; gap: var(--menu-legacy-user-gap);
+}
+.pds-menu-legacy__user .pds-avatar { flex: none; }
+.pds-menu-legacy__details {
+  display: flex; flex-direction: column; align-items: center; gap: var(--menu-legacy-details-gap);
+  max-width: 100%; color: var(--menu-legacy-name-fg); text-align: center;
+}
+.pds-menu-legacy__details p { margin: 0; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pds-menu-legacy__name { font: var(--type-12-semibold); line-height: 16px; }       /* Figma 12 "auto" = 16 */
+.pds-menu-legacy__role { font: var(--type-10-semibold); line-height: 14px; letter-spacing: .5px; text-transform: uppercase; } /* Figma 10 "auto" = 14 */
+.pds-menu-legacy__rule { display: block; align-self: stretch; height: 1px; margin: 0 0 -1px; border: 0; background: var(--menu-legacy-rule); } /* 0-height line in Figma: takes no space */
+
+/* "Logout" group */
+.pds-menu-legacy__logout {
+  box-sizing: border-box; align-self: stretch;
+  display: flex; align-items: center; justify-content: center;
+  height: var(--menu-legacy-logout-h);
+  margin: 0; padding: 0; border: 0; border-radius: 0;
+  background: var(--menu-legacy-logout-bg);
+  font: var(--type-12-regular); line-height: 16px; text-transform: uppercase;
+  color: var(--menu-legacy-logout-fg); cursor: pointer;
+}
+
+/* "Menu Items (Scroll)" */
+.pds-menu-legacy__list {
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  margin: 0; padding: 0; list-style: none;
+  overflow-y: auto;
+}
+.pds-menu-legacy__list > li { display: block; }
+
+/* .Menu-Item (kit .pds-menu-item from main-menu.css) with its "Text" label shown.
+   Figma keeps the item 60 wide and lets the label overflow; the kit stretches it to the menu. */
+.pds-menu-item.pds-menu-legacy__item {
+  width: 100%;
+  gap: var(--menu-legacy-item-gap);
+}
+.pds-menu-legacy__label {
+  min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font: var(--type-14-semibold);
+  letter-spacing: var(--menu-legacy-label-ls);
+  text-transform: uppercase;
+  color: var(--menu-legacy-label-fg);
+}
+
+/* Focus — added in review, not in Figma */
+.pds-menu-legacy__close:focus-visible { outline: 2px solid var(--menu-legacy-focus); outline-offset: 2px; }
+.pds-menu-legacy__logout:focus-visible { outline: 2px solid var(--menu-legacy-focus); outline-offset: -2px; }

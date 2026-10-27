@@ -156,6 +156,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
     <li><b>Fields overflow (newer):</b> 4–6 inputs of 200px wrap inside a 570px row, so only 2 fit per row and 170px is left empty. Adjacent borders are doubled (gap 0, inside strokes); the older set overlaps them by 1px instead.</li>
     <li><b>Atom variant missing in kit — Text Input Field (older):</b> the remote Text Input Field uses label #616161, placeholder #737373, value #404040 (all off-token) and a 5px icon gap. Built as the kit Input - Text with scoped overrides (<code>.pds-actions__tif</code>).</li>
     <li><b>Atom variant missing in kit — refresh-line icon</b> (20px) in the swappable slot. Inlined, same path as <code>tooltip.js</code>.</li>
+    <li><b>Label room:</b> the kit input reserves 16px after the label for an info icon; removed inside Actions fields so “Booking Confirmation Number” fits as in Figma.</li>
     <li><b>Date format:</b> Figma samples read “19 Jan 2023 - 10:00 AM”; the kit Calendar writes DD-MM-YYYY. Not reconciled.</li>
     <li><b>Save enable rule (older):</b> Figma shows only Empty (Save disabled) and Filled (Save enabled). Built as “enabled when every field has a value”; confirm for two-field cards.</li>
     <li><b>Secondary button meaning (newer):</b> both buttons read “Button Text”. Built as Cancel (leaves Active, fires <code>cancel</code>) + Submit; confirm.</li>

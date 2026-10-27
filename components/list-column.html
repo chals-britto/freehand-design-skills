@@ -161,7 +161,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
   <li>Hidden layers not built: second Input Tag in Type = Tag, Additional Text in Text + Tag, the “Pin” + dashed line in every route arrow, and the hidden transit in .Route Multi.</li>
   <li>.Route Multi is a fixed 42px high in Figma (content is 33); built hugging, centred.</li>
   <li>Size=Xtra Large Tag hugs (220) while the other Tag sizes are fixed. Size names are reused with different meanings (Route uses “Via” as a Size).</li>
-  <li>Swappable placeholder body text is #000000 (off-token). Atom variant missing in kit: <code>refresh-line</code> icon (20px) — inlined in the page sample.</li>
+  <li>Swappable placeholder body text is #000000 (off-token). Placeholder icon is the kit <code>refresh-line</code> (20px, <code>icons/refresh-line.svg</code>).</li>
   <li>No dark theme, no hover / selected row states, no empty-value state in any of the three sets.</li>
 </ul></div></section>
 
@@ -181,7 +181,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 <script>
 const $=s=>document.querySelector(s);
 const ICON=n=>{const i=(window.PDS_ICONS||[]).find(x=>x.n===n);if(!i)throw new Error("icon missing: "+n);return i.svg.replace("<svg ",'<svg aria-hidden="true" focusable="false" ')};
-const REFRESH='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5525 3.69417C6.06463 2.38388 7.99916 1.66388 10 1.66667C14.6025 1.66667 18.3333 5.3975 18.3333 10C18.3333 11.78 17.775 13.43 16.825 14.7833L14.1667 10H16.6667C16.6668 8.69302 16.2827 7.41484 15.5622 6.32438C14.8417 5.23392 13.8166 4.3793 12.6143 3.86677C11.412 3.35424 10.0856 3.20642 8.79996 3.44168C7.51433 3.67694 6.32621 4.28492 5.38333 5.19L4.5525 3.69417ZM15.4475 16.3058C13.9354 17.6161 12.0008 18.3361 10 18.3333C5.3975 18.3333 1.66667 14.6025 1.66667 10C1.66667 8.22 2.225 6.57 3.175 5.21667L5.83333 10H3.33333C3.33323 11.307 3.71729 12.5852 4.43778 13.6756C5.15827 14.7661 6.18339 15.6207 7.38568 16.1332C8.58798 16.6458 9.9144 16.7936 11.2 16.5583C12.4857 16.3231 13.6738 15.7151 14.6167 14.81L15.4475 16.3058Z"/></svg>';
+const REFRESH='<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_2238_4150)"><path d="M4.55 3.69C6.06 2.38 8.00 1.66 10 1.67C14.60 1.67 18.33 5.40 18.33 10C18.33 11.78 17.77 13.43 16.82 14.78L14.17 10H16.67C16.67 8.69 16.28 7.41 15.56 6.32C14.84 5.23 13.82 4.38 12.61 3.87C11.41 3.35 10.09 3.21 8.80 3.44C7.51 3.68 6.33 4.28 5.38 5.19L4.55 3.69ZM15.45 16.31C13.94 17.62 12.00 18.34 10 18.33C5.40 18.33 1.67 14.60 1.67 10C1.67 8.22 2.23 6.57 3.17 5.22L5.83 10H3.33C3.33 11.31 3.72 12.59 4.44 13.68C5.16 14.77 6.18 15.62 7.39 16.13C8.59 16.65 9.91 16.79 11.2 16.56C12.49 16.32 13.67 15.72 14.62 14.81L15.45 16.31Z" fill="currentColor"/></g><defs><clipPath id="clip0_2238_4150"><rect width="20" height="20" fill="white"/></clipPath></defs></svg>'; /* kit icon icons/refresh-line.svg */
 const ARROW='<svg viewBox="0 0 12 7" preserveAspectRatio="none" aria-hidden="true"><path d="M0.5 3.5H11.5M8.5 0.5L11.5 3.5L8.5 6.5" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>';
 const LINE=`<span class="pds-list-column__line">${ARROW}</span>`;
 

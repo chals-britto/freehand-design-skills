@@ -187,7 +187,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
   <li>.Menu Primary Hover text is <code>#0078DD</code>, off-token (next to <code>--pando-blue</code> #0076DD). Kept as a component token.</li>
   <li>.Menu-Item sub text <code>#737373</code> and .Swappable body text <code>#000000</code> are off-token.</li>
   <li>Warning-Circle on this page is orange <code>#FF8C54</code> with a <code>#515151</code> glyph; the kit icon is red <code>#E25757</code> / white. Recoloured by CSS here — atom variant missing in kit.</li>
-  <li><code>refresh-line</code> icon (in .Swappable Content) is not in the kit icon set — an empty 20px slot is shown.</li>
+  <li><code>.Swappable Content</code> icon is the kit <code>refresh-line</code> (20px, <code>icons/refresh-line.svg</code>).</li>
   <li>The Secondary “Active” variants use the .State “Current” marker; the .State set also has a “Selected-Input” instance under the Completed marker. Only the visible marker is built.</li>
   <li>Figma’s .Menu Location property only changes the opacity of the dashed line above (First) or below (Last); “Default” exists only for Primary.</li>
   <li>The Tab Group in the Menu-type panel uses 15px side padding; the Header set uses 20px (kit default).</li>
@@ -228,7 +228,7 @@ const HEADER=(o={})=>{
   if(o.type==="swap")return `<div class="pds-left-panel__header pds-left-panel__header--swap">${SLOT({title:"Swappable Header",body:false})}</div>`;
   return `<div class="pds-left-panel__header"><h2 class="pds-left-panel__title">Heading</h2>${BTN(o.btn||"Collapse")}</div>`;
 };
-const SLOT=(o={})=>`<div class="pds-left-panel__slot${o.cls?" "+o.cls:""}"><p class="pds-left-panel__slot-title"><span class="pds-icon pds-left-panel__slot-icon" aria-hidden="true"></span>${o.title||"Swappable Content"}</p>${o.body===false?"":`<p class="pds-left-panel__slot-body">Swap this component out with another.</p>`}</div>`;
+const SLOT=(o={})=>`<div class="pds-left-panel__slot${o.cls?" "+o.cls:""}"><p class="pds-left-panel__slot-title"><span class="pds-icon pds-left-panel__slot-icon" aria-hidden="true"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_2238_4150)"><path d="M4.55 3.69C6.06 2.38 8.00 1.66 10 1.67C14.60 1.67 18.33 5.40 18.33 10C18.33 11.78 17.77 13.43 16.82 14.78L14.17 10H16.67C16.67 8.69 16.28 7.41 15.56 6.32C14.84 5.23 13.82 4.38 12.61 3.87C11.41 3.35 10.09 3.21 8.80 3.44C7.51 3.68 6.33 4.28 5.38 5.19L4.55 3.69ZM15.45 16.31C13.94 17.62 12.00 18.34 10 18.33C5.40 18.33 1.67 14.60 1.67 10C1.67 8.22 2.23 6.57 3.17 5.22L5.83 10H3.33C3.33 11.31 3.72 12.59 4.44 13.68C5.16 14.77 6.18 15.62 7.39 16.13C8.59 16.65 9.91 16.79 11.2 16.56C12.49 16.32 13.67 15.72 14.62 14.81L15.45 16.31Z" fill="currentColor"/></g><defs><clipPath id="clip0_2238_4150"><rect width="20" height="20" fill="white"/></clipPath></defs></svg></span>${o.title||"Swappable Content"}</p>${o.body===false?"":`<p class="pds-left-panel__slot-body">Swap this component out with another.</p>`}</div>`;
 const STATE=s=>`<span class="pds-left-panel__state pds-left-panel__state--${s}" aria-hidden="true">${s==="completed"?`<span class="pds-icon">${ICON("nav-selected")}</span>`:""}</span>`;
 const WARN=`<span class="pds-icon pds-left-panel__warn" aria-label="Warning" role="img">${ICON("system-status-warning-circle")}</span>`;
 const CARET=`<span class="pds-icon pds-left-panel__caret" aria-hidden="true">${ICON("nav-dropdown-arrow-stroke")}</span>`;

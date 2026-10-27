@@ -1,10 +1,10 @@
 # Icons — Pando DS V1
 
 **Status:** Built 2026-10-23 · no review yet — every published icon treated as Keep · **Figma:** DS V2 – Atoms › 🟡 Icons (page 17:18)
-**Files:** `icons.css` (size + colour classes) · `icons/<name>.svg` (431 files) · `icons/icons-data.js` (manifest: name, Figma name, node id, family, size, colour, svg) · `icons.html` (searchable gallery)
+**Files:** `icons.css` (size + colour classes) · `icons/<name>.svg` (432 files) · `icons/icons-data.js` (manifest: name, Figma name, node id, family, size, colour, svg) · `icons.html` (searchable gallery)
 
 ## What it is
-The icon library: every component and component-set variant on the Figma Icons page, exported as SVG (441 components on the page → **430 exported**, 11 not adopted; plus `advanced-search` from the Playground page 362:38 → **431**). The page has no written description; families and sizes below come from the Figma frame names.
+The icon library: every component and component-set variant on the Figma Icons page, exported as SVG (441 components on the page → **430 exported**, 11 not adopted; plus `advanced-search` from the Playground page 362:38 → **431**; plus `refresh-line` (20px, the `.Swappable Content` placeholder icon, a remote library component exported from its instance in DS V2 – Organisms 2238:4150) → **432**). The page has no written description; families and sizes below come from the Figma frame names.
 
 ## Variants
 Families (Figma frame → file prefix → count):
@@ -21,7 +21,7 @@ Families (Figma frame → file prefix → count):
 | Header logos | Header-Logo/Apps (1282:548) | `logo-apps-` | 27×28 · 20 | brand | brand | 4 |
 | File types | Misc/File-Types (112:26) | `file-` | 20×24 | solid | one band colour per type | 14 |
 | Track & map | Track Icons (3463:3540) | `map-`, `location-type-` | 16 – 96 | illustration | full colour | 17 |
-| Misc | page-level components | `misc-`, `keyboard`, `debit-card`, `advanced-search` | 7×11 – 71×31 | mixed | mixed | 17 |
+| Misc | page-level components | `misc-`, `keyboard`, `debit-card`, `advanced-search`, `refresh-line` | 7×11 – 71×31 | mixed | mixed | 18 |
 
 Sizes (`icons.css`):
 
@@ -44,7 +44,7 @@ Family colours: `.pds-icon--indicator` (`--icon-indicator` → `--pando-dark`), 
 Icons are exported at 1× from the component frame, numbers rounded to 2 decimals. No padding is added. 37 icons export a little larger than their frame because a vector overflows it (see Open issues); Collapse-Expand, List-Type and map markers include their shadow or rotation box.
 
 ## Colour (currentColor)
-- **320 single-colour icons**: every fill and stroke used the same colour, so it was replaced with `currentColor`. They follow the text colour of their parent. The original Figma colour is kept in the manifest (`col`) and shown in the gallery.
+- **321 single-colour icons**: every fill and stroke used the same colour, so it was replaced with `currentColor`. They follow the text colour of their parent. The original Figma colour is kept in the manifest (`col`) and shown in the gallery.
 - **111 multi-colour icons kept as Figma**: two-colour menu icons, file types, logos, header icons, toast state icons (white disc + glyph), info/question/warning circles, map markers and vehicles, gradient icons (trend arrows, breadcrumb arrow, Collapse-Expand, Pi-Studio active) and anything with a filter or mask.
 - `currentColor` only works for **inline** SVG. In an `<img>` a single-colour icon renders black.
 

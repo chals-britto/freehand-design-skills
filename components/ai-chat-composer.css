@@ -1,0 +1,197 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — AI Chat composer (Prompt / Chat Bar)
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 AI Chat (2814:5163)
+     · "Chat Bar"            3991:14306 (6)  — primary (newer copy)
+     · ".Bottom Bar"         2815:23806 (6)  — built as --legacy
+     · ".send"               2815:23819 (4)
+     · ".Query Text - Swap if required" 3052:12279
+     · ".typing dark/.Swappable Content" 3541:14039 (reuses comment-thread slot)
+     · "Prompt"              2819:1891  (intro + suggestions block)
+     · ".typing light/dark"  2815:24083 / 3540:14579 — the dots live in
+       ai-chat-bubbles.css (.pds-ai-bubble__typing); not duplicated here.
+   Requires ../tokens.css, button.css (Icon Button · Circular Background),
+   icons.css, comment-thread.css (slot), ai-chat-bubbles.css (typing dots).
+   Built 2026-10-28, not reviewed.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Bar ── */
+  --ai-composer-pad:          var(--space-10) var(--space-15); /* 10px 15px (stacked) */
+  --ai-composer-inline-pad:   0 var(--space-15);              /* 0 15px (one row) */
+  --ai-composer-inline-h:     54px;
+  --ai-composer-row-gap:      var(--space-10);                /* text row ↔ actions row */
+  --ai-composer-gap:          var(--space-15);                /* add · divider · field · send */
+  --ai-composer-radius:       8px;                            /* Light */
+  --ai-composer-dark-radius:  var(--radius-12);               /* Dark 12px */
+  --ai-composer-bg:           var(--white);
+  --ai-composer-shadow:       var(--shadow-3);                /* 0 2 14 10% — Light only */
+  --ai-composer-dark-bg:      color-mix(in srgb, var(--pando-dark) 40%, transparent); /* #234357 @ 40% */
+
+  /* ── Text (.Query Text — Swap if required) ── */
+  --ai-composer-text:         600 12px/16px var(--font-family); /* Open Sans SemiBold 12/auto → 16 (.type-12-semibold is 12/17) */
+  --ai-composer-placeholder-font: italic 400 12px/16px var(--font-family); /* Open Sans Italic 12/auto — no italic style in tokens */
+  --ai-composer-fg:           var(--text-dark);               /* #313131 — typed text, both themes */
+  --ai-composer-ph:           var(--text-dark);               /* #313131 Light placeholder (Chat Bar) */
+  --ai-composer-legacy-ph:    var(--text-medium);             /* #545454 Light placeholder (.Bottom Bar) */
+  --ai-composer-dark-ph:      var(--dark-label-text);         /* #D5DAF4 */
+  --ai-composer-field-min-h:  16px;
+
+  /* ── Add + divider ── */
+  --ai-composer-add:          var(--pando-dark);              /* #234357 */
+  --ai-composer-dark-add:     var(--dark-label-text);         /* #D5DAF4 */
+  --ai-composer-add-size:     14px;
+  --ai-composer-divider:      rgb(156 179 191 / .5);          /* #9CB3BF @ 50% — off-token in Figma (same as --top-header-divider) */
+  --ai-composer-divider-h:    24px;
+
+  /* ── .send (Icon Button · Circular Background, 30 / glyph 20) ── */
+  --ai-composer-send-bg:          var(--accent-blue-grey);    /* #CBD4D8 Light Default */
+  --ai-composer-send-fg:          var(--white);
+  --ai-composer-send-active-bg:   var(--pando-blue);          /* #0076DD — Chat Bar / .Bottom Bar Active Light override */
+  --ai-composer-send-orange-bg:   var(--freehand-orange);     /* #FE6505 — .send State=Active, Theme=Light (main component) */
+  --ai-composer-send-dark-bg:     color-mix(in srgb, var(--accent-off-white) 20%, transparent); /* #F8F8F8 @ 20% */
+  --ai-composer-send-dark-border: color-mix(in srgb, var(--dark-label-text) 50%, transparent);  /* #D5DAF4 @ 50%, 1px inside */
+  --ai-composer-send-dark-active-bg: var(--dark-highlight-green); /* #1FCD93 */
+
+  /* ── Prompt (intro + "More Suggestions") ── */
+  --ai-composer-prompt-w:       720px;
+  --ai-composer-prompt-pad:     var(--space-10) var(--space-15); /* outer 10 15 */
+  --ai-composer-prompt-inner:   0 90px;                       /* inner frame 0 90 */
+  --ai-composer-prompt-gap:     var(--space-10);
+  --ai-composer-prompt-fg:      var(--pando-dark);            /* #234357 intro text + AI icon */
+  --ai-composer-prompt-label:   var(--text-medium);           /* #545454 "More Suggestions:" */
+  --ai-composer-prompt-font:    400 10px/14px var(--font-family); /* Regular 10/auto */
+  --ai-composer-prompt-label-font: 400 10px/12px var(--font-family); /* Regular 10/12 */
+  --ai-composer-card-gap:       20px;
+  --ai-composer-card-w:         157px;
+  --ai-composer-card-h:         56px;
+  --ai-composer-card-pad:       4px 8px;
+  --ai-composer-card-radius:    8px;
+  --ai-composer-card-bg:        var(--pando-light);           /* #EEF2F4 */
+  --ai-composer-card-fg:        var(--text-dark);             /* #313131 */
+}
+
+/* ── Root ─────────────────────────────────────────────────────────── */
+.pds-ai-composer {
+  --_bg: var(--ai-composer-bg); --_ph: var(--ai-composer-ph); --_add: var(--ai-composer-add);
+  box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: var(--ai-composer-row-gap);
+  width: 100%;
+  padding: var(--ai-composer-pad);
+  background: var(--_bg);
+  border-radius: var(--ai-composer-radius);
+  box-shadow: var(--ai-composer-shadow);
+  font-family: var(--font-family);
+}
+.pds-ai-composer--dark {
+  --_bg: var(--ai-composer-dark-bg); --_ph: var(--ai-composer-dark-ph); --_add: var(--ai-composer-dark-add);
+  border-radius: var(--ai-composer-dark-radius);
+  box-shadow: none;
+}
+.pds-ai-composer--legacy:not(.pds-ai-composer--dark) { --_ph: var(--ai-composer-legacy-ph); }
+
+/* Rows */
+.pds-ai-composer__inputs { display: flex; align-items: center; gap: var(--ai-composer-gap); min-width: 0; }
+.pds-ai-composer__actions { display: flex; align-items: center; justify-content: space-between; gap: var(--ai-composer-gap); }
+.pds-ai-composer__left { display: flex; align-items: center; gap: var(--ai-composer-gap); }
+
+/* One row (.Bottom Bar, and Chat Bar Active·Dark / Typing): add · divider · field · send */
+.pds-ai-composer--inline {
+  flex-direction: row; align-items: center; justify-content: flex-start;
+  gap: var(--ai-composer-gap);
+  min-height: var(--ai-composer-inline-h);
+  padding: var(--ai-composer-inline-pad);
+}
+.pds-ai-composer--inline .pds-ai-composer__inputs { flex: 1 1 auto; }
+
+/* ── Field (.Query Text — Swap if required) ───────────────────────── */
+.pds-ai-composer__field {
+  flex: 1 1 auto; min-width: 0;
+  display: block; box-sizing: border-box;
+  width: 100%; min-height: var(--ai-composer-field-min-h);
+  margin: 0; padding: 0; border: 0; outline: 0; resize: none; overflow: hidden;
+  background: transparent;
+  font: var(--ai-composer-text); color: var(--ai-composer-fg);
+}
+.pds-ai-composer__field::placeholder { font: var(--ai-composer-placeholder-font); color: var(--_ph); opacity: 1; }
+/* Static (non-live) text */
+.pds-ai-composer__field--ph { font: var(--ai-composer-placeholder-font); color: var(--_ph); }
+
+/* ── Add (Indicator Icon/Add 14) + divider ───────────────────────── */
+.pds-ai-composer__add {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: var(--ai-composer-add-size); height: var(--ai-composer-add-size);
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--_add);
+}
+.pds-ai-composer__add svg { display: block; width: 100%; height: 100%; }
+.pds-ai-composer__divider {
+  flex: none; width: 1px; height: var(--ai-composer-divider-h);
+  background: var(--ai-composer-divider);
+}
+
+/* ── .send — kit Icon Button (.pds-button--icon), colours from .send ── */
+.pds-ai-composer__send.pds-button--icon,
+.pds-ai-composer__send.pds-button--icon:hover:not(:disabled),
+.pds-ai-composer__send.pds-button--icon:disabled,
+.pds-ai-composer__send.pds-button--icon.is-hover {
+  flex: none; --_bg: var(--ai-composer-send-bg); --_fg: var(--ai-composer-send-fg); --_bd: transparent;
+  box-shadow: var(--shadow-1);
+}
+.pds-ai-composer__send.pds-button--icon:disabled { cursor: default; }
+.pds-ai-composer__send.is-active.pds-button--icon,
+.pds-ai-composer__send.is-active.pds-button--icon:hover:not(:disabled) { --_bg: var(--ai-composer-send-active-bg); }
+.pds-ai-composer__send--orange.is-active.pds-button--icon,
+.pds-ai-composer__send--orange.is-active.pds-button--icon:hover:not(:disabled) { --_bg: var(--ai-composer-send-orange-bg); }
+/* Dark: Default = translucent disc with a 1px inside ring; Active = green */
+.pds-ai-composer__send--dark.pds-button--icon,
+.pds-ai-composer__send--dark.pds-button--icon:hover:not(:disabled),
+.pds-ai-composer__send--dark.pds-button--icon:disabled {
+  --_bg: var(--ai-composer-send-dark-bg);
+  box-shadow: inset 0 0 0 1px var(--ai-composer-send-dark-border), var(--shadow-1);
+}
+.pds-ai-composer__send--dark.is-active.pds-button--icon,
+.pds-ai-composer__send--dark.is-active.pds-button--icon:hover:not(:disabled) {
+  --_bg: var(--ai-composer-send-dark-active-bg); box-shadow: var(--shadow-1);
+}
+
+/* ── Typing state: field swapped for the slot (.typing dark/.Swappable Content) ── */
+.pds-ai-composer__slot { flex: 1 1 auto; min-width: 0; }
+.pds-ai-composer__slot.pds-comment-thread__slot { align-self: center; }
+
+/* ── Focus (added in review — not in Figma) ── */
+.pds-ai-composer:has(.pds-ai-composer__field:focus-visible) { outline: 2px solid var(--pando-blue); outline-offset: 2px; }
+.pds-ai-composer__add:focus-visible,
+.pds-ai-composer__card:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; }
+
+/* ── Prompt: intro + suggestions ───────────────────────────────────── */
+.pds-ai-composer-prompt {
+  box-sizing: border-box;
+  width: 100%; max-width: var(--ai-composer-prompt-w);
+  padding: var(--ai-composer-prompt-pad);
+  font-family: var(--font-family);
+}
+.pds-ai-composer-prompt__inner {
+  display: flex; flex-direction: column; align-items: center;
+  gap: var(--ai-composer-prompt-gap);
+  padding: var(--ai-composer-prompt-inner);
+}
+.pds-ai-composer-prompt__intro {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-10);
+  margin: 0; font: var(--ai-composer-prompt-font); color: var(--ai-composer-prompt-fg);
+}
+.pds-ai-composer-prompt__icon { flex: none; width: 20px; height: 20px; color: var(--ai-composer-prompt-fg); }
+.pds-ai-composer-prompt__icon svg { display: block; width: 100%; height: 100%; }
+.pds-ai-composer-prompt__label { margin: 0; font: var(--ai-composer-prompt-label-font); color: var(--ai-composer-prompt-label); }
+.pds-ai-composer-prompt__cards { display: flex; align-items: flex-start; gap: var(--ai-composer-card-gap); margin: 0; padding: 0; list-style: none; }
+.pds-ai-composer__card {
+  box-sizing: border-box;
+  display: block; flex: none;
+  width: var(--ai-composer-card-w); height: var(--ai-composer-card-h);
+  margin: 0; padding: var(--ai-composer-card-pad); border: 0;
+  border-radius: var(--ai-composer-card-radius);
+  background: var(--ai-composer-card-bg); color: var(--ai-composer-card-fg);
+  font: var(--ai-composer-prompt-label-font); text-align: left; cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) { .pds-ai-composer * { transition: none !important; } }

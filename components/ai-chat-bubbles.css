@@ -296,6 +296,7 @@
   border: 0;
   border-radius: var(--ai-pi-radius);
   background: transparent;
+  color: var(--ai-pi-dark-fg);             /* label + Freehand AI icon (currentColor) */
   font: var(--ai-pi-font);
   white-space: nowrap;
   cursor: pointer;

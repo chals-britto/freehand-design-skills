@@ -107,7 +107,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 .stage-content p{font:var(--type-12-regular);margin:0 0 12px;color:var(--grey-dark)}
 .mm-log{font:400 11.5px var(--pg-mono);color:var(--pg-muted);margin-top:10px}
 .vscroll{overflow-x:auto}
-.vmenus{display:grid;grid-template-columns:repeat(3,310px);gap:24px;padding:20px;width:max-content}
+.vmenus{display:grid;grid-template-columns:repeat(3,310px);gap:20px 14px;padding:16px;width:max-content}
 .vmenu{display:flex;flex-direction:column;gap:6px}
 .vmenu .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
 .vbox{position:relative;width:310px;height:var(--main-menu-height);background:var(--pg-soft);border-radius:4px;overflow:hidden}
@@ -117,7 +117,7 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 .parts{display:flex;flex-wrap:wrap;gap:22px 32px;padding:20px;align-items:flex-start}
 .part{display:flex;flex-direction:column;gap:6px}
 .part .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
-.on-fly{background:var(--main-menu-fly-bg);font-family:var(--font-family)}
+.on-fly{background:var(--main-menu-fly-bg);font-family:var(--font-family);align-self:flex-start}
 .on-fly ul{margin:0;padding:0;list-style:none}
 .w204{width:204px}.w200{width:200px}.w184{width:184px}.w250{width:250px}.w168{width:168px}
 .bare{all:unset}
@@ -216,9 +216,8 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{ou
 
 <section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
 <div class="panel card"><ul class="openlist">
-  <li>Visible labels next to rail icons, or an expand control to show them. <a href="https://fluent2.microsoft.design/components/web/react/core/nav/usage" target="_blank" rel="noopener">Fluent 2 Nav</a></li>
-  <li>A visible selected state on the current page link in the fly-out. <a href="https://carbondesignsystem.com/components/UI-shell-left-panel/usage/" target="_blank" rel="noopener">Carbon UI shell left panel</a></li>
-  <li>Chevron that rotates on expand for groups, so expanded groups show they can collapse. <a href="https://carbondesignsystem.com/components/UI-shell-left-panel/usage/" target="_blank" rel="noopener">Carbon UI shell left panel</a></li>
+  <li>Labels with the icons — Fluent 2 Nav does not support an icon-only layout — and a hamburger to expand / collapse. <a href="https://fluent2.microsoft.design/components/web/react/core/nav/usage" target="_blank" rel="noopener">Fluent 2 Nav</a></li>
+  <li>Every sub-menu group marked with a chevron, open or closed (Figma drops the caret when a group is expanded). <a href="https://carbondesignsystem.com/components/UI-shell-left-panel/usage/" target="_blank" rel="noopener">Carbon UI shell left panel</a></li>
 </ul></div></section>
 
 <section id="code" data-flag-area><h2>Code</h2><p class="sub">Include tokens.css, icons.css, scrollbar.css, avatar.css, tooltip.css, main-menu.css, then icons/icons-data.js, tooltip.js and main-menu.js. The menu fills its container’s height.</p>

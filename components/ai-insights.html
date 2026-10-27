@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI Insights · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="readonly.css">
+<link rel="stylesheet" href="skeleton.css">
+<link rel="stylesheet" href="scrollbar.css">
+<link rel="stylesheet" href="ai-insights.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* ai-insights page */
+.vstack{display:flex;flex-direction:column;gap:22px;padding:20px}
+.vrow{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.vcell.w458{width:458px;max-width:100%}
+.surface{background:var(--white);border-radius:8px;padding:16px;overflow-x:auto}
+.surface.soft{background:var(--accent-light-blue-bg)}
+.artifact-pair{display:flex;gap:20px;align-items:flex-start;overflow-x:auto;padding-bottom:4px}
+.slot-note{height:100%;min-height:200px;border:1px dashed var(--border-blue-grey);border-radius:4px;display:flex;align-items:center;justify-content:center;font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.stage.ai{display:flex;align-items:flex-start;justify-content:center;padding:24px;background:var(--white);border-radius:0 10px 10px 0;overflow-x:auto}
+ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Organisms</div>
+    <h1>AI Insight cards and Artifacts</h1>
+    <p class="lede">Insight cards, the Quick Insights list, the Artifacts list and viewer, and the action icon row used in the AI chat.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · not reviewed</span><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4514-10895" target="_blank" rel="noopener">.Insight_Card 4514:10895 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4514-10994" target="_blank" rel="noopener">.Insights 4514:10994 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4514-13552" target="_blank" rel="noopener">Artifacts 4514:13552 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4524-7455" target="_blank" rel="noopener">Action icon buttons 4524:7455 ↗</a><span>Files: ai-insights.css · ai-insights.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Quick Insights shows two cards. <b>Show More</b> opens the full list and turns into <b>Show Less</b> (Figma: Property 1 = Default ↔ Expanded). Hover a card to see the Hover state.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls" onsubmit="return false">
+    <label class="chk"><input type="checkbox" id="c-exp"> Expanded</label>
+    <label class="chk"><input type="checkbox" id="c-load"> First card loading</label>
+    <label class="chk"><input type="checkbox" id="c-det"> Show Details (card)</label>
+    <label class="chk"><input type="checkbox" id="c-act"> Action Button (card)</label>
+  </form>
+  <div class="stage ai" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Every published variant, with the Figma sample text. Colours exactly as in Figma.</p>
+<div class="panel vstack">
+  <h3 style="margin:0;font-size:14px">.Insight_Card — Property 1 × Show Details × Action Button</h3>
+  <div class="vrow surface" id="v-card"></div>
+  <h3 style="margin:8px 0 0;font-size:14px">.Insights — Property 1 × Size</h3>
+  <div class="vrow surface" id="v-ins"></div>
+  <h3 style="margin:8px 0 0;font-size:14px">Artifacts — Type=List · Type=Context</h3>
+  <div class="artifact-pair surface soft" id="v-art"></div>
+  <h3 style="margin:8px 0 0;font-size:14px">Action icon buttons</h3>
+  <div class="vrow surface" id="v-act"></div>
+</div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="panel"><div class="spec-table">
+  <div><b>Card</b>fills its container · padding <code>10 / 15</code> · gap <code>10</code> · radius <code>4</code> · stroke <code>1px --border-grey</code></div>
+  <div><b>Card hover</b>white + <code>--status-orange-light</code> @ 42% · stroke <code>0.5px --highlight-orange</code> · <code>--shadow-2</code></div>
+  <div><b>Icon circle</b><code>30px</code> · glyph <code>20px</code> · Load-Material on <code>--border-blue</code></div>
+  <div><b>Icon tones</b>Cost <code>#F2E7FE/#2D0645</code> · Records <code>#BDF0F4/#006265</code> · Impact <code>#FFF8F9/#FF0000</code> · Calendar <code>#FFF4E5/#F94200</code></div>
+  <div><b>Content</b>gap <code>4</code> · title <code>.type-12-semibold</code> · description <code>.type-12-regular</code> (master) / <code>.type-11-regular</code> (in lists)</div>
+  <div><b>Show Details</b>Label Readonly Text ×2 per row · space-between · gap <code>5</code> · text <code>#404040</code></div>
+  <div><b>Action Button</b>Download · View, <code>14px</code>, gap <code>20</code>, top-right</div>
+  <div><b>Load</b>empty icon circle + Skeleton 220 Light (kit) · <code>58px</code> tall</div>
+  <div><b>Quick Insights</b>width <code>499</code> · gap <code>8</code> · label <code>.type-10-semibold</code> UPPER +0.5 <code>--dark-input-text</code></div>
+  <div><b>List cards</b>white @ 40% · title <code>--status-blue-dark</code> · 2 shown, 4 expanded</div>
+  <div><b>Large</b>2 columns · gap <code>8</code> · header ↔ grid <code>15</code> · no Show More</div>
+  <div><b>Artifacts List</b><code>320 × 710</code> · padding <code>15</code> · gap <code>10</code> · radius <code>8</code> · <code>--shadow-3</code></div>
+  <div><b>Artifacts Context</b><code>620 × 710</code> · padding <code>15</code> · gap <code>15</code> · white + <code>--accent-light-blue-bg</code> @ 60% · square</div>
+  <div><b>Context header</b>Icon Button small · name Bold 14 · Action buttons gap <code>20</code> · divider <code>16px</code> · close <code>14px</code></div>
+  <div><b>Action icon buttons</b>4 × <code>12px</code> · gap <code>15</code> · padding-top <code>5</code> · <code>--grey-medium</code></div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Composition</h3><ul><li>Cards reuse the kit: Label Readonly Text for details, Skeleton 220 Light for loading, Button Text Only (Show More), Action Button (Share, Download), Icon Button No Background, Scrollbar.</li><li>The Slideout Chat composes these classes. Keep them inside the chat panel.</li></ul></div>
+  <div class="panel card"><h3>Artifacts</h3><ul><li>List: one card per artifact the chat produced, with a timestamp.</li><li>Context: the opened artifact. "Replace Content" is a slot; the content scrolls with the kit scrollbar.</li></ul></div>
+  <div class="panel card"><h3>Text from Figma</h3><p>Figma has no usage notes for these components. Nothing else is added here.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Show More / Show Less</h3><p>A real <code>&lt;button&gt;</code> with <code>aria-expanded</code> and <code>aria-controls</code> pointing at the list. The label changes with the state.</p></div>
+  <div class="panel card"><h3>Icon-only controls</h3><p>Download, View, Close, Details, Clone, Accept, Reject and Upload are buttons with an <code>aria-label</code> (the Figma icon name). Focus ring added in review — not in Figma.</p></div>
+  <div class="panel card"><h3>Loading</h3><p>The loading card carries <code>aria-busy="true"</code> and an accessible name. The skeleton shimmer stops under reduced motion (kit).</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul class="plain" id="open-list">
+  <li>Line height: Figma text is “auto” (12px → 16, 10px → 14). Tokens give 12px → 17 and 10px → 12, so cards are about 2px taller than Figma.</li>
+  <li>Artifact name is Open Sans <b>Bold</b> 14; tokens.css has no <code>.type-14-bold</code>. Kept as a component token.</li>
+  <li><code>#404040</code> (detail text, artifact card text) is not in tokens.css.</li>
+  <li>Indicator icons Cost and Calendar are two-colour in Figma (<code>#2D0645 + #404040</code>, <code>#F94200 + #422500</code>); the kit icons are single-colour, so the whole glyph takes the main colour.</li>
+  <li>Context header: the Icon Button instance shows a <code>#EEF2F4</code> 20px background in its Default state; the kit “No Background” button has none. Kit kept.</li>
+  <li>Share / Download labels are <code>#234357</code> in Figma; the kit Action Button is <code>#376F99</code>. Overridden inside the Artifacts header only.</li>
+  <li>Show More: Figma places the caret (<code>#545454</code>) next to the Text Only button; here it sits inside the button so one control toggles. The kit “Show more” molecule uses a different arrow and <code>#0078DD</code>, so it was not used.</li>
+  <li>Hover is the only interactive state in Figma. No click target is defined for a card; no Pressed, Selected or Focus state.</li>
+  <li>Contrast: “Quick Insights” <code>#8A8A9E</code> on white is 3.4 : 1; Action icon buttons <code>#A3A3A3</code> on white is 2.5 : 1 (both below 4.5 : 1). Kept as Figma.</li>
+  <li>Close in the List and Context headers has no defined behaviour in Figma.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul class="plain">
+  <li>Expandable tiles toggle with Enter and have enabled / hover / focus / disabled states. Here only Hover exists. <a href="https://carbondesignsystem.com/components/tile/usage/" target="_blank" rel="noopener">Carbon Tile</a></li>
+  <li>When one action is obvious, the whole card can act as a button, with focus and hover as the cue. No card-level action is defined here. <a href="https://fluent2.microsoft.design/components/web/react/core/card/usage" target="_blank" rel="noopener">Fluent 2 Card</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the kit atoms, the icon manifest and this component, then build with <code>pdsAiInsights</code>.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup of one card (what <code>ai-insights.js</code> produces):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="ai-insights.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const A=window.pdsAiInsights;A.bind(document);
+// Figma sample text
+const MASTER={title:"Bulk Shipment Creation",desc:"Shipments created through bulk upload for streamlined processing"};
+const DET=[["Label Text","Information Text"],["Label Text","Information Text"]];
+const LIST=[
+ {tone:"cost",title:"Tariff Name Mismatch",desc:"15 invoices  ·  $34,210 impact"},
+ {tone:"records",title:"GL Code Unallocated",desc:"8 invoices  ·  $12,440 impact"},
+ {tone:"impact",title:"Pending Approval",desc:"12 invoices  ·  $44,100 total"},
+ {tone:"calendar",title:"Overdue Invoices",desc:"24 invoices  ·  $39,340 at risk"}];
+const ART=[
+ {title:"Searched invoice (18 Invoices)",desc:"CEVA · Shanghai → LA · 18 invoices found",time:"10:57:45"},
+ {title:"Invoice with Updated data (18 Invoices)",desc:"Payment due date · Classification Of Goods",time:"11:12:20"},
+ {title:"Invoice Update Summary",desc:"18 invoices got update",time:"12:52:00"}];
+const cell=(lbl,node,cls)=>{const c=document.createElement("div");c.className="vcell "+(cls||"");c.innerHTML=`<span class="lbl">${lbl}</span>`;c.appendChild(node);return c};
+
+// Try it
+function renderTry(){const st=$("#stage");st.replaceChildren();
+ const cards=LIST.map((c,i)=>Object.assign({},c,i===0&&$("#c-load").checked?{state:"loading"}:{},$("#c-det").checked?{details:DET}:{},$("#c-act").checked?{actions:true}:{}));
+ st.appendChild(A.insights({cards,expanded:$("#c-exp").checked}))}
+["#c-exp","#c-load","#c-det","#c-act"].forEach(s=>$(s).addEventListener("change",renderTry));renderTry();
+
+// Variants — card
+[["Property 1=Default",{}],["Property 1=Load",{state:"loading"}],["Property 1=Hover",{state:"hover"}],["Default · Show Details=true",{details:DET}],["Default · Action Button=true",{actions:true}]]
+ .forEach(([l,o])=>$("#v-card").appendChild(cell(l,A.card(Object.assign({},MASTER,o)),"w458")));
+// Variants — insights
+$("#v-ins").appendChild(cell("Property 1=Default, Size=Default",A.insights({cards:LIST})));
+$("#v-ins").appendChild(cell("Property 1=Expanded, Size=Default",A.insights({cards:LIST,expanded:true})));
+$("#v-ins").appendChild(cell("Property 1=Expanded, Size=Large",A.insights({cards:LIST,large:true})));
+// Variants — artifacts
+$("#v-art").appendChild(cell("Type=List",A.artifactList({cards:ART})));
+const note=document.createElement("div");note.className="slot-note";note.textContent="Replace Content (slot)";
+$("#v-art").appendChild(cell("Type=Context",A.artifactContext({name:"< Artifact Name >",content:note})));
+// Variants — action icon buttons
+$("#v-act").appendChild(cell("Action icon buttons",A.actions()));
+
+// Code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/readonly.css">
+<link rel="stylesheet" href="components/skeleton.css">
+<link rel="stylesheet" href="components/scrollbar.css">
+<link rel="stylesheet" href="components/ai-insights.css">
+<script src="components/icons/icons-data.js"><\/script>
+<script src="components/ai-insights.js"><\/script>
+
+<script>
+  pdsAiInsights.bind(document);           // Show More / Show Less
+  const list = pdsAiInsights.insights({
+    label: 'Quick Insights',
+    cards: [
+      { tone: 'cost', title: 'Tariff Name Mismatch', desc: '15 invoices  ·  $34,210 impact' },
+      { tone: 'records', title: 'GL Code Unallocated', desc: '8 invoices  ·  $12,440 impact' }
+    ]
+    // expanded: true · large: true
+  });
+  // card options: tone (cost|records|impact|calendar), state (hover|loading),
+  // details: [[label, value], …], actions: true, artifact: true, time
+  // also: pdsAiInsights.artifactList({ cards }), artifactContext({ name, content }), actions()
+<\/script>`;
+$("#code2").textContent=A.card(MASTER).outerHTML.replace(/<svg[\s\S]*?<\/svg>/g,"<svg>…</svg>").replace(/></g,">\n<");
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>
