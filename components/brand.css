@@ -1,0 +1,56 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Brand (Pi-Avatar + Pando-Logo)
+   Figma: DS V2 – Atoms › AI + Branding (7902:1169) › section "Pando - Pi branding" (10608:860)
+     Pi-Avatar  component set 7906:1025 (6 variants)
+     Pando-Logo component set 8346:9246 (6 variants)
+   Brand assets, not UI controls. Each variant is an SVG exported from
+   Figma in components/brand/<name>.svg — use the file, do not redraw it.
+   Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Backgrounds used to preview the assets */
+  --brand-stage-light: var(--white);
+  --brand-stage-dark:  #0F0F0F; /* off-token in Figma: "Charcoal" from the Core Colors text (7902:1211) */
+
+  /* Brand colours baked into the SVGs (reference only; not in tokens.css) */
+  --brand-pando-yellow: #FFE01B; /* off-token in Figma: "Pando Yellow" (7902:1204) */
+  --brand-pando-green:  #003D31; /* off-token in Figma: "Pando Green" (7902:1207) */
+  --brand-charcoal:     #0F0F0F; /* off-token in Figma: "Charcoal" (7902:1211) */
+
+  /* Component sizes as set in Figma (the frame, not the shadow) */
+  --brand-pi-large-w: 330px;  --brand-pi-large-h: 350px;
+  --brand-pi-small-w: 133px;  --brand-pi-small-h: 142px;
+  --brand-logo-w:     380px;  --brand-logo-h:     106px;
+
+  /* Preview layout (page only) */
+  --brand-stage-pad:   24px;
+  --brand-preview-max: 160px;
+}
+
+/* An asset image. Keeps its aspect ratio; never stretch. */
+.pds-brand {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Figma sizes, for when the asset is placed at 1× */
+.pds-brand--pi-large            { width: var(--brand-pi-large-w); }
+.pds-brand--pi-small            { width: var(--brand-pi-small-w); }
+.pds-brand--logo                { width: var(--brand-logo-w); }
+
+/* Preview stage */
+.pds-brand-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--brand-stage-pad);
+  min-height: calc(var(--brand-preview-max) + 2 * var(--brand-stage-pad));
+}
+.pds-brand-stage--light { background: var(--brand-stage-light); }
+.pds-brand-stage--dark  { background: var(--brand-stage-dark); }
+.pds-brand-stage .pds-brand {
+  width: auto;
+  max-height: var(--brand-preview-max);
+}

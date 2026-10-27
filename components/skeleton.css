@@ -1,0 +1,124 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Skeleton (loading placeholder)
+   Figma: DS V2 – Molecules › ✏️ Skeleton (4047:3492)
+     component set "Skeleton" 4048:2868 (Size × Theme = 10)
+     ".Skeleton Block Light" 4047:3588 · ".Skeleton Block Dark" 4069:1238 (Default / Start / End)
+   Built 2026-10-28. Requires ../tokens.css. No JS.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colours — exactly as the Figma blocks use them */
+  --skeleton-light-bg:      var(--border-input-light);                         /* #E2EAEC */
+  --skeleton-light-start:   color-mix(in srgb, var(--pando-dark) 60%, transparent); /* #234357 @ 60% */
+  --skeleton-light-end:     color-mix(in srgb, var(--pando-dark) 20%, transparent); /* #234357 @ 20% */
+  --skeleton-dark-bg:       var(--dark-input-text);                            /* #8A8A9E */
+  --skeleton-dark-shade:    #484858; /* off-token in Figma */
+  --skeleton-dark-start:    color-mix(in srgb, var(--skeleton-dark-shade) 50%, transparent); /* #484858 @ 50% */
+  --skeleton-dark-end:      color-mix(in srgb, var(--skeleton-dark-shade) 50%, transparent); /* #484858 @ 50% */
+
+  /* Measured from the component */
+  --skeleton-height: 38px;        /* fixed; the two bars are centred inside */
+  --skeleton-gap: var(--space-10);/* 10px between the bars */
+  --skeleton-bar-height: 10px;
+  --skeleton-bar-radius: 5px;     /* Figma 14 / 10 on a 10px bar → renders as 5 */
+
+  /* Widths per Size (bottom bar = Size, top bar is shorter) */
+  --skeleton-220-top: 160px; --skeleton-220-bottom: 220px;
+  --skeleton-180-top: 120px; --skeleton-180-bottom: 180px;
+  --skeleton-160-top: 100px; --skeleton-160-bottom: 160px;
+  --skeleton-120-top:  85px; --skeleton-120-bottom: 120px;
+  --skeleton-80-top:   50px; --skeleton-80-bottom:   80px;
+
+  /* Shimmer — from the Figma prototype on the block:
+     Default →(after 0.5s, 0.3s ease-in)→ Start →(0.3s ease-out)→ End →(0.3s ease-in-out)→ Default */
+  --skeleton-cycle: 1.4s;
+  /* Gradient stops from the Start / End fills */
+  --skeleton-start-stop: 56.7%;   /* Start: shade at 0% → base at 56.7% */
+  --skeleton-end-stop: 44.4%;     /* End:   base at 44.4% → shade at 100% */
+}
+
+/* ── Skeleton (two bars) ───────────────────────────────────────── */
+.pds-skeleton {
+  --_bg: var(--skeleton-light-bg); --_start: var(--skeleton-light-start); --_end: var(--skeleton-light-end);
+  --_top: var(--skeleton-220-top); --_bottom: var(--skeleton-220-bottom);
+  box-sizing: border-box;
+  width: var(--_bottom);
+  height: var(--skeleton-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--skeleton-gap);
+}
+.pds-skeleton--220 { --_top: var(--skeleton-220-top); --_bottom: var(--skeleton-220-bottom); }
+.pds-skeleton--180 { --_top: var(--skeleton-180-top); --_bottom: var(--skeleton-180-bottom); }
+.pds-skeleton--160 { --_top: var(--skeleton-160-top); --_bottom: var(--skeleton-160-bottom); }
+.pds-skeleton--120 { --_top: var(--skeleton-120-top); --_bottom: var(--skeleton-120-bottom); }
+.pds-skeleton--80  { --_top: var(--skeleton-80-top);  --_bottom: var(--skeleton-80-bottom); }
+
+.pds-skeleton > .pds-skeleton__block:first-child { width: var(--_top); }
+.pds-skeleton > .pds-skeleton__block:last-child  { width: var(--_bottom); }
+
+/* Theme — also usable on a single block */
+.pds-skeleton--light { --_bg: var(--skeleton-light-bg); --_start: var(--skeleton-light-start); --_end: var(--skeleton-light-end); }
+.pds-skeleton--dark  { --_bg: var(--skeleton-dark-bg);  --_start: var(--skeleton-dark-start);  --_end: var(--skeleton-dark-end); }
+
+/* ── Block (.Skeleton Block) ───────────────────────────────────── */
+.pds-skeleton__block {
+  --_bg: var(--skeleton-light-bg); --_start: var(--skeleton-light-start); --_end: var(--skeleton-light-end);
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--skeleton-220-bottom);
+  height: var(--skeleton-bar-height);
+  border-radius: var(--skeleton-bar-radius);
+  background: var(--_bg);
+  overflow: hidden;
+}
+/* inherit the theme from a parent .pds-skeleton; a theme class on the block itself wins */
+.pds-skeleton .pds-skeleton__block { --_bg: inherit; --_start: inherit; --_end: inherit; }
+.pds-skeleton__block.pds-skeleton--light { --_bg: var(--skeleton-light-bg); --_start: var(--skeleton-light-start); --_end: var(--skeleton-light-end); }
+.pds-skeleton__block.pds-skeleton--dark  { --_bg: var(--skeleton-dark-bg);  --_start: var(--skeleton-dark-start);  --_end: var(--skeleton-dark-end); }
+
+/* The two shimmer frames, layered over the base fill */
+.pds-skeleton__block::before,
+.pds-skeleton__block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+.pds-skeleton__block::before { background: linear-gradient(90deg, var(--_start) 0%, var(--_bg) var(--skeleton-start-stop)); }
+.pds-skeleton__block::after  { background: linear-gradient(90deg, var(--_bg) var(--skeleton-end-stop), var(--_end) 100%); }
+
+.pds-skeleton__block::before { animation: pds-skeleton-start var(--skeleton-cycle) infinite; }
+.pds-skeleton__block::after  { animation: pds-skeleton-end   var(--skeleton-cycle) infinite; }
+
+/* 0.5s hold · 0.3s to Start (ease-in) · 0.3s to End (ease-out) · 0.3s back (ease-in-out) = 1.4s */
+@keyframes pds-skeleton-start {
+  0%, 35.71%  { opacity: 0; animation-timing-function: ease-in; }
+  57.14%      { opacity: 1; animation-timing-function: ease-out; }
+  78.57%, 100% { opacity: 0; }
+}
+@keyframes pds-skeleton-end {
+  0%, 57.14%  { opacity: 0; animation-timing-function: ease-out; }
+  78.57%      { opacity: 1; animation-timing-function: ease-in-out; }
+  100%        { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pds-skeleton__block::before,
+  .pds-skeleton__block::after { animation: none; opacity: 0; }
+}
+
+/* Static frames (documentation) and the no-motion version — after the media query so the frames still show */
+.pds-skeleton__block--start::before { opacity: 1; animation: none; }
+.pds-skeleton__block--start::after  { opacity: 0; animation: none; }
+.pds-skeleton__block--end::before   { opacity: 0; animation: none; }
+.pds-skeleton__block--end::after    { opacity: 1; animation: none; }
+.pds-skeleton__block--default::before,
+.pds-skeleton__block--default::after,
+.pds-skeleton--static .pds-skeleton__block::before,
+.pds-skeleton--static .pds-skeleton__block::after { animation: none; opacity: 0; }

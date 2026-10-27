@@ -21,6 +21,14 @@ window.PDS_REGISTRY = [
   { id: 'tooltip',    name: 'Tooltips',          level: 'Atoms', desc: 'Text, Custom Content, Map Tracking', status: 'As in Figma' },
   { id: 'icons',      name: 'Icons',             level: 'Atoms', desc: 'SVG icon set, searchable', status: 'As in Figma' },
   { id: 'scrollbar',  name: 'Scrollbar',         level: 'Atoms', desc: 'Light & dark', status: 'As in Figma' },
+  { id: 'menu',       name: 'Dropdown Menus',    level: 'Atoms', desc: '16 menus + 33 parts, light & dark', status: 'As in Figma' },
+  { id: 'readonly',   name: 'Label Readonly Text', level: 'Atoms', desc: 'Label : value, light & dark', status: 'As in Figma' },
+  { id: 'brand',      name: 'Brand',             level: 'Atoms', desc: 'Pi-Avatar, Pando-Logo (12 SVGs)', status: 'As in Figma' },
+  // ── Molecules ──
+  { id: 'button-group', name: 'Button Group',    level: 'Molecules', desc: 'Buttons and Action Buttons', status: 'As in Figma' },
+  { id: 'skeleton',   name: 'Skeleton',          level: 'Molecules', desc: '5 sizes, light & dark, shimmer', status: 'As in Figma' },
+  { id: 'tabs',       name: 'Tab Group',         level: 'Molecules', desc: '4 groups + 5 tab states', status: 'As in Figma' },
+  { id: 'progress',   name: 'Progress Indicator', level: 'Molecules', desc: '12 states, light & dark', status: 'As in Figma' },
 ];
 window.PDS_EMPTY = [
   { name: 'Alerts', level: 'Atoms', note: 'The Figma page is empty — nothing to build yet.' },

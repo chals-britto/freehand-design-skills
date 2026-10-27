@@ -1,0 +1,88 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Tab Group (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ Tabs (51:0)
+     · component set "Tab Group" (308:3318) — Theme × Background = 4 variants
+     · base set ".Tab" (59:254) — Theme × State = 5 variants
+       (Light: Active / Inactive / Disabled · Dark: Active / Inactive)
+   No review yet: everything published kept. Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Light ─────────────────────────────────────────────────── */
+  --tabs-active-fg:        var(--pando-blue-active);   /* #005399 "Text/Blue Active" — label + underline */
+  --tabs-inactive-fg:      var(--text-light);          /* #6C6C6C "Text/Light" */
+  --tabs-disabled-fg:      var(--grey-medium);         /* #A3A3A3 "Text/#A3A3A3-Disabled" (not --text-disabled #A3A2A2) */
+  --tabs-disabled-line:    var(--border-grey);         /* #EFEFEF */
+  --tabs-border:           var(--border-grey);         /* #EFEFEF "Border/Grey" — Background=No bottom rule */
+  --tabs-bg:               var(--accent-off-white);    /* #F8F8F8 "Accent/OffWhite" — Background=Yes */
+
+  /* ── Dark ──────────────────────────────────────────────────── */
+  --tabs-dark-active-fg:   var(--dark-highlight-green); /* #1FCD93 */
+  --tabs-dark-inactive-fg: var(--dark-input-text);      /* #8A8A9E */
+  --tabs-dark-border:      var(--dark-input-text);      /* #8A8A9E — Background=No bottom rule */
+  --tabs-dark-bg:          var(--dark-darker);          /* #24242F — Background=Yes */
+
+  /* ── Measured from the component ───────────────────────────── */
+  --tabs-pad: 5px 20px 0;      /* group padding top / sides / bottom */
+  --tabs-gap: 20px;            /* tab ↔ tab */
+  --tabs-tab-pad-x: 1px;       /* tab side padding */
+  --tabs-label-gap: 8px;       /* label ↔ underline */
+  --tabs-line: 1.5px;          /* underline and group bottom rule (stroke 1.5) */
+  --tabs-tracking: .3px;       /* "12px/Heading-AllCaps" letter-spacing */
+}
+
+/* ── Group ─────────────────────────────────────────────────────── */
+.pds-tabs {
+  --_active: var(--tabs-active-fg);
+  --_inactive: var(--tabs-inactive-fg);
+  --_rule: var(--tabs-border);          /* bottom rule of the group */
+  --_rest-line: var(--tabs-border);     /* underline of an inactive tab (same as its surroundings) */
+  --_bg: transparent;
+  box-sizing: border-box;
+  display: inline-flex;                 /* hugs its tabs, as Figma */
+  align-items: flex-end;
+  gap: var(--tabs-gap);
+  padding: var(--tabs-pad);
+  background: var(--_bg);
+  box-shadow: inset 0 calc(-1 * var(--tabs-line)) 0 var(--_rule); /* Figma: 1.5 bottom stroke, inside */
+  font-family: var(--font-family);
+}
+.pds-tabs--bg      { --_rule: transparent; --_bg: var(--tabs-bg); --_rest-line: var(--tabs-bg); }
+.pds-tabs--dark    { --_active: var(--tabs-dark-active-fg); --_inactive: var(--tabs-dark-inactive-fg); --_rule: var(--tabs-dark-border); --_rest-line: transparent; }
+.pds-tabs--dark.pds-tabs--bg { --_rule: transparent; --_bg: var(--tabs-dark-bg); --_rest-line: var(--tabs-dark-bg); }
+
+/* ── Tab ───────────────────────────────────────────────────────── */
+.pds-tabs__tab {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--tabs-label-gap);
+  padding: 0 var(--tabs-tab-pad-x);
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--_inactive);
+  font: var(--type-12-semibold);
+  letter-spacing: var(--tabs-tracking);
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pds-tabs__tab::after {               /* underline */
+  content: "";
+  display: block;
+  height: var(--tabs-line);
+  border-radius: var(--tabs-line);    /* round cap */
+  background: var(--_rest-line);
+}
+.pds-tabs__tab[aria-selected="true"] { color: var(--_active); }
+.pds-tabs__tab[aria-selected="true"]::after { background: var(--_active); }
+
+.pds-tabs__tab[aria-disabled="true"] { color: var(--tabs-disabled-fg); cursor: default; }
+.pds-tabs__tab[aria-disabled="true"]::after { background: var(--tabs-disabled-line); }
+
+/* Focus — added in review, not in Figma */
+.pds-tabs__tab:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; border-radius: 2px; }
+
+/* ── Panel ─────────────────────────────────────────────────────── */
+.pds-tabs__panel[hidden] { display: none; }
+.pds-tabs__panel:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review */

@@ -45,8 +45,22 @@ All Atoms are built (2026-10-23). Each has `components/<id>.css` (+ `.js` if int
 | Tags | `tag` | — | As in Figma |
 | Status | `status` | — | As in Figma |
 | Tooltips | `tooltip` | `pdsTooltip` | As in Figma (Text, Custom Content, Map Tracking) |
-| Icons (430) | `icons` | manifest `components/icons/icons-data.js`, files `components/icons/*.svg` | As in Figma |
+| Icons (431) | `icons` | manifest `components/icons/icons-data.js`, files `components/icons/*.svg` | As in Figma |
 | Scrollbar | `scrollbar` | — | As in Figma |
+| Dropdown Menus (open lists) | `menu` | `pdsMenu` | As in Figma — general-purpose menu = Dropdown Light · Single-Info |
+| Label Readonly Text | `readonly` | — | As in Figma |
+| Brand (Pi-Avatar, Pando-Logo) | `brand` | files `components/brand/*.svg` | As in Figma |
+
+**Molecules** (file `rd3gmPnjhPo1d2GAlNSJOn`; build plan `review/molecules-inventory.md`) — reuse atoms inside them:
+
+| Molecule | id | JS | Status |
+|---|---|---|---|
+| Button Group | `button-group` | — | As in Figma |
+| Skeleton | `skeleton` | — | As in Figma |
+| Tab Group | `tabs` | `pdsTabs` | As in Figma |
+| Progress Indicator | `progress` | `pdsProgress` | As in Figma |
+
+The full, current list of pages is `components/registry.js`. Organisms plan: `review/organisms-inventory.md`.
 
 Alerts: Figma page is empty — use Toast or Callout (`badge`) and ask.
 "As in Figma" pages have an **Open issues** section; respect it and don't silently fix. Not built yet: Molecules, Organisms (read from Figma when needed). Gaps in Atoms: see `review/atoms-audit.md`.

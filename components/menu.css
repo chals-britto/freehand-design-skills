@@ -1,0 +1,376 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Dropdown menu panels (the open list under a dropdown field)
+   Figma: DS V2 – Atoms › 🟡 Inputs (0:1)
+     · "Dropdown list"      component set 4096:7204  (6 · table menus)
+     · "Dropdown Light"     component set 3154:2534  (6)
+     · ".Dropdown Dark"     component set 3380:4191  (4)
+     · parts: ".Dropdown Option" 3418:3343 (11) + 4096:4146 (7) · ".Header" 4096:3673 (6)
+              ".Table Cell" 4096:4133 (3) · ". Toggle" 4232:6750 (2) · ".Custom Add" 4644:6619 (2)
+              ".Blinking cursor" 3196:1721 (2)
+   Built 2026-10-28 · no review file — every published variant kept as in Figma.
+   Requires ../tokens.css. Multi-select rows reuse checkbox.css; table tags reuse tag.css;
+   scrollbars reuse scrollbar.css (.pds-scroll).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Light list (Dropdown Light) ─────────────────────────────── */
+  --menu-bg:                 var(--white);
+  --menu-shadow:             var(--shadow-3);              /* 0 2 14 10% — Dropdown Light */
+  --menu-option-fg:          var(--text-dark);             /* #313131 */
+  --menu-option-hover-bg:    var(--accent-light-highlight);/* #E9F1F5 */
+  --menu-option-selected-bg: var(--accent-alternate-white);/* #F9FAFA (single, Type=Dropdown) */
+  --menu-option-selected-fg: var(--pando-blue);            /* #0076DD */
+  --menu-check:              var(--pando-blue);            /* Navigation/Selected 12px, Multi-Select state */
+  --menu-sub-fg:             var(--text-dark);             /* Multi-info second line */
+  --menu-section-bg:         var(--pando-light);           /* #EEF2F4 Section Heading */
+  --menu-section-fg:         var(--text-dark);
+  --menu-add-fg:             var(--action-blue);           /* #376F99 "Add new" + New Option */
+  --menu-add-active-border:  var(--pando-blue);            /* New Option row, 1px inside */
+  --menu-hint-fg:            #737373;                      /* off-token in Figma — "ENTER" hint (same value as --dropdown-secondary-fg) */
+
+  /* ── Table list (Dropdown list) ──────────────────────────────── */
+  --menu-table-shadow:       var(--shadow-4);              /* 0 14 28 6% */
+  --menu-cell-bg:            var(--white);
+  --menu-cell-alt-bg:        var(--accent-alternate-white);/* #F9FAFA Alternative */
+  --menu-cell-border:        var(--border-grey);           /* #EFEFEF, 0.5 bottom */
+  --menu-cell-fg:            var(--text-dark);
+  --menu-cell-selected-bg:   #E9F4FE;                      /* off-token in Figma */
+  --menu-cell-selected-border: var(--white);
+  --menu-cell-selected-fg:   var(--pando-blue);
+  --menu-cell-disabled-bg:   color-mix(in srgb, var(--grey-light) 30%, transparent); /* #E7E7E7 @ 30% */
+  --menu-cell-disabled-border: var(--border-input-light);  /* #E2EAEC */
+  --menu-cell-disabled-fg:   var(--text-medium);           /* #545454 */
+  --menu-head-fg:            var(--pando-blue-active);     /* #005399 table header text */
+  --menu-tag-bg:             var(--border-grey);           /* #EFEFEF — Tag instance fill override (tag.css has no #EFEFEF tag) */
+  --menu-bar-bg:             var(--white);                 /* Selection header, Place=Top */
+  --menu-bar-bottom-bg:      var(--accent-light-highlight);/* #E9F1F5 Selection header, Place=Bottom */
+  --menu-bar-bottom-border:  var(--border-input-light);    /* #E2EAEC, 1px top */
+  --menu-bar-label:          #2A4255;                      /* off-token in Figma (nearest --pando-dark #234357) */
+  --menu-pill-active-bg:     #0078DD;                      /* off-token in Figma (nearest --pando-blue #0076DD) */
+  --menu-pill-active-fg:     var(--white);
+  --menu-pill-bg:            var(--white);
+  --menu-pill-fg:            var(--pando-dark);            /* #234357 */
+  --menu-pill-shadow:        var(--shadow-1);              /* 0 2 3 10% */
+
+  /* ── Dark (.Dropdown Dark + dark parts) ──────────────────────── */
+  --menu-dark-bg:            var(--dark-darker);           /* #24242F */
+  --menu-dark-option-fg:     var(--dark-label-text);       /* #D5DAF4 .Dropdown Option Dark */
+  --menu-dark-option-hover-bg: var(--dark-light);          /* #343440 */
+  --menu-dark-option-selected-fg: var(--highlight-blue-light); /* #9CD2FF */
+  --menu-dark-text-fg:       var(--white);                 /* plain text rows (align=Right, Multi-Select Right) */
+  --menu-dark-section-bg:    var(--dark-light);            /* #343440 */
+  --menu-dark-section-fg:    var(--dark-label-text);
+  --menu-dark-pill-bg:       #48485880;                    /* off-token in Figma — #484858 @ 50% */
+  --menu-dark-pill-fg:       var(--dark-label-text);
+
+  /* ── Measured ────────────────────────────────────────────────── */
+  --menu-w:                  200px;
+  --menu-w-table:            400px;
+  --menu-pad-b:              5px;    /* light list bottom padding */
+  --menu-pad-check:          5px;    /* Single-Info · Multiple: top + bottom */
+  --menu-option-h:           36px;
+  --menu-option-h-info:      52px;
+  --menu-option-pad:         var(--space-10);
+  --menu-option-gap:         var(--space-10);
+  --menu-info-gap:           4px;    /* title ↔ second line */
+  --menu-check-size:         12px;
+  --menu-section-h:          24px;
+  --menu-section-pad:        5px var(--space-10);
+  --menu-max-h:              365px;  /* Single-Info · Single = 10 rows + 5 */
+  --menu-max-h-info:         525px;  /* Multi-Info = 10 rows + 5 */
+  --menu-max-h-check:        298px;  /* Single-Info · Multiple = 8 rows + 10 */
+  --menu-max-h-add:          293px;  /* Custom Add = 7 rows + add row + 5 */
+  --menu-add-icon:           10px;
+  --menu-hint-gap:           3px;
+  --menu-hint-icon:          14px;
+  --menu-cursor-gap:         2px;
+
+  --menu-cell-w:             100px;
+  --menu-cell-w-main:        200px;
+  --menu-cell-h:             36px;
+  --menu-head-h:             34px;
+  --menu-cell-pad:           var(--space-10) 5px;
+  --menu-cell-gap:           8px;    /* checkbox ↔ text */
+  --menu-head-gap:           5px;    /* other header cells */
+  --menu-body-max-h:         360px;  /* Usage=Search: 10 rows */
+  --menu-body-max-h-short:   180px;  /* Usage=Recent / Selected: 5 rows */
+  --menu-bar-h:              34px;
+  --menu-bar-pad:            5px var(--space-10);
+  --menu-bar-gap:            var(--space-15);   /* label ↔ pills */
+  --menu-pill-gap:           var(--space-10);
+  --menu-pill-h:             24px;
+  --menu-pill-pad-active:    5px var(--space-10);
+  --menu-pill-pad:           5px;
+  --menu-pill-min-w:         40px;   /* inactive text box = 40/48 wide in Figma */
+  --menu-pill-radius-active: 14px;
+  --menu-pill-radius:        20px;
+
+  --menu-dark-radius:        4px;
+  --menu-dark-pad:           var(--space-10) 5px var(--space-10) var(--space-15);
+  --menu-dark-pad-single-left: 0 5px 5px 0;
+  --menu-dark-gap:           12px;   /* plain text / checkbox rows */
+  --menu-dark-indent:        var(--space-15);   /* unselected rows next to a ✓ row */
+  --menu-dark-check-gap:     5px;
+  --menu-dark-max-h:         268px;  /* options frame in Multi-Select / Single Right */
+  --menu-dark-max-h-single:  364px;  /* Single Select Left */
+
+  --menu-focus: 2px solid var(--pando-blue); /* added — not in Figma */
+}
+
+/* ═══ Shell ═══════════════════════════════════════════════════════ */
+.pds-menu {
+  box-sizing: border-box;
+  width: var(--menu-w);
+  margin: 0; padding: 0 0 var(--menu-pad-b);
+  list-style: none;
+  display: flex; flex-direction: column;
+  max-height: var(--menu-max-h);
+  overflow-y: auto;
+  background: var(--menu-bg);
+  box-shadow: var(--menu-shadow);
+  font-family: var(--font-family);
+  color: var(--menu-option-fg);
+}
+.pds-menu *, .pds-menu *::before, .pds-menu *::after { box-sizing: border-box; }
+.pds-menu[hidden] { display: none; }
+.pds-menu--info  { max-height: var(--menu-max-h-info); }
+.pds-menu--check { max-height: var(--menu-max-h-check); padding: var(--menu-pad-check) 0; }
+.pds-menu--add   { max-height: var(--menu-max-h-add); }
+
+/* ═══ Option (".Dropdown Option" 3418:3343) ═══════════════════════ */
+.pds-menu__option {
+  flex: none;
+  display: flex; align-items: center; gap: var(--menu-option-gap);
+  height: var(--menu-option-h);
+  padding: var(--menu-option-pad);
+  font: var(--type-12-semibold);
+  color: var(--menu-option-fg);
+  background: var(--menu-bg);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pds-menu__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.pds-menu__option:hover, .pds-menu__option.is-hover, .pds-menu__option.is-active { background: var(--menu-option-hover-bg); }
+.pds-menu__option[aria-selected="true"] { background: var(--menu-option-selected-bg); color: var(--menu-option-selected-fg); }
+.pds-menu__option[aria-selected="true"]:hover, .pds-menu__option[aria-selected="true"].is-active { background: var(--menu-option-hover-bg); }
+
+/* Multi-info: title + 10px line + Input Tag */
+.pds-menu__option--info { height: var(--menu-option-h-info); align-items: flex-start; }
+.pds-menu__info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--menu-info-gap); }
+.pds-menu__info .pds-menu__label { display: block; }
+.pds-menu__sub { font: var(--type-10-regular); letter-spacing: .5px; color: var(--menu-sub-fg); overflow: hidden; text-overflow: ellipsis; }
+.pds-menu__option--info .pds-tag { align-self: center; }
+/* Figma: Selected keeps a white fill (title turns blue); Multi-Select adds the 12px ✓ and hides the tag */
+.pds-menu__option--info[aria-selected="true"] { background: var(--menu-bg); }
+.pds-menu__option--info[aria-selected="true"]:hover,
+.pds-menu__option--info[aria-selected="true"].is-active { background: var(--menu-option-hover-bg); }
+.pds-menu__option--info .pds-menu__sub { color: var(--menu-sub-fg); }
+.pds-menu__check { flex: none; width: var(--menu-check-size); height: var(--menu-check-size); color: var(--menu-check); visibility: hidden; }
+.pds-menu__option[aria-selected="true"] .pds-menu__check { visibility: visible; }
+.pds-menu[aria-multiselectable="true"] .pds-menu__option--info[aria-selected="true"] .pds-tag { display: none; }
+
+/* Section heading */
+.pds-menu__section {
+  flex: none;
+  display: flex; align-items: center;
+  height: var(--menu-section-h);
+  padding: var(--menu-section-pad);
+  background: var(--menu-section-bg);
+  color: var(--menu-section-fg);
+  font: var(--type-10-semibold); letter-spacing: .5px; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Checkbox row (Single-Info · Multiple) — checkbox.css draws the box */
+.pds-menu__option--check { font: var(--type-12-regular); }
+.pds-menu__option--check .pds-checkbox { pointer-events: none; min-width: 0; }
+.pds-menu__option--check .pds-checkbox__label { overflow: hidden; text-overflow: ellipsis; }
+.pds-menu__option--check[aria-selected="true"] { background: var(--menu-bg); color: var(--menu-option-fg); }
+.pds-menu__option--check:hover, .pds-menu__option--check.is-active { background: var(--menu-option-hover-bg); }
+
+/* ═══ Custom Add (".Custom Add" 4644:6619) ═════════════════════════ */
+.pds-menu__add {
+  flex: none;
+  display: flex; align-items: center; gap: var(--menu-option-gap);
+  width: 100%; height: var(--menu-option-h);
+  padding: var(--menu-option-pad);
+  margin: 0; border: 0; background: var(--menu-bg);
+  font: var(--type-10-semibold); letter-spacing: 0; text-transform: uppercase;
+  color: var(--menu-add-fg); text-align: left; cursor: pointer;
+}
+.pds-menu__add svg { flex: none; width: var(--menu-add-icon); height: var(--menu-add-icon); }
+.pds-menu__add.is-active, .pds-menu__add:hover { background: var(--menu-option-hover-bg); } /* hover on Add row — added, not in Figma */
+.pds-menu__new {
+  flex: none;
+  display: flex; align-items: center;
+  height: var(--menu-option-h);
+  padding: calc(var(--menu-option-pad) - 1px);   /* 1px inside stroke */
+  border: 1px solid var(--menu-add-active-border);
+  background: var(--menu-bg);
+}
+.pds-menu__new[hidden] { display: none; }
+.pds-menu__new-field { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--menu-cursor-gap); }
+.pds-menu__new-input {
+  flex: 1; min-width: 0; margin: 0; padding: 0; border: 0; outline: 0; background: none;
+  font: var(--type-12-semibold); color: var(--menu-add-fg); caret-color: var(--menu-add-fg);
+}
+.pds-menu__new-input::placeholder { color: var(--menu-add-fg); opacity: 1; }
+.pds-menu__cursor { font: var(--type-12-semibold); color: var(--menu-add-fg); animation: pds-menu-blink 1s steps(1) infinite; }
+.pds-menu__cursor--off { visibility: hidden; animation: none; }
+@keyframes pds-menu-blink { 50% { visibility: hidden; } }
+.pds-menu__hint { flex: none; display: inline-flex; align-items: center; gap: var(--menu-hint-gap); font: var(--type-10-regular); letter-spacing: .5px; color: var(--menu-hint-fg); }
+.pds-menu__hint svg { width: var(--menu-hint-icon); height: var(--menu-hint-icon); }
+
+/* ═══ Table menu ("Dropdown list" 4096:7204) ══════════════════════ */
+.pds-menu--table {
+  width: var(--menu-w-table);
+  max-height: none; overflow: visible;
+  padding: 0;
+  box-shadow: var(--menu-table-shadow);
+}
+.pds-menu--table.pds-menu--flat { box-shadow: none; background: none; } /* "Dropdown Light · Type=Table" body only */
+.pds-menu__body { display: flex; flex-direction: column; max-height: var(--menu-body-max-h); overflow-y: auto; }
+.pds-menu__body--short { max-height: var(--menu-body-max-h-short); }
+
+.pds-menu__row { flex: none; display: flex; cursor: pointer; }
+.pds-menu__cell {
+  flex: none;
+  display: flex; align-items: center; gap: var(--menu-cell-gap);
+  width: var(--menu-cell-w); height: var(--menu-cell-h);
+  padding: var(--menu-cell-pad);
+  background: var(--menu-cell-bg);
+  box-shadow: inset 0 -.5px 0 var(--menu-cell-border);   /* 0.5 inside bottom stroke */
+  font: var(--type-12-regular); color: var(--menu-cell-fg);
+  white-space: nowrap; overflow: hidden;
+}
+.pds-menu__cell:first-child { width: var(--menu-cell-w-main); }
+.pds-menu__cell-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.pds-menu__cell .pds-tag { --_bg: var(--menu-tag-bg); }
+.pds-menu__cell .pds-checkbox { flex: none; pointer-events: none; }
+.pds-menu__row--alt .pds-menu__cell { background: var(--menu-cell-alt-bg); }
+.pds-menu__row[aria-selected="true"] .pds-menu__cell {
+  background: var(--menu-cell-selected-bg);
+  box-shadow: inset 0 -.5px 0 var(--menu-cell-selected-border);
+  color: var(--menu-cell-selected-fg);
+}
+.pds-menu__row[aria-disabled="true"] { cursor: not-allowed; }
+.pds-menu__row[aria-disabled="true"] .pds-menu__cell,
+.pds-menu__cell--disabled {
+  background: var(--menu-cell-disabled-bg);
+  box-shadow: inset 0 -.5px 0 var(--menu-cell-disabled-border);
+  color: var(--menu-cell-disabled-fg);
+}
+/* Keyboard highlight — added, not in Figma (State=Hover looks the same as Default) */
+.pds-menu__row.is-active { outline: var(--menu-focus); outline-offset: -2px; }
+
+/* Table header (.Header Type=Table) */
+.pds-menu__head { flex: none; display: flex; box-shadow: 0 1px 0 var(--menu-cell-border); position: relative; z-index: 1; }
+.pds-menu__hcell {
+  flex: none; display: flex; align-items: center; gap: var(--menu-head-gap);
+  width: var(--menu-cell-w); height: var(--menu-head-h);
+  padding: var(--menu-cell-pad);
+  background: var(--menu-cell-bg);
+  box-shadow: inset 0 1px 0 var(--menu-cell-border), inset 0 -.5px 0 var(--menu-cell-border);
+  font: var(--type-10-semibold); letter-spacing: .5px; text-transform: uppercase;
+  color: var(--menu-head-fg); white-space: nowrap; overflow: hidden;
+}
+.pds-menu__hcell:first-child { width: var(--menu-cell-w-main); gap: var(--menu-cell-gap); }
+.pds-menu__hcell-spacer { flex: none; width: 14px; height: 14px; } /* checkbox at opacity 0 in Figma */
+
+/* Section header (.Header Type=Section) */
+.pds-menu--table .pds-menu__section { height: var(--menu-section-h); }
+
+/* Selection header (.Header Type=Selection) */
+.pds-menu__bar {
+  flex: none;
+  display: flex; align-items: center; gap: var(--menu-bar-gap);
+  height: var(--menu-bar-h);
+  padding: var(--menu-bar-pad);
+  background: var(--menu-bar-bg);
+}
+.pds-menu__bar--bottom { background: var(--menu-bar-bottom-bg); box-shadow: inset 0 1px 0 var(--menu-bar-bottom-border); }
+.pds-menu__bar-label { font: var(--type-12-semibold); color: var(--menu-bar-label); }
+.pds-menu__pills { display: flex; align-items: center; gap: var(--menu-pill-gap); }
+/* ". Toggle" pill (4232:6750) — atom variant missing in kit (toggle.css Toggle Tab is a segmented control) */
+.pds-menu__pill {
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: var(--menu-pill-h); min-width: calc(var(--menu-pill-min-w) + 10px);
+  padding: var(--menu-pill-pad);
+  margin: 0; border: 0; border-radius: var(--menu-pill-radius);
+  background: var(--menu-pill-bg); color: var(--menu-pill-fg);
+  box-shadow: var(--menu-pill-shadow);
+  font: var(--type-10-bold); line-height: 14px; text-transform: uppercase; white-space: nowrap;
+  cursor: pointer;
+}
+.pds-menu__pill[aria-pressed="true"] {
+  padding: var(--menu-pill-pad-active);
+  border-radius: var(--menu-pill-radius-active);
+  background: var(--menu-pill-active-bg); color: var(--menu-pill-active-fg);
+  box-shadow: none;
+}
+.pds-menu__pill:focus-visible { outline: var(--menu-focus); outline-offset: 2px; } /* added — not in Figma */
+
+/* ═══ Dark (.Dropdown Dark 3380:4191 + dark parts) ════════════════ */
+.pds-menu--dark {
+  display: flex; flex-direction: row; align-items: stretch;
+  width: auto; max-height: none; overflow: visible;
+  padding: var(--menu-dark-pad);
+  border-radius: var(--menu-dark-radius);
+  background: var(--menu-dark-bg);
+  box-shadow: none;
+  color: var(--menu-dark-text-fg);
+}
+.pds-menu__list {
+  --_lw: 205px; --_lg: 11px;   /* options frame width · gap to the scrollbar */
+  flex: none;
+  width: calc(var(--_lw) + var(--_lg) + 6px);
+  display: flex; flex-direction: column; gap: var(--menu-dark-gap);
+  margin: 0; padding: 0 var(--_lg) 0 0; list-style: none;
+  max-height: var(--menu-dark-max-h); overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+.pds-menu--single-right .pds-menu__list { --_lw: 190px; }
+.pds-menu--multi-left .pds-menu__list   { --_lw: 209px; --_lg: 5px; }
+.pds-menu__text .pds-menu__label { max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+/* plain text rows (align=Right, Multi-Select Right) */
+.pds-menu__text {
+  flex: none; display: flex; align-items: center; justify-content: flex-end; gap: var(--menu-dark-check-gap);
+  font: var(--type-12-regular); line-height: 16px; color: var(--menu-dark-text-fg);
+  white-space: nowrap; cursor: pointer;
+}
+.pds-menu__text .pds-menu__label { flex: 0 1 auto; text-align: right; }
+.pds-menu__text[aria-selected="true"] { color: var(--menu-dark-option-selected-fg); }
+.pds-menu__text svg { flex: none; width: 10px; height: 8px; display: none; }
+.pds-menu--multi-right .pds-menu__text { padding-right: var(--menu-dark-indent); }
+.pds-menu--multi-right .pds-menu__text[aria-selected="true"] { padding-right: 0; }
+.pds-menu--multi-right .pds-menu__text[aria-selected="true"] svg { display: block; }
+.pds-menu__text:hover .pds-menu__label, .pds-menu__text.is-active .pds-menu__label { text-decoration: underline; } /* added — not in Figma (no hover state) */
+.pds-menu__text.is-active { outline: var(--menu-focus); outline-offset: 1px; }
+
+/* dark checkbox rows (Multi-Select Left) */
+.pds-menu__list .pds-menu__option--check { height: auto; padding: 0; background: none; }
+.pds-menu__list .pds-menu__option--check:hover,
+.pds-menu__list .pds-menu__option--check.is-active { background: none; }
+.pds-menu__list .pds-menu__option--check.is-active .pds-checkbox__box { outline: var(--menu-focus); outline-offset: 2px; }
+
+/* dark .Dropdown Option rows (Single Select Left) */
+.pds-menu--single-left { padding: var(--menu-dark-pad-single-left); }
+.pds-menu--single-left .pds-menu__list { gap: 0; padding: 0; width: var(--menu-w); max-height: var(--menu-dark-max-h-single); scrollbar-gutter: auto; }
+.pds-menu--dark .pds-menu__option { width: var(--menu-w); background: none; color: var(--menu-dark-option-fg); }
+.pds-menu--dark .pds-menu__option:hover,
+.pds-menu--dark .pds-menu__option.is-hover,
+.pds-menu--dark .pds-menu__option.is-active { background: var(--menu-dark-option-hover-bg); color: var(--menu-dark-option-fg); }
+.pds-menu--dark .pds-menu__option[aria-selected="true"] { background: none; color: var(--menu-dark-option-selected-fg); }
+.pds-menu--dark .pds-menu__option[aria-selected="true"].is-active { background: var(--menu-dark-option-hover-bg); }
+
+/* dark section + selection header parts */
+.pds-menu__section--dark { background: var(--menu-dark-section-bg); color: var(--menu-dark-section-fg); }
+.pds-menu__bar--dark { background: var(--menu-dark-section-bg); }
+.pds-menu__bar--dark .pds-menu__bar-label { color: var(--menu-dark-pill-fg); }
+.pds-menu__bar--dark .pds-menu__pill { background: var(--menu-dark-pill-bg); color: var(--menu-dark-pill-fg); }
+
+/* ═══ Placement under a field (Inputs › Dropdown Select) ══════════ */
+.pds-menu-anchor { position: relative; display: inline-block; vertical-align: top; }
+.pds-menu-anchor > .pds-menu { position: absolute; left: 0; top: 100%; z-index: 20; }
+.pds-menu-anchor--right > .pds-menu { left: auto; right: 0; }

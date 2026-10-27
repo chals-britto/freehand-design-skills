@@ -1,0 +1,40 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Label Readonly Text
+   Figma: DS V2 – Atoms › Foundation – Text & Text Styles (143:0)
+          › component set "Label Readonly Text" (3212:3376)
+          Theme=Light 563:3 · Theme=Dark 3212:3375
+   Built 2026-10-27 (no review yet: every published item treated as Keep).
+   Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Component tokens — colours exactly as the Figma variants use them */
+  --readonly-light-fg: var(--text-dark);        /* #313131 · style Text/Dark */
+  --readonly-dark-fg:  var(--dark-label-text);  /* #D5DAF4 · style Dark/Label-Text */
+
+  /* Measured from the component */
+  --readonly-gap: 4px;      /* label ↔ ":" ↔ value (auto-layout gap) */
+  --readonly-height: 16px;  /* Figma line box; hugs content */
+}
+
+/* ── Label : value line ─────────────────────────────────────────── */
+.pds-readonly {
+  --_fg: var(--readonly-light-fg);
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--readonly-gap);
+  margin: 0;
+  padding: 0;
+  color: var(--_fg);
+  font-family: var(--font-family);
+  /* no fill, border, radius or shadow — kept as in Figma */
+}
+.pds-readonly--light { --_fg: var(--readonly-light-fg); }
+.pds-readonly--dark  { --_fg: var(--readonly-dark-fg); }
+
+/* Label — 12px/Body: Open Sans Regular 12 / 16 */
+.pds-readonly__label { font: var(--type-12-regular); margin: 0; color: inherit; }
+/* Separator — Label/Regular/Normal: Open Sans Regular 12 / auto */
+.pds-readonly__sep   { font: var(--type-12-regular); margin: 0; color: inherit; }
+/* Value — 12px/Heading: Open Sans SemiBold 12 / auto */
+.pds-readonly__value { font: var(--type-12-semibold); margin: 0; color: inherit; }
