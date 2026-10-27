@@ -1,0 +1,86 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Condition (rule builder)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟡 Conditions (2305:4670)
+     · component set "Condition" 2384:6520 — Type = Single · Linked · Brackets · And/Or
+   No review file — every published variant kept as in Figma.
+   Requires ../tokens.css, input.css (Dropdown Select + Text · Type=Condition), tag.css (nimbus).
+   The fields are kit inputs; this file only lays them out and draws the
+   link bracket, the And/Or connector and the round brackets.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colours */
+  --condition-link-line:   var(--border-blue-grey);   /* #B5C3CB — Linked bracket + And/Or connector */
+  --condition-bracket-fg:  #000000;                   /* off-token in Figma (pure black "(" ")") */
+
+  /* Measured from the component */
+  --condition-field-overlap: -1px;  /* fields sit edge to edge, borders overlap (auto-layout gap -1) */
+  --condition-label-h:       14px;  /* label slot above each field (Single, Brackets) */
+  --condition-row-gap:       var(--space-10); /* Linked: row ↔ row */
+  --condition-link-w:        10px;  /* Linked bracket width */
+  --condition-link-indent:   9px;   /* rows start 9px right of the bracket line (10 wide, gap -1) */
+  --condition-link-top:      15px;  /* bracket top tick, from the top of the first row */
+  --condition-link-bottom:   14px;  /* bracket bottom tick, from the bottom of the last row */
+  --condition-andor-pad-top: 36px;  /* And/Or: linked group starts 36px down */
+  --condition-andor-indent:  30px;  /* And/Or: linked group starts 30px in */
+  --condition-andor-tag-x:   11px;  /* tag position */
+  --condition-andor-tag-y:   5px;
+  --condition-andor-line-y:  26px;  /* connector starts under the tag … */
+  --condition-andor-line-h:  25px;  /* … and meets the bracket's top tick */
+  --condition-brackets-pad:  var(--space-10);
+  --condition-bracket-w:     14px;  /* "(" / ")" cell, 5px side padding */
+  --condition-bracket-pad:   26px 5px 12px; /* glyph sits level with the field box */
+}
+
+.pds-condition { font-family: var(--font-family); box-sizing: border-box; }
+.pds-condition *, .pds-condition *::before, .pds-condition *::after { box-sizing: border-box; }
+
+/* ── Single: one row of kit fields, edge to edge ──────────────────── */
+.pds-condition__row { display: inline-flex; align-items: flex-start; vertical-align: top; }
+.pds-condition__row > .pds-input + .pds-input { margin-left: var(--condition-field-overlap); }
+.pds-condition__row > .pds-input { flex: none; }
+.pds-condition__row > .pds-input:focus-within { z-index: 1; }
+/* label slot: 14px even when the label is empty (Figma keeps the frame) */
+.pds-condition__row .pds-input__head { min-height: var(--condition-label-h); }
+/* rows without labels (inside Linked) */
+.pds-condition__row--nolabel .pds-input__head { display: none; }
+
+/* ── Linked: rows joined by a bracket on the left ─────────────────── */
+.pds-condition--linked {
+  position: relative; display: inline-flex; flex-direction: column; align-items: flex-start;
+  gap: var(--condition-row-gap);
+  padding-left: var(--condition-link-indent);
+}
+.pds-condition--linked::before {
+  content: ""; position: absolute; left: 0;
+  top: var(--condition-link-top); bottom: var(--condition-link-bottom);
+  width: var(--condition-link-w);
+  border: 1px solid var(--condition-link-line); border-right: 0;
+  pointer-events: none;
+}
+/* one row only: nothing to link */
+.pds-condition--linked:has(> .pds-condition__row:only-child)::before { display: none; }
+
+/* ── And/Or: logic tag above a Linked group ───────────────────────── */
+.pds-condition--andor {
+  position: relative; display: inline-block;
+  padding: var(--condition-andor-pad-top) 0 0 var(--condition-andor-indent);
+}
+.pds-condition--andor > .pds-condition__logic {
+  position: absolute; left: var(--condition-andor-tag-x); top: var(--condition-andor-tag-y);
+}
+.pds-condition--andor::before {
+  content: ""; position: absolute;
+  left: var(--condition-andor-indent); top: var(--condition-andor-line-y);
+  width: 1px; height: var(--condition-andor-line-h);
+  background: var(--condition-link-line);
+}
+
+/* ── Brackets: ( row ) row ────────────────────────────────────────── */
+.pds-condition--brackets {
+  display: inline-flex; align-items: center; padding: var(--condition-brackets-pad);
+}
+.pds-condition__bracket {
+  flex: none; width: var(--condition-bracket-w); padding: var(--condition-bracket-pad);
+  font: var(--type-10-bold); color: var(--condition-bracket-fg); text-align: left;
+}

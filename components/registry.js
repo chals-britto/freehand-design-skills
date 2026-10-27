@@ -29,6 +29,12 @@ window.PDS_REGISTRY = [
   { id: 'skeleton',   name: 'Skeleton',          level: 'Molecules', desc: '5 sizes, light & dark, shimmer', status: 'As in Figma' },
   { id: 'tabs',       name: 'Tab Group',         level: 'Molecules', desc: '4 groups + 5 tab states', status: 'As in Figma' },
   { id: 'progress',   name: 'Progress Indicator', level: 'Molecules', desc: '12 states, light & dark', status: 'As in Figma' },
+  { id: 'dropdown-option', name: 'Dropdown Option', level: 'Molecules', desc: 'Avatar + two-line option rows', status: 'As in Figma' },
+  { id: 'toggle-tab', name: 'Toggle Tab',        level: 'Molecules', desc: 'Icon, steps, pills, segment', status: 'As in Figma' },
+  { id: 'loader',     name: 'Loaders',           level: 'Molecules', desc: '4 animated GIFs + stills', status: 'As in Figma' },
+  { id: 'empty-state', name: 'Empty State',      level: 'Molecules', desc: '38 illustrations, light & dark', status: 'As in Figma' },
+  { id: 'search-input', name: 'Search Input',    level: 'Molecules', desc: 'Field + filtering option list', status: 'As in Figma' },
+  { id: 'timepicker', name: 'Timepicker',        level: 'Molecules', desc: '24-hour, keyboard, Cancel/Apply', status: 'As in Figma' },
 ];
 window.PDS_EMPTY = [
   { name: 'Alerts', level: 'Atoms', note: 'The Figma page is empty — nothing to build yet.' },

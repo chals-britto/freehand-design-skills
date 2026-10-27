@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dropdown Option · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="avatar.css">
+<link rel="stylesheet" href="dropdown-option.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+h3.grp{font-size:14px;font-weight:600;margin:0;padding:16px 20px 0}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.vcell .stage{background:#fff;border:1px solid var(--pg-line);border-radius:6px;padding:10px;overflow-x:auto}
+.vcell .stage ul{margin:0;padding:0}
+/* spec */
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-radius:10px;overflow:hidden}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+table.vt{width:100%;border-collapse:collapse;font-size:12.5px}
+table.vt th,table.vt td{text-align:left;padding:8px 12px;border-top:1px solid var(--pg-line);vertical-align:top}
+table.vt th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);border-top:0}
+table.vt code{font:400 12px var(--pg-mono)}
+.tw{overflow-x:auto}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+.open ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.vgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>Dropdown Option</h1>
+    <p class="lede">One option row with an Icon Avatar, a title and a secondary line. Used inside Search Input and .Search Dropdown. Figma has no written description; this is drawn from the component.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · no review (every published variant kept)</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=3303-2663" target="_blank" rel="noopener">Figma component set 3303:2663 ↗</a><span>Files: dropdown-option.css · reuses avatar.css, icons.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Type × State: 5 published variants. Hover rows are shown with <code>.is-hover</code>; real hover works on every row. Sample text is Figma’s.</p>
+<div class="panel"><div class="vgrid" id="vgrid"></div>
+<h3 class="grp">Boolean properties</h3><p class="sub" style="padding:4px 20px 0;margin:0">Prefix Icon (default on), Secondary Text (default on), Selected (default off). Shown on Type=Selection, State=Default.</p>
+<div class="vgrid" id="pgrid"></div></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma variants.</p>
+<div class="spec-table" style="margin-bottom:14px">
+  <div><b>Size</b><code>300 × 56px</code> fixed</div>
+  <div><b>Padding</b><code>10px</code> all sides · <code>--space-10</code></div>
+  <div><b>Gap</b><code>10px</code> avatar · text · trailing icon</div>
+  <div><b>Title ↔ secondary</b><code>4px</code></div>
+  <div><b>Prefix</b>Icon Avatar <code>30px</code>, glyph 14 · <code>.pds-avatar</code></div>
+  <div><b>Title</b><code>.type-12-semibold</code> · #404040 · line 16</div>
+  <div><b>Secondary</b><code>.type-12-regular</code> · #737373 · line 16</div>
+  <div><b>Trailing icons</b><code>12px</code> · check / delete</div>
+</div>
+<div class="panel tw"><table class="vt">
+<thead><tr><th>Variant</th><th>Fill</th><th>Prefix</th><th>Trailing</th><th>Class</th></tr></thead>
+<tbody>
+<tr><td>Selection · Default (2464:9108)</td><td>none</td><td>Icon Avatar Purple, Depot</td><td>—</td><td><code>.pds-dropdown-option</code></td></tr>
+<tr><td>Selection · Hover (3303:2747)</td><td>#EEF2F4 <code>--pando-light</code></td><td>Icon Avatar Purple, Depot</td><td>—</td><td><code>:hover</code> / <code>.is-hover</code></td></tr>
+<tr><td>Selection · Selected (3303:2762)</td><td>none</td><td>Icon Avatar #0076DD + white Check <code>.pds-avatar--selected</code></td><td>—</td><td><code>aria-selected="true"</code></td></tr>
+<tr><td>Viewable · Default (3303:2679)</td><td>none</td><td>Icon Avatar Purple, Depot</td><td>—</td><td><code>.pds-dropdown-option--viewable</code></td></tr>
+<tr><td>Viewable · Hover (3303:2694)</td><td>#EEF2F4 <code>--pando-light</code></td><td>Icon Avatar Purple, Depot</td><td>Delete 12px #0D204A <code>--status-blue-dark</code></td><td><code>--viewable:hover</code></td></tr>
+<tr><td>Selected = true (boolean)</td><td>none</td><td>—</td><td>Navigation/Selected 12px #0076DD <code>--pando-blue</code></td><td><code>.pds-dropdown-option__check</code></td></tr>
+</tbody></table></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Types</h3><ul><li><b>Selection</b>: picking the row selects it; the avatar turns into a blue check.</li><li><b>Viewable</b>: a row that is already in a list; hover shows a delete icon.</li></ul><p class="src">From the variant names only — Figma has no usage text.</p></div>
+  <div class="panel card"><h3>Where it is used</h3><p>Search Input (2419:10052) and .Search Dropdown (2464:8997), both on the 🟡 Search page of the Molecules file.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Roles</h3><p>Use as <code>role="option"</code> inside a <code>role="listbox"</code>, with <code>aria-selected</code>. The avatar is decorative (<code>aria-hidden</code>). The delete icon is a real <code>&lt;button&gt;</code> with an accessible name.</p></div>
+  <div class="panel card"><h3>Keyboard</h3><p>The highlighted option (<code>.is-active</code>, from <code>aria-activedescendant</code>) uses the Hover look. Delete shows on hover, keyboard highlight or focus inside the row. Focus outlines are added — not in Figma.</p></div>
+  <div class="panel card"><h3>Contrast (for the a11y pass)</h3><p>Title #404040 on white 10.4 : 1, on #EEF2F4 9.2 : 1. Secondary #737373 on white 4.7 : 1, on #EEF2F4 4.21 : 1 (below 4.5). Hover fill vs white 1.13 : 1. Selected is shown only by the avatar change.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul>
+  <li><b>How this relates to menu and dropdown.</b> Nothing here is reused from <code>menu.css</code>: no variant matches an existing option part. Closest is menu <i>.Dropdown Option · Multi-info</i> (200 wide, 52 high, no avatar, title #313131, second line 10 Regular, hover #E9F1F5). The Atoms <code>dropdown.css</code> two-line panel row (loose frame 3240:4042) is nearest of all — 56 high, padding 10, 30px icon circle, 12 SemiBold #404040 title — but its secondary line is 10 Regular with a 6px gap, the icon is a cyan depot circle (#D7F3F6), and selected is a #F8F8F8 fill + right check. So three “option with icon + two lines” patterns now exist (menu Multi-info, dropdown two-line row, this). This one stays a separate molecule for Search; decide later whether the dropdown two-line row should become this.</li>
+  <li><b>Hover colour differs from the menu atom:</b> #EEF2F4 here vs #E9F1F5 in menu.css.</li>
+  <li><b>Avatar glyph colour:</b> Figma’s remote Icon Avatar (2541:10713) draws Depot in #2D0645; the kit avatar draws glyphs #234357. Kit avatar kept. The Selected avatar in Figma is a Purple avatar with a #0076DD fill override and Indicator Icon/Check 14 — matches kit <code>.pds-avatar--selected</code>.</li>
+  <li><b>Selection · Selected</b> has no row fill and no text change; selection relies on the avatar only. It also carries a hidden second check layer (not built).</li>
+  <li><b>Viewable · Hover:</b> the Delete icon is a 14px icon scaled to 12, #0D204A. What Delete does is not in Figma (no confirmation, no event spec).</li>
+  <li>Off-token: #404040 (title), #737373 (secondary).</li>
+  <li>Line heights: title Auto (≈16) and secondary 16 vs 17 in <code>.type-12-*</code>; set to 16px in the component so the row stays 56.</li>
+  <li>Fixed 300px width in Figma; long text truncates with an ellipsis (no Figma rule). No disabled state.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>Disabled option state. <span class="src"><a href="https://carbondesignsystem.com/components/dropdown/usage/" target="_blank" rel="noopener">Carbon Dropdown</a></span></li>
+  <li>Tooltip with the full text when a label is truncated. <span class="src"><a href="https://carbondesignsystem.com/components/dropdown/usage/" target="_blank" rel="noopener">Carbon Dropdown</a></span></li>
+  <li>A visible focus state for keyboard users (only a placeholder outline is added here). <span class="src"><a href="https://carbondesignsystem.com/components/dropdown/usage/" target="_blank" rel="noopener">Carbon Dropdown</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Link the kit atoms, then the molecule.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const svg=(n,cls)=>{const i=(window.PDS_ICONS||[]).find(x=>x.n===n);if(!i)throw new Error("icon missing: "+n);return i.svg.replace("<svg ",`<svg${cls?` class="${cls}"`:""} aria-hidden="true" focusable="false" `)};
+const TITLE="Dropdown Option",SUB="0990909087";
+function opt({type="selection",state="default",prefix=true,sub=true,selected=false}={}){
+  const li=document.createElement("li");
+  li.className="pds-dropdown-option"+(type==="viewable"?" pds-dropdown-option--viewable":"")+(state==="hover"?" is-hover":"");
+  li.setAttribute("role","option");
+  li.setAttribute("aria-selected",state==="selected"||selected?"true":"false");
+  let h="";
+  if(prefix){h+=state==="selected"
+    ?`<span class="pds-avatar pds-avatar--purple pds-avatar--selected" aria-hidden="true">${svg("indicator-check-14","pds-avatar__icon")}</span>`
+    :`<span class="pds-avatar pds-avatar--purple" aria-hidden="true">${svg("indicator-depot-14","pds-avatar__icon")}</span>`}
+  h+=`<span class="pds-dropdown-option__text"><span class="pds-dropdown-option__title">${TITLE}</span>${sub?`<span class="pds-dropdown-option__sub">${SUB}</span>`:""}</span>`;
+  if(selected)h+=`<span class="pds-icon pds-icon--12 pds-dropdown-option__check" aria-hidden="true">${svg("nav-selected")}</span>`;
+  if(type==="viewable")h+=`<button type="button" class="pds-dropdown-option__delete" aria-label="Delete ${TITLE}"><span class="pds-icon">${svg("indicator-delete-14")}</span></button>`;
+  li.innerHTML=h;return li}
+function cell(host,label,node){const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${label}</span>`;const st=document.createElement("div");st.className="stage";const ul=document.createElement("ul");ul.setAttribute("role","listbox");ul.setAttribute("aria-label",label);ul.appendChild(node);st.appendChild(ul);c.appendChild(st);host.appendChild(c)}
+[["Type=Selection, State=Default",{}],["Type=Viewable, State=Default",{type:"viewable"}],
+ ["Type=Selection, State=Hover",{state:"hover"}],["Type=Viewable, State=Hover",{type:"viewable",state:"hover"}],
+ ["Type=Selection, State=Selected",{state:"selected"}]].forEach(([l,o])=>cell($("#vgrid"),l,opt(o)));
+[["Selected = true",{selected:true}],["Secondary Text = false",{sub:false}],["Prefix Icon = false",{prefix:false}]].forEach(([l,o])=>cell($("#pgrid"),l,opt(o)));
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/avatar.css">
+<link rel="stylesheet" href="components/dropdown-option.css">
+
+<ul role="listbox" aria-label="…">
+${opt({type:"viewable"}).outerHTML.replace(/<svg[\s\S]*?<\/svg>/g,"<svg …/>").replace(/></g,">\n  <")}
+</ul>
+
+<!-- Selection · Selected: aria-selected="true" + avatar class pds-avatar--selected with Indicator Icon/Check -->
+<!-- Hover / keyboard highlight: :hover or .is-active -->`;
+
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>
