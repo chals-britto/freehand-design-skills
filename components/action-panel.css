@@ -1,0 +1,171 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Actions (inline action forms)   id: action-panel
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 Action (2383:3802)
+     · Actions 3544:1036 (newer, 5 variants)      → .pds-actions
+     · Actions 2384:5702 (older, 8 variants)      → .pds-actions.pds-actions--legacy
+     · .Panel - Swappable with Local 2528:1187    → .pds-actions__slot
+   Built 2026-10-28, not reviewed. Requires ../tokens.css and the kit atoms:
+   button.css, button-group.css, input.css (+ input.js), icons.css + icons/icons-data.js.
+   Optional: calendar.css/js (date fields), attachments.css/js (+ tag, card, badge,
+   checkbox, tooltip) for the Document row.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Card */
+  --action-panel-width:        600px;                    /* both sets */
+  --action-panel-bg:           var(--white);
+  --action-panel-radius:       2px;                      /* not on the radius scale */
+  --action-panel-rule:         color-mix(in srgb, var(--grey-light) 30%, transparent);          /* #E7E7E7 @30%, bottom 2px — Default */
+  --action-panel-rule-w:       2px;
+  --action-panel-rule-hover:   color-mix(in srgb, var(--highlight-blue-light) 24%, transparent); /* #9CD2FF @24%, bottom 3px — Hover / Active / older set */
+  --action-panel-rule-hover-w: 3px;
+  --action-panel-border:       var(--border-grey);           /* #EFEFEF 1px — Default */
+  --action-panel-border-hover: var(--highlight-blue-light);  /* #9CD2FF 1px — Hover / Active / older set */
+  --action-panel-tint-hover:   color-mix(in srgb, var(--accent-light-highlight) 24%, transparent); /* #E9F1F5 @24% */
+  --action-panel-pad:          var(--space-15);
+  --action-panel-gap:          var(--space-10);          /* header ↔ fields ↔ alert */
+  --action-panel-title:        var(--dark-darker);       /* #24242F */
+
+  /* Header buttons */
+  --action-panel-btn-gap:        20px;                   /* newer: Button Group Type=Buttons */
+  --action-panel-btn-gap-legacy: var(--space-10);        /* older: Clear · Save frame */
+
+  /* Fields */
+  --action-panel-field-gap:        0px;                  /* newer: wrap, 0 gap */
+  --action-panel-field-gap-legacy: -1px;                 /* older: borders overlap 1px */
+
+  /* Alert row (older, Alert boolean) */
+  --action-panel-alert:     var(--action-red);           /* #E25757 */
+  --action-panel-alert-gap: 5px;
+  --action-panel-alert-icon: 12px;
+
+  /* Document row (older, hidden layer in Mark as Delivered) */
+  --action-panel-doc-gap:   4px;
+  --action-panel-doc-label: var(--text-medium);          /* #545454 */
+
+  /* "Text Input Field" (remote atom used by the older set) — differs from kit Input - Text */
+  --action-panel-tif-label: #616161;  /* off-token in Figma */
+  --action-panel-tif-ph:    #737373;  /* off-token in Figma */
+  --action-panel-tif-value: #404040;  /* off-token in Figma */
+  --action-panel-tif-gap:   5px;      /* icon ↔ text (kit input uses 10) */
+  --action-panel-icon-calendar: var(--grey-medium); /* #A3A3A3 Navigation/Calendar-Input */
+  --action-panel-icon-geofence: #9C9C9C;            /* off-token in Figma — Navigation/GeoFence-Input */
+
+  /* .Panel - Swappable with Local */
+  --action-panel-slot-width:     334px;
+  --action-panel-slot-pad:       10px 8px 10px 15px;
+  --action-panel-slot-bg:        var(--accent-alternate-white); /* #F9FAFA */
+  --action-panel-slot-inner-pad: var(--space-10);
+  --action-panel-slot-gap:       4px;
+  --action-panel-slot-title-gap: 8px;
+  --action-panel-slot-icon:      20px;
+  --action-panel-slot-title:     var(--pando-dark);      /* #234357 */
+  --action-panel-slot-body:      #000000;                /* off-token in Figma */
+
+  --action-panel-focus-ring: 2px solid var(--pando-blue); /* added in review — not in Figma */
+}
+
+/* ── Card ──────────────────────────────────────────────────────── */
+.pds-actions {
+  --_rule: var(--action-panel-rule); --_rule-w: var(--action-panel-rule-w);
+  --_border: var(--action-panel-border); --_tint: transparent;
+  box-sizing: border-box;
+  width: var(--action-panel-width);
+  max-width: 100%;
+  background: var(--action-panel-bg);
+  border-radius: var(--action-panel-radius);
+  box-shadow: inset 0 calc(-1 * var(--_rule-w)) 0 var(--_rule); /* Figma inside stroke, bottom only */
+  font-family: var(--font-family);
+  color: var(--action-panel-title);
+}
+.pds-actions *, .pds-actions *::before, .pds-actions *::after { box-sizing: border-box; }
+
+/* Hover / Active (Active looks the same as Hover — Figma .documentation) */
+.pds-actions:hover, .pds-actions:focus-within, .pds-actions.is-hover, .pds-actions.is-active,
+.pds-actions--legacy {
+  --_rule: var(--action-panel-rule-hover); --_rule-w: var(--action-panel-rule-hover-w);
+  --_border: var(--action-panel-border-hover); --_tint: var(--action-panel-tint-hover);
+}
+
+.pds-actions__content {
+  display: flex; flex-direction: column; gap: var(--action-panel-gap);
+  padding: calc(var(--action-panel-pad) - 1px);           /* 1px inside stroke + 14 = 15 */
+  border: 1px solid var(--_border);
+  border-radius: inherit;
+  background: var(--_tint);
+}
+
+/* ── Header ────────────────────────────────────────────────────── */
+.pds-actions__header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--action-panel-gap); min-width: 0;
+}
+.pds-actions__title {
+  margin: 0; min-width: 0; flex: 1 1 auto;
+  font: var(--type-12-semibold); color: var(--action-panel-title);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Kit Button Group, carrying Small buttons here (Figma instance is 24 tall) */
+.pds-actions__buttons { flex: none; gap: var(--action-panel-btn-gap); min-height: 0; }
+.pds-actions--legacy .pds-actions__buttons { gap: var(--action-panel-btn-gap-legacy); }
+
+/* Newer set: Button Group is hidden at rest, shown on Hover / Active */
+.pds-actions:not(.pds-actions--legacy) .pds-actions__buttons { display: none; }
+.pds-actions:not(.pds-actions--legacy):hover .pds-actions__buttons,
+.pds-actions:not(.pds-actions--legacy):focus-within .pds-actions__buttons,
+.pds-actions:not(.pds-actions--legacy).is-hover .pds-actions__buttons,
+.pds-actions:not(.pds-actions--legacy).is-active .pds-actions__buttons { display: flex; }
+
+/* ── Fields (kit .pds-input, 200 wide) ─────────────────────────── */
+.pds-actions__fields {
+  display: flex; flex-wrap: wrap; align-items: flex-start;
+  gap: var(--action-panel-field-gap);
+}
+.pds-actions--legacy .pds-actions__fields { flex-wrap: nowrap; gap: 0; }
+.pds-actions--legacy .pds-actions__fields > .pds-input + .pds-input { margin-left: var(--action-panel-field-gap-legacy); }
+.pds-actions__fields > .pds-input:focus-within { z-index: 1; }
+/* No info icon in these fields: give the label the full 180px row (kit reserves 16px for the icon) */
+.pds-actions__fields .pds-input__head:not(:has(+ .pds-input__info)) { padding-right: 0; }
+
+/* Remote "Text Input Field" look (older set) on the kit input */
+.pds-actions__tif .pds-input__label { color: var(--action-panel-tif-label); }
+.pds-actions__tif .pds-input__control::placeholder { color: var(--action-panel-tif-ph); }
+.pds-actions__tif .pds-input__control { color: var(--action-panel-tif-value); }
+.pds-actions__tif .pds-input__row { gap: var(--action-panel-tif-gap); }
+.pds-actions__icon[data-icon="calendar"] { color: var(--action-panel-icon-calendar); }
+.pds-actions__icon[data-icon="geofence"] { color: var(--action-panel-icon-geofence); }
+
+/* ── Alert row (older set, Alert = true) ───────────────────────── */
+.pds-actions__alert {
+  display: flex; align-items: center; gap: var(--action-panel-alert-gap);
+  margin: 0; font: var(--type-12-regular); line-height: 16px; color: var(--action-panel-alert);
+}
+.pds-actions__alert .pds-icon { --_icon: var(--action-panel-alert-icon); flex: none; }
+
+/* ── Document row (older set) — Misc/Add-Attachment via the Attachments kit ── */
+.pds-actions__doc { display: flex; flex-direction: column; gap: var(--action-panel-doc-gap); }
+.pds-actions__doc-label {
+  margin: 0; font: var(--type-10-regular); letter-spacing: 0; text-transform: uppercase;
+  color: var(--action-panel-doc-label);
+}
+
+/* ── .Panel - Swappable with Local (Type = Swappable) ──────────── */
+.pds-actions__slot { display: flex; flex-direction: column; }
+.pds-actions__slot-local {
+  width: var(--action-panel-slot-width); max-width: 100%;
+  padding: var(--action-panel-slot-pad);
+}
+.pds-actions__slot-body {
+  display: flex; flex-direction: column; gap: var(--action-panel-slot-gap);
+  padding: var(--action-panel-slot-inner-pad);
+  background: var(--action-panel-slot-bg);
+}
+.pds-actions__slot-title {
+  display: flex; align-items: center; gap: var(--action-panel-slot-title-gap);
+  margin: 0; font: var(--type-12-semibold); color: var(--action-panel-slot-title);
+}
+.pds-actions__slot-title svg { flex: none; width: var(--action-panel-slot-icon); height: var(--action-panel-slot-icon); fill: currentColor; }
+.pds-actions__slot-text { margin: 0; font: var(--type-12-regular); line-height: 16px; color: var(--action-panel-slot-body); }
+
+/* Keyboard focus on the card itself (added in review — not in Figma) */
+.pds-actions:focus-visible { outline: var(--action-panel-focus-ring); outline-offset: 2px; }

@@ -1,0 +1,358 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — AI Chat bubbles, PI and Loader (organism)
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 AI Chat (2814:5163)
+     · "Chat bubble" component set 2817:5261 (10 variants) → .pds-ai-bubble
+     · "AI bubble"   component set 2808:4906 (2 variants)  → .pds-ai-card
+     · ".button"     component set 2808:4899 (5 variants)  → .pds-ai-card__button
+     · "PI"          component set 3542:14233 (6 variants) → .pds-ai-pi
+     · "Loader"      component set 4158:14459 (2 states)   → .pds-ai-loader
+       (".Loader" 3568:15030 is the older private copy — not built, see .md)
+   No review file — every published variant kept as in Figma.
+   Requires ../tokens.css, brand.css (Pando Green), skeleton.css (dark
+   skeleton in the AI bubble loader) and comment-thread.css (the
+   .Swappable Content slot). Self-contained classes: the AI Chat window
+   composes them.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Shared ── */
+  --ai-shade: #484858;                                   /* off-token in Figma (same hex as --skeleton-dark-shade / comment bubble) */
+
+  /* ── Chat bubble ── */
+  --ai-bubble-gap:          5px;                         /* avatar ↔ bubble, bubble ↔ time */
+  --ai-bubble-pad:          var(--space-10) var(--space-15); /* 10px 15px */
+  --ai-bubble-inner-gap:    8px;                         /* text ↔ swappable content */
+  --ai-bubble-radius:       10px;
+  --ai-bubble-swap-width:   200px;                       /* Swapable=yes bubble */
+
+  --ai-bubble-avatar:       38px;                        /* Dark: Freehand logo disc */
+  --ai-bubble-avatar-bg:    var(--dark-darker);          /* #24242F */
+  --ai-bubble-avatar-ring:  color-mix(in srgb, var(--pando-dark) 20%, transparent); /* #234357 @ 20%, 1px inside */
+  --ai-bubble-avatar-logo-w: 21px;
+  --ai-bubble-avatar-logo-h: 22px;
+  --ai-bubble-avatar-logo:  var(--freehand-orange);      /* #FE6505 */
+  --ai-bubble-pi:           20px;                        /* Light: Pi disc */
+  --ai-bubble-pi-bg:        var(--brand-pando-green);    /* #003D31 (brand.css) */
+  --ai-bubble-pi-avatar-w:  16px;
+  --ai-bubble-pi-avatar-h:  17px;
+
+  /* Dark theme */
+  --ai-bubble-dark-user-bg:   color-mix(in srgb, var(--dark-input-text) 50%, transparent); /* #8A8A9E @ 50% */
+  --ai-bubble-dark-user-fg:   var(--accent-off-white);   /* #F8F8F8 */
+  --ai-bubble-dark-ai-bg:     color-mix(in srgb, var(--ai-shade) 50%, transparent);       /* #484858 @ 50% */
+  --ai-bubble-dark-ai-fg:     var(--dark-label-text);    /* #D5DAF4 */
+  --ai-bubble-dark-time:      var(--dark-label-text);    /* #D5DAF4 */
+  /* Light theme */
+  --ai-bubble-light-user-bg:      var(--status-orange-light);  /* #FFF4E5 */
+  --ai-bubble-light-user-swap-bg: var(--status-skyblue-light); /* #B5E4FF — Swapable=yes uses a different fill in Figma */
+  --ai-bubble-light-ai-bg:        var(--accent-light-highlight); /* #E9F1F5 */
+  --ai-bubble-light-fg:           var(--text-dark);        /* #313131 */
+  --ai-bubble-light-user-time:    var(--text-light);       /* #6C6C6C */
+  --ai-bubble-light-ai-time:      var(--dark-label-text);  /* #D5DAF4 — as in Figma, see Open issues */
+
+  /* Typing dots (.typing dark / .typing light, frame Typing01–09) */
+  --ai-typing-gap:          4px;
+  --ai-typing-dot:          6px;
+  --ai-typing-dot-active:   8px;
+  --ai-typing-dark-pad:     var(--space-10) var(--space-15); /* 10px 15px */
+  --ai-typing-dark-bg:      color-mix(in srgb, var(--ai-shade) 50%, transparent); /* #484858 @ 50% */
+  --ai-typing-dark-radius:  0 10px 10px 10px;
+  --ai-typing-dark-on:      var(--freehand-orange);      /* #FE6505 */
+  --ai-typing-dark-off:     color-mix(in srgb, var(--highlight-orange) 50%, transparent); /* #FF8C54 @ 50% */
+  --ai-typing-light-pad:    8px var(--space-15);         /* 8px 15px (instance override; main is 8/20) */
+  --ai-typing-light-bg:     transparent;                 /* no fill in Figma */
+  --ai-typing-light-radius: 16px 16px 16px 1px;
+  --ai-typing-light-on:     #0078DD;                     /* off-token in Figma (Pando Blue is #0076DD) */
+  --ai-typing-light-off:    color-mix(in srgb, var(--highlight-blue-light) 50%, transparent); /* #9CD2FF @ 50% */
+  --ai-typing-cycle:        4.8s;                        /* 9 frames: holds .4 .8 .4 .1 .3 .4 .1 .3 .8 s + 8 × 0.15s linear */
+
+  /* ── AI bubble (card) ── */
+  --ai-card-bg:             var(--gradient-dark-purple); /* #343440 → #371A37, 90deg */
+  --ai-card-pad:            20px;
+  --ai-card-radius:         18px;
+  --ai-card-gap:            var(--space-15);             /* Content: header ↔ slot ↔ buttons */
+  --ai-card-loader-gap:     var(--space-10);             /* Loader */
+  --ai-card-row-gap:        var(--space-10);             /* icon ↔ header text, button ↔ button, icon ↔ skeleton */
+  --ai-card-width:          400px;                       /* Property 1=Content */
+  --ai-card-loader-width:   340px;                       /* Property 1=Loader */
+  --ai-card-icon:           20px;                        /* Header-Logo/Apps · AI-Yellow */
+  --ai-card-accent:         var(--status-brown-medium);  /* #FAAE3C — icon + "Pi Summary" */
+  --ai-card-header-tracking: .3px;
+
+  /* .button */
+  --ai-button-pad:          6px var(--space-10);         /* 6px 10px */
+  --ai-button-radius:       16px;
+  --ai-button-transition:   1s;                          /* Figma: Dissolve 1.02s "Gentle" on hover */
+  --ai-button-dark-bg:      color-mix(in srgb, var(--accent-off-white) 20%, transparent); /* #F8F8F8 @ 20% */
+  --ai-button-dark-border:  color-mix(in srgb, var(--dark-label-text) 50%, transparent);  /* #D5DAF4 @ 50% */
+  --ai-button-dark-fg:      var(--white);
+  --ai-button-dark-hover-bg: var(--dark-darker);         /* #24242F */
+  --ai-button-red:          var(--action-red);           /* #E25757 */
+  --ai-button-light-bg:     var(--status-blue-light);    /* #D9E6FF */
+  --ai-button-light-fg:     var(--pando-blue-active);    /* #005399 */
+  --ai-button-light-hover-bg: var(--accent-light-blue-bg); /* #F3F6FC */
+  --ai-button-light-hover-border: var(--border-blue);    /* #E9F1F5 */
+
+  /* ── PI (agent switcher) ── */
+  --ai-pi-height:           28px;
+  --ai-pi-pad-x:            8px;
+  --ai-pi-gap:              var(--space-10);
+  --ai-pi-radius:           14px;
+  --ai-pi-font:             700 14px/16px var(--font-family); /* Figma Bold 14/16 — no 14-bold in the type scale */
+  --ai-pi-icon:             14px;                        /* Freehand_Ai_Icon (dark) */
+  --ai-pi-wand-w:           19.5px;                      /* ai-wand (light) */
+  --ai-pi-wand-h:           17.7px;
+  --ai-pi-arrow-w:          8px;
+  --ai-pi-arrow-h:          5px;
+  --ai-pi-transition:       .3s ease-out;               /* Figma: Smart animate 300ms ease-out */
+  --ai-pi-dark-fg:          #FFA600;                     /* off-token in Figma */
+  --ai-pi-dark-arrow:       var(--dark-input-text);      /* #8A8A9E */
+  --ai-pi-dark-fap-hover:   var(--pando-light);          /* #EEF2F4 */
+  --ai-pi-dark-pma-hover:   rgb(0 0 0 / .8);             /* #000000 @ 80% — off-token in Figma */
+  --ai-pi-light-fg:         var(--gradient-pando-green); /* #003D31 → #006265, text gradient */
+  --ai-pi-light-arrow:      var(--text-dark);            /* #313131 */
+  --ai-pi-light-hover:      color-mix(in srgb, var(--pando-dark) 10%, transparent); /* #234357 @ 10% */
+
+  /* ── Loader (Pi-With Halo › Freehand) ── */
+  --ai-loader-size:         174px;
+  --ai-loader-art-w:        180px;                       /* exported art incl. the logo shadow */
+  --ai-loader-art-h:        175px;
+  --ai-loader-ring:         color-mix(in srgb, var(--freehand-orange) 9%, transparent); /* Ellipse 05: #FE6505 @ 9% */
+  --ai-loader-inner-r:      73.16px;                     /* Ellipse 04 radius — the art is clipped to it */
+  --ai-loader-cycle:        1.55s;                       /* State 1 hold .5s → .3s linear → State 2 hold .6s → .15s linear */
+
+  /* Focus — added in review, not in Figma */
+  --ai-focus: 2px solid var(--pando-blue);
+}
+
+/* ══ Chat bubble ═════════════════════════════════════════════════ */
+.pds-ai-bubble {
+  --_bg: var(--ai-bubble-dark-ai-bg); --_fg: var(--ai-bubble-dark-ai-fg); --_time: var(--ai-bubble-dark-time);
+  --_radius: 0 var(--ai-bubble-radius) var(--ai-bubble-radius) var(--ai-bubble-radius);
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ai-bubble-gap);
+  font-family: var(--font-family);
+}
+.pds-ai-bubble--user { justify-content: flex-end; }
+
+/* Theme × Type */
+.pds-ai-bubble--dark.pds-ai-bubble--user  { --_bg: var(--ai-bubble-dark-user-bg); --_fg: var(--ai-bubble-dark-user-fg); }
+.pds-ai-bubble--light.pds-ai-bubble--ai   { --_bg: var(--ai-bubble-light-ai-bg); --_fg: var(--ai-bubble-light-fg); --_time: var(--ai-bubble-light-ai-time); }
+.pds-ai-bubble--light.pds-ai-bubble--user { --_bg: var(--ai-bubble-light-user-bg); --_fg: var(--ai-bubble-light-fg); --_time: var(--ai-bubble-light-user-time); }
+.pds-ai-bubble--light.pds-ai-bubble--user.pds-ai-bubble--swap { --_bg: var(--ai-bubble-light-user-swap-bg); }
+.pds-ai-bubble--user { --_radius: var(--ai-bubble-radius) 0 var(--ai-bubble-radius) var(--ai-bubble-radius); }
+
+/* Avatar — Dark: Freehand logo on a 38px disc · Light: Pi on a 20px Pando Green disc */
+.pds-ai-bubble__avatar {
+  box-sizing: border-box;
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--ai-bubble-avatar); height: var(--ai-bubble-avatar);
+  border-radius: 50%;
+  background: var(--ai-bubble-avatar-bg);
+  box-shadow: inset 0 0 0 1px var(--ai-bubble-avatar-ring);
+  color: var(--ai-bubble-avatar-logo);
+  overflow: hidden;
+}
+.pds-ai-bubble__avatar svg { display: block; width: var(--ai-bubble-avatar-logo-w); height: var(--ai-bubble-avatar-logo-h); }
+.pds-ai-bubble__avatar--pi {
+  position: relative;
+  width: var(--ai-bubble-pi); height: var(--ai-bubble-pi);
+  background: var(--ai-bubble-pi-bg);
+  box-shadow: none;
+}
+.pds-ai-bubble__avatar--pi img {
+  position: absolute; left: 2px; top: 1.5px;          /* Figma x 2 · y 1.5, mirrored */
+  width: var(--ai-bubble-pi-avatar-w); height: var(--ai-bubble-pi-avatar-h);
+  transform: scaleX(-1);
+}
+
+/* Column: bubble + optional time */
+.pds-ai-bubble__body {
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: var(--ai-bubble-gap);
+  min-width: 0;
+}
+.pds-ai-bubble--user .pds-ai-bubble__body { align-items: flex-end; }
+
+.pds-ai-bubble__message {
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  gap: var(--ai-bubble-inner-gap);
+  max-width: 100%;
+  padding: var(--ai-bubble-pad);
+  border-radius: var(--_radius);
+  background: var(--_bg);
+  color: var(--_fg);
+}
+.pds-ai-bubble--swap .pds-ai-bubble__message { width: var(--ai-bubble-swap-width); }
+.pds-ai-bubble__text { margin: 0; font: var(--type-12-semibold); overflow-wrap: anywhere; } /* Figma 12/18 (Light AI: 12/auto) */
+.pds-ai-bubble__message .pds-comment-thread__slot { align-self: stretch; }
+.pds-ai-bubble__time { font: var(--type-10-regular); letter-spacing: .5px; color: var(--_time); }
+
+/* Typing dots (Type=Loading) */
+.pds-ai-bubble__typing {
+  --_on: var(--ai-typing-dark-on); --_off: var(--ai-typing-dark-off);
+  box-sizing: border-box;
+  display: inline-flex; align-items: center;
+  gap: var(--ai-typing-gap);
+  padding: var(--ai-typing-dark-pad);
+  border-radius: var(--ai-typing-dark-radius);
+  background: var(--ai-typing-dark-bg);
+  min-height: 36px;
+}
+.pds-ai-bubble--light .pds-ai-bubble__typing {
+  --_on: var(--ai-typing-light-on); --_off: var(--ai-typing-light-off);
+  padding: var(--ai-typing-light-pad);
+  border-radius: var(--ai-typing-light-radius);
+  background: var(--ai-typing-light-bg);
+  min-height: 37px;
+}
+.pds-ai-bubble__dot {
+  flex: none;
+  width: var(--ai-typing-dot); height: var(--ai-typing-dot);
+  border-radius: 50%;
+  background: var(--_off);
+  animation: var(--ai-typing-cycle) linear infinite;
+}
+.pds-ai-bubble__dot:nth-child(1) { animation-name: pds-ai-dot-1; }
+.pds-ai-bubble__dot:nth-child(2) { animation-name: pds-ai-dot-2; }
+.pds-ai-bubble__dot:nth-child(3) { animation-name: pds-ai-dot-3; }
+
+/* Active dot: 8px, strong colour. Frames from Figma (.typing dark/light, Typing01 → 09). */
+@keyframes pds-ai-dot-1 {
+  0%, 8.333%, 42.708%, 44.792%, 68.75%, 70.833% { width: var(--ai-typing-dot-active); height: var(--ai-typing-dot-active); background: var(--_on); }
+  11.458%, 39.583%, 47.917%, 65.625%, 73.958%, 100% { width: var(--ai-typing-dot); height: var(--ai-typing-dot); background: var(--_off); }
+}
+@keyframes pds-ai-dot-2 {
+  0%, 8.333%, 31.25%, 44.792%, 57.292%, 70.833%, 83.333%, 100% { width: var(--ai-typing-dot); height: var(--ai-typing-dot); background: var(--_off); }
+  11.458%, 28.125%, 47.917%, 54.167%, 73.958%, 80.208% { width: var(--ai-typing-dot-active); height: var(--ai-typing-dot-active); background: var(--_on); }
+}
+@keyframes pds-ai-dot-3 {
+  0%, 28.125%, 42.708%, 54.167%, 68.75%, 80.208% { width: var(--ai-typing-dot); height: var(--ai-typing-dot); background: var(--_off); }
+  31.25%, 39.583%, 57.292%, 65.625%, 83.333%, 100% { width: var(--ai-typing-dot-active); height: var(--ai-typing-dot-active); background: var(--_on); }
+}
+
+/* ══ AI bubble (card) ════════════════════════════════════════════ */
+.pds-ai-card {
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  gap: var(--ai-card-gap);
+  width: var(--ai-card-width);
+  max-width: 100%;
+  padding: var(--ai-card-pad);
+  border-radius: var(--ai-card-radius);
+  background: var(--ai-card-bg);
+  font-family: var(--font-family);
+}
+.pds-ai-card--loader { width: var(--ai-card-loader-width); gap: var(--ai-card-loader-gap); }
+.pds-ai-card__row { display: flex; align-items: flex-start; gap: var(--ai-card-row-gap); }
+.pds-ai-card__header { display: flex; align-items: center; gap: var(--ai-card-row-gap); margin: 0; }
+.pds-ai-card__icon { display: block; flex: none; width: var(--ai-card-icon); height: var(--ai-card-icon); color: var(--ai-card-accent); }
+.pds-ai-card__title {
+  font: var(--type-12-semibold);           /* Figma 12/auto */
+  text-transform: uppercase;
+  letter-spacing: var(--ai-card-header-tracking);
+  color: var(--ai-card-accent);
+}
+.pds-ai-card__actions { display: flex; flex-wrap: wrap; gap: var(--ai-card-row-gap); }
+
+/* .button (inside the AI bubble) */
+.pds-ai-card__button {
+  --_bg: var(--ai-button-dark-bg); --_fg: var(--ai-button-dark-fg); --_border: var(--ai-button-dark-border);
+  --_hover-bg: var(--ai-button-dark-hover-bg); --_hover-border: var(--ai-button-dark-border);
+  box-sizing: border-box;
+  display: inline-flex; align-items: center;
+  padding: var(--ai-button-pad);
+  border: 0;
+  border-radius: var(--ai-button-radius);
+  background: var(--_bg);
+  box-shadow: inset 0 0 0 1px var(--_border);   /* 1px inside stroke */
+  color: var(--_fg);
+  font: var(--type-11-regular);                 /* Figma 11/auto */
+  cursor: pointer;
+  transition: background-color var(--ai-button-transition) ease, box-shadow var(--ai-button-transition) ease;
+}
+.pds-ai-card__button:hover,
+.pds-ai-card__button.is-hover { --_bg: var(--_hover-bg); --_border: var(--_hover-border); }
+.pds-ai-card__button--red,
+.pds-ai-card__button--red:hover { --_bg: var(--ai-button-dark-hover-bg); --_border: var(--ai-button-red); --_fg: var(--ai-button-red); }
+.pds-ai-card__button--light {
+  --_bg: var(--ai-button-light-bg); --_fg: var(--ai-button-light-fg); --_border: transparent;
+  --_hover-bg: var(--ai-button-light-hover-bg); --_hover-border: var(--ai-button-light-hover-border);
+}
+.pds-ai-card__button:focus-visible { outline: var(--ai-focus); outline-offset: 2px; } /* added in review — not in Figma */
+
+/* ══ PI (agent name + dropdown arrow) ════════════════════════════ */
+.pds-ai-pi {
+  --_hover: var(--ai-pi-dark-pma-hover); --_arrow: var(--ai-pi-dark-arrow);
+  box-sizing: border-box;
+  display: inline-flex; align-items: center;
+  gap: var(--ai-pi-gap);
+  height: var(--ai-pi-height);
+  padding: 0 var(--ai-pi-pad-x);
+  border: 0;
+  border-radius: var(--ai-pi-radius);
+  background: transparent;
+  font: var(--ai-pi-font);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--ai-pi-transition);
+}
+.pds-ai-pi--dark.pds-ai-pi--fap { --_hover: var(--ai-pi-dark-fap-hover); }
+.pds-ai-pi--light { --_hover: var(--ai-pi-light-hover); --_arrow: var(--ai-pi-light-arrow); }
+.pds-ai-pi:hover, .pds-ai-pi.is-hover { background: var(--_hover); }
+.pds-ai-pi:focus-visible { outline: var(--ai-focus); outline-offset: 2px; } /* added in review — not in Figma */
+
+.pds-ai-pi__icon { display: block; flex: none; width: var(--ai-pi-icon); height: var(--ai-pi-icon); }
+.pds-ai-pi--light .pds-ai-pi__icon { width: var(--ai-pi-wand-w); height: var(--ai-pi-wand-h); }
+.pds-ai-pi__label { color: var(--ai-pi-dark-fg); }
+.pds-ai-pi--light .pds-ai-pi__label {
+  background: var(--ai-pi-light-fg);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.pds-ai-pi__arrow { color: var(--_arrow); }   /* .pds-icon from icons.css */
+.pds-ai-pi__arrow.pds-icon { width: var(--ai-pi-arrow-w); height: var(--ai-pi-arrow-h); } /* Navigation/Dropdown-Arrow is 8×5 */
+
+/* ══ Loader ══════════════════════════════════════════════════════ */
+.pds-ai-loader {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  width: var(--ai-loader-size); height: var(--ai-loader-size);
+}
+/* Ellipse 05 — the outer ring that fades out (State 2) and back in (State 1) */
+.pds-ai-loader::before {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: var(--ai-loader-ring);
+  animation: pds-ai-loader-ring var(--ai-loader-cycle) linear infinite;
+}
+.pds-ai-loader__art {
+  position: absolute; left: 0; top: 0;
+  width: var(--ai-loader-art-w); height: var(--ai-loader-art-h);
+  max-width: none;
+  clip-path: circle(var(--ai-loader-inner-r) at 87px 87px); /* the art's own outer ring is drawn by ::before */
+}
+@keyframes pds-ai-loader-ring {
+  0%, 32.258% { opacity: 1; }     /* State 1, 0.5s */
+  51.613%, 90.323% { opacity: 0; } /* → 0.3s linear → State 2, 0.6s */
+  100% { opacity: 1; }             /* → 0.15s linear → State 1 */
+}
+.pds-ai-loader--state-2::before { animation: none; opacity: 0; } /* static frame (documentation) */
+.pds-ai-loader--state-1::before { animation: none; opacity: 1; }
+
+/* ── Reduced motion: hold the first frame ── */
+@media (prefers-reduced-motion: reduce) {
+  .pds-ai-bubble__dot { animation: none; }
+  .pds-ai-bubble__dot:first-child { width: var(--ai-typing-dot-active); height: var(--ai-typing-dot-active); background: var(--_on); }
+  .pds-ai-loader::before { animation: none; opacity: 1; }
+  .pds-ai-pi, .pds-ai-card__button { transition: none; }
+}
+/* Static typing frame (documentation) */
+.pds-ai-bubble__typing--static .pds-ai-bubble__dot { animation: none; }
+.pds-ai-bubble__typing--static .pds-ai-bubble__dot:first-child { width: var(--ai-typing-dot-active); height: var(--ai-typing-dot-active); background: var(--_on); }

@@ -150,7 +150,8 @@
     ov.addEventListener('mousedown', blockOverlay);
     state.set(m, { trigger, key, guard, ov, blockOverlay });
     /* initial focus: first field, else the first action (Cancel), else the dialog */
-    const field = m.querySelector('.pds-modal__field ' + FOCUSABLE) || m.querySelector('.pds-modal__slot ' + FOCUSABLE);
+    const area = m.querySelector('.pds-modal__field') || m.querySelector('.pds-modal__slot');
+    const field = area && area.querySelector(FOCUSABLE);
     const firstAction = m.querySelector('.pds-modal__actions button');
     (field || firstAction || m).focus();
     return m;

@@ -47,6 +47,7 @@ window.PDS_REGISTRY = [
   { id: 'column-picker', name: 'Column Picker',  level: 'Molecules', desc: 'Toggle, pin, advanced, reorder', status: 'As in Figma' },
   { id: 'table-dropdown', name: 'Table Dropdown', level: 'Molecules', desc: '10 variants, single & multi', status: 'As in Figma' },
   { id: 'table-cell', name: 'Table Cell',        level: 'Molecules', desc: '33 cell types', status: 'As in Figma' },
+  { id: 'table',      name: 'Table',             level: 'Molecules', desc: 'Composed table: select, sort, sticky, loading, empty', status: 'As in Figma' },
   { id: 'list-column', name: 'List Column',      level: 'Molecules', desc: 'Text, tag, status, route, data', status: 'As in Figma' },
   { id: 'list',       name: 'List',              level: 'Molecules', desc: 'Standard, swappable, table style', status: 'As in Figma' },
   { id: 'filter-by',  name: 'Filter By',         level: 'Molecules', desc: 'Pills, more filters, date & time', status: 'As in Figma' },
@@ -63,6 +64,7 @@ window.PDS_REGISTRY = [
   { id: 'side-nav',   name: 'Side Nav',          level: 'Organisms', desc: '40px icon rail', status: 'As in Figma' },
   { id: 'subheader-nav', name: 'Subheader Menu', level: 'Organisms', desc: 'Two-level fly-out', status: 'As in Figma' },
   { id: 'left-panel', name: 'Left Menu Panel',   level: 'Organisms', desc: 'Stages, menu, header (in progress in Figma)', status: 'As in Figma' },
+  { id: 'modal',      name: 'Modal',             level: 'Organisms', desc: '6 variants, focus trap, Esc', status: 'As in Figma' },
 ];
 window.PDS_EMPTY = [
   { name: 'Alerts', level: 'Atoms', note: 'The Figma page is empty — nothing to build yet.' },
