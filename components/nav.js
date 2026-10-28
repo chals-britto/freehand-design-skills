@@ -25,6 +25,18 @@
     .ds-side .home{font-weight:600;color:var(--pg-ink)}
     .ds-jump{display:none;margin-top:16px}
     .ds-jump select{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-panel);color:var(--pg-ink);width:100%}
+    /* Desktop: two independent scroll areas — sidebar and content. The page itself doesn't scroll. */
+    @media (min-width:821px){
+      html,body{height:100%;overflow:hidden}
+      body{padding-block:0}
+      .ds-shell{height:100%}
+      .ds-side{position:static;height:100%;max-height:none;overflow-y:auto;overscroll-behavior:contain;padding-right:8px}
+      .ds-shell > .wrap{height:100%;overflow-y:auto;overscroll-behavior:contain;padding-bottom:64px;padding-right:4px}
+      .ds-side,.ds-shell > .wrap{scrollbar-width:thin;scrollbar-color:var(--pg-line) transparent}
+      .ds-side::-webkit-scrollbar,.ds-shell > .wrap::-webkit-scrollbar{width:8px}
+      .ds-side::-webkit-scrollbar-thumb,.ds-shell > .wrap::-webkit-scrollbar-thumb{background:var(--pg-line);border-radius:8px}
+      .ds-side::-webkit-scrollbar-track,.ds-shell > .wrap::-webkit-scrollbar-track{background:transparent}
+    }
     @media (max-width:820px){.ds-shell{grid-template-columns:1fr}.ds-side{display:none}.ds-jump{display:block}.ds-shell > .wrap{overflow-x:auto}}`;
     document.head.appendChild(css);
 
