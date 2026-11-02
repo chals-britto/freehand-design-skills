@@ -65,12 +65,34 @@ h3{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
 .toast-copy.on{opacity:1}
 code{font:400 12px var(--pg-mono);background:var(--pg-soft);padding:1px 5px;border-radius:4px}
 @media (max-width:820px){.shell{grid-template-columns:1fr}nav.side{display:none}}
+
+nav.side .ds-top{display:flex;flex-direction:column;gap:10px;padding:0 8px 8px;margin-bottom:4px;border-bottom:1px solid var(--pg-line);position:sticky;top:0;z-index:2;background:var(--pg-bg);padding-top:24px}
+nav.side .ds-top-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+nav.side .home{font-weight:600;color:var(--pg-ink);padding:4px 0;font-size:14px}
+nav.side .ds-list,nav.side .ds-results{display:flex;flex-direction:column;gap:2px}
+nav.side .ds-list[hidden],nav.side .ds-results[hidden]{display:none}
+nav.side a.ds-item{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+nav.side .ds-lvl{flex:none;font-size:10px;color:var(--pg-muted);opacity:.8}
+.ds-search{position:relative}
+.ds-search input{width:100%;box-sizing:border-box;font:400 13px var(--pg-ui);padding:7px 28px 7px 9px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-panel);color:var(--pg-ink)}
+.ds-search input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:1px}
+.ds-search kbd{position:absolute;right:7px;top:50%;transform:translateY(-50%);font:500 11px var(--pg-mono);color:var(--pg-muted);border:1px solid var(--pg-line);border-radius:4px;padding:0 4px;pointer-events:none}
+.ds-results a{display:flex;flex-direction:column;gap:1px}.ds-results a.is-first{background:var(--pg-soft);color:var(--pg-ink)}
+.ds-results .lvl{font-size:10.5px;color:var(--pg-muted)}.ds-results .aka{font-size:11px;color:var(--pg-accent)}.ds-results .none{font-size:12.5px;color:var(--pg-muted);padding:4px 8px}
+.ds-onpage{position:sticky;top:0;z-index:20;display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;align-items:center;margin:8px 0 0;padding:8px 0;background:var(--pg-bg);border-bottom:1px solid var(--pg-line)}
+.ds-onpage::-webkit-scrollbar{display:none}
+.ds-onpage .lbl{font:500 10.5px var(--pg-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--pg-muted);flex:none;margin-right:2px}
+.ds-onpage a{flex:none;font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.ds-onpage a:hover{border-color:var(--pg-accent)}
+.ds-onpage a[aria-current="true"]{background:var(--pg-ink);color:var(--pg-bg);border-color:var(--pg-ink)}
+.shell>main>section{scroll-margin-top:56px}
+@media (min-width:821px){.shell{grid-template-columns:220px minmax(0,1fr)}}
 /* Desktop: sidebar and content scroll independently; the page itself doesn't scroll. */
 @media (min-width:821px){
   html,body{height:100%;overflow:hidden}
   body{padding-block:0;margin:0}
   .shell{height:100%}
-  nav.side{position:static;height:100%;overflow-y:auto;overscroll-behavior:contain;padding-bottom:24px;padding-right:8px}
+  nav.side{position:static;height:100%;padding-top:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:24px;padding-right:8px}
   .shell>main{height:100%;overflow-y:auto;overscroll-behavior:contain;padding-bottom:64px;padding-right:4px;min-width:0}
   nav.side,.shell>main{scrollbar-width:thin;scrollbar-color:var(--pg-line) transparent}
   nav.side::-webkit-scrollbar,.shell>main::-webkit-scrollbar{width:8px}
@@ -81,12 +103,19 @@ code{font:400 12px var(--pg-mono);background:var(--pg-soft);padding:1px 5px;bord
 </style>
 
 <div class="shell">
-<nav class="side" aria-label="Sections">
-  <div class="grp">Foundations</div>
-  <a href="#roles">Colour roles</a><a href="#palette">Palette</a><a href="#status">Status &amp; tags</a><a href="#gradients">Gradients</a><a href="#type">Type scale</a><a href="#elevation">Elevation</a><a href="#pairs">Contrast pairs</a>
-  <div id="side-levels"></div>
+<nav class="side" aria-label="Design system">
+  <div class="ds-top">
+    <div class="ds-top-row"><a class="home" href="#top">Pando DS V1</a><span class="ds-theme-slot"></span></div>
+    <div class="ds-search" role="search"><input type="search" id="ds-search-input" placeholder="Search components…" aria-label="Search components (synonyms work: dialog, pop-up, chip…)" autocomplete="off"><kbd>/</kbd></div>
+  </div>
+  <div class="ds-results" id="ds-results" hidden aria-live="polite"></div>
+  <div class="ds-list" id="ds-list">
+    <div class="grp">Foundation</div>
+    <a href="#roles">Colour roles</a><a href="#palette">Palette</a><a href="#status">Status &amp; tags</a><a href="#gradients">Gradients</a><a href="#type">Type scale</a><a href="#elevation">Elevation</a><a href="#pairs">Contrast pairs</a>
+    <div id="side-levels"></div>
+  </div>
 </nav>
-<main>
+<main id="top">
 <header class="hd">
   <div><div class="eyebrow">Pando DS V1 · also V1, Pando, Old DS, FAP DS, Procure DS</div>
   <h1>Pando DS V1 Library</h1>
@@ -168,13 +197,40 @@ function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").s
 {let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
 </script>
 <script src="components/registry.js"></script>
+<script src="components/search.js"></script>
 <script>
-(function(){const R=window.PDS_REGISTRY||[],E=window.PDS_EMPTY||[],L=window.PDS_LEVELS||[];
-let side="",body="";
-L.forEach(l=>{const it=R.filter(c=>c.level===l),em=E.filter(c=>c.level===l);if(!it.length&&!em.length)return;
- side+=`<div class="grp">${l}</div>`+it.map(c=>`<a href="components/${c.id}.html">${c.name}</a>`).join("");
- body+=`<h3>${l} · ${it.length}</h3><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">`+
-  it.map(c=>`<a class="tok" href="components/${c.id}.html" style="text-decoration:none"><span class="b"><span class="n">${c.name}</span><span class="u">${c.desc||""}</span><span class="v">${c.status||""}</span></span></a>`).join("")+
-  em.map(c=>`<div class="pending-box"><b>${c.name}</b> · ${c.note}</div>`).join("")+`</div>`;});
-document.getElementById("side-levels").outerHTML=side;document.getElementById("comp-levels").innerHTML=body;})();
+(function(){
+const R=(window.PDS_REGISTRY||[]).slice().sort((a,b)=>a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+const E=window.PDS_EMPTY||[];
+const tag=l=>({Atoms:'Atom',Molecules:'Molecule',Organisms:'Organism'}[l]||l);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* sidebar: Foundation + Components A–Z */
+document.getElementById('side-levels').outerHTML=`<div class="grp">Components · ${R.length}</div>`+R.map(c=>`<a class="ds-item" href="components/${c.id}.html"><span>${esc(c.name)}</span><span class="ds-lvl">${tag(c.level)}</span></a>`).join('');
+/* components grid A–Z */
+const card=c=>`<a class="tok" href="components/${c.id}.html" style="text-decoration:none" data-id="${c.id}"><span class="b"><span class="n">${esc(c.name)}</span><span class="u">${esc(c.desc||'')}</span><span class="v">${tag(c.level)} · ${esc(c.status||'')}</span></span></a>`;
+const grid=document.getElementById('comp-levels');
+grid.innerHTML=`<div class="grid" id="comp-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">${R.map(card).join('')}${E.map(c=>`<div class="pending-box"><b>${esc(c.name)}</b> · ${esc(c.note)}</div>`).join('')}</div>`;
+/* search (sidebar) */
+const input=document.getElementById('ds-search-input'),res=document.getElementById('ds-results'),list=document.getElementById('ds-list');
+function run(){const q=input.value.trim();
+ if(!q){res.hidden=true;list.hidden=false;res.innerHTML='';return;}
+ const hits=window.pdsSearch?window.pdsSearch(q):[];list.hidden=true;res.hidden=false;
+ res.innerHTML=`<div class="grp">${hits.length} result${hits.length===1?'':'s'}</div>`+(hits.length?hits.map((r,i)=>`<a href="components/${r.c.id}.html"${i===0?' class="is-first"':''}><span>${esc(r.c.name)}</span><span class="lvl">${tag(r.c.level)}</span>${r.hit?`<span class="aka">also called “${esc(r.hit)}”</span>`:''}</a>`).join(''):'<div class="none">No component matches. Try another word, e.g. dialog, chip, drawer.</div>');}
+input.addEventListener('input',run);
+input.addEventListener('keydown',e=>{if(e.key==='Enter'){const a=res.querySelector('a');if(a)location.href=a.getAttribute('href');}if(e.key==='Escape'){input.value='';run();input.blur();}});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&!/^(input|textarea|select)$/i.test(document.activeElement.tagName)){e.preventDefault();input.focus();}});
+/* theme switch lives in the sidebar */
+const th=document.querySelector('header.hd .theme'),slot=document.querySelector('.ds-theme-slot');
+const mq=matchMedia('(max-width:820px)');const place=()=>{if(!th)return;if(mq.matches){document.querySelector('header.hd').appendChild(th);}else slot.appendChild(th);};place();mq.addEventListener&&mq.addEventListener('change',place);
+/* On this page bar */
+const main=document.querySelector('.shell>main');const secs=[...main.querySelectorAll(':scope > section')].filter(x=>x.querySelector(':scope > h2'));
+const bar=document.createElement('nav');bar.className='ds-onpage';bar.setAttribute('aria-label','On this page');
+bar.innerHTML='<span class="lbl">On this page</span>'+secs.map(x=>`<a href="#${x.id}">${esc(x.querySelector(':scope > h2').textContent.trim())}</a>`).join('');
+document.querySelector('header.hd').insertAdjacentElement('afterend',bar);
+const links=[...bar.querySelectorAll('a')];
+const act=id=>links.forEach(a=>{const on=a.getAttribute('href')==='#'+id;if(on&&a.getAttribute('aria-current')!=='true')a.scrollIntoView({block:'nearest',inline:'nearest'});on?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current');});
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href').slice(1);const t=id==='top'?main:document.getElementById(id);if(!t)return;e.preventDefault();if(id==='top'){main.scrollTo({top:0,behavior:'smooth'});return;}t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});act(id);history.replaceState(null,'','#'+id);});
+const spy=()=>{const sc=getComputedStyle(main).overflowY==='auto'?main:null;const topY=(sc?main.getBoundingClientRect().top:0)+bar.offsetHeight+24;let cur=secs[0].id;secs.forEach(x=>{if(x.getBoundingClientRect().top<=topY)cur=x.id;});const end=sc?(main.scrollTop+main.clientHeight>=main.scrollHeight-2):(innerHeight+scrollY>=document.documentElement.scrollHeight-2);if(end)cur=secs[secs.length-1].id;act(cur);};
+main.addEventListener('scroll',spy,{passive:true});window.addEventListener('scroll',spy,{passive:true});spy();
+})();
 </script>

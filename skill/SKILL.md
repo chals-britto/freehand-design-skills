@@ -26,7 +26,7 @@ If it's unclear which, ask before building.
 5. Follow the `build-rules` skill (confirm-before-build, Artifact output, desktop-only, no invented copy).
 
 ## Components in the kit
-**Everything in the three V1 Figma files is built** (2026-10-28): 20 Atoms, 40 Molecules, 15 Organisms. The authoritative list — id, name, level, status — is **`components/registry.js`**; read it to find a component. For each id there is:
+**Everything in the three V1 Figma files is built** (2026-10-28): 20 Atoms, 40 Molecules, 15 Organisms. The authoritative list — id, name, level, status and **synonyms (`aka`)** — is **`components/registry.js`**; read it to find a component. When Charles uses another name (dialog, pop-up, chip, drawer, snackbar, text field…), match it against `aka` (same logic as `components/search.js`); the full synonym list with sources is `review/synonyms.md`. For each id there is:
 - `components/<id>.md` — read this first: variants with exact values + tokens, anatomy, behaviour, usage, accessibility, **Open issues**, Not adopted.
 - `components/<id>.css` (+ `<id>.js` if interactive, exposing `window.pds<Name>`) — reuse these exactly; molecules/organisms already compose the atoms.
 - `components/<id>.html` — the live spec page.
