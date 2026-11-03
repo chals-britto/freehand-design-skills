@@ -6,7 +6,7 @@ description: Pando DS V1 — the full V1 design system (tokens + reviewed compon
 # Pando DS V1
 
 One skill for the whole V1 design system. It grows as components pass review.
-Source of truth: the repo at **`/Users/Charles-Pando/Documents/Claude Code/pando-ds-v1`**.
+Source of truth: the `pando-ds-v1/` folder of the **freehand-design-skills** repo (`/Users/Charles-Pando/Documents/Claude Code/freehand-design-skills/pando-ds-v1`).
 Living library (for people): https://claude.ai/artifact/GwQoWeEqK3NnC5tpVEMjMB
 
 ## Which design system?

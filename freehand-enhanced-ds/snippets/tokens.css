@@ -1,0 +1,85 @@
+/* Freehand V1 Enhanced Studio: design tokens
+   Measured from Enhanced Studio v103 (computed styles), cross-checked with freehand-studio main.
+   Use these variables in every new page; do not introduce new colours. */
+:root{
+  /* type */
+  --fh-font: Inter, system-ui, sans-serif;
+  --fh-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --fh-fs-10: 10px;  /* tiny tags (Joined) */
+  --fh-fs-12: 12px;  /* meta, labels, badges, table header */
+  --fh-fs-14: 14px;  /* body, cells, buttons, controls */
+  --fh-fs-16: 16px;
+  --fh-fs-18: 18px;  /* section titles (Disputes), detail page title */
+  --fh-fs-20: 20px;  /* big figures (totals) */
+  --fh-fs-24: 24px;  /* list page title */
+
+  /* text */
+  --fh-text: #0F172A;          /* titles, values, messages */
+  --fh-text-cell: #1F1F1F;     /* table cell text */
+  --fh-text-strong2: #334155;  /* buttons, dropdown labels, link text */
+  --fh-text-helper: #475569;   /* descriptions, reasons, sentences */
+  --fh-text-meta: #64748B;     /* labels, times, counts, placeholders */
+  --fh-text-faint: #94A3B8;    /* chevrons, separators */
+
+  /* brand (orange) */
+  --fh-brand: #FE6301;         /* primary button, active page, focus */
+  --fh-brand-hover: #E85A00;   /* primary button border / hover */
+  --fh-brand-deep: #D84E00;    /* invoice # links, Apply, Summary title, Next step */
+  --fh-brand-text: #C2410C;    /* text on brand tint (active pill, active dropdown) */
+  --fh-brand-ring: #FDBA74;    /* active pill border, active page border */
+  --fh-brand-tint: #FFF1E6;    /* active pill / active nav background */
+  --fh-brand-tint2: #FFF7ED;   /* active dropdown background */
+
+  /* surfaces */
+  --fh-bg: #FFFFFF;            /* main canvas, cards, controls */
+  --fh-bg-side: #F8FAFC;       /* sidebar */
+  --fh-bg-detail: #FAFAFA;     /* detail-page left column canvas */
+  --fh-bg-th: #FAFAF9;         /* table header */
+  --fh-bg-subtle: #FAFBFC;     /* suggestion row inside a card */
+  --fh-bg-chip: #F1F5F9;       /* count badge, muted chip */
+
+  /* borders */
+  --fh-border: #E2E8F0;        /* cards, inputs, dropdowns, pills */
+  --fh-border-btn: #DCDFE4;    /* buttons */
+  --fh-divider: #E5E7EB;       /* page dividers, footer top, sidebar edge */
+  --fh-divider-soft: #F1F5F9;  /* lines inside cards */
+  --fh-underline: #CBD5E1;     /* text-link underline */
+
+  /* status tones: text / background / 1px inset ring */
+  --fh-ok-fg:#166534;   --fh-ok-bg:#DCFCE7;   --fh-ok-ring:#BBF7D0;    /* Approved, Resolved */
+  --fh-warn-fg:#92400E; --fh-warn-bg:#FEF3C7; --fh-warn-ring:#FDE68A;  /* Held, Open */
+  --fh-bad-fg:#991B1B;  --fh-bad-bg:#FEE2E2;  --fh-bad-ring:#FECACA;   /* Issue found */
+  --fh-info-fg:#1E40AF; --fh-info-bg:#DBEAFE; --fh-info-ring:#BFDBFE;  /* Received, Partly resolved */
+  --fh-org-fg:#9A3412;  --fh-org-bg:#FFEDD5;  --fh-org-ring:#FED7AA;   /* Escalated, "N to review" */
+  --fh-acc-fg:#115E59;  --fh-acc-bg:#CCFBF1;  --fh-acc-ring:#99F6E4;   /* Ready to pay */
+  --fh-mute-fg:#334155; --fh-mute-bg:#F1F5F9; --fh-mute-ring:#E2E8F0;  /* Not audited, neutral tags */
+
+  /* money */
+  --fh-money-held: #B91C1C;    /* disputed / open amounts */
+  --fh-money-ok: #15803D;      /* resolved amounts (only when > 0) */
+
+  /* radius */
+  --fh-r-control: 6px;   /* buttons, dropdowns, pager buttons */
+  --fh-r-input: 8px;     /* search, nav item */
+  --fh-r-card: 10px;     /* dispute card, menus */
+  --fh-r-panel: 12px;    /* totals card, summary card */
+  --fh-r-pill: 999px;    /* pills, badges, count chips */
+
+  /* shadow */
+  --fh-sh-control: 0 2px 0 rgba(15,23,42,.05);
+  --fh-sh-card: 0 1px 2px rgba(15,23,42,.06), 0 4px 12px rgba(15,23,42,.06);
+  --fh-sh-menu: 0 12px 28px -8px rgba(15,23,42,.22);
+  --fh-sh-tip: 0 6px 16px rgba(15,23,42,.24);
+
+  /* sizes */
+  --fh-h-control: 36px;  /* buttons, search, dropdowns, icon buttons */
+  --fh-h-pill: 28px;     /* status pills */
+  --fh-h-pager: 32px;    /* pager buttons */
+  --fh-h-badge: 22px;
+  --fh-h-th: 40px;
+  --fh-h-row: 44px;
+  --fh-h-foot: 52px;
+  --fh-w-side: 232px;    /* sidebar; 64px when collapsed */
+  --fh-w-conv: 440px;    /* conversation column on detail pages */
+  --fh-tip-max: 320px;   /* every tooltip wraps at 320px */
+}

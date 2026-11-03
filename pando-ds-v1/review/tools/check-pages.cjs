@@ -1,7 +1,7 @@
 // Checks every library page in headless Chrome: no JS errors, no missing files, sidebar + flags present, no sideways scroll.
 // Run from "Documents/Claude Code":  node pando-ds-v1/review/tools/check-pages.cjs
 const { chromium } = require("/Users/Charles-Pando/Documents/Claude Code/node_modules/playwright");
-const fs=require('fs');const dir="/Users/Charles-Pando/Documents/Claude Code/pando-ds-v1/components/";
+const fs=require('fs');const dir="/Users/Charles-Pando/Documents/Claude Code/freehand-design-skills/pando-ds-v1/components/";
 (async()=>{const b=await chromium.launch({channel:'chrome'});const bad=[];let n=0;
 const pages=fs.readdirSync(dir).filter(x=>x.endsWith('.html'));
 for(const f of ['../index.html',...pages]){const p=await b.newPage({viewport:{width:1280,height:900}});const errs=[];

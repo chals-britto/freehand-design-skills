@@ -1,6 +1,6 @@
 # Component build brief (shared by every builder)
 
-Repo: `/Users/Charles-Pando/Documents/Claude Code/pando-ds-v1` · Figma file key `S21sFFHjfc3XvGDAAYvA49` (named "DS V2 – Atoms", content is V1/Pando).
+Repo: `/Users/Charles-Pando/Documents/Claude Code/freehand-design-skills/pando-ds-v1` · Figma file key `S21sFFHjfc3XvGDAAYvA49` (named "DS V2 – Atoms", content is V1/Pando).
 
 ## The reference implementation — copy its shape exactly
 Read these first: `tokens.css`, `components/toast.css`, `components/toast.js`, `components/toast.md`, `components/toast.html`.

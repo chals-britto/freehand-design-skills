@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enhanced Studio components</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* =====================================================================
+   Freehand V1 Enhanced Studio: component snippets
+   Copy a section's markup + its CSS block into a new prototype.
+   Values come from tokens.css; do not hard-code new colours.
+   ===================================================================== */
+*{box-sizing:border-box}
+body{margin:0;font:400 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text);background:var(--fh-bg)}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.gallery{max-width:1080px;margin:0 auto;padding:32px 24px 120px}
+.gallery>h1{font-size:var(--fh-fs-24);margin:0 0 4px}
+.gallery>p{color:var(--fh-text-meta);margin:0 0 24px}
+.sec{border-top:1px solid var(--fh-divider);padding:24px 0}
+.sec>h2{font-size:var(--fh-fs-16);margin:0 0 4px}
+.sec>p{margin:0 0 16px;color:var(--fh-text-helper);font-size:var(--fh-fs-12)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* ---------- 1. Buttons ---------- */
+.fh-btn{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-control);padding:0 12px;border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:var(--fh-bg);color:var(--fh-text-strong2);font:500 var(--fh-fs-14) var(--fh-font);box-shadow:var(--fh-sh-control);cursor:pointer}
+.fh-btn:hover{background:#F8FAFC}
+.fh-btn.sm{height:32px;padding:0 10px}
+.fh-btn-pri{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-control);padding:0 14px;border:1px solid var(--fh-brand-hover);border-radius:var(--fh-r-control);background:var(--fh-brand);color:#fff;font:600 var(--fh-fs-14) var(--fh-font);box-shadow:var(--fh-sh-control);cursor:pointer}
+.fh-btn-pri:hover{background:var(--fh-brand-hover)}
+/* icon button; .act = something is set; .bdot = count badge */
+.fh-ib{position:relative;display:inline-grid;place-items:center;width:var(--fh-h-control);height:var(--fh-h-control);border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:var(--fh-bg);color:var(--fh-text-helper);box-shadow:var(--fh-sh-control);cursor:pointer}
+.fh-ib.act{border-color:var(--fh-brand-ring);background:var(--fh-brand-tint2);color:var(--fh-brand-text)}
+.fh-ib .bdot{position:absolute;top:-6px;right:-6px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--fh-brand);color:#fff;font:600 10px/16px var(--fh-font);font-style:normal;text-align:center}
+
+/* ---------- 2. Status pills (list page status filter; not tabs) ---------- */
+.fh-pills{display:flex;gap:8px;flex-wrap:wrap}
+.fh-pill{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-pill);padding:0 10px;border:1px solid var(--fh-border);border-radius:var(--fh-r-pill);background:var(--fh-bg);color:var(--fh-text-helper);font:500 var(--fh-fs-14) var(--fh-font);cursor:pointer}
+.fh-pill .c{color:var(--fh-text-meta)}
+.fh-pill.on{border-color:var(--fh-brand-ring);background:var(--fh-brand-tint);color:var(--fh-brand-text);font-weight:600}
+.fh-pill.on .c{color:var(--fh-brand-text)}
+
+/* ---------- 3. Badges (status) ---------- */
+.fh-b{display:inline-flex;align-items:center;height:var(--fh-h-badge);padding:0 9px;border-radius:var(--fh-r-pill);font:500 var(--fh-fs-12) var(--fh-font);white-space:nowrap}
+.fh-b.t-ok{color:var(--fh-ok-fg);background:var(--fh-ok-bg);box-shadow:inset 0 0 0 1px var(--fh-ok-ring)}
+.fh-b.t-warn{color:var(--fh-warn-fg);background:var(--fh-warn-bg);box-shadow:inset 0 0 0 1px var(--fh-warn-ring)}
+.fh-b.t-bad{color:var(--fh-bad-fg);background:var(--fh-bad-bg);box-shadow:inset 0 0 0 1px var(--fh-bad-ring)}
+.fh-b.t-info{color:var(--fh-info-fg);background:var(--fh-info-bg);box-shadow:inset 0 0 0 1px var(--fh-info-ring)}
+.fh-b.t-org{color:var(--fh-org-fg);background:var(--fh-org-bg);box-shadow:inset 0 0 0 1px var(--fh-org-ring)}
+.fh-b.t-acc{color:var(--fh-acc-fg);background:var(--fh-acc-bg);box-shadow:inset 0 0 0 1px var(--fh-acc-ring)}
+.fh-b.t-mute{color:var(--fh-mute-fg);background:var(--fh-mute-bg);box-shadow:inset 0 0 0 1px var(--fh-mute-ring)}
+/* exception tag inside a card: neutral, so status and money keep the colour */
+.fh-tag{display:inline-flex;align-items:center;height:var(--fh-h-badge);padding:0 9px;border-radius:var(--fh-r-pill);background:#F8FAFC;color:var(--fh-text-helper);box-shadow:inset 0 0 0 1px var(--fh-border);font:500 var(--fh-fs-12) var(--fh-font)}
+/* count chip next to a section title */
+.fh-cnt{display:inline-grid;place-items:center;min-width:24px;height:22px;padding:0 7px;border-radius:var(--fh-r-pill);background:var(--fh-bg-chip);color:var(--fh-text-strong2);font:600 var(--fh-fs-12) var(--fh-font)}
+
+/* ---------- 4. Search + dropdown filter (with counts) ---------- */
+.fh-q{display:flex;align-items:center;gap:6px;height:var(--fh-h-control);padding:0 10px;border:1px solid var(--fh-border);border-radius:var(--fh-r-input);background:var(--fh-bg);color:var(--fh-text-meta);min-width:220px}
+.fh-q:focus-within{border-color:var(--fh-brand);box-shadow:0 0 0 3px var(--fh-brand-tint)}
+.fh-q input{border:0;outline:0;background:none;font:400 var(--fh-fs-14) var(--fh-font);color:var(--fh-text);width:100%}
+.fh-ddw{position:relative}
+.fh-dd{display:inline-flex;align-items:center;justify-content:space-between;gap:6px;min-width:128px;height:var(--fh-h-control);padding:0 10px 0 12px;border:1px solid var(--fh-border);border-radius:var(--fh-r-control);background:var(--fh-bg);color:var(--fh-text-strong2);font:400 var(--fh-fs-14) var(--fh-font);cursor:pointer}
+.fh-dd .i{color:var(--fh-text-faint);width:14px;height:14px}
+.fh-dd .n{display:inline-grid;place-items:center;min-width:16px;height:16px;margin-left:6px;padding:0 4px;border-radius:999px;background:var(--fh-brand);color:#fff;font:600 10px var(--fh-font)}
+.fh-dd.on{border-color:var(--fh-brand-ring);background:var(--fh-brand-tint2);color:var(--fh-brand-text)}
+.fh-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:20;width:240px;padding:6px;background:var(--fh-bg);border:1px solid var(--fh-border);border-radius:var(--fh-r-card);box-shadow:var(--fh-sh-menu)}
+.fh-menu .it{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border:0;border-radius:6px;background:none;font:400 var(--fh-fs-14) var(--fh-font);color:var(--fh-text);text-align:left;cursor:pointer}
+.fh-menu .it:hover{background:#F8FAFC}
+.fh-menu .it .lb{flex:1}
+.fh-menu .it .ct{color:var(--fh-text-meta);font-size:var(--fh-fs-12)}
+.fh-menu .clr{width:100%;margin-top:4px;padding:8px;border:0;border-top:1px solid var(--fh-divider-soft);background:none;color:var(--fh-brand-text);font:400 var(--fh-fs-14) var(--fh-font);text-align:left;cursor:pointer}
+.fh-cb{width:16px;height:16px;border:1.5px solid #CBD5E1;border-radius:4px;display:inline-grid;place-items:center;background:#fff;flex:none}
+.fh-cb.on{background:var(--fh-brand);border-color:var(--fh-brand);color:#fff}
+.fh-cb.on .i{width:12px;height:12px;stroke-width:3}
+
+/* ---------- 5. Sort menu (listing-page pattern) ---------- */
+.fh-sortpop{position:absolute;top:calc(100% + 6px);right:0;z-index:20;width:240px;padding:12px;background:var(--fh-bg);border:1px solid var(--fh-divider);border-radius:8px;box-shadow:0 10px 15px -3px rgba(15,23,42,.1),0 4px 6px -4px rgba(15,23,42,.1)}
+.fh-sortpop .pl{font:600 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);margin:0 0 6px}
+.fh-sortpop .si{display:flex;align-items:center;justify-content:space-between;width:100%;height:32px;padding:0 8px;border:0;border-radius:6px;background:none;font:400 var(--fh-fs-14) var(--fh-font);color:var(--fh-text);text-align:left;cursor:pointer}
+.fh-sortpop .si.on{background:var(--fh-brand-tint);color:var(--fh-brand-text);font-weight:500}
+.fh-sortpop .seg{display:inline-flex;gap:2px}
+.fh-sortpop .seg button{display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:4px;background:none;color:var(--fh-brand-text);cursor:pointer}
+.fh-sortpop .seg button.on{background:#fff;box-shadow:0 1px 2px rgba(15,23,42,.14)}
+.fh-sortpop .pf{border-top:1px solid var(--fh-divider-soft);margin-top:6px;padding-top:8px}
+
+/* ---------- 6. Table (list pages) ---------- */
+.fh-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:var(--fh-fs-14)}
+.fh-tbl th{height:var(--fh-h-th);padding:0 24px;background:var(--fh-bg-th);color:var(--fh-text-meta);font:600 var(--fh-fs-12) var(--fh-font);text-align:left;border-bottom:1px solid var(--fh-divider);white-space:nowrap}
+.fh-tbl td{height:var(--fh-h-row);padding:8px 24px;color:var(--fh-text-cell);border-bottom:1px solid var(--fh-divider-soft);vertical-align:middle}
+.fh-tbl tr:hover td{background:#FFF6EF} /* hover and selected share one highlight */
+.fh-tbl .r{text-align:right;font-variant-numeric:tabular-nums}
+.fh-tbl .money{font-family:var(--fh-mono);font-weight:600;color:var(--fh-money-held)}
+.fh-vend{display:inline-flex;align-items:center;gap:8px;min-width:0}
+.fh-vend .scac{font:500 var(--fh-fs-12) var(--fh-mono);color:var(--fh-text-meta)}
+/* two-line cell: line 1 like any cell, line 2 grey 12px; each line truncates, "+N" after two items */
+.fh-2l{display:flex;flex-direction:column;min-width:0;max-width:240px;line-height:18px}
+.fh-2l b,.fh-2l span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fh-2l b{font-weight:400;color:inherit}
+.fh-2l span{font-size:var(--fh-fs-12);color:var(--fh-text-meta)}
+
+/* ---------- 7. Footer pager (same on every list) ---------- */
+.fh-foot{display:flex;align-items:center;gap:12px;height:var(--fh-h-foot);padding:0 24px;border-top:1px solid var(--fh-divider);background:var(--fh-bg);color:var(--fh-text-meta);font-size:var(--fh-fs-14)}
+.fh-foot .sp{flex:1}
+.fh-foot .rpp{display:inline-flex;align-items:center;gap:8px}
+.fh-foot .rppb{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 8px;border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:#fff;color:var(--fh-text);font:500 var(--fh-fs-14) var(--fh-font)}
+.fh-pgn{display:flex;align-items:center;gap:4px}
+.fh-pgn button{min-width:var(--fh-h-pager);height:var(--fh-h-pager);padding:0 8px;border:1px solid transparent;border-radius:var(--fh-r-control);background:none;color:var(--fh-text-strong2);font:500 var(--fh-fs-14) var(--fh-font);cursor:pointer}
+.fh-pgn button.on{background:#fff;border-color:var(--fh-brand-ring);color:var(--fh-text);font-weight:700;box-shadow:inset 0 -2px 0 var(--fh-brand),var(--fh-sh-control)}
+.fh-pgn button[disabled]{opacity:.4;cursor:not-allowed}
+.fh-pgn .el{color:var(--fh-text-faint);padding:0 2px}
+.fh-go{display:inline-flex;align-items:center;gap:6px;margin-left:8px}
+.fh-go input{width:48px;height:32px;border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);padding:0 6px;font:inherit}
+
+/* ---------- 8. Totals card (detail page) ---------- */
+.fh-tots{display:flex;padding:14px 20px;border:1px solid var(--fh-border);border-radius:var(--fh-r-panel);background:#fff;box-shadow:var(--fh-sh-card)}
+.fh-tot{flex:1 1 0;display:flex;flex-direction:column;gap:2px;padding:0 28px;min-width:0}
+.fh-tot:first-child{padding-left:0}
+.fh-tot+.fh-tot{border-left:1px solid var(--fh-divider)}
+.fh-tot small{font:500 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-helper);white-space:nowrap}
+.fh-tot small span{font-weight:400;color:var(--fh-text-meta)}
+.fh-tot b{font:700 var(--fh-fs-20)/26px var(--fh-font);color:var(--fh-text);font-variant-numeric:tabular-nums;white-space:nowrap}
+.fh-tot b em{font-style:normal;font:500 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);margin-left:4px}
+.fh-tot.held b{color:var(--fh-money-held)}
+.fh-tot.ok b{color:var(--fh-money-ok)}
+
+/* ---------- 9. Summary card ---------- */
+.fh-sum{position:relative;padding:14px 16px 14px 20px;border:1px solid var(--fh-border);border-radius:var(--fh-r-panel);background:#fff;overflow:hidden}
+.fh-sum::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,#FE6301,#FF9A4D 55%,#FDBA74)}
+.fh-sum .h{display:flex;align-items:center;gap:8px;color:var(--fh-brand-deep);font-weight:600}
+.fh-sum .h .meta{margin-left:auto;font:400 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta)}
+.fh-sum p{margin:8px 0 0;line-height:21.7px}
+.fh-sum .src{margin-top:8px;font-size:var(--fh-fs-12);color:var(--fh-text-meta)}
+.fh-sum .nx{margin-top:12px;padding-top:12px;border-top:1px solid var(--fh-divider-soft)}
+.fh-sum .nx .ld{color:var(--fh-brand-deep);font-weight:600}
+
+/* ---------- 10. Dispute card ---------- */
+.fh-card{background:#fff;border:1px solid var(--fh-border);border-radius:var(--fh-r-card);overflow:hidden}
+.fh-card .h{display:flex;align-items:center;gap:10px;height:50px;padding:10px 14px}
+.fh-card .h .sp{flex:1}
+.fh-inv{border:0;background:none;padding:0;font:600 var(--fh-fs-14) var(--fh-mono);color:var(--fh-brand-deep);text-decoration:underline;text-decoration-color:var(--fh-brand-ring);text-underline-offset:3px;cursor:pointer}
+.fh-card .amts{display:flex;border-top:1px solid var(--fh-divider-soft)}
+.fh-card .amts>div{flex:1;padding:10px 14px 10px 40px}
+.fh-card .amts>div+div{border-left:1px solid var(--fh-divider-soft);padding-left:24px}
+.fh-card .amts small{display:block;font:500 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);text-transform:uppercase;letter-spacing:.6px}
+.fh-card .amts b{font-weight:500}
+.fh-card .amts b.red{color:var(--fh-money-held)}
+.fh-card .amts em{font-style:normal;font-size:var(--fh-fs-12);color:var(--fh-text-meta);margin-left:3px}
+.fh-card .line{margin:0;padding:8px 14px 8px 41px;border-top:1px solid var(--fh-divider-soft);font-size:var(--fh-fs-12);color:var(--fh-text-helper)}
+.fh-card .sugg{display:flex;align-items:center;gap:10px;padding:8px 15px;border-top:1px solid var(--fh-divider-soft);background:var(--fh-bg-subtle);font-size:var(--fh-fs-12);color:var(--fh-text-helper)}
+.fh-card .sugg b{font-weight:500;color:var(--fh-text)}
+.fh-card .sugg .why{color:var(--fh-text-meta);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.fh-apply{border:0;background:none;padding:0 4px;font:600 var(--fh-fs-14) var(--fh-font);color:var(--fh-brand-deep);text-decoration:underline;text-decoration-color:var(--fh-brand-ring);text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:pointer}
+
+/* ---------- 11. Text link that opens a new tab ---------- */
+.fh-ext{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;font:500 var(--fh-fs-14) var(--fh-font);color:var(--fh-text-strong2);text-decoration:underline;text-decoration-color:var(--fh-underline);text-underline-offset:3px;cursor:pointer}
+.fh-ext:hover{color:var(--fh-text);text-decoration-color:currentColor}
+.fh-ext .i{width:13px;height:13px;color:var(--fh-text-meta)}
+
+/* ---------- 12. Tooltip (one element, wraps at 320px) ---------- */
+.fh-tip{display:inline-block;max-width:var(--fh-tip-max);padding:6px 10px;border-radius:6px;background:#0F172A;color:#F8FAFC;font:500 var(--fh-fs-12)/1.45 var(--fh-font);box-shadow:var(--fh-sh-tip);white-space:normal;text-wrap:balance}
+
+/* ---------- 13. Toast ---------- */
+.fh-toast{display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border-radius:8px;background:rgba(29,45,62,.94);color:#fff;font-size:var(--fh-fs-14)}
+.fh-toast b{font-weight:700}
+.fh-toast .ac{color:#9BCDFF;font-weight:700;background:none;border:0;cursor:pointer;font:inherit}
+
+/* ---------- 14. Ask Freehand button (orange-only rotating ring) ---------- */
+@property --fga{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes fgaspin{to{--fga:360deg}}
+.fh-ask{display:inline-flex;padding:3.5px;border:0;border-radius:999px;background:conic-gradient(from var(--fga),#E85400,#FE6301 20%,#FF9A4D 45%,#FDBA74 55%,#FF9A4D 65%,#FE6301 85%,#E85400);animation:fgaspin 5s linear infinite;box-shadow:0 12px 28px -6px rgba(254,99,1,.55),0 4px 12px -4px rgba(254,99,1,.4),0 2px 6px rgba(15,23,42,.14);cursor:pointer}
+.fh-ask .in{display:flex;align-items:center;gap:8px;padding:10px 18px 10px 12px;border-radius:999px;background:#fff;color:var(--fh-text);font:600 var(--fh-fs-14) var(--fh-font)}
+.fh-ask .in .mk{width:18px;height:18px;fill:var(--fh-brand)} /* Freehand assistant mark: also used for Summary and Suggested rows */
+
+/* ---------- 15. Activity timeline ---------- */
+.fh-act{list-style:none;margin:0;padding:4px 0}
+.fh-act li{display:grid;grid-template-columns:84px 12px minmax(0,1fr);column-gap:14px;position:relative;padding-bottom:16px}
+.fh-act li:not(:last-child)::before{content:"";position:absolute;left:103px;top:16px;bottom:-2px;border-left:2px dotted #CBD5E1}
+.fh-act time{font-size:var(--fh-fs-12);color:var(--fh-text-meta);line-height:16px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.fh-act time small{display:block;margin-top:2px;font-size:var(--fh-fs-12)}
+.fh-act .dot{width:10px;height:10px;border-radius:50%;margin-top:5px;background:#94A3B8;box-shadow:0 0 0 3px var(--fh-bg-detail)}
+.fh-act .nx .dot{background:var(--fh-bg-detail);box-shadow:none;border:1.5px dashed #94A3B8}
+.fh-act p{margin:0;line-height:1.45}
+.fh-act li>div>span{display:block;margin-top:2px;font-size:var(--fh-fs-12);color:var(--fh-text-meta)}
+.fh-act .vw{margin-left:8px;font-size:var(--fh-fs-12);color:var(--fh-text-helper);border:0;background:none;cursor:pointer;text-decoration:underline;text-decoration-color:var(--fh-underline)}
+
+/* ---------- 16. Sticky list bar (detail-page list header) ---------- */
+.fh-cbar{position:sticky;top:0;z-index:4;padding:12px 24px 10px;background:var(--fh-bg-detail);transition:box-shadow .2s ease}
+.fh-cbar.stuck{box-shadow:0 1px 0 var(--fh-divider)} /* divider only while pinned */
+.fh-cbar .row1{display:flex;align-items:center;flex-wrap:wrap;row-gap:8px;min-height:36px}
+.fh-cbar .ttl{display:inline-flex;align-items:center;gap:8px;margin-right:24px;flex:none}
+.fh-cbar .ttl b{font:700 var(--fh-fs-18) var(--fh-font)}
+.fh-cbar .tools{flex:1 1 440px;display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+.fh-cbar .tools .fh-q{flex:1 1 200px;min-width:160px}
+
+/* ---------- 17. Sidebar (232px; 64px rail when collapsed) ---------- */
+.fh-side{width:var(--fh-w-side);background:var(--fh-bg-side);border-right:1px solid var(--fh-divider);padding:16px 10px 0;display:flex;flex-direction:column;gap:2px;height:860px}
+.fh-side .logo{display:flex;align-items:center;padding:0 6px 10px;font:700 20px var(--fh-font);color:var(--fh-text)}
+.fh-ws{display:flex;align-items:center;gap:8px;height:36px;margin-bottom:6px;padding:6px 10px;border:1px solid var(--fh-divider);border-radius:var(--fh-r-input);background:#fff;box-shadow:var(--fh-sh-control);font:600 var(--fh-fs-14) var(--fh-font)}
+.fh-ws .wst{display:grid;place-items:center;width:20px;height:20px;border-radius:4px;background:var(--fh-text);color:#fff;font-size:11px}
+.fh-ws .i{margin-left:auto;color:var(--fh-text-faint)}
+.fh-nsrch{display:flex;align-items:center;gap:8px;height:36px;margin-bottom:6px;padding:0 10px;border-radius:var(--fh-r-input);background:#fff;box-shadow:0 0 0 1px #F1F2F4;color:#94A3B8}
+.fh-nsrch kbd{margin-left:auto;font:500 11px var(--fh-font);color:var(--fh-text-meta);border:1px solid var(--fh-border);border-radius:4px;padding:1px 4px}
+.fh-gl{padding:18px 10px 6px;font:600 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);text-transform:uppercase;letter-spacing:.72px}
+.fh-ni{display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border-radius:var(--fh-r-input);color:var(--fh-text-strong2);font:400 var(--fh-fs-14) var(--fh-font);text-decoration:none;cursor:pointer}
+.fh-ni .i{width:18px;height:18px;stroke-width:1.75}
+.fh-ni:hover{background:#F1F5F9}
+.fh-ni.on{background:var(--fh-brand-tint);color:var(--fh-text);font-weight:500}
+.fh-ni .bdg{margin-left:auto;display:grid;place-items:center;min-width:22px;height:22px;border-radius:11px;background:#DC2626;color:#fff;font:700 var(--fh-fs-12) var(--fh-font)}
+.fh-ni .chev{margin-left:auto;width:14px;height:14px;color:var(--fh-text-faint)}
+.fh-user{margin-top:auto;display:flex;align-items:center;gap:8px;height:52px;padding:0 10px;border-top:1px solid var(--fh-divider);font-size:var(--fh-fs-14)}
+.fh-user .av{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#FFE4CC;color:#7C2D12;font:700 var(--fh-fs-12) var(--fh-font)}
+.fh-user small{color:var(--fh-text-meta);font-size:var(--fh-fs-12)}
+
+/* ---------- 18. List toolbar: filter bar (saved filters + tokens + search + Save) ---------- */
+.fh-fx{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.fh-fxbox{display:flex;align-items:center;gap:6px;flex:1;min-width:0;height:var(--fh-h-control);padding:0 4px;border:1px solid var(--fh-border);border-radius:var(--fh-r-input);background:#fff}
+.fh-fxbox:focus-within{border-color:var(--fh-brand);box-shadow:0 0 0 3px var(--fh-brand-tint)}
+.fh-fxbtn{display:inline-flex;align-items:center;gap:2px;height:28px;padding:0 6px;border:0;border-radius:6px;background:none;color:var(--fh-text-helper);cursor:pointer}
+.fh-fxbtn .i{width:14px;height:14px}
+.fh-fxdiv{width:1px;height:20px;background:var(--fh-border)}
+.fh-tok{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 4px 0 8px;border:1px solid var(--fh-brand-ring);border-radius:6px;background:var(--fh-brand-tint2);color:var(--fh-text);font:400 var(--fh-fs-12) var(--fh-font);white-space:nowrap}
+.fh-tok .op{color:var(--fh-text-meta)}
+.fh-tok b{font-weight:600;color:var(--fh-brand-text)}
+.fh-tok button{display:grid;place-items:center;width:18px;height:18px;border:0;border-radius:4px;background:none;color:var(--fh-text-meta);cursor:pointer}
+.fh-fxbox input{flex:1;min-width:120px;border:0;outline:0;background:none;font:400 var(--fh-fs-14) var(--fh-font);color:var(--fh-text)}
+.fh-save{height:var(--fh-h-control);padding:0 12px;border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:#fff;color:var(--fh-text-strong2);font:500 var(--fh-fs-14) var(--fh-font);box-shadow:var(--fh-sh-control)}
+.fh-save[disabled]{color:#94A3B8;cursor:not-allowed}
+.fh-ib.wide{display:inline-flex;align-items:center;width:auto;gap:6px;padding:0 10px;font:600 var(--fh-fs-14) var(--fh-font);color:var(--fh-text)}
+
+/* ---------- 19. Column picker (no density control) ---------- */
+.fh-cp{width:320px;padding:14px;background:#fff;border:1px solid var(--fh-divider);border-radius:8px;box-shadow:0 10px 15px -3px rgba(15,23,42,.1),0 4px 6px -4px rgba(15,23,42,.1)}
+.fh-cp .pl{font:600 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);margin-bottom:8px}
+.fh-cp .pl span{font-weight:400}
+.fh-cp .find{display:flex;align-items:center;gap:6px;height:30px;margin-bottom:6px;padding:0 10px;border:1px solid var(--fh-border);border-radius:6px;color:#94A3B8}
+.fh-cp .find input{border:0;outline:0;font:inherit;width:100%}
+.fh-cp .row{display:flex;align-items:center;gap:6px;height:34px;padding:0 6px 0 2px;border-radius:6px;cursor:grab}
+.fh-cp .row:hover{background:#F8FAFC}
+.fh-cp .g{color:#CBD5E1}
+.fh-cp .row label{display:flex;align-items:center;gap:8px;flex:1;cursor:pointer}
+.fh-cp .row em{font-style:normal;font-size:var(--fh-fs-12);color:var(--fh-text-meta);margin-left:4px}
+.fh-cp .pin{color:var(--fh-brand)}
+.fh-cp .pin.off{color:#CBD5E1}
+.fh-cp .ft{display:flex;justify-content:space-between;margin-top:8px;padding-top:10px;border-top:1px solid var(--fh-divider-soft)}
+.fh-cp .ft button{border:0;background:none;padding:0;font:500 var(--fh-fs-14) var(--fh-font);color:var(--fh-brand-text);cursor:pointer}
+</style>
+</head>
+<body>
+<!-- icon sprite (lucide paths) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-chevl" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-chevr" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></symbol>
+  <symbol id="i-asc" viewBox="0 0 24 24"><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/><path d="M11 12h4"/><path d="M11 16h7"/><path d="M11 20h10"/></symbol>
+  <symbol id="i-desc" viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="M11 4h10"/><path d="M11 8h7"/><path d="M11 12h4"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-funnel" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+  <symbol id="i-cols" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></symbol>
+  <symbol id="i-updown" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-mark" viewBox="3 3 14 14"><path d="M14.84 9.52h-1.52a2.88 2.88 0 0 1-2.88-2.88V5.12a.25.25 0 0 0-.25-.25H7.97a.25.25 0 0 0-.25.25v1.52a2.88 2.88 0 0 1-2.88 2.88H3.29a.25.25 0 0 0-.25.25v2.22c0 .15.13.25.25.25h1.52a2.88 2.88 0 0 1 2.88 2.88v1.52c0 .15.13.25.25.25h2.22c.15 0 .25-.13.25-.25v-1.52a2.88 2.88 0 0 1 2.88-2.88h1.52c.15 0 .25-.13.25-.25V9.77a.25.25 0 0 0-.25-.25z"/><path d="M16.83 4.79h-.57a1.09 1.09 0 0 1-1.09-1.09v-.57a.1.1 0 0 0-.1-.1h-.84a.1.1 0 0 0-.1.1v.57a1.09 1.09 0 0 1-1.09 1.09h-.58a.1.1 0 0 0-.1.1v.84c0 .06.05.1.1.1h.57c.6 0 1.09.49 1.09 1.09v.57c0 .06.05.1.1.1h.84a.1.1 0 0 0 .1-.1v-.57c0-.6.49-1.09 1.09-1.09h.57a.1.1 0 0 0 .1-.1v-.84a.1.1 0 0 0-.1-.1z"/></symbol>
+</svg>
+
+<main class="gallery">
+<h1>Enhanced Studio components</h1>
+<p>Freehand V1 Enhanced Studio. Each block shows the markup to copy; styles are in the &lt;style&gt; block above, values in tokens.css.</p>
+
+<section class="sec"><h2>1. Buttons</h2><p>Secondary is the default. One primary (orange) per page, for the main action only. Icon buttons get an orange badge when something is set.</p>
+<div class="row">
+  <button class="fh-btn">Upload history</button>
+  <button class="fh-btn-pri">Upload invoices</button>
+  <button class="fh-ib" aria-label="Sort"><svg class="i"><use href="#i-sort"/></svg></button>
+  <button class="fh-ib act" aria-label="Sorted by amount"><svg class="i"><use href="#i-sort"/></svg><i class="bdot">1</i></button>
+</div></section>
+
+<section class="sec"><h2>2. Status pills</h2><p>List-page status filter. Pills, not tabs: they filter one list. 28px tall, count inside.</p>
+<div class="fh-pills">
+  <button class="fh-pill on">All <span class="c">46</span></button>
+  <button class="fh-pill">Open <span class="c">17</span></button>
+  <button class="fh-pill">Partly resolved <span class="c">5</span></button>
+  <button class="fh-pill">Resolved <span class="c">24</span></button>
+</div></section>
+
+<section class="sec"><h2>3. Badges, tags, count chip</h2><p>Status badges carry meaning by tone. Exception tags inside cards stay neutral. Count chip sits next to section titles.</p>
+<div class="row">
+  <span class="fh-b t-warn">Open</span><span class="fh-b t-org">Escalated</span><span class="fh-b t-info">Partly resolved</span><span class="fh-b t-ok">Resolved</span>
+  <span class="fh-b t-bad">Issue found</span><span class="fh-b t-acc">Ready to pay</span><span class="fh-b t-mute">Not audited</span>
+  <span class="fh-tag">Rate overcharge</span><span class="fh-cnt">24</span><span class="fh-cnt">15 of 24</span>
+</div></section>
+
+<section class="sec"><h2>4. Search and dropdown filters</h2><p>One dropdown per field. Options show live counts. An active dropdown turns orange with a count.</p>
+<div class="row" style="align-items:flex-start;min-height:190px">
+  <label class="fh-q"><svg class="i"><use href="#i-search"/></svg><input type="search" placeholder="Search invoice # or charge"></label>
+  <div class="fh-ddw"><button class="fh-dd">Status<svg class="i"><use href="#i-chev"/></svg></button></div>
+  <div class="fh-ddw"><button class="fh-dd on"><span>Exception<span class="n">1</span></span><svg class="i"><use href="#i-chev"/></svg></button>
+    <div class="fh-menu" role="menu">
+      <button class="it" role="menuitemcheckbox" aria-checked="false"><span class="fh-cb"></span><span class="lb">Discount variance</span><span class="ct">1</span></button>
+      <button class="it" role="menuitemcheckbox" aria-checked="true"><span class="fh-cb on"><svg class="i"><use href="#i-check"/></svg></span><span class="lb">Rate overcharge</span><span class="ct">3</span></button>
+      <button class="it" role="menuitemcheckbox" aria-checked="false"><span class="fh-cb"></span><span class="lb">Unauthorized charge</span><span class="ct">2</span></button>
+      <button class="clr">Clear</button>
+    </div></div>
+</div></section>
+
+<section class="sec"><h2>5. Sort menu</h2><p>Same as the listing pages: icon button, "Sort by" list, the chosen row gets an ascending / descending toggle, "Clear sort" at the bottom.</p>
+<div class="row" style="align-items:flex-start;min-height:240px"><div class="fh-ddw"><button class="fh-ib act"><svg class="i"><use href="#i-sort"/></svg><i class="bdot">1</i></button>
+  <div class="fh-sortpop" role="menu" style="left:0;right:auto"><div class="pl">Sort by</div>
+    <button class="si">Status</button>
+    <div class="si on"><span>Disputed amount</span><span class="seg"><button aria-label="Lowest first"><svg class="i"><use href="#i-asc"/></svg></button><button class="on" aria-label="Highest first"><svg class="i"><use href="#i-desc"/></svg></button></span></div>
+    <button class="si">Invoice number</button>
+    <div class="pf"><button class="fh-ext" style="text-decoration:none">Clear sort</button></div>
+  </div></div></div></section>
+
+<section class="sec"><h2>6. Table</h2><p>Header 40px, rows 44px, 24px side padding. Two-line cell: line 1 like any cell, line 2 grey 12px, each truncated.</p>
+<table class="fh-tbl"><thead><tr><th>Vendor</th><th>Status</th><th class="r">Disputed</th><th>Charges / exceptions</th></tr></thead><tbody>
+<tr><td><span class="fh-vend"><span class="scac">UPSN</span>United Parcel Service</span></td><td><span class="fh-b t-info">Partly resolved</span></td><td class="r"><span class="money">1,025.87</span> SGD</td><td><span class="fh-2l"><b>Fuel surcharge, Base rate +3</b><span>Rate overcharge, Discount variance +1</span></span></td></tr>
+<tr><td><span class="fh-vend"><span class="scac">KHNN</span>Kuehne+Nagel</span></td><td><span class="fh-b t-warn">Open</span></td><td class="r"><span class="money">1,088.76</span> EUR</td><td><span class="fh-2l"><b>Ocean freight, Detention</b><span>No contract match, Unauthorized charge</span></span></td></tr>
+</tbody></table></section>
+
+<section class="sec"><h2>7. Footer pager</h2><p>Identical on every list: rows per page, range, numbered pages, "Go to" when there are more than 7 pages.</p>
+<div class="fh-foot"><span class="rpp">Rows per page <button class="rppb">10 <svg class="i" style="width:14px"><use href="#i-chev"/></svg></button></span><span>1–10 of 24</span><span class="sp"></span>
+<nav class="fh-pgn" aria-label="Pagination"><button disabled aria-label="Previous page"><svg class="i"><use href="#i-chevl"/></svg></button><button class="on" aria-current="page">1</button><button>2</button><button>3</button><button aria-label="Next page"><svg class="i"><use href="#i-chevr"/></svg></button></nav></div></section>
+
+<section class="sec"><h2>8. Totals card</h2><p>Three equal columns, left-aligned. Open in red when money is held; Resolved in green only when above zero.</p>
+<div class="fh-tots"><div class="fh-tot"><small>Disputed <span>· 5 charges</span></small><b>1,025.87<em>SGD</em></b></div><div class="fh-tot held"><small>Open <span>· 4 charges</span></small><b>1,001.47<em>SGD</em></b></div><div class="fh-tot ok"><small>Resolved <span>· 1 charge</span></small><b>24.40<em>SGD</em></b></div></div></section>
+
+<section class="sec"><h2>9. Summary card</h2><p>Orange-family stroke on the left (no teal). Plain sentences, no AI wording.</p>
+<div class="fh-sum"><div class="h">Summary<span class="meta">Last replied · Vendor <b>Aug 14</b> · You <b>not yet</b></span></div>
+<p>Kuehne+Nagel agreed to the audited amounts on Aug 14. Accepting the suggested action resolves all 3 charges.</p>
+<div class="src">Based on the charges, messages and <button class="fh-ext" style="font-size:12px">activity</button> · Updated Aug 14</div>
+<div class="nx"><span class="ld">Next step:</span> <b>Your decision on 3 open charges</b></div></div></section>
+
+<section class="sec"><h2>10. Dispute card</h2><p>Header row, amounts grid, optional reason line, optional suggestion row with Apply.</p>
+<article class="fh-card"><div class="h"><span class="fh-cb"></span><button class="fh-inv">INV-31356</button><b style="font-weight:600">Fuel surcharge 18.5%</b><span class="fh-tag">Rate overcharge</span><span class="sp"></span><span class="fh-b t-warn">Open</span><button class="fh-btn sm">Resolve</button></div>
+<div class="amts"><div><small>Billed</small><b>1,447.78</b><em>SGD</em></div><div><small>Expected</small><b>1,226.50</b><em>SGD</em></div><div><small>Disputed</small><b class="red">221.28</b><em>SGD</em></div></div>
+<div class="sugg">Suggested: <b>Accept audited charge</b><span class="why">· Vendor agreed to bill the contract amount in their reply on Aug 14.</span><button class="fh-apply">Apply</button></div></article></section>
+
+<section class="sec"><h2>11. Text link to another page (new tab)</h2><p>Dark grey with a grey underline plus the new-tab icon. Never blue; never the icon alone.</p>
+<button class="fh-ext">2 invoices<svg class="i"><use href="#i-ext"/></svg></button></section>
+
+<section class="sec"><h2>12. Tooltip</h2><p>One floating element positioned by script. Wraps at 320px, never a single long line.</p>
+<span class="fh-tip">Rows per page applies to this list only. Your choice is remembered next time you open it.</span></section>
+
+<section class="sec"><h2>13. Toast</h2><p>Bottom centre, dark, auto-hides after about 4s. Title in bold, detail after it, optional action.</p>
+<span class="fh-toast"><b>Charge resolved</b> INV-31356 · SGD 24.40 <button class="ac">Undo</button></span></section>
+
+<section class="sec"><h2>14. Ask Freehand</h2><p>Orange-only rotating ring, white pill. Bottom-right; moves up when a footer pager slides in.</p>
+<button class="fh-ask"><span class="in"><svg class="mk"><use href="#i-mark"/></svg>Ask Freehand</span></button></section>
+
+<section class="sec"><h2>15. Activity timeline</h2><p>Date column fits the date (84px). Newest first; the next step on top with a dashed dot.</p>
+<ol class="fh-act">
+<li class="nx"><time>Next</time><span class="dot"></span><div><p>Waiting for DHL Express to reply</p><span>Next step</span></div></li>
+<li><time>Aug 13, 2026<small>2:15 AM</small></time><span class="dot"></span><div><p>2 reminders sent</p><span>System</span></div></li>
+<li><time>Aug 6, 2026<small>9:05 AM</small></time><span class="dot"></span><div><p>Dispute opened<button class="vw">View</button></p><span>Freehand Audit</span></div></li>
+</ol></section>
+
+<section class="sec"><h2>16. Sticky list bar</h2><p>Title + count, then search, filters and sort on one row. Pins under the tabs; the divider shows only while pinned. See behaviours.js.</p>
+<div class="fh-cbar stuck" style="position:relative"><div class="row1"><span class="ttl"><span class="fh-cb"></span><b>Disputes</b><span class="fh-cnt">24</span></span>
+<div class="tools"><label class="fh-q"><svg class="i"><use href="#i-search"/></svg><input type="search" placeholder="Search invoice # or charge"></label><button class="fh-dd">Status<svg class="i"><use href="#i-chev"/></svg></button><button class="fh-dd">Exception<svg class="i"><use href="#i-chev"/></svg></button><button class="fh-ib"><svg class="i"><use href="#i-sort"/></svg></button></div></div></div></section>
+
+<section class="sec"><h2>17. Sidebar</h2><p>232px, light. Brand, workspace switcher, "Search anything ⌘K", grouped nav (Operations, Insights, Workspace), profile pinned at the bottom. Keep every item, including "Agents" (a product name). Swap the generic file icon for each page's Lucide icon (18px, stroke 1.75).</p>
+<nav class="fh-side" aria-label="Main navigation">
+  <div class="logo"><span style="color:var(--fh-brand);margin-right:6px">✳</span>freehand</div>
+  <div class="fh-ws"><span class="wst">Z</span>Zebra Technologies<svg class="i" style="width:14px;height:14px"><use href="#i-updown"/></svg></div>
+  <div class="fh-nsrch"><svg class="i"><use href="#i-search"/></svg>Search anything<kbd>⌘K</kbd></div>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Dashboard</a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Notification<span class="bdg">3</span></a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>My task</a>
+  <div class="fh-gl">Operations</div>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Contracts</a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Invoices</a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Exceptions</a>
+  <a class="fh-ni on" aria-current="page"><svg class="i"><use href="#i-file"/></svg>Dispute dockets</a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Payments<svg class="i chev"><use href="#i-chevr"/></svg></a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>GL coding</a>
+  <div class="fh-gl">Insights</div>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Spend intelligence</a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Reports</a>
+  <div class="fh-gl">Workspace</div>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Agents</a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Context graph</a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Clients</a>
+  <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Configuration<svg class="i chev"><use href="#i-chevr"/></svg></a>
+  <div class="fh-user"><span class="av">C</span>cfo <small>· Pandostaging</small></div>
+</nav></section>
+
+<section class="sec"><h2>18. List toolbar: filter bar, sort, columns, export</h2><p>Saved-filters button, then one box holding filter tokens and the search. "Save" stays disabled until there is something to save. Sort and columns are icon buttons; the columns button shows the visible count and opens the column picker (19).</p>
+<div class="row" style="flex-wrap:nowrap">
+  <div class="fh-fx"><div class="fh-fxbox"><button class="fh-fxbtn" aria-label="Saved filters"><svg class="i"><use href="#i-funnel"/></svg><svg class="i"><use href="#i-chev"/></svg></button><span class="fh-fxdiv"></span>
+    <span class="fh-tok">Status <span class="op">is</span> <b>Held</b><button aria-label="Remove filter"><svg class="i" style="width:12px;height:12px"><use href="#i-x"/></svg></button></span>
+    <input type="search" placeholder="Search invoice or tracking #, or add a filter…"></div>
+    <button class="fh-save">Save</button></div>
+  <button class="fh-ib act" aria-label="Sort"><svg class="i"><use href="#i-sort"/></svg><i class="bdot">1</i></button>
+  <button class="fh-ib wide" aria-label="Columns: 10 shown"><svg class="i"><use href="#i-cols"/></svg>10</button>
+  <button class="fh-btn">Export</button>
+</div></section>
+
+<section class="sec"><h2>19. Column picker</h2><p>Opens from the columns button. Find a column, tick to show, drag to reorder, pin. The first column is always shown. No density setting.</p>
+<div class="fh-cp" role="dialog" aria-label="Columns">
+  <div class="pl">Columns <span>10 of 18 shown · drag to reorder</span></div>
+  <label class="find"><svg class="i" style="width:14px;height:14px"><use href="#i-search"/></svg><input type="search" placeholder="Find a column"></label>
+  <div class="row"><svg class="i g"><use href="#i-grip"/></svg><label><span class="fh-cb on"><svg class="i"><use href="#i-check"/></svg></span>Invoice #<em>Always shown</em></label><svg class="i pin"><use href="#i-pin"/></svg></div>
+  <div class="row"><svg class="i g"><use href="#i-grip"/></svg><label><span class="fh-cb on"><svg class="i"><use href="#i-check"/></svg></span>Mode</label><svg class="i pin off"><use href="#i-pin"/></svg></div>
+  <div class="row"><svg class="i g"><use href="#i-grip"/></svg><label><span class="fh-cb on"><svg class="i"><use href="#i-check"/></svg></span>Vendor</label><svg class="i pin off"><use href="#i-pin"/></svg></div>
+  <div class="row"><svg class="i g"><use href="#i-grip"/></svg><label><span class="fh-cb"></span>Tracking number</label><svg class="i pin off"><use href="#i-pin"/></svg></div>
+  <div class="ft"><button>Show all</button><button>Reset to default</button></div>
+</div></section>
+</main>
+</body>
+</html>
