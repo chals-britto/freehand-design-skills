@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>List Column · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="tag.css">
+<link rel="stylesheet" href="status.css">
+<link rel="stylesheet" href="skeleton.css">
+<link rel="stylesheet" href="checkbox.css">
+<link rel="stylesheet" href="list-column.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+/* variants */
+.vh{font:600 13px var(--pg-ui);margin:0;padding:16px 20px 0}
+.vh code{font:400 12px var(--pg-mono);color:var(--pg-muted)}
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:16px 20px 20px}
+.vgrid.one{grid-template-columns:minmax(0,1fr)}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.vcell .box{overflow-x:auto;background:var(--white);border-radius:6px;padding:14px;border:1px solid var(--pg-line)}
+.bounds .box .pds-list-column{outline:1px dashed #c9d3da;outline-offset:0}
+.bounds-note{font-size:12px;color:var(--pg-muted);padding:0 20px}
+/* spec */
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--pg-line);border-radius:10px;overflow:hidden}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+table.vals{width:100%;border-collapse:collapse;font-size:12.5px}
+table.vals th,table.vals td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--pg-line);vertical-align:top}
+table.vals th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted)}
+table.vals code{font:400 12px var(--pg-mono)}
+.tw{overflow-x:auto}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+ul.plain{margin:0;padding:16px 18px 16px 36px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+ul.plain a{color:var(--pg-accent)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.vgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>List Column</h1>
+    <p class="lede">One cell of a list row: text, tags, a status, a loading skeleton, a route or a swappable slot. Also the white data cell with an optional checkbox (List-Data) and the route block (.Route). The List molecule is built from these.</p>
+    <div class="meta"><span>Status: Built from Figma 2026-10-28 · no review</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=2479-10402" target="_blank" rel="noopener">Figma List Column 2479:10402 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=360-6" target="_blank" rel="noopener">List-Data 360:6 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=6199-2264" target="_blank" rel="noopener">.Route 6199:2264 ↗</a><span>Files: list-column.css (no JS)</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Every published variant, with the kit atoms inside (tag.css, status.css, skeleton.css, checkbox.css). Light only — Figma has no dark version. Samples are on white, as in Figma.</p>
+<div class="panel bounds">
+  <h3 class="vh">List Column — Type × Size (15) · <code>.pds-list-column</code></h3>
+  <p class="bounds-note">Dashed outline = the column’s fixed width.</p>
+  <div class="vgrid" id="v-col"></div>
+</div>
+<div class="panel" style="margin-top:14px">
+  <h3 class="vh">List-Data (Adjustable) — Data points × Checkbox (4) · <code>.pds-list-column--data</code></h3>
+  <div class="vgrid" id="v-data"></div>
+</div>
+<div class="panel" style="margin-top:14px">
+  <h3 class="vh">.Route — Single · Multi (2) · <code>.pds-list-column--route.pds-list-column--route-center</code></h3>
+  <div class="vgrid one" id="v-route"></div>
+</div>
+</section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="spec-table">
+  <div><b>Width (Size)</b>Small <code>80</code> · Default <code>120</code> · Large <code>180</code> · Xtra Large <code>220</code> · height hugs</div>
+  <div><b>Type widths</b>Text + Tag <code>160</code> · Status <code>130</code> (Large <code>160</code>) · Skeleton, Route, Swappable hug</div>
+  <div><b>Main text</b><code>.type-12-semibold</code> <code>--text-dark</code> · line-height <code>16</code></div>
+  <div><b>Additional text</b><code>.type-12-regular</code> <code>--text-medium</code> · line-height <code>16</code></div>
+  <div><b>Main ↔ Additional</b><code>5px</code></div>
+  <div><b>Tag row gap</b><code>6px</code> · Input Tag + Multiselect Tag (tag.css)</div>
+  <div><b>Route place</b><code>100</code> wide · code <code>.type-10-regular</code> caps +0.5, line-height 12, truncates</div>
+  <div><b>Via connector</b><code>30</code> wide · padding <code>12 8 5</code> (.Route: <code>12 8 10</code>) · arrow <code>14</code> · “VIA” 8 SemiBold caps <code>--pando-blue-active</code></div>
+  <div><b>Arrow</b><code>28</code> wide · padding <code>12 8</code> · line <code>12</code> · 1px <code>--border-blue-grey</code>, arrow-line end</div>
+  <div><b>List-Data cell</b>white · padding <code>10</code> (Dual <code>8 10</code>) · checkbox gap <code>10</code> · lines gap <code>4</code></div>
+  <div><b>Swappable placeholder</b><code>--pando-light</code> · padding <code>3 10</code> · gap <code>20</code> · icon <code>20</code>, gap <code>8</code> · body <code>150</code> wide</div>
+  <div><b>Alignment</b>List Column Route: top · .Route set: centred · List-Data: centred</div>
+</div>
+<div class="panel tw" style="margin-top:14px"><table class="vals">
+  <thead><tr><th>Type</th><th>Sizes in Figma</th><th>Content</th><th>Classes</th></tr></thead>
+  <tbody>
+    <tr><td>Text</td><td>Small · Default · Large · Xtra Large</td><td>Main Text + Additional Text (Small sample: “Additional”)</td><td><code>.pds-list-column--{size}</code> · <code>__main</code> · <code>__sub</code></td></tr>
+    <tr><td>Text + Tag</td><td>Default</td><td>Main Text + count tag “+ 2” on one row; Additional Text hidden</td><td><code>--text-tag</code> · <code>__row</code> · <code>.pds-tag--count</code></td></tr>
+    <tr><td>Tag</td><td>Default · Large · Xtra Large</td><td>Input Tag “Text Input” (Remove=No) + “+ 2”; a second Input Tag is hidden</td><td><code>--tag</code> · <code>.pds-tag--input</code> · <code>.pds-tag--count</code></td></tr>
+    <tr><td>Status</td><td>Default · Small · Large</td><td>#Status Purple — Vertical with Contract, Secondary, Overpack (Default, Large); Horizontal Small with Sea (Small)</td><td><code>--status</code> · <code>.pds-status--vertical</code> / <code>--small</code></td></tr>
+    <tr><td>Skeleton</td><td>Default</td><td>Skeleton Size=120, Light</td><td><code>--skeleton</code> · <code>.pds-skeleton--120</code></td></tr>
+    <tr><td>Route</td><td>Via · Default</td><td>Via: Origin → VIA Transit Place → Destination. Default: Origin “+ 2” → Destination “+ 2”</td><td><code>--route</code> · <code>__place</code> · <code>__via</code> · <code>__arrow</code></td></tr>
+    <tr><td>Swappable</td><td>Default</td><td>Slot; Figma shows the .Swappable Content placeholder</td><td><code>--slot</code> · <code>__slot-placeholder</code></td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<section id="usage" data-flag-area><h2>Usage</h2><p class="sub">Figma has no usage text for these sets. What follows describes the components as built.</p>
+<div class="cols">
+  <div class="panel card"><h3>Pick a type per column</h3><ul><li><b>Text</b> — a value with a second line under it.</li><li><b>Text + Tag / Tag</b> — a value with a count of more values (“+ 2”).</li><li><b>Status</b> — the #Status atom, sized to the column.</li><li><b>Skeleton</b> — while the row loads.</li><li><b>Route</b> — origin, optional transit (“VIA”) and destination.</li><li><b>Swappable</b> — any other content.</li></ul></div>
+  <div class="panel card"><h3>Width</h3><p>Columns have a fixed width per Size (80 / 120 / 180 / 220). Text longer than the column is cut with an ellipsis (build choice — see Open issues).</p></div>
+  <div class="panel card"><h3>List-Data and .Route</h3><p>List-Data is a white cell with one or two lines and an optional checkbox for row selection. .Route is the route block used on its own: Single shows the “VIA” transit; Multi shows count tags and no transit.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Checkbox needs a name</h3><p>List-Data has no visible label next to the box. Give the native input an <code>aria-label</code> (e.g. “Select row”) or point <code>aria-labelledby</code> at the cell text.</p></div>
+  <div class="panel card"><h3>Skeleton</h3><p>Keep <code>aria-hidden="true"</code> on the skeleton and set <code>aria-busy="true"</code> on the list while it loads (see Skeleton).</p></div>
+  <div class="panel card"><h3>Route arrows</h3><p>Arrows are decorative SVGs with <code>aria-hidden</code>. The order Origin → Transit → Destination is carried only by reading order and the “VIA” text.</p></div>
+  <div class="panel card"><h3>Truncated text</h3><p>Text cut with an ellipsis is still in the DOM, so screen readers read it all. Sighted users cannot see the rest — no tooltip in Figma.</p></div>
+  <div class="panel card"><h3>Contrast (for the accessibility pass)</h3><p>Main #313131 and Additional #545454 on white pass. Arrows #B5C3CB on white are 1.8 : 1 (decorative). “VIA” #005399 at 8px is about 7.8 : 1 but very small. Count-tag border #E2EAEC is 1.2 : 1.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="panel"><ul class="plain">
+  <li>Text overflow is not defined for Type = Text, Text + Tag or List-Data (text hugs and would spill out of the fixed width). Built with an ellipsis, as Figma does inside Route (truncate ending).</li>
+  <li>Line heights: 12px text is Auto (16px box) in Figma; tokens use 17px. Built with 16px so the heights match (37 for Text). “VIA” is 8px SemiBold, Auto — no <code>.type-8-semibold</code> token; built as <code>--type-8-regular</code> + weight 600.</li>
+  <li>Status column is 130 wide; the kit Status default is 140. Built at 100% of the column. Size=Small keeps the kit’s 107px status inside a 130 column. Status label is uppercase without tracking in both.</li>
+  <li>Count tag text is #404040 in Figma (off-token); the kit Multiselect Tag uses <code>--color-text-primary</code> #313131. Kit kept. Input Tag text is also #404040 in Figma.</li>
+  <li>Route Size=Via and .Route Single are the same layout with different alignment (top vs centred) and connector bottom padding (5 vs 10). Built as one route with <code>--route-center</code>.</li>
+  <li>.Route has a text property “Via2” (default “Columbo”) and a boolean “Via”. The visible sample says “Transit Place”, so the text property’s target is unclear. Built: Via on = connector + transit place.</li>
+  <li>Hidden layers not built: second Input Tag in Type = Tag, Additional Text in Text + Tag, the “Pin” + dashed line in every route arrow, and the hidden transit in .Route Multi.</li>
+  <li>.Route Multi is a fixed 42px high in Figma (content is 33); built hugging, centred.</li>
+  <li>Size=Xtra Large Tag hugs (220) while the other Tag sizes are fixed. Size names are reused with different meanings (Route uses “Via” as a Size).</li>
+  <li>Swappable placeholder body text is #000000 (off-token). Placeholder icon is the kit <code>refresh-line</code> (20px, <code>icons/refresh-line.svg</code>).</li>
+  <li>No dark theme, no hover / selected row states, no empty-value state in any of the three sets.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel"><ul class="plain">
+  <li>Show the full text of a truncated cell on hover (tooltip). <a href="https://ant.design/components/table" target="_blank" rel="noopener">Ant Table (column.ellipsis.showTitle)</a></li>
+  <li>Two-line cells get a taller row (64px) and the header matches the row height. <a href="https://carbondesignsystem.com/components/data-table/usage/" target="_blank" rel="noopener">Carbon Data table</a></li>
+  <li>Selection: header checkbox with an indeterminate state; single-select uses radios. (List-level, for the List molecule.) <a href="https://carbondesignsystem.com/components/data-table/usage/" target="_blank" rel="noopener">Carbon Data table</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">CSS only. Include tokens.css, the atom CSS you use, and list-column.css.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="checkbox.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const ICON=n=>{const i=(window.PDS_ICONS||[]).find(x=>x.n===n);if(!i)throw new Error("icon missing: "+n);return i.svg.replace("<svg ",'<svg aria-hidden="true" focusable="false" ')};
+const REFRESH='<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_2238_4150)"><path d="M4.55 3.69C6.06 2.38 8.00 1.66 10 1.67C14.60 1.67 18.33 5.40 18.33 10C18.33 11.78 17.77 13.43 16.82 14.78L14.17 10H16.67C16.67 8.69 16.28 7.41 15.56 6.32C14.84 5.23 13.82 4.38 12.61 3.87C11.41 3.35 10.09 3.21 8.80 3.44C7.51 3.68 6.33 4.28 5.38 5.19L4.55 3.69ZM15.45 16.31C13.94 17.62 12.00 18.34 10 18.33C5.40 18.33 1.67 14.60 1.67 10C1.67 8.22 2.23 6.57 3.17 5.22L5.83 10H3.33C3.33 11.31 3.72 12.59 4.44 13.68C5.16 14.77 6.18 15.62 7.39 16.13C8.59 16.65 9.91 16.79 11.2 16.56C12.49 16.32 13.67 15.72 14.62 14.81L15.45 16.31Z" fill="currentColor"/></g><defs><clipPath id="clip0_2238_4150"><rect width="20" height="20" fill="white"/></clipPath></defs></svg>'; /* kit icon icons/refresh-line.svg */
+const ARROW='<svg viewBox="0 0 12 7" preserveAspectRatio="none" aria-hidden="true"><path d="M0.5 3.5H11.5M8.5 0.5L11.5 3.5L8.5 6.5" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>';
+const LINE=`<span class="pds-list-column__line">${ARROW}</span>`;
+
+/* atoms from the kit */
+const count=()=>`<span class="pds-tag pds-tag--count">+ 2</span>`;
+const inputTag=t=>`<span class="pds-tag pds-tag--input"><span class="pds-tag__text">${t}</span></span>`;
+const status=small=>small
+  ?`<span class="pds-status pds-status--purple pds-status--small"><span class="pds-status__label">Status Text</span><span class="pds-status__icons">${ICON("status-indent-type-sea")}</span></span>`
+  :`<span class="pds-status pds-status--purple pds-status--vertical"><span class="pds-status__label">Status Text</span><span class="pds-status__icons">${ICON("status-indent-type-contract")}${ICON("status-movement-type-secondary")}${ICON("status-other-overpack")}</span></span>`;
+const checkbox=()=>`<label class="pds-checkbox"><input type="checkbox" class="pds-checkbox__input" aria-label="Select row"><span class="pds-checkbox__box" aria-hidden="true"><svg class="pds-checkbox__mark" viewBox="0 0 10 8" aria-hidden="true"><path d="M3.28 5.72L8.74.09c.12-.12.3-.12.41 0l.76.78c.12.12.12.32 0 .44L3.48 7.91c-.11.12-.3.12-.41 0L.09 4.85c-.12-.12-.12-.32 0-.44l.74-.78c.12-.12.3-.12.42 0z"/></svg><span class="pds-checkbox__dash"></span></span></label>`;
+
+/* List Column builders */
+const place=(main,code)=>`<div class="pds-list-column__place"><span class="pds-list-column__main">${main}</span><span class="pds-list-column__sub pds-list-column__sub--code">${code}</span></div>`;
+const via=`<div class="pds-list-column__via">${LINE}<span class="pds-list-column__via-label">via</span></div>`;
+const arrow=`<div class="pds-list-column__arrow" aria-hidden="true">${LINE}</div>`;
+const route=(withVia,center)=>`<div class="pds-list-column pds-list-column--route${center?" pds-list-column--route-center":""}">${place("Origin","Origin code")}${withVia?via+place("Transit Place","Transit code"):count()}${arrow}${place("Destination","Destination code")}${withVia?"":count()}</div>`;
+const B={
+ text:(size,sub)=>`<div class="pds-list-column pds-list-column--${size}"><span class="pds-list-column__main">Main Text</span><span class="pds-list-column__sub">${sub||"Additional Text"}</span></div>`,
+ textTag:()=>`<div class="pds-list-column pds-list-column--text-tag"><div class="pds-list-column__row"><span class="pds-list-column__main">Main Text</span>${count()}</div></div>`,
+ tag:size=>`<div class="pds-list-column pds-list-column--tag pds-list-column--${size}">${inputTag("Text Input")}${count()}</div>`,
+ status:size=>`<div class="pds-list-column pds-list-column--status pds-list-column--${size}">${status(size==="small")}</div>`,
+ skeleton:()=>`<div class="pds-list-column pds-list-column--skeleton"><div class="pds-skeleton pds-skeleton--120 pds-skeleton--light" aria-hidden="true"><span class="pds-skeleton__block"></span><span class="pds-skeleton__block"></span></div></div>`,
+ slot:()=>`<div class="pds-list-column pds-list-column--slot"><div class="pds-list-column__slot-placeholder"><span class="pds-list-column__slot-title">${REFRESH}Swappable Content</span><p class="pds-list-column__slot-body">Swap this component out with another.</p></div></div>`,
+ data:(dual,cb)=>`<div class="pds-list-column pds-list-column--data${dual?" pds-list-column--dual":""}">${cb?checkbox():""}${dual?`<div class="pds-list-column__data"><span class="pds-list-column__main">Some data Here</span><span class="pds-list-column__sub">Some data Here</span></div>`:`<span class="pds-list-column__main">Some data Here</span>`}</div>`,
+};
+const cell=(host,lbl,html)=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${lbl}</span><div class="box">${html}</div>`;host.appendChild(c)};
+
+const COL=[
+ ["Type=Text, Size=Small",B.text("small","Additional")],
+ ["Type=Text, Size=Default",B.text("default")],
+ ["Type=Text, Size=Large",B.text("large")],
+ ["Type=Text, Size=Xtra Large",B.text("xlarge")],
+ ["Type=Text + Tag, Size=Default",B.textTag()],
+ ["Type=Tag, Size=Default",B.tag("default")],
+ ["Type=Tag, Size=Large",B.tag("large")],
+ ["Type=Tag, Size=Xtra Large",B.tag("xlarge")],
+ ["Type=Status, Size=Small",B.status("small")],
+ ["Type=Status, Size=Default",B.status("default")],
+ ["Type=Status, Size=Large",B.status("large")],
+ ["Type=Skeleton, Size=Default",B.skeleton()],
+ ["Type=Swappable, Size=Default",B.slot()],
+ ["Type=Route, Size=Via",route(true,false)],
+ ["Type=Route, Size=Default",route(false,false)],
+];
+COL.forEach(([l,h])=>cell($("#v-col"),l,h));
+[["Property 1=Single Data Point, Checkbox=No",B.data(false,false)],["Property 1=Single Data Point, Checkbox=Yes",B.data(false,true)],["Property 1=Dual Data Points, Checkbox=No",B.data(true,false)],["Property 1=Dual Data Points, Checkbox=Yes",B.data(true,true)]].forEach(([l,h])=>cell($("#v-data"),l,h));
+[["Property 1=Single (Via = on)",route(true,true)],["Property 1=Multi",route(false,true)]].forEach(([l,h])=>cell($("#v-route"),l,h));
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/tag.css">       <!-- Tag, Text + Tag, Route counts -->
+<link rel="stylesheet" href="components/status.css">    <!-- Status -->
+<link rel="stylesheet" href="components/skeleton.css">  <!-- Skeleton -->
+<link rel="stylesheet" href="components/checkbox.css">  <!-- List-Data checkbox -->
+<link rel="stylesheet" href="components/list-column.css">
+
+<!-- Type=Text · Size: --small | --default | --large | --xlarge -->
+${B.text("default")}
+
+<!-- Type=Text + Tag -->
+${B.textTag()}
+
+<!-- Type=Tag -->
+${B.tag("default")}
+
+<!-- Type=Status (Default/Large: vertical status · Small: --small status) -->
+<div class="pds-list-column pds-list-column--status pds-list-column--default">
+  <span class="pds-status pds-status--purple pds-status--vertical">…</span>
+</div>
+
+<!-- Type=Skeleton -->
+${B.skeleton()}
+
+<!-- Type=Swappable: put any content inside -->
+<div class="pds-list-column pds-list-column--slot">…</div>
+
+<!-- Type=Route (add --route-center for the .Route set) -->
+<div class="pds-list-column pds-list-column--route">
+  <div class="pds-list-column__place"><span class="pds-list-column__main">Origin</span><span class="pds-list-column__sub pds-list-column__sub--code">Origin code</span></div>
+  <div class="pds-list-column__via"><span class="pds-list-column__line"><svg …arrow…/></span><span class="pds-list-column__via-label">via</span></div>
+  <div class="pds-list-column__place">…Transit Place…</div>
+  <div class="pds-list-column__arrow" aria-hidden="true"><span class="pds-list-column__line"><svg …arrow…/></span></div>
+  <div class="pds-list-column__place">…Destination…</div>
+</div>
+
+<!-- List-Data (Adjustable): add --dual for two lines; checkbox optional -->
+<div class="pds-list-column pds-list-column--data pds-list-column--dual">
+  <label class="pds-checkbox"><input type="checkbox" class="pds-checkbox__input" aria-label="Select row">…</label>
+  <div class="pds-list-column__data">
+    <span class="pds-list-column__main">Some data Here</span>
+    <span class="pds-list-column__sub">Some data Here</span>
+  </div>
+</div>`;
+
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

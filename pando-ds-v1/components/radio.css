@@ -1,0 +1,140 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Radio Buttons
+   Figma: DS V2 – Atoms › Radio Buttons (page 193:223) › component set
+   "Radio" (3344:3638). Reviewed 2026-10-23. Requires ../tokens.css.
+   Built on a native <input type="radio">, so arrow keys / Space / Tab
+   work without JavaScript.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Light theme — colours exactly as the Figma variants use them */
+  --radio-ring:                 var(--grey-medium);        /* #A3A3A3 · unselected ring */
+  --radio-selected:             var(--pando-blue);         /* #0076DD · ring + dot when selected */
+  --radio-label:                var(--text-dark);          /* #313131 */
+  --radio-disabled-ring:        var(--grey-medium);        /* #A3A3A3 */
+  --radio-disabled-fill:        var(--grey-light);         /* #E7E7E7 · disabled + unselected only */
+  --radio-disabled-dot:         var(--grey-medium);        /* #A3A3A3 */
+  --radio-disabled-label:       var(--text-light);         /* #6C6C6C · Figma uses text-light, not text-disabled */
+
+  /* Dark theme — rebuilt from the values on the (orphaned) instances */
+  --radio-dark-ring:            var(--grey-medium);        /* #A3A3A3 */
+  --radio-dark-selected:        var(--highlight-blue-light); /* #9CD2FF */
+  --radio-dark-label:           var(--dark-label-text);    /* #D5DAF4 */
+  --radio-dark-disabled-ring:   var(--grey-medium);        /* #A3A3A3 */
+  --radio-dark-disabled-fill:   var(--grey-dark);          /* #515151 */
+  --radio-dark-disabled-dot:    var(--grey-medium);        /* #A3A3A3 */
+  --radio-dark-disabled-label:  var(--dark-label-text);    /* #D5DAF4 · not dimmed in Figma; kept */
+  --radio-dark-bg:              var(--dark-bg);            /* #393945 · panel behind the dark theme */
+
+  /* Measured from the component */
+  --radio-size:       14px;          /* outer ring */
+  --radio-ring-width: 1px;
+  --radio-dot:        7px;           /* centre dot, 3.5px inset from the outer edge */
+  --radio-gap:        var(--space-10); /* control ↔ label */
+  --radio-row-height: 16px;          /* component height (label line height Auto ≈ 16) */
+
+  /* Added in review — not in Figma */
+  --radio-focus-ring:   var(--pando-blue);
+  --radio-error-text:   var(--action-red);
+  --radio-group-gap:    var(--space-10); /* option ↔ option; group layout is "Later" in review */
+  --radio-group-text-gap: 4px;           /* legend / helper / error spacing */
+}
+
+/* ── Single radio (label wraps the input so the label is clickable) ── */
+.pds-radio {
+  --_ring: var(--radio-ring);
+  --_selected: var(--radio-selected);
+  --_label: var(--radio-label);
+  --_dis-ring: var(--radio-disabled-ring);
+  --_dis-fill: var(--radio-disabled-fill);
+  --_dis-dot: var(--radio-disabled-dot);
+  --_dis-label: var(--radio-disabled-label);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--radio-gap);
+  min-height: var(--radio-row-height);
+  font: var(--type-12-regular);
+  color: var(--_label);
+  cursor: pointer;
+}
+/* Theme = Dark (on the radio or on any ancestor group) */
+.pds-radio--dark,
+.pds-radio-group--dark .pds-radio {
+  --_ring: var(--radio-dark-ring);
+  --_selected: var(--radio-dark-selected);
+  --_label: var(--radio-dark-label);
+  --_dis-ring: var(--radio-dark-disabled-ring);
+  --_dis-fill: var(--radio-dark-disabled-fill);
+  --_dis-dot: var(--radio-dark-disabled-dot);
+  --_dis-label: var(--radio-dark-disabled-label);
+}
+
+.pds-radio__input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  position: relative;
+  box-sizing: border-box;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  margin: 0;
+  border: var(--radio-ring-width) solid var(--_ring);
+  border-radius: 50%;
+  background: transparent;
+  cursor: inherit;
+}
+.pds-radio__input::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: var(--radio-dot);
+  height: var(--radio-dot);
+  border-radius: 50%;
+  background: var(--_selected);
+  transform: translate(-50%, -50%) scale(0);
+}
+
+/* Selected = Yes */
+.pds-radio__input:checked { border-color: var(--_selected); }
+.pds-radio__input:checked::before { transform: translate(-50%, -50%) scale(1); }
+
+/* State = Disabled */
+.pds-radio:has(.pds-radio__input:disabled),
+.pds-radio--disabled { color: var(--_dis-label); cursor: default; }
+.pds-radio__input:disabled { border-color: var(--_dis-ring); background: var(--_dis-fill); }
+.pds-radio__input:disabled:checked { border-color: var(--_dis-ring); background: transparent; } /* no fill on disabled-selected, as Figma */
+.pds-radio__input:disabled::before { background: var(--_dis-dot); }
+
+/* Focus — added in review, not in Figma */
+.pds-radio__input:focus-visible { outline: 2px solid var(--radio-focus-ring); outline-offset: 2px; }
+
+.pds-radio__label { min-width: 0; }
+
+/* ── Radio group — added in review, not in Figma ─────────────────── */
+.pds-radio-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--radio-group-text-gap);
+  font-family: var(--font-family);
+}
+.pds-radio-group__legend {
+  padding: 0;
+  margin-bottom: var(--radio-group-text-gap);
+  font: var(--type-12-semibold);
+  color: var(--radio-label);
+}
+.pds-radio-group--dark .pds-radio-group__legend { color: var(--radio-dark-label); }
+.pds-radio-group__options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--radio-group-gap);
+}
+.pds-radio-group__helper { margin: 0; font: var(--type-11-regular); color: var(--text-light); }
+.pds-radio-group--dark .pds-radio-group__helper { color: var(--radio-dark-label); }
+.pds-radio-group__error { margin: 0; font: var(--type-11-regular); color: var(--radio-error-text); }
+.pds-radio-group:not(.pds-radio-group--error) .pds-radio-group__error { display: none; }

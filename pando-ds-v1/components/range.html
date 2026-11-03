@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Range · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="range.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* range page */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:220px minmax(0,1fr) 150px;gap:16px;align-items:center;padding:22px 20px;border-top:1px solid var(--pg-line)}
+.row:first-child{border-top:0}
+.row h3{margin:0;font-size:14px}
+.row .hint{font-size:12px;color:var(--pg-muted);margin:2px 0 0}
+.row .ctl{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.row select{font:400 12.5px var(--pg-ui);padding:4px 6px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.row .out{font:500 12.5px var(--pg-mono);color:var(--pg-ink)}
+.canvas{background:#fff;border-radius:8px;padding:20px;overflow-x:auto;display:flex;align-items:center;min-height:96px}
+.canvas.dk{background:var(--dark-darker)}
+.vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.vcell .canvas{min-height:110px}
+.vcell .note{font-size:11.5px;color:var(--pg-muted)}
+.spec-wrap{padding:0}
+.spec-wrap h3{font-size:13px;margin:0;padding:12px 14px;border-top:1px solid var(--pg-line)}
+.spec-wrap h3:first-child{border-top:0}
+.olist{margin:0;padding:16px 18px 16px 36px;display:flex;flex-direction:column;gap:7px;font-size:13.5px}
+.olist li b{font-weight:600}
+.tag{display:inline-block;font:500 10.5px var(--pg-ui);letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;background:var(--pg-soft);color:var(--pg-muted);margin-left:6px;vertical-align:1px}
+.ddc .cap.none{color:var(--pg-muted)}
+@media (max-width:760px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Range</h1>
+    <p class="lede">The Figma Range page publishes three slider sets: <b>Range</b> (one handle, Dark/Light, Tight/Loose ticks), <b>Slider</b> (two handles, Pando blue fill) and <b>Dual Range</b> (two handles, light blue fill). All three are built here as published. The Figma Overview text is copied from Carbon, so it is listed under Open issues and not used here.</p>
+    <div class="meta"><span>Status: Built from Figma 2026-10-23 · no review decisions</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3224-2928" target="_blank" rel="noopener">Figma page 3224:2928 ↗</a><span>Files: range.css · range.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#range">Range</a><a href="#slider">Slider</a><a href="#dual">Dual Range</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area="try"><h2>Try it</h2><p class="sub">Drag a handle, click the track to make the nearest handle jump there, or Tab to a handle and use the arrow keys, Home and End. The keyboard keys and the focus ring are <b>added in review — not in Figma</b>.</p>
+<div class="panel rows">
+  <div class="row"><div><h3>Range</h3><p class="hint">One handle, snaps to the ticks (step 50).</p>
+    <div class="ctl"><select id="t-theme" aria-label="Theme"><option value="light">Light</option><option value="dark">Dark</option></select><select id="t-spacing" aria-label="Spacing"><option value="tight">Tight</option><option value="loose">Loose</option></select></div></div>
+    <div class="canvas" id="t-range"></div><div class="out" id="o-range" aria-live="polite"></div></div>
+  <div class="row"><div><h3>Slider</h3><p class="hint">Two handles, Pando blue fill. 16 dots.</p></div>
+    <div class="canvas" id="t-slider"></div><div class="out" id="o-slider" aria-live="polite"></div></div>
+  <div class="row"><div><h3>Dual Range</h3><p class="hint">Two handles, light blue fill. 00–16.</p></div>
+    <div class="canvas" id="t-dual"></div><div class="out" id="o-dual" aria-live="polite"></div></div>
+</div></section>
+
+<section id="range" data-flag-area="range"><h2>Range <span class="tag">set 3235:3847</span></h2><p class="sub">Theme × Spacing = 4 variants, plus the Label and Scale booleans. “Spacing” really sets tick density: Tight = 21 ticks, Loose = 5. No filled track. Dark variants are shown on <code>--dark-darker</code> for display only; the backdrop is not part of the component.</p>
+<div class="panel vgrid" id="v-range"></div></section>
+
+<section id="slider" data-flag-area="slider"><h2>Slider <span class="tag">set 8568:2053</span></h2><p class="sub">Level = 0 to 1 / 0 to 1.5 / 1 to 1.5. Handle positions are copied from Figma; the Level names do not match them (see Open issues).</p>
+<div class="panel vgrid" id="v-slider"></div></section>
+
+<section id="dual" data-flag-area="dual"><h2>Dual Range <span class="tag">set 8570:1364</span></h2><p class="sub">Level = 0 to 2 / 0 to 16 / - to 4 / 2 to 4, plus the Show Scale Count boolean. “- to 4” draws the same as 0 to 4 in Figma.</p>
+<div class="panel vgrid" id="v-dual"></div></section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma sets. The thumb is shared by all three.</p>
+<div class="panel spec-wrap">
+<h3>Thumb (all sets)</h3>
+<div class="spec-table">
+  <div><b>Size</b><code>14px</code> light · <code>20px</code> dark</div>
+  <div><b>Fill</b><code>--accent-alternate-white</code> #F9FAFA</div>
+  <div><b>Border</b><code>1px --dark-input-text</code> #8A8A9E</div>
+  <div><b>Carets</b>light <code>--pando-blue</code> 3×5 · dark <code>--gradient-forest-green</code> 4.5×8</div>
+  <div><b>Caret gap</b><code>4px</code> light · <code>5.6px</code> dark</div>
+  <div><b>Radius</b>full circle</div>
+</div>
+<h3>Range (single handle)</h3>
+<div class="spec-table">
+  <div><b>Width</b>Light <code>200</code> · Dark Loose <code>310</code> · Dark Tight <code>307</code></div>
+  <div><b>Track</b><code>8px</code> tall · radius <code>9</code> · Light Loose <code>191×9</code></div>
+  <div><b>Track colour</b>Light <code>--border-input-light</code> · Dark <code>--grey-dark</code></div>
+  <div><b>Ticks</b><code>--border-blue-grey</code> · 3px (Dark Loose 4px) · Tight 21 · Loose 5</div>
+  <div><b>Gaps</b>label↔track Light <code>10</code> / Dark <code>15</code> · track↔scale <code>10</code> (Dark +2 rail padding)</div>
+  <div><b>Label</b><code>.type-12-regular</code> Light <code>--text-dark</code> / Dark white</div>
+  <div><b>Unit</b><code>.type-10-regular</code> Light <code>--text-medium</code> / Dark <code>--border-blue-grey</code> · gap <code>5</code></div>
+  <div><b>Scale</b><code>--type-10-regular</code>, tracking 0 · Light <code>--text-light</code> / Dark <code>--border-blue-grey</code></div>
+  <div><b>Selected label</b>Light <code>--type-10-semibold --text-dark</code> · Dark <code>--dark-highlight-green</code> regular</div>
+</div>
+<h3>Slider (two handles)</h3>
+<div class="spec-table">
+  <div><b>Width</b><code>374</code> (16 dots) · <code>324</code> (6 dots)</div>
+  <div><b>Track</b><code>8px</code> · radius 1000 · <code>--border-input-light</code> · top <code>3</code></div>
+  <div><b>Fill</b><code>--pando-blue</code> #0076DD</div>
+  <div><b>Dots</b><code>4×4 --accent-off-white</code> · gap <code>20</code> / <code>50</code> · first at <code>5</code></div>
+  <div><b>Scale</b>0–14 · <code>#667085</code> (off-token) · <code>.type-10-regular</code> · <code>2px</code> below track</div>
+</div>
+<h3>Dual Range (two handles)</h3>
+<div class="spec-table">
+  <div><b>Width</b><code>334</code> · track <code>332×8</code> at x <code>2</code> · radius <code>8</code></div>
+  <div><b>Fill</b><code>--highlight-blue-light</code> #9CD2FF · radius 1000</div>
+  <div><b>Dots</b>17 cells <code>12×8</code>, <code>8</code> apart, dot <code>4×4 --accent-off-white</code></div>
+  <div><b>Scale count</b>00–16 · <code>--text-light</code> · <code>.type-10-regular</code> · <code>4px</code> below track</div>
+</div>
+</div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2><p class="sub">Only Figma text that is not copied from another system. Copied and placeholder text is listed under Open issues.</p>
+<div class="cols">
+  <div class="panel card"><h3>When to use</h3><ul><li>Sliders provide a visual indication of adjustable content, where the user can increase or decrease the value by moving the handle along a horizontal track.</li><li>Use when selecting a single value or range of number values.</li><li>Use sliders when there is a need to show a selection of a single value or range of values.</li></ul></div>
+  <div class="panel card"><h3>When not to use</h3><ul><li>Do not use for extremely large ranges, for example, 1-Max.</li><li>Do not use ranges that are too small, for example, 1-2.</li><li>Do not use complex inputted values that are not numbers.</li></ul></div>
+  <div class="panel card"><h3>Behaviour</h3><p>Sliders can be manipulated by moving the thumb along the track, or by selecting a spot along the track that the thumb will jump to.</p></div>
+  <div class="panel card"><h3>Placement &amp; convention</h3><p>The slider label should indicate what value the slider is changing. Range values are used to describe the range in numbers.</p></div>
+</div>
+<h3 style="font-size:14px;margin:18px 0 8px">Do &amp; don’t <span class="tag">as in Figma · no captions</span></h3>
+<div class="dd" id="dd"></div>
+</section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Each handle is a slider</h3><p><code>range.js</code> gives every handle <code>role="slider"</code>, <code>tabindex="0"</code>, <code>aria-valuenow/min/max</code> and a label (the field label, or “Minimum” / “Maximum” on two-handle sets). For two handles, each one’s min/max is the other handle’s value, so they cannot cross.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html" target="_blank" rel="noopener">WCAG 2.2 · 4.1.2</a></p></div>
+  <div class="panel card"><h3>Keys and focus <span class="tag">added in review — not in Figma</span></h3><p>←/↓ one step down, →/↑ one step up, Home/End to min/max. Focus ring <code>2px --pando-blue</code>, offset 2. Click-to-jump (from the Figma Behaviour text) is the single-pointer alternative to dragging.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html" target="_blank" rel="noopener">WCAG 2.2 · 2.5.7</a></p></div>
+  <div class="panel card"><h3>Open for the accessibility pass</h3><p>14px thumb is under the 24×24 target. Light track, Dual Range fill and dark track are under 3:1. Kept as Figma for now; ratios under Open issues.</p><p class="src">Sources: <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html" target="_blank" rel="noopener">2.5.8</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html" target="_blank" rel="noopener">1.4.11</a></p></div>
+</div></section>
+
+<section id="open" data-flag-area="open"><h2>Open issues</h2>
+<div class="open"><ol class="olist" style="padding:4px 0 4px 20px">
+  <li><b>Three sets doing the same job — pick one.</b> Range (one handle, no fill), Slider (two handles, <code>--pando-blue</code> fill) and Dual Range (two handles, <code>--highlight-blue-light</code> fill) all select a value on a dotted track. They differ in fill colour, track radius (9 / 1000 / 8), dot colour (#B5C3CB vs #F8F8F8), scale style and spacing.</li>
+  <li><b>Overview copied from Carbon.</b> It describes a “default and range” slider with number inputs; V1 has no number input and the Range set has no two-handle variant. Not used on this page.</li>
+  <li><b>When to use:</b> the 4th bullet (“Use when needing to expose a variety of options or to limit the number of options quickly.”) matches Carbon’s wording; left out of Usage. Bullets 2 and 3 say the same thing.</li>
+  <li><b>Behaviour:</b> “All interactions are optimized for mouse, keyboard, and touch.” is Carbon wording, and no keyboard rules or focus state exist in Figma. Left out of Usage; the keys in Try it are added in review.</li>
+  <li><b>Placeholder text:</b> the old <code>.documentation</code> block’s “Uses:” field still says “Enter suggestion here”.</li>
+  <li><b>Do / Don’t have no captions.</b> The Don’t (scale ending in “MAX”) only makes sense next to the “1-Max” bullet.</li>
+  <li><b>No states in any set:</b> no hover, focus, pressed, disabled or error. Range “Type” has one option (Stepper); default Theme is Dark.</li>
+  <li><b>Range has no filled track.</b> The value shows only by handle position and the highlighted scale label — and Dark Tight has no highlighted label at all.</li>
+  <li><b>Thumb:</b> 14px (light) is under the 24×24 target; light 14 vs dark 20 with no reason; built from Navigation/Collapse-Expand parts, not a thumb component. Dark carets use the Forest Green gradient; the light thumb border uses dark-theme <code>--dark-input-text</code>.</li>
+  <li><b>Light Loose track is 191×9</b> (others 200×8) and has 17 hidden dot layers; its end labels don’t line up with the track ends.</li>
+  <li><b>Slider:</b> scale colour “Gray Text” #667085 is not a V1 token; the 16-dot variant labels 0–14 (12–14 sit outside the scale frame); the other two levels have no scale; Level names (0 to 1.5…) match no shown number; widths 374 vs 324; set name has a trailing space.</li>
+  <li><b>Dual Range:</b> “- to 4” renders the same as 0 to 4; three hidden “16” labels in #667085 in every variant.</li>
+  <li><b>Contrast (non-text, &lt; 3:1):</b> light track vs white 1.22:1 · Dual Range fill vs track 1.32:1, vs white 1.61:1 · dark track vs #24242F 1.93:1 · tick dot vs light track 1.48:1. Thumb border vs white 3.38:1, Pando blue fill vs track 3.71:1.</li>
+  <li><b>Type:</b> Label is 12/auto (built as <code>.type-12-regular</code> 12/17). Range scale is 10/auto, tracking 0 (built with <code>--type-10-regular</code> 10/12, tracking 0); selected uses <code>--type-10-semibold</code>. Slider/Dual scale use 10/12 +0.5 for the same role.</li>
+  <li><b>Thumb positions</b> map to the scale label centres; within ~2px of Figma. Dark Loose and Dark Tight place the track differently inside the component (x 5 vs 0).</li>
+  <li><b>Dark variants rely on a loose dark rectangle</b> to be readable on canvas (white label on a transparent component).</li>
+</ol></div>
+<div class="panel card" style="margin-top:14px"><h3>Not adopted</h3><ul><li>Dark backdrop rectangle (3235:3823) — loose shape, not part of the component.</li><li>Stray instances (3714:3523, 3714:3524, cropped Dual Range 8577:3020) — leftover copies.</li><li>Orphan “15” text (8568:2148). The <code>.dot</code> part (8576:1379) is kept only as Dual Range’s internal cell.</li><li>Spectral / Specs redline sheets (5414:13354, 5414:13443) — generated, Range set only.</li><li>Old <code>.documentation</code> block (3235:3848) — duplicates the section docs.</li></ul></div>
+</section>
+
+<section id="gaps" data-flag-area="gaps"><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>Paired number input to type an exact value (one for single, two for range). <span class="src"><a href="https://carbondesignsystem.com/components/slider/usage/" target="_blank" rel="noopener">Carbon</a> · <a href="https://fluent2.microsoft.design/components/web/react/core/slider/usage" target="_blank" rel="noopener">Fluent 2</a> · <a href="https://ant.design/components/slider" target="_blank" rel="noopener">Ant Design</a></span></li>
+  <li>Focus, disabled and error states. <span class="src"><a href="https://carbondesignsystem.com/components/slider/usage/" target="_blank" rel="noopener">Carbon</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html" target="_blank" rel="noopener">WCAG 4.1.2</a></span></li>
+  <li>Written step and keyboard rules (Shift+arrow larger jumps, snapping). The keys in Try it are a demo only. <span class="src"><a href="https://carbondesignsystem.com/components/slider/usage/" target="_blank" rel="noopener">Carbon</a> · <a href="https://ant.design/components/slider" target="_blank" rel="noopener">Ant Design</a></span></li>
+  <li>Min/max labels at the track ends and a value tooltip instead of a full scale row. <span class="src"><a href="https://carbondesignsystem.com/components/slider/usage/" target="_blank" rel="noopener">Carbon</a> · <a href="https://fluent2.microsoft.design/components/web/react/core/slider/usage" target="_blank" rel="noopener">Fluent 2</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include the three files, then build with <code>pdsRange.build()</code> or write the markup and call <code>pdsRange.initAll()</code>.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup (what <code>range.js</code> produces for Range · Light · Tight):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="range.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const B=o=>pdsRange.build(o);
+function cell(host,label,node,dark,note){const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${label}</span>`;const cv=document.createElement("div");cv.className="canvas"+(dark?" dk":"");cv.appendChild(node);c.appendChild(cv);if(note){const n=document.createElement("span");n.className="note";n.textContent=note;c.appendChild(n)}host.appendChild(c)}
+
+// Try it
+function tryRange(){const th=$("#t-theme").value,sp=$("#t-spacing").value;const r=B({set:"range",theme:th,spacing:sp,value:sp==="tight"?200:100});const cv=$("#t-range");cv.classList.toggle("dk",th==="dark");cv.replaceChildren(r);$("#o-range").textContent="value "+r.querySelector(".pds-range__thumb").dataset.value}
+$("#t-theme").addEventListener("change",tryRange);$("#t-spacing").addEventListener("change",tryRange);
+document.addEventListener("pds-range:change",e=>{const host=e.target.closest(".canvas");if(!host)return;const out={"t-range":"#o-range","t-slider":"#o-slider","t-dual":"#o-dual"}[host.id];if(out)$(out).textContent=(e.detail.values.length>1?"range ":"value ")+e.detail.values.join(" – ")});
+tryRange();
+$("#t-slider").appendChild(B({set:"slider",steps:16,a:0,b:1,scale:true}));
+$("#t-dual").appendChild(B({set:"dual",a:2,b:4,scale:true}));
+$("#o-slider").textContent="range 0 – 1";$("#o-dual").textContent="range 2 – 4";
+
+// Range variants (values as placed in Figma)
+const vr=$("#v-range");
+cell(vr,"Theme=Dark, Spacing=Loose",B({set:"range",theme:"dark",spacing:"loose",value:100}),true);
+cell(vr,"Theme=Dark, Spacing=Tight",B({set:"range",theme:"dark",spacing:"tight",value:0,highlight:false}),true,"No highlighted label in Figma.");
+cell(vr,"Theme=Light, Spacing=Tight",B({set:"range",theme:"light",spacing:"tight",value:200}));
+cell(vr,"Theme=Light, Spacing=Loose",B({set:"range",theme:"light",spacing:"loose",value:100}),false,"Track 191×9 as in Figma.");
+cell(vr,"Light Tight · Label=false",B({set:"range",theme:"light",spacing:"tight",value:200,showLabel:false}));
+cell(vr,"Light Tight · Scale=false",B({set:"range",theme:"light",spacing:"tight",value:200,showScale:false}));
+
+// Slider variants
+const vs=$("#v-slider");
+cell(vs,"Level=0 to 1",B({set:"slider",steps:16,a:0,b:1,scale:true}),false,"374 wide · scale 0–14 under 16 dots.");
+cell(vs,"Level=0 to 1.5",B({set:"slider",steps:6,a:0,b:2}),false,"324 wide · no scale.");
+cell(vs,"Level=1 to 1.5",B({set:"slider",steps:6,a:1,b:2}),false,"324 wide · no scale.");
+
+// Dual Range variants
+const vd=$("#v-dual");
+cell(vd,"Level=0 to 2",B({set:"dual",a:0,b:2,scale:true}));
+cell(vd,"Level=0 to 16",B({set:"dual",a:0,b:16,scale:true}));
+cell(vd,"Level=- to 4",B({set:"dual",a:0,b:4,scale:true}),false,"Same as 0 to 4 in Figma.");
+cell(vd,"Level=2 to 4",B({set:"dual",a:2,b:4,scale:true}));
+cell(vd,"Level=2 to 4 · Show Scale Count=false",B({set:"dual",a:2,b:4,scale:false}));
+
+// Do & don't (Figma examples, no captions in Figma)
+[{ok:true,scale:[0,200,400,600,800,1000]},{ok:false,scale:[0,100,200,300,400,"MAX"]}].forEach(d=>{const c=document.createElement("div");c.className="panel ddc"+(d.ok?"":" dont");const ex=document.createElement("div");ex.className="ex";const r=B({set:"range",theme:"light",spacing:"tight",value:200,scale:d.scale,min:0,max:d.ok?1000:500,step:d.ok?50:25});r.querySelectorAll(".pds-range__thumb").forEach(t=>{t.tabIndex=-1;t.removeAttribute("role")});ex.appendChild(r);c.appendChild(ex);const cap=document.createElement("div");cap.className="cap none";cap.innerHTML=`<b>${d.ok?"Do":"Don’t"}</b>No caption in Figma.`;c.appendChild(cap);$("#dd").appendChild(c)});
+
+// code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/range.css">
+<script src="components/range.js"><\/script>
+
+<script>
+  // Range (single handle)
+  el.appendChild(pdsRange.build({ set: 'range', theme: 'light', spacing: 'tight',
+    min: 0, max: 1000, step: 50, value: 200, label: 'Label', unit: 'unit' }));
+  // Slider (two handles, Pando blue) — steps 16 or 6
+  el.appendChild(pdsRange.build({ set: 'slider', steps: 16, a: 0, b: 1, scale: true }));
+  // Dual Range (two handles, light blue) — dot indexes 0–16
+  el.appendChild(pdsRange.build({ set: 'dual', a: 2, b: 4, scale: true }));
+
+  document.addEventListener('pds-range:change', e => console.log(e.detail.values));
+<\/script>`;
+{const r=B({set:"range",theme:"light",spacing:"tight",value:200});$("#code2").textContent=r.outerHTML.replace(/></g,">\n<")}
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

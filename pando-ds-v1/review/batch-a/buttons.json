@@ -1,0 +1,572 @@
+{
+ "component": "Buttons",
+ "pageId": "11:12",
+ "summary": "One 'Button' component set (92 variants) covering Text, Action, Icon, Dropdown/Split and Dual Icon types across Light, Dark and a V2 'Studio' theme, plus small sets for AI Copilot, Show more and an arrow icon. Documentation sits in a .documentation block, a 'Button' doc frame and two dev-spec templates, with a large Draft Workspace of old explorations off to the side.",
+ "items": [
+  {
+   "id": "primary-light",
+   "group": "variants",
+   "k": "viz",
+   "name": "Text Button / Primary / Light",
+   "node": "11:27",
+   "use": "Normal 30px tall (pad 6/10/8/10, gap 10), Small 24px (pad 5/10/5/10). Radius 4. Default fill #0076DD pando-blue, white label. Hover: white fill + 1px #0076DD border, blue label. Loading: same as Hover plus a 16px (14px Small) raster spinner image, width grows to 123/113. Disabled: #E7E7E7 grey-light fill, #545454 text-medium label. Labels uppercase Open Sans Bold 12px (style Button/Normal-Bold) / 10px 14px LH (Button/Small-Bold).",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#0076DD;color:#fff;padding:6px 10px 8px;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#fff;color:#0076DD;padding:6px 10px 8px;border:1px solid #0076DD;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#fff;color:#0076DD;padding:6px 10px 8px;border:1px solid #0076DD;border-radius:4px;text-transform:uppercase\"><i style=\"width:10px;height:10px;border:2px solid #9CD2FF;border-top-color:#0076DD;border-radius:50%\"></i>Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#E7E7E7;color:#545454;padding:6px 10px 8px;border-radius:4px;text-transform:uppercase\">Button Text</span></div>",
+   "flags": [
+    "Hover and Loading look the same (white fill, blue border); Loading only adds the spinner",
+    "Loading spinner is a raster IMAGE layer ('826 1'), not a vector or component",
+    "White on #0076DD = 4.53:1, just passes 4.5 (note for the accessibility pass)"
+   ],
+   "warn": [
+    "Vertical padding is uneven (6 top / 8 bottom) on Normal but even (5/5) on Small",
+    "Hover inverts the button instead of darkening it; pando-blue-active #005399 exists in tokens but is not used"
+   ],
+   "rec": "<b>Keep</b> Default/Disabled; review Hover vs Loading",
+   "src": []
+  },
+  {
+   "id": "secondary-light",
+   "group": "variants",
+   "k": "viz",
+   "name": "Text Button / Secondary / Light (+ Red, Green)",
+   "node": "11:51",
+   "use": "Same sizes, padding and radius as Primary. Default #EEF2F4 pando-light fill, #0076DD label. Hover and Loading identical to Primary (white fill, #0076DD border). Disabled #E7E7E7 / #545454. Red state: #EEF2F4 fill with #E25757 action-red label. Green state (Normal only): label stays #0076DD.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#EEF2F4;color:#0076DD;padding:6px 10px 8px;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#fff;color:#0076DD;padding:6px 10px 8px;border:1px solid #0076DD;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#E7E7E7;color:#545454;padding:6px 10px 8px;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#EEF2F4;color:#E25757;padding:6px 10px 8px;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"font:10px Open Sans;color:#6C6C6C\">Green = Default</span></div>",
+   "flags": [
+    "'Green' state (3142:1288) is identical to Default: label #0076DD, no green anywhere",
+    "Secondary Hover is the same as Primary Hover, so the two lose their difference on hover",
+    "#0076DD on #EEF2F4 = 4.02:1 and #E25757 on #EEF2F4 = 3.25:1, below 4.5 (accessibility pass)"
+   ],
+   "warn": [
+    "Red/Green are colour tones but sit in the State property next to Hover/Disabled, so a red button can't also be hovered or disabled"
+   ],
+   "rec": "<b>Keep</b> Default/Disabled/Red; drop or fix Green",
+   "src": []
+  },
+  {
+   "id": "dark-theme",
+   "group": "variants",
+   "k": "viz",
+   "name": "Text Button / Dark theme (Primary + Secondary)",
+   "node": "134:31",
+   "use": "Primary Default #0076DD / white. Primary Hover: no fill, 1px #9CD2FF highlight-blue-light border, white label. Primary Disabled #393945 dark-bg / #A3A3A3. Secondary Default #393945 / white; Hover #24242F dark-darker fill + #393945 border; Disabled #393945 / #A3A3A3; Small Red #393945 / #E25757. Dark Primary Small also has a Loading (same as hover + spinner).",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#24242F\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#0076DD;color:#fff;padding:6px 10px 8px;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:transparent;color:#fff;padding:6px 10px 8px;border:1px solid #9CD2FF;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#393945;color:#A3A3A3;padding:6px 10px 8px;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#393945;color:#fff;padding:6px 10px 8px;border-radius:4px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#24242F;color:#fff;padding:6px 10px 8px;border:1px solid #393945;border-radius:4px;text-transform:uppercase\">Button Text</span></div>",
+   "flags": [
+    "Fill style is named 'Dark/Dark-Bg-#393944' but the value is #393945",
+    "Primary Disabled and Secondary Default share the same #393945 fill; only label colour separates them",
+    "#E25757 on #393945 = 3.11:1; #A3A3A3 on #393945 = 4.51:1 (accessibility pass)"
+   ],
+   "warn": [
+    "Dark theme has no Normal Loading and no Normal Red for Secondary; coverage is uneven against Light"
+   ],
+   "rec": "<b>Keep</b>, fill in the missing states later",
+   "src": []
+  },
+  {
+   "id": "text-only",
+   "group": "variants",
+   "k": "viz",
+   "name": "Text Button / Text Only",
+   "node": "138:18",
+   "use": "No padding, no radius, height 16 (Normal) / 14 (Small). Light: #0076DD label; Hover #E9F1F5 accent-light-highlight fill with #234357 pando-dark label; Disabled #A3A3A3. Dark: white label, Disabled #A3A3A3, Small Red #D26568 accent-red-medium.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:transparent;color:#0076DD;padding:0;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#E9F1F5;color:#234357;padding:0;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:transparent;color:#A3A3A3;padding:0;text-transform:uppercase\">Button Text</span></div><div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#24242F\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:transparent;color:#fff;padding:0;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 10px/14px Open Sans;background:transparent;color:#D26568;padding:0;text-transform:uppercase\">Button Text</span></div>",
+   "flags": [
+    "Hover fill has zero padding so the highlight hugs the text exactly",
+    "Fill style named 'Accent/Light-Highlight-#EFF3F5' but the value is #E9F1F5",
+    "#A3A3A3 disabled on white = 2.52:1 (disabled is exempt; note only)"
+   ],
+   "warn": [
+    "Hit area is 14-16px tall, below the 24px minimum target (see target-size gap)",
+    "Dark theme has no Hover"
+   ],
+   "rec": "<b>Keep</b>, add padding to the hover area",
+   "src": []
+  },
+  {
+   "id": "studio-theme",
+   "group": "variants",
+   "k": "viz",
+   "name": "Theme = Studio (Text Button + Dropdown)",
+   "node": "9352:2323",
+   "use": "Primary fill is gradient style 'Gradient/Linear/Pi-Green' (#041F04 to #343440) with white label; Hover white fill + gradient border + gradient label. Secondary #EEF2F4 fill with gradient label. Studio Dropdown label #003D31 'Primary/Pando-Green'. Labels are Open Sans Bold 12/10 but sentence case, with no text style attached.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:linear-gradient(90deg,#041F04,#343440);color:#fff;padding:6px 10px 8px;border-radius:4px\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#fff;color:#343440;padding:6px 10px 8px;border:1px solid #343440;border-radius:4px\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#EEF2F4;color:#343440;padding:6px 10px 8px;border-radius:4px\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#EEF2F4;color:#003D31;padding:7px 10px;border-radius:4px\">Label <svg width=10 height=8><path d=\"M1 2l4 4 4-4\" stroke=\"#003D31\" stroke-width=\"1.5\" fill=none /></svg></span></div>",
+   "flags": [
+    "Gradient #041F04 to #343440 and #003D31 are not in V1 tokens.css",
+    "Studio labels have no text style and are not uppercase, unlike every Light/Dark label",
+    "Style is called 'Pi-Green' but renders near-black"
+   ],
+   "warn": [
+    "Studio is the V2 brand; a V2 theme living inside the V1 button set mixes the two systems. Confirm whether it belongs here"
+   ],
+   "rec": "<b>Outdated</b>? Decide if Studio stays in V1",
+   "src": []
+  },
+  {
+   "id": "action-button",
+   "group": "variants",
+   "k": "viz",
+   "name": "Action Button",
+   "node": "139:41",
+   "use": "Transparent, pad 3/5/3/5, gap 4, height 22. 10px icon (instance '10px/Type=LR') + uppercase label Open Sans SemiBold 12px (style Button/Action-Semibold). Light: #376F99 action-blue; Red #E25757; Green #91C38A; Disabled #A3A3A3; Hover and Active: #E9F1F5 fill, radius 4. Dark: white label, Hover #8A8A9E fill.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:600 12px/16px Open Sans;background:transparent;color:#376F99;padding:3px 5px;text-transform:uppercase\"><svg width=10 height=10 viewBox=\"0 0 20 20\"><path d=\"M10 2v16M2 10h16\" stroke=\"#376F99\" stroke-width=\"2\"/></svg>Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:600 12px/16px Open Sans;background:#E9F1F5;color:#376F99;padding:3px 5px;border-radius:4px;text-transform:uppercase\"><svg width=10 height=10 viewBox=\"0 0 20 20\"><path d=\"M10 2v16M2 10h16\" stroke=\"#376F99\" stroke-width=\"2\"/></svg>Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:600 12px/16px Open Sans;background:transparent;color:#91C38A;padding:3px 5px;border-radius:4px;text-transform:uppercase\"><svg width=10 height=10 viewBox=\"0 0 20 20\"><path d=\"M10 2v16M2 10h16\" stroke=\"#91C38A\" stroke-width=\"2\"/></svg>Button Text</span></div>",
+   "flags": [
+    "Hover and Active are identical (#E9F1F5)",
+    "Radius is 0 at Default but 4 at Hover",
+    "#91C38A green label on white = 2.02:1; #E25757 = 3.66:1; dark hover white on #8A8A9E = 3.38:1 (accessibility pass)"
+   ],
+   "warn": [
+    "Only Normal size exists"
+   ],
+   "rec": "<b>Keep</b>, separate Active from Hover",
+   "src": []
+  },
+  {
+   "id": "icon-button",
+   "group": "variants",
+   "k": "viz",
+   "name": "Icon Button (Circular Background / No Background)",
+   "node": "273:1083",
+   "use": "Circular: 30px (20px icon) and 20px (14px icon), #EEF2F4 circle. Default icon #234357 with shadow 0 2 3 #000 10% (= shadow-1, style 'Shadow/White BG/0-1-3-10%'); Hover icon #376F99, no shadow; Disabled circle #E7E7E7, icon #9C9C9C. No Background: same sizes, Delete icon #234357, Hover adds a white circle, Disabled #A3A3A3.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"width:30px;height:30px;border-radius:15px;background:#EEF2F4;box-shadow:0 2px 3px #0000001a;display:grid;place-items:center\"><svg width=20 height=20 viewBox=\"0 0 20 20\"><path d=\"M10 2v16M2 10h16\" stroke=\"#234357\" stroke-width=\"2\"/></svg></span><span style=\"width:30px;height:30px;border-radius:15px;background:#EEF2F4;display:grid;place-items:center\"><svg width=20 height=20 viewBox=\"0 0 20 20\"><path d=\"M10 2v16M2 10h16\" stroke=\"#376F99\" stroke-width=\"2\"/></svg></span><span style=\"width:30px;height:30px;border-radius:15px;background:#E7E7E7;display:grid;place-items:center\"><svg width=20 height=20 viewBox=\"0 0 20 20\"><path d=\"M10 2v16M2 10h16\" stroke=\"#9C9C9C\" stroke-width=\"2\"/></svg></span><span style=\"width:20px;height:20px;border-radius:10px;background:#EEF2F4;display:grid;place-items:center\"><svg width=14 height=14 viewBox=\"0 0 20 20\"><path d=\"M10 2v16M2 10h16\" stroke=\"#234357\" stroke-width=\"2\"/></svg></span><svg width=20 height=20 fill=none stroke=\"#234357\"><path d=\"M3 5h14M8 5V3h4v2M5 5l1 12h8l1-12\"/></svg></div>",
+   "flags": [
+    "Disabled icon #9C9C9C has no colour style and is not in tokens.css",
+    "Shadow style name says 0-1-3 but the value is 0 2 3",
+    "No Background Hover adds a #FFFFFF circle, invisible on a white page",
+    "Small Disabled is filed under Variant '-' while its siblings are 'Circular Background'",
+    "Small variant frame radius 12 / 0 while its circle radius is 15"
+   ],
+   "warn": [
+    "Small size is 20x20, under the 24px minimum target",
+    "Only the Small Circular Default lacks the shadow that Normal Default has"
+   ],
+   "rec": "<b>Keep</b>, clean up naming and the hover circle",
+   "src": []
+  },
+  {
+   "id": "pill-button",
+   "group": "variants",
+   "k": "viz",
+   "name": "Text Button / Circular Background (pill)",
+   "node": "3079:1277",
+   "use": "Small only, 20px tall, radius 24, pad 3/9 (Loading 3/10). Default white fill, #234357 label; Hover #E9F1F5; Disabled #E7E7E7 with #9C9C9C label; 'Loading' #FFEEC4 (Status/Brown/Light) with #313131 text-dark label. Button/Small-Bold.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#F8F8F8\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 10px/14px Open Sans;background:#fff;color:#234357;padding:3px 9px;border-radius:24px;text-transform:uppercase;box-shadow:0 0 0 1px #E2EAEC\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 10px/14px Open Sans;background:#E9F1F5;color:#234357;padding:3px 9px;border-radius:24px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 10px/14px Open Sans;background:#E7E7E7;color:#9C9C9C;padding:3px 9px;border-radius:24px;text-transform:uppercase\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 10px/14px Open Sans;background:#FFEEC4;color:#313131;padding:3px 10px;border-radius:24px;text-transform:uppercase\">Button Text</span></div>",
+   "flags": [
+    "'Loading' state is just a brown-light fill, no loading indicator; it reads as a selected/status chip",
+    "Disabled label #9C9C9C is unregistered",
+    "#9C9C9C on #E7E7E7 = 2.22:1 (disabled exempt; note only)"
+   ],
+   "warn": [
+    "Default white fill has no border; on a white page the pill has no edge (outline in preview added only for visibility)",
+    "Looks like a filter chip rather than a button; confirm intent"
+   ],
+   "rec": "<b>Keep</b>? confirm chip vs button",
+   "src": []
+  },
+  {
+   "id": "dropdown-button",
+   "group": "variants",
+   "k": "viz",
+   "name": "Button Dropdown + Split",
+   "node": "211:10",
+   "use": "Dropdown: Secondary only. Normal 30px pad 7/10/7/10, Small 24px pad 5/10; #EEF2F4 fill, #0076DD label + 10x8 'Navigation/Button-Down-Caret'. Loading: white + #0076DD border (Small pad 4). Dark Small: #393945 / white. Active variants include the open menu (140px wide, 'Indent Bulk Upload' + 'Sample format' rows). Split: two #EEF2F4 segments (label 103px + 30px caret) with 2px gap on a #FFFFFF frame, radius 4.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#EEF2F4;color:#0076DD;padding:7px 10px;border-radius:4px;text-transform:uppercase\">Label <svg width=10 height=8><path d=\"M1 2l4 4 4-4\" stroke=\"#0076DD\" stroke-width=\"1.5\" fill=none /></svg></span><span style=\"display:inline-flex;gap:2px\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#EEF2F4;color:#0076DD;padding:7px 10px;text-transform:uppercase;border-radius:4px 0 0 4px\">Button Text</span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#EEF2F4;color:#0076DD;padding:11px 10px;text-transform:uppercase;border-radius:0 4px 4px 0\"><svg width=10 height=8><path d=\"M1 2l4 4 4-4\" stroke=\"#0076DD\" stroke-width=\"1.5\" fill=none /></svg></span></span></div>",
+   "flags": [
+    "Active variants bake an open menu into the button; menu text uses 12px/Body, Label/Regular/Normal, Label/Regular/Italic-Underlined and 11px/Regular styles",
+    "Light Normal Active nests another component 'Dropdowns/Button Dropdown/Small/Closed/None/No' (a 'Small' name in a Normal variant)",
+    "Split frame fill #FFFFFF has no style",
+    "No Hover or Disabled for dropdowns"
+   ],
+   "warn": [
+    "Menu sample copy 'Indent Bulk Upload' is product-specific placeholder"
+   ],
+   "rec": "<b>Keep</b> closed states; move menu to Dropdown page",
+   "src": []
+  },
+  {
+   "id": "dual-icon",
+   "group": "variants",
+   "k": "viz",
+   "name": "Dual Icon",
+   "node": "3262:3521",
+   "use": "'-' variant: two stacked 24x24 squares, gap 2. Cancel (.Button/Cancel) #E7E7E7 fill with #515151 close icon; Confirm (.Button/Confirm) #0076DD with white check; pad 6. Circular Background: 51x24 pill, #E2EAEC border-input-light fill, radius 20, two #234357 right carets.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;flex-direction:column;gap:2px\"><span style=\"width:24px;height:24px;background:#E7E7E7;display:flex;align-items:center;justify-content:center\"><svg width=\"8\" height=\"8\"><path d=\"M0 0l8 8M8 0L0 8\" stroke=\"#515151\" stroke-width=\"1.5\"/></svg></span><span style=\"width:24px;height:24px;background:#0076DD;display:flex;align-items:center;justify-content:center\"><svg width=\"11\" height=\"8\"><path d=\"M1 4l3 3 6-6\" stroke=\"#fff\" stroke-width=\"1.5\" fill=\"none\"/></svg></span></span><span style=\"width:51px;height:24px;border-radius:20px;background:#E2EAEC;display:grid;place-items:center;gap:2px\"><svg width=\"7\" height=\"12\"><path d=\"M1 1l5 5-5 5\" stroke=\"#234357\" stroke-width=\"1.5\" fill=\"none\"/></svg><svg width=\"7\" height=\"12\"><path d=\"M1 1l5 5-5 5\" stroke=\"#234357\" stroke-width=\"1.5\" fill=\"none\"/></svg></span></div>",
+   "flags": [
+    "Circular 'Normal/Default' and 'Small/Active' are the same 51x24 frame with the same fill: size and state do nothing",
+    "Padding 10 on all sides inside a 24px-tall frame (content overflows the padding box)",
+    "Three loose components in Draft Workspace reuse the exact variant name 'Theme=Light, Type=Dual Icon, Variant=-, Size=Small, State=Default'"
+   ],
+   "warn": [
+    "Cancel/Confirm are two separate actions packed into one 'button'"
+   ],
+   "rec": "<b>Keep</b> '-' pair; review the circular one",
+   "src": []
+  },
+  {
+   "id": "ai-copilot",
+   "group": "variants",
+   "k": "viz",
+   "name": "AI Copilot Button (+ Pi standalone)",
+   "node": "5913:6603",
+   "use": "Set 5913:6603: 30px tall, radius 4, pad 5/8/5/6, gap 8. Light Default #F3F6FC accent-light-blue-bg with Freehand logo (gradient #E03A8A to #FE6505). Light Hover adds 1px gradient border (#FF8C54 to #8D00DF) and label 'AI-Powered Suggestions' in teal gradient (#006265 to #19A476), style 12px/Heading. Dark Default gradient fill #FF4DA6 to #FE6505. Standalone 'AI Copilot Button/Pi/Default' + '/Hover' (86x30) use teal Pi gradients.",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 12px/16px Open Sans;background:#F3F6FC;color:#000;padding:5px 8px 5px 6px;border-radius:4px\"><span style=\"width:14px;height:14px;border-radius:3px;background:linear-gradient(90deg,#E03A8A,#FE6505)\"></span></span><span style=\"display:inline-flex;align-items:center;gap:4px;font:600 12px/16px Open Sans;background:#F3F6FC;color:#006265;padding:5px 8px 5px 6px;border-radius:4px;border:1px solid #FF8C54\"><span style=\"width:14px;height:14px;border-radius:3px;background:linear-gradient(90deg,#E03A8A,#FE6505)\"></span><span style=\"background:linear-gradient(90deg,#006265,#19A476);-webkit-background-clip:text;color:transparent\">AI-Powered Suggestions</span></span></div>",
+   "flags": [
+    "Gradients #E03A8A, #FF4DA6, #8D00DF, #006265, #19A476 are not in V1 tokens.css",
+    "Hover mixes three brand gradients (pink-orange logo, orange-purple border, teal label)",
+    "Style '12px/Heading' is not in the V1 type list",
+    "Pi Default/Hover are loose COMPONENTs outside the set"
+   ],
+   "warn": [
+    "Theme option 'Type=Freehand' has a single value"
+   ],
+   "rec": "<b>Later</b>, belongs with AI/V2 work",
+   "src": []
+  },
+  {
+   "id": "show-more",
+   "group": "variants",
+   "k": "viz",
+   "name": "Show more / Show less",
+   "node": "10888:1735",
+   "use": "156x14 row, gap 5: divider line, Text Only Small button 'Show more'/'Show Less', 14px .arrow-right caret, divider line. Hover uses Text Only Hover (#E9F1F5 / #234357).",
+   "html": "<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;background:#fff\"><span style=\"display:inline-flex;align-items:center;gap:5px;width:220px\"><span style=\"flex:1;height:1px;background:#E7E7E7\"></span><span style=\"display:inline-flex;align-items:center;gap:4px;font:700 10px/14px Open Sans;background:transparent;color:#0078DD;padding:0;text-transform:uppercase\">Show more</span><svg width=\"10\" height=\"8\"><path d=\"M1 2l4 4 4-4\" stroke=\"#0078DD\" stroke-width=\"1.5\" fill=\"none\"/></svg><span style=\"flex:1;height:1px;background:#E7E7E7\"></span></span></div>",
+   "flags": [
+    "Label override is #0078DD, two steps off pando-blue #0076DD and unregistered",
+    "Copy case differs: 'Show more' vs 'Show Less'",
+    ".arrow-right set has placeholder state names 'State3' and 'State4'"
+   ],
+   "warn": [],
+   "rec": "<b>Keep</b>, fix colour and case",
+   "src": []
+  },
+  {
+   "id": "states-model",
+   "group": "states",
+   "k": "note",
+   "name": "State property mixes states and tones",
+   "node": "3054:1314",
+   "use": "State options: Default, Disabled, Hover, Loading, Active, Red, Green. Variant options include '-', 'Split', 'Text Only', 'Circular Background'. 92 variants in the set; many Type x Variant x State combos are missing (e.g. no Disabled dropdown, no Dark Normal Loading, no Studio Disabled).",
+   "flags": [
+    "Red and Green are colour tones but are modelled as States, so they can't combine with Hover/Disabled",
+    "No Focus state exists for any type"
+   ],
+   "warn": [
+    "Consider a separate Tone/Danger property when rebuilding"
+   ],
+   "rec": "<b>Later</b> restructure; review with gaps below",
+   "src": []
+  },
+  {
+   "id": "type-styles",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Label text styles",
+   "node": "11:27",
+   "use": "Button/Normal-Bold: Open Sans Bold 12, auto line height, 0 tracking, UPPER. Button/Small-Bold: Open Sans Bold 10/14, 0 tracking, UPPER (= type-10-bold + caps, but caps adds 0.5px tracking). Button/Action-Semibold: Open Sans SemiBold 12, auto LH, UPPER. Icons: 'Indicator Icon/Add', 'Indicator Icon/Delete' 20/14px, 'Navigation/Button-Down-Caret' 10x8, '10px/Type=LR'.",
+   "flags": [
+    "Button/Normal-Bold (12 Bold, auto LH) has no match: type-12-bold is 12/14",
+    "Button/Action-Semibold (12 SemiBold) has no match in the type list",
+    "Buttons are uppercase with 0 tracking; .caps class adds 0.5px"
+   ],
+   "warn": [
+    "Auto line height renders ~16px for 12px Open Sans"
+   ],
+   "rec": "<b>Keep</b>, map to type classes",
+   "src": []
+  },
+  {
+   "id": "doc-block",
+   "group": "docs",
+   "k": "note",
+   "name": ".documentation block (Overview / Uses / Placement)",
+   "node": "3079:1286",
+   "use": "Overview: buttons trigger actions, labels say what happens. Uses: Primary once per screen; Secondary only with a Primary; Text Only for the negative action of a pair ('Cancel', 'Back'); text/icon/both, sometimes with a tooltip. Placement & Convention: buttons generally placed to the right, visible without scrolling.",
+   "flags": [
+    "Placement says buttons go to the right; Template 2 'Alignment' text says the primary goes on the left of full-page designs (contradiction)",
+    "Placement sentence is missing a word ('right of the screen  should be')"
+   ],
+   "warn": [
+    "Covers only Primary/Secondary/Text Only; Action, Icon, Dropdown, Dual Icon, pill are not described here"
+   ],
+   "rec": "<b>Keep</b>, fix placement wording",
+   "src": []
+  },
+  {
+   "id": "doc-frame",
+   "group": "docs",
+   "k": "note",
+   "name": "'Button' doc frame (Overview, Behaviour, Do/Don't, Types)",
+   "node": "5554:25032",
+   "use": "Overview, Behaviour (one primary per page), Do/Don't (no more than 1 primary in a group; don't put 2 icons in one button), and a description for each type: icon button (tooltip needed for icon-only), Button Dropdown, Dual icon, Text button (label centred), Action button.",
+   "flags": [
+    "'Don't put 2 icons in the same button' conflicts with the Dual Icon type defined on the same page",
+    "Button Dropdown description is marketing-style and cut off mid-sentence ('this button o')"
+   ],
+   "warn": [
+    "Typos: 'Dont', 'buttons text label'"
+   ],
+   "rec": "<b>Keep</b>, trim and align with Dual Icon",
+   "src": []
+  },
+  {
+   "id": "template-docs",
+   "group": "docs",
+   "k": "note",
+   "name": "Template 1 / Template 2 dev-spec frames",
+   "node": "5554:24094",
+   "use": "Developer spec frames with colour/padding callouts (pad 5/10, 6/10/8/10, 7/10/7/10; Bold 12 / Bold 10 / Semibold 12), When to use / When not to use lists, Sizes, Alignment, 'Botton ordering', and the note 'Button size will change as per the text size and length.'",
+   "flags": [
+    "Sizes text is copied from Carbon: lists Large (expressive), Extra large, 2XL, mentions 'IBM.com team' and 'Carbon only offers'; V1 only has Normal and Small",
+    "Callout says 'Text/Medium-#737373' but the disabled label is #545454",
+    "Callout 'White-#FFFFF' has a 5-digit hex",
+    "Alignment text (primary on the left) is Carbon guidance and contradicts the .documentation block",
+    "Typo heading 'Botton ordering'"
+   ],
+   "warn": [
+    "Template 1 and Template 2 repeat much of the same content; Template 1 (5514:19418) duplicates groups 482144-482146"
+   ],
+   "rec": "<b>Outdated</b>: rewrite sizes/alignment for V1",
+   "src": [
+    {
+     "label": "Carbon · Button usage",
+     "url": "https://carbondesignsystem.com/components/button/usage/"
+    }
+   ]
+  },
+  {
+   "id": "draft-workspace",
+   "group": "loose",
+   "k": "note",
+   "name": "Draft Workspace section",
+   "node": "5577:28055",
+   "use": "17710x14419 section far off-canvas (x 33341) holding 'Button' (685x3176), 'Spec' (1280x8975), 'Template 3', 'Flow', a vector and a stray Button instance. Contains three loose COMPONENTs named like set variants (5577:27704, 5577:27713, 5577:27720).",
+   "flags": [
+    "Duplicate components share a variant's exact name and will show up in asset search"
+   ],
+   "warn": [],
+   "rec": "<b>Skip</b>: old explorations; archive",
+   "src": []
+  },
+  {
+   "id": "stray-nodes",
+   "group": "loose",
+   "k": "note",
+   "name": "Stray frames and instances near the set",
+   "node": "4500:6137",
+   "use": "Detached frame 'Button/Light/Icon Button/-/Small/Default' (24x24, #E2EAEC); instances 4335:289 and 5554:23919 of the Icon Button sitting loose on the page; dark backdrop rectangles 1853:898 and 10704:1665 (#24242F) behind the dark variants; divider vectors 5475:16570 and 5522:20988.",
+   "flags": [
+    "Old slash-named frame from before the variant set; not a component"
+   ],
+   "warn": [
+    "Backdrop rectangles are intentional presentation; keep"
+   ],
+   "rec": "<b>Skip</b> the detached frame and loose instances",
+   "src": []
+  },
+  {
+   "id": "sub-components",
+   "group": "anatomy",
+   "k": "spec",
+   "name": ".Button/Confirm and .Button/Cancel",
+   "node": "3262:3517",
+   "use": "Private 24x24 building blocks for Dual Icon: Confirm #0076DD with white 'Navigation/Selected' check, Cancel #E7E7E7 with #515151 grey-dark 'Navigation/Close-Tag'; pad 6.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Keep</b>",
+   "src": [],
+   "def": "keep"
+  },
+  {
+   "id": "gap-focus",
+   "group": "gaps",
+   "k": "gap",
+   "name": "No focus state",
+   "node": "3054:1314",
+   "use": "No variant shows a keyboard focus ring. WCAG 2.4.7 needs a visible focus indicator; Carbon notes buttons are triggered with Enter or Space while focused.",
+   "flags": [],
+   "warn": [
+    "Focus indicator also needs 3:1 against adjacent colours (1.4.11)"
+   ],
+   "rec": "<b>Add</b> Focus state",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 2.4.7 Focus Visible",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    },
+    {
+     "label": "Carbon · Button usage",
+     "url": "https://carbondesignsystem.com/components/button/usage/"
+    }
+   ]
+  },
+  {
+   "id": "gap-loading",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Loading is not a real state",
+   "node": "909:3",
+   "use": "V1 Loading reuses the hover style with a raster spinner, and the pill 'Loading' has no indicator. Carbon shows inline loading with the button disabled while loading; Ant Design has a 'loading' prop with optional delay and icon.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> a vector spinner + disabled-while-loading rule",
+   "src": [
+    {
+     "label": "Carbon · Button usage",
+     "url": "https://carbondesignsystem.com/components/button/usage/"
+    },
+    {
+     "label": "Ant Design · Button",
+     "url": "https://ant.design/components/button"
+    }
+   ]
+  },
+  {
+   "id": "gap-icon-name",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Icon-only buttons: accessible name + tooltip rule",
+   "node": "273:1083",
+   "use": "Icon Buttons have no label or tooltip slot. Carbon: a tooltip is always required for icon buttons. WCAG 4.1.2: the control needs a programmatic name (e.g. aria-label). Fluent: icons need 3:1 contrast.",
+   "flags": [],
+   "warn": [
+    "The 'Button' doc frame already says icon-only buttons need a tooltip; the component doesn't carry it"
+   ],
+   "rec": "<b>Add</b> name/tooltip guidance",
+   "src": [
+    {
+     "label": "Carbon · Button usage",
+     "url": "https://carbondesignsystem.com/components/button/usage/"
+    },
+    {
+     "label": "WCAG 2.2 · Understanding 4.1.2 Name, Role, Value",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html"
+    },
+    {
+     "label": "Fluent 2 · Button usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/button/usage"
+    }
+   ]
+  },
+  {
+   "id": "gap-target",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Target size under 24px",
+   "node": "273:1086",
+   "use": "Small icon buttons are 20x20, Text Only is 14-16px tall, Action Button 22px. WCAG 2.5.8 asks for 24x24 CSS px or enough spacing around smaller targets.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Later</b>: check spacing in layouts",
+   "src": [
+    {
+     "label": "WCAG 2.2 · Understanding 2.5.8 Target Size (Minimum)",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-danger",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Danger as a proper variant",
+   "node": "3147:1299",
+   "use": "V1 has Red only as a State on Secondary/Action/Text Only; there is no red filled primary. Carbon offers danger in primary, tertiary and ghost styles and says danger should not be icon-only; Ant Design has a 'danger' prop that works across types.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> a Danger tone property",
+   "src": [
+    {
+     "label": "Carbon · Button usage",
+     "url": "https://carbondesignsystem.com/components/button/usage/"
+    },
+    {
+     "label": "Ant Design · Button",
+     "url": "https://ant.design/components/button"
+    }
+   ]
+  },
+  {
+   "id": "gap-disabled-reason",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Disabled guidance",
+   "node": "11:45",
+   "use": "V1 docs (Template 2) say to give context for disabled buttons, but nothing defines how. Fluent: show a tooltip explaining what is unavailable and why; disabled buttons don't need to meet contrast.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Later</b>: define the disabled tooltip pattern",
+   "src": [
+    {
+     "label": "Fluent 2 · Button usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/button/usage"
+    }
+   ]
+  },
+  {
+   "id": "gap-sizes",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Only two sizes",
+   "node": "3054:1314",
+   "use": "V1 has Normal (30) and Small (24) only; Action and pill have one size each. Ant Design offers small/medium/large plus 'block' full-width; Carbon offers seven sizes.",
+   "flags": [],
+   "warn": [
+    "Not necessarily needed for V1; flag for discussion"
+   ],
+   "rec": "<b>Later</b>",
+   "src": [
+    {
+     "label": "Ant Design · Button",
+     "url": "https://ant.design/components/button"
+    },
+    {
+     "label": "Carbon · Button usage",
+     "url": "https://carbondesignsystem.com/components/button/usage/"
+    }
+   ]
+  }
+ ],
+ "spacing": [
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  14,
+  16,
+  20,
+  22,
+  24,
+  30,
+  51
+ ],
+ "radius": [
+  0,
+  4,
+  12,
+  15,
+  20,
+  24
+ ],
+ "newTextStyles": [
+  "Button/Normal-Bold",
+  "Button/Small-Bold",
+  "Button/Action-Semibold",
+  "12px/Body",
+  "12px/Heading",
+  "Label/Regular/Normal",
+  "Label/Regular/Italic-Underlined",
+  "11px/Regular"
+ ],
+ "notReadable": [
+  "Loading spinner is a raster image ('826 1'); its colours could not be read as values",
+  "Draft Workspace contents (Spec 1280x8975, Template 3, Flow) were inventoried by name/size only, not walked",
+  "Studio-theme text styles: none attached, so no style name to report"
+ ]
+}

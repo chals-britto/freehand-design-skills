@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Brand · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="brand.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* brand gallery */
+.bgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.bcard{overflow:hidden;display:flex;flex-direction:column}
+.bcard .stages{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--pg-line)}
+.bcard .stages.wide{grid-template-columns:1fr}
+.bcard .info{padding:12px 16px;display:flex;flex-direction:column;gap:4px}
+.bcard .vname{font:500 12px var(--pg-mono);color:var(--pg-ink)}
+.bcard .vmeta{font-size:12px;color:var(--pg-muted)}
+.bcard .vmeta a{color:var(--pg-accent)}
+.copypath{align-self:flex-start;display:inline-flex;gap:6px;align-items:center;font:400 12px var(--pg-mono);border:1px solid var(--pg-line);background:var(--pg-soft);color:var(--pg-ink);border-radius:6px;padding:4px 8px;cursor:pointer;margin-top:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copypath:hover{border-color:var(--pg-accent)}
+.copypath .ok{color:var(--pg-ok);font-family:var(--pg-ui);font-weight:600}
+.stagelbl{position:relative}
+.stagelbl span{position:absolute;top:6px;left:8px;font:500 10.5px var(--pg-ui);letter-spacing:.04em;text-transform:uppercase;color:#7a7a7a}
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.sw{overflow:hidden}
+.sw .chip{height:72px}
+.sw .cap{padding:10px 14px;font-size:12.5px}
+.sw .cap b{display:block;font-size:13px}
+.sw .cap code{font:400 12px var(--pg-mono)}
+blockquote{margin:0;padding:12px 16px;border-left:3px solid var(--pg-line);color:var(--pg-ink);font-size:13.5px}
+blockquote p{margin:0 0 8px} blockquote p:last-child{margin:0}
+table.vt{width:100%;border-collapse:collapse;font-size:12.5px}
+table.vt th,table.vt td{text-align:left;padding:8px 12px;border-top:1px solid var(--pg-line);vertical-align:top}
+table.vt th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);border-top:0}
+table.vt code{font:400 12px var(--pg-mono)}
+.tscroll{overflow-x:auto}
+ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+@media (max-width:760px){.bgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Brand</h1>
+    <p class="lede">The Pi mark (AI avatar) and the Pando logo, exported from Figma as SVG. Use the files; do not redraw them. Click a file path to copy it.</p>
+    <div class="meta"><span>Status: Built from Figma 2026-10-28 · no review yet</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=7906-1025" target="_blank" rel="noopener">Pi-Avatar 7906:1025 ↗</a><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=8346-9246" target="_blank" rel="noopener">Pando-Logo 8346:9246 ↗</a><span>Files: brand.css · brand/*.svg</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#pi">Pi-Avatar</a><a href="#logo">Pando-Logo</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#notadopted">Not adopted</a><a href="#code">Code</a></nav>
+
+<section id="pi" data-flag-area><h2>Pi-Avatar</h2><p class="sub">Size × Ai Stars × Shadow. 6 variants. Each shown on white and on Charcoal (#0F0F0F), scaled to fit; real sizes are listed.</p>
+<div class="bgrid" id="g-pi"></div></section>
+
+<section id="logo" data-flag-area><h2>Pando-Logo</h2><p class="sub">Type × Color. 6 variants. Each shown on white and on Charcoal (#0F0F0F).</p>
+<div class="bgrid" id="g-logo"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Values read from the Figma variants. Shadow variants export larger than the component because the SVG includes the shadow.</p>
+<div class="panel">
+<div class="spec-table">
+  <div><b>Pi Large</b><code>330 × 350</code> · with stars <code>330 × 419.12</code></div>
+  <div><b>Pi Small</b><code>133 × 142</code> · with stars <code>133 × 168.92</code></div>
+  <div><b>Pi body</b><code>#FFEC75 → #F8CF0C → #F2C200</code></div>
+  <div><b>Pi eyes</b><code>#211203</code></div>
+  <div><b>Pi shadow</b><code>20 / 20</code> · blur <code>50</code> (L) <code>40</code> (S) · <code>rgba(144,122,15,.8)</code></div>
+  <div><b>Shadow SVG canvas</b>L <code>430 × 450</code> · S <code>213 × 222</code> · shape at <code>30,30</code> / <code>20,20</code></div>
+  <div><b>Logo</b><code>380 × 106</code> · Flat Black/White <code>380 × 106.7</code></div>
+  <div><b>Logo gradient mark</b><code>#FFE01B → #F2C200 → white</code></div>
+  <div><b>Logo letters</b>Black <code>#0F0F0F</code> · Green <code>#003D31</code> · White</div>
+  <div><b>Logo dot</b>Gradient <code>#FFE01B</code> · Flat B/W <code>#FFDD33</code> · Flat Green <code>#003D31</code></div>
+  <div><b>Clear space</b>not stated in Figma</div>
+  <div><b>Minimum size</b>not stated in Figma</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2><p class="sub">Figma has no usage notes for these two sets. The only text in the "Pando - Pi branding" section is the Core Colors guideline, quoted as written.</p>
+<div class="panel card">
+<h3>Core Colors <span style="font-weight:400;color:var(--pg-muted)">(Figma frame P46, 7902:1192)</span></h3>
+<blockquote><p>The primary palette uses a combination of bold natural hues: A Yellow named “Quaking aspen trees” and “Forrest” for Green and Charcoal represents as Earth</p><p>The cream shade is a lightened tint of our yellow, while the forest color is a darkened tone. A lighter cream and toned white add contrast and flexibility for accessibility, and they work together to emphasize the Pando yellow.</p></blockquote>
+</div>
+<div class="swatches" style="margin-top:14px">
+  <div class="panel sw"><div class="chip" style="background:var(--brand-pando-yellow)"></div><div class="cap"><b>Pando Yellow</b><code>#FFE01B · R255 G224 B0 · C62 M22 Y100 K0</code></div></div>
+  <div class="panel sw"><div class="chip" style="background:var(--brand-pando-green)"></div><div class="cap"><b>Pando Green</b><code>#003D31 · R255 G255 B255 · C0 M0 Y0 K0</code></div></div>
+  <div class="panel sw"><div class="chip" style="background:var(--brand-charcoal)"></div><div class="cap"><b>Charcoal</b><code>#0F0F0F · R15 G188 B115 · C75 M0 Y75 K0</code></div></div>
+</div>
+<p class="sub" style="margin-top:10px">The RGB and CMYK values above are copied from Figma and do not match the hex values. See Open issues.</p>
+</section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Alt text</h3><p>Logo: <code>alt="Pando"</code>. Pi mark: an alt that names it (e.g. <code>alt="Pi"</code>), or <code>alt=""</code> when a visible label sits next to it.</p><p class="src">Added in review — not in Figma.</p></div>
+  <div class="panel card"><h3>Pick the variant for the ground</h3><p>Flat White and Gradient White disappear on white. Flat Green on Charcoal is very low contrast. The gallery shows every variant on both grounds.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul class="plain">
+  <li>Core Colors text contradicts itself: Pando Yellow #FFE01B is listed as R255 G224 B0 (= #FFE000); Pando Green #003D31 as R255 G255 B255 / C0 M0 Y0 K0 (white); Charcoal #0F0F0F as R15 G188 B115 / C75 M0 Y75 K0 (a green).</li>
+  <li>Two yellows: the dot in Flat Black and Flat White is #FFDD33; every other yellow is #FFE01B.</li>
+  <li>Pi-Avatar has 6 of 8 combinations: Ai Stars=Yes exists only with Shadow=Yes.</li>
+  <li>Flat Black and Flat White are 106.7 tall; the other logos are 106.</li>
+  <li>Shadow variants: the SVG file is larger than the component (shadow included). Align by the shape, not the file box.</li>
+  <li>No clear space, minimum size or placement rules in Figma. One Pando-Logo instance on the page is used at 74 × 21 (8388:1072).</li>
+  <li>Brand colours (#FFE01B, #003D31, #0F0F0F, #F2C200, #211203, #FFEC75, #F8CF0C, #FFDE72, #FFDD33) are not in tokens.css.</li>
+  <li>Colour frame P48 (7902:1213: Functional / Light / Accent, 15 swatches) has no names or values in text; not documented.</li>
+</ul></div>
+<p class="sub" style="margin-top:14px"><b>Industry gaps — not added:</b> none listed. These are brand files; no reference system was read.</p>
+</section>
+
+<section id="notadopted" data-flag-area><h2>Not adopted</h2>
+<div class="panel card"><ul class="plain">
+  <li><b>Freehand-Logo</b> (10608:959, 3 variants) — V2 / Freehand brand, not V1. Likely the same as the <code>logo-apps-freehand-*</code> icons. See <code>review/atoms-audit.md</code>.</li>
+  <li><b>Pi-With Halo</b> (10687:255, 2 variants, 1100 × 2180) — a large brand illustration, not a UI asset. Export only if a screen needs it.</li>
+  <li>Loose items in the section (instances, ellipses, groups, “Gradient logo 1”, “ai-wand 1” raster frames, Header-Logo/Apps instance) — not built.</li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Use the SVG file as an image. Size it by width; the height follows.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const FIG="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=";
+const PI=[
+ {name:"Size=Large, Ai Stars=No, Shadow=Yes",id:"7905:988",file:"pi-avatar-large-shadow",fig:"330 × 350",svg:"430 × 450"},
+ {name:"Size=Large, Ai Stars=No, Shadow=No",id:"8926:1397",file:"pi-avatar-large",fig:"330 × 350",svg:"330 × 350"},
+ {name:"Size=Small, Ai Stars=No, Shadow=Yes",id:"7906:1024",file:"pi-avatar-small-shadow",fig:"133 × 142",svg:"213 × 222"},
+ {name:"Size=Small, Ai Stars=No, Shadow=No",id:"8926:1401",file:"pi-avatar-small",fig:"133 × 142",svg:"133 × 142"},
+ {name:"Size=Large, Ai Stars=Yes, Shadow=Yes",id:"7951:218",file:"pi-avatar-large-ai-stars-shadow",fig:"330 × 419.12",svg:"407 × 490"},
+ {name:"Size=Small, Ai Stars=Yes, Shadow=Yes",id:"7951:228",file:"pi-avatar-small-ai-stars-shadow",fig:"133 × 168.92",svg:"204 × 229"},
+];
+const LOGO=[
+ {name:"Type=Flat, Color=Black",id:"8066:1168",file:"pando-logo-flat-black",fig:"380 × 106.7",svg:"380 × 107"},
+ {name:"Type=Flat, Color=White",id:"9494:7981",file:"pando-logo-flat-white",fig:"380 × 106.7",svg:"380 × 107"},
+ {name:"Type=Flat, Color=Green",id:"8346:9247",file:"pando-logo-flat-green",fig:"380 × 106",svg:"380 × 106"},
+ {name:"Type=Gradient, Color=White",id:"8345:9233",file:"pando-logo-gradient-white",fig:"380 × 106",svg:"380 × 106"},
+ {name:"Type=Gradient, Color=Green",id:"8345:9234",file:"pando-logo-gradient-green",fig:"380 × 106",svg:"380 × 106"},
+ {name:"Type=Gradient, Color=Black",id:"8345:9245",file:"pando-logo-gradient-black",fig:"380 × 106",svg:"380 × 106"},
+];
+function copyText(t){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(t);const a=document.createElement("textarea");a.value=t;a.setAttribute("readonly","");a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch{}a.remove();return Promise.resolve()}
+function card(v,kind){
+  const path=`components/brand/${v.file}.svg`;
+  const c=document.createElement("div");c.className="panel bcard";
+  const st=document.createElement("div");st.className="stages";
+  ["light","dark"].forEach(g=>{const s=document.createElement("div");s.className=`pds-brand-stage pds-brand-stage--${g} stagelbl`;s.innerHTML=`<span>${g==="light"?"White":"Charcoal"}</span>`;const img=document.createElement("img");img.className="pds-brand "+(kind==="logo"?"pds-brand--logo":"");img.src=`brand/${v.file}.svg`;img.alt=kind==="logo"?"Pando":"Pi";img.dataset.file=v.file;s.appendChild(img);st.appendChild(s)});
+  c.appendChild(st);
+  const info=document.createElement("div");info.className="info";
+  info.innerHTML=`<span class="vname">${v.name}</span><span class="vmeta">Figma ${v.fig} · SVG ${v.svg} · <a href="${FIG}${v.id.replace(":","-")}" target="_blank" rel="noopener">${v.id} ↗</a></span>`;
+  const b=document.createElement("button");b.type="button";b.className="copypath";b.title="Copy file path";b.textContent=path;
+  b.addEventListener("click",()=>copyText(path).then(()=>{b.innerHTML=`<span class="ok">Copied</span> ${path}`;setTimeout(()=>{b.textContent=path},1400)}));
+  info.appendChild(b);c.appendChild(info);return c;
+}
+PI.forEach(v=>$("#g-pi").appendChild(card(v,"pi")));
+LOGO.forEach(v=>$("#g-logo").appendChild(card(v,"logo")));
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/brand.css">
+
+<!-- Logo in a header (scale by width) -->
+<img class="pds-brand" src="components/brand/pando-logo-flat-black.svg" alt="Pando" style="width:74px">
+
+<!-- Pi mark at its Figma size -->
+<img class="pds-brand pds-brand--pi-small" src="components/brand/pi-avatar-small.svg" alt="Pi">`;
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — AI Insight cards and Artifacts (organism)
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 AI Chat (2814:5163)
+          › section "Freehand - ai - component"
+     · ".Insight_Card"       component set 4514:10895 (Default · Load · Hover · Clear[hidden])
+     · ".Insights"           component set 4514:10994 (Default · Expanded · Expanded Large)
+     · "Artifacts"           component set 4514:13552 (List · Context)
+     · "Action icon buttons" component     4524:7455
+   Built 2026-10-28. No review yet: every published item treated as Keep.
+   Requires ../tokens.css and the kit atoms: readonly.css, skeleton.css,
+   scrollbar.css, button.css, icons.css. Classes are self-contained so the
+   Slideout Chat can compose them.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Insight card ── */
+  --ai-insights-card-bg:        var(--white);
+  --ai-insights-card-border:    var(--border-grey);           /* #EFEFEF · 1px */
+  --ai-insights-card-radius:    4px;
+  --ai-insights-card-pad:       var(--space-10) var(--space-15);  /* 10 / 15 */
+  --ai-insights-card-gap:       var(--space-10);               /* icon ↔ content ↔ actions */
+  --ai-insights-content-gap:    4px;                           /* header ↔ description ↔ details */
+  --ai-insights-title-fg:       var(--pando-dark);             /* #234357 */
+  --ai-insights-desc-fg:        var(--pando-dark);             /* #234357 */
+  --ai-insights-detail-fg:      #404040;                       /* off-token in Figma (Label Readonly override) */
+  --ai-insights-detail-gap:     5px;                           /* two read-only items per row */
+  --ai-insights-detail-rows:    var(--space-10);               /* rows (Details frame gap) */
+  /* Hover */
+  --ai-insights-hover-tint:     color-mix(in srgb, var(--status-orange-light) 42%, transparent); /* #FFF4E5 @ 42% over white */
+  --ai-insights-hover-border:   var(--highlight-orange);       /* #FF8C54 · 0.5px */
+  --ai-insights-hover-stroke:   .5px;
+  --ai-insights-hover-shadow:   var(--shadow-2);               /* 0 2 4 6% */
+  /* Icon circle */
+  --ai-insights-icon-size:      30px;
+  --ai-insights-icon-glyph:     20px;
+  --ai-insights-icon-bg:        var(--border-blue);            /* #E9F1F5 · Load-Material */
+  --ai-insights-icon-fg:        var(--pando-dark);
+  --ai-insights-cost-bg:        var(--status-purple-light);    /* #F2E7FE */
+  --ai-insights-cost-fg:        var(--status-purple-dark);     /* #2D0645 */
+  --ai-insights-records-bg:     var(--status-cyan-light);      /* #BDF0F4 */
+  --ai-insights-records-fg:     var(--status-cyan-dark);       /* #006265 */
+  --ai-insights-impact-bg:      var(--accent-error-red-light); /* #FFF8F9 */
+  --ai-insights-impact-fg:      var(--status-red-dark);        /* #FF0000 */
+  --ai-insights-calendar-bg:    var(--status-orange-light);    /* #FFF4E5 */
+  --ai-insights-calendar-fg:    var(--status-orange-dark);     /* #F94200 */
+  /* Card actions (Action Button = true): Download · View, 14px */
+  --ai-insights-card-actions-gap: 20px;
+  --ai-insights-card-actions-icon: 14px;
+
+  /* ── Insights list ── */
+  --ai-insights-list-width:     499px;
+  --ai-insights-list-gap:       8px;                           /* header ↔ cards ↔ cards */
+  --ai-insights-large-gap:      var(--space-15);               /* header ↔ grid (Size=Large) */
+  --ai-insights-label-fg:       var(--dark-input-text);        /* #8A8A9E · "Quick Insights" */
+  --ai-insights-card-tint:      color-mix(in srgb, var(--white) 40%, transparent); /* #FFFFFF @ 40% inside the list */
+  --ai-insights-list-title-fg:  var(--status-blue-dark);       /* #0D204A */
+  --ai-insights-caret-fg:       var(--text-medium);            /* #545454 · Navigation/Button-Down-Caret */
+
+  /* ── Artifacts ── */
+  --ai-insights-artifact-list-w:   320px;
+  --ai-insights-artifact-view-w:   620px;
+  --ai-insights-artifact-h:        710px;
+  --ai-insights-artifact-pad:      var(--space-15);
+  --ai-insights-artifact-gap:      var(--space-10);            /* List: header ↔ list ↔ cards */
+  --ai-insights-artifact-view-gap: var(--space-15);            /* Context: header ↔ content */
+  --ai-insights-artifact-radius:   8px;                        /* List only; Context is square */
+  --ai-insights-artifact-shadow:   var(--shadow-3);            /* List: 0 2 14 10% */
+  --ai-insights-artifact-head-pad: 5px 0 5px 3px;
+  --ai-insights-artifact-label-fg: var(--pando-blue-active);   /* #005399 · "Artifacts" */
+  --ai-insights-artifact-fg:       #404040;                    /* off-token in Figma · card text */
+  --ai-insights-artifact-view-tint: color-mix(in srgb, var(--accent-light-blue-bg) 60%, transparent); /* #F3F6FC @ 60% over white */
+  --ai-insights-artifact-name-fg:  var(--pando-dark);
+  --ai-insights-artifact-name-font: 700 14px/19px var(--font-family); /* Open Sans Bold 14 — no .type-14-bold in tokens.css */
+  --ai-insights-artifact-tools-gap: 20px;
+  --ai-insights-artifact-divider:  var(--border-input-light);  /* #E2EAEC · 16px vertical */
+  --ai-insights-close:             14px;                       /* Navigation/Close-Tag instance size */
+  --ai-insights-close-fg:          var(--grey-dark);           /* #515151 */
+
+  /* ── Action icon buttons (Clone · Accept · Reject · Upload) ── */
+  --ai-insights-actions-gap:   var(--space-15);
+  --ai-insights-actions-pad-t: 5px;
+  --ai-insights-actions-icon:  12px;                           /* 10px action icons scaled to 12 in Figma */
+  --ai-insights-actions-fg:    var(--grey-medium);             /* #A3A3A3 */
+}
+
+/* ════ Insight card (.Insight_Card) ═══════════════════════════════════ */
+.pds-ai-insight {
+  --_bg: var(--ai-insights-card-bg);
+  --_bd: var(--ai-insights-card-border);
+  --_title: var(--ai-insights-title-fg);
+  --_desc: var(--ai-insights-desc-fg);
+  --_icon-bg: var(--ai-insights-icon-bg);
+  --_icon-fg: var(--ai-insights-icon-fg);
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ai-insights-card-gap);
+  width: 100%;
+  margin: 0;
+  padding: var(--ai-insights-card-pad);
+  border-radius: var(--ai-insights-card-radius);
+  background: var(--_bg);
+  box-shadow: inset 0 0 0 1px var(--_bd);   /* stroke drawn inside: no size change on hover */
+  font-family: var(--font-family);
+  /* the Label Readonly Text atoms inside use the Figma override colour */
+  --readonly-light-fg: var(--ai-insights-detail-fg);
+}
+/* Property 1=Hover */
+.pds-ai-insight:hover,
+.pds-ai-insight.is-hover {
+  background: linear-gradient(var(--ai-insights-hover-tint), var(--ai-insights-hover-tint)), var(--ai-insights-card-bg);
+  box-shadow: inset 0 0 0 var(--ai-insights-hover-stroke) var(--ai-insights-hover-border), var(--ai-insights-hover-shadow);
+}
+.pds-ai-insight--loading:hover { background: var(--_bg); box-shadow: inset 0 0 0 1px var(--_bd); } /* Load has no hover in Figma */
+
+/* Icon circle */
+.pds-ai-insight__icon {
+  box-sizing: border-box;
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--ai-insights-icon-size); height: var(--ai-insights-icon-size);
+  border-radius: 50%;
+  background: var(--_icon-bg);
+  color: var(--_icon-fg);
+}
+.pds-ai-insight__icon .pds-icon { --_icon: var(--ai-insights-icon-glyph); }
+.pds-ai-insight--cost     { --_icon-bg: var(--ai-insights-cost-bg);     --_icon-fg: var(--ai-insights-cost-fg); }
+.pds-ai-insight--records  { --_icon-bg: var(--ai-insights-records-bg);  --_icon-fg: var(--ai-insights-records-fg); }
+.pds-ai-insight--impact   { --_icon-bg: var(--ai-insights-impact-bg);   --_icon-fg: var(--ai-insights-impact-fg); }
+.pds-ai-insight--calendar { --_icon-bg: var(--ai-insights-calendar-bg); --_icon-fg: var(--ai-insights-calendar-fg); }
+
+/* Content */
+.pds-ai-insight__content {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: column; gap: var(--ai-insights-content-gap);
+}
+.pds-ai-insight__head { display: flex; align-items: center; gap: var(--space-10); min-width: 0; }
+.pds-ai-insight__title {
+  margin: 0; min-width: 0;
+  font: var(--type-12-semibold);        /* Open Sans SemiBold 12 / auto (16) */
+  color: var(--_title);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pds-ai-insight__desc {
+  margin: 0;
+  font: var(--type-12-regular);         /* Open Sans Regular 12 / 16 on the master */
+  color: var(--_desc);
+}
+/* Show Details = true */
+.pds-ai-insight__details { display: flex; flex-direction: column; gap: var(--ai-insights-detail-rows); }
+.pds-ai-insight__detail-row { display: flex; justify-content: space-between; gap: var(--ai-insights-detail-gap); }
+
+/* Action Button = true: Download · View (14px) */
+.pds-ai-insight__actions { flex: none; display: flex; align-items: center; gap: var(--ai-insights-card-actions-gap); }
+.pds-ai-insight__action {
+  display: inline-flex; padding: 0; margin: 0; border: 0; background: none; cursor: pointer;
+  color: var(--ai-insights-icon-fg);
+}
+.pds-ai-insight__action .pds-icon { --_icon: var(--ai-insights-card-actions-icon); }
+.pds-ai-insight__action:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; border-radius: 2px; } /* added in review — not in Figma */
+
+/* Property 1=Load: empty icon circle + Skeleton 220 Light (kit) */
+.pds-ai-insight--loading .pds-ai-insight__icon .pds-icon { display: none; }
+.pds-ai-insight--loading .pds-skeleton { flex: none; }
+
+/* ════ Insights list (.Insights) ═══════════════════════════════════════ */
+.pds-ai-insights {
+  box-sizing: border-box;
+  display: flex; flex-direction: column; gap: var(--ai-insights-list-gap);
+  width: var(--ai-insights-list-width); max-width: 100%;
+  font-family: var(--font-family);
+}
+.pds-ai-insights__head { display: flex; align-items: center; gap: var(--space-10); min-height: 16px; }
+.pds-ai-insights__label {
+  margin: 0; flex: 1 1 auto;
+  font: var(--type-10-semibold); letter-spacing: .5px; text-transform: uppercase;
+  color: var(--ai-insights-label-fg);
+}
+.pds-ai-insights__toggle .pds-ai-insights__caret { color: var(--ai-insights-caret-fg); }
+.pds-ai-insights__caret { width: 10px; height: 8px; }
+.pds-ai-insights--expanded .pds-ai-insights__caret { transform: rotate(180deg); }
+.pds-ai-insights__list { display: flex; flex-direction: column; gap: var(--ai-insights-list-gap); margin: 0; padding: 0; list-style: none; }
+.pds-ai-insights__list > li { display: block; }
+.pds-ai-insights__list > li[hidden] { display: none; }
+/* Cards inside the list: 40% white, darker title, 11px description */
+.pds-ai-insights .pds-ai-insight {
+  --_bg: var(--ai-insights-card-tint);
+  --_title: var(--ai-insights-list-title-fg);
+}
+.pds-ai-insights .pds-ai-insight__desc { font: var(--type-11-regular); }
+/* Size=Large: two columns, no Show More */
+.pds-ai-insights--large { gap: var(--ai-insights-large-gap); }
+.pds-ai-insights--large .pds-ai-insights__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ai-insights-list-gap); }
+
+/* ════ Artifacts ══════════════════════════════════════════════════════ */
+.pds-ai-artifact {
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  height: var(--ai-insights-artifact-h);
+  padding: var(--ai-insights-artifact-pad);
+  box-shadow: inset 0 0 0 1px var(--ai-insights-card-border);
+  font-family: var(--font-family);
+}
+/* Type=List */
+.pds-ai-artifact--list {
+  width: var(--ai-insights-artifact-list-w);
+  gap: var(--ai-insights-artifact-gap);
+  border-radius: var(--ai-insights-artifact-radius);
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px var(--ai-insights-card-border), var(--ai-insights-artifact-shadow);
+}
+/* Type=Context */
+.pds-ai-artifact--context {
+  width: var(--ai-insights-artifact-view-w);
+  gap: var(--ai-insights-artifact-view-gap);
+  background: linear-gradient(var(--ai-insights-artifact-view-tint), var(--ai-insights-artifact-view-tint)), var(--white);
+}
+.pds-ai-artifact__head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 5px; }
+.pds-ai-artifact--list .pds-ai-artifact__head { align-items: flex-start; padding: var(--ai-insights-artifact-head-pad); }
+.pds-ai-artifact__label {
+  margin: 0;
+  font: var(--type-10-semibold); letter-spacing: .5px; text-transform: uppercase;
+  color: var(--ai-insights-artifact-label-fg);
+}
+.pds-ai-artifact__lead { display: flex; align-items: center; gap: var(--space-10); min-width: 0; }
+.pds-ai-artifact__name {
+  margin: 0; font: var(--ai-insights-artifact-name-font); color: var(--ai-insights-artifact-name-fg);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pds-ai-artifact__tools {
+  display: flex; align-items: center; gap: var(--ai-insights-artifact-tools-gap);
+  --button-action-fg: var(--pando-dark);   /* Figma Share / Download label + icon #234357 (kit default #376F99) */
+}
+.pds-ai-artifact__divider { width: 1px; height: 16px; flex: none; background: var(--ai-insights-artifact-divider); }
+.pds-ai-artifact__close {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: var(--ai-insights-close); height: var(--ai-insights-close);
+  padding: 0; margin: 0; border: 0; background: none; cursor: pointer;
+  color: var(--ai-insights-close-fg);
+}
+.pds-ai-artifact__close .pds-icon { --_icon: var(--ai-insights-close); }
+.pds-ai-artifact__close:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; border-radius: 2px; } /* added in review — not in Figma */
+/* List of artifact cards (scrolls with the kit scrollbar) */
+.pds-ai-artifact__list {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; gap: var(--ai-insights-artifact-gap);
+  margin: 0; padding: 0; list-style: none;
+}
+.pds-ai-artifact__list > li { display: block; }
+/* Content slot ("Replace Content") */
+.pds-ai-artifact__body { flex: 1 1 auto; min-height: 0; }
+
+/* Artifact card = .Insight_Card with the icon hidden, #404040 text, timestamp */
+.pds-ai-insight--artifact {
+  --_title: var(--ai-insights-artifact-fg);
+  --_desc: var(--ai-insights-artifact-fg);
+}
+.pds-ai-insight--artifact .pds-ai-insight__desc { font: var(--type-11-regular); }
+.pds-ai-insight__time.pds-readonly .pds-readonly__label { font: var(--type-10-regular); letter-spacing: .5px; } /* Open Sans Regular 10 / 12, +0.5 */
+
+/* ════ Action icon buttons ════════════════════════════════════════════ */
+.pds-ai-insight-actions {
+  display: inline-flex; align-items: center;
+  gap: var(--ai-insights-actions-gap);
+  padding-top: var(--ai-insights-actions-pad-t);
+}
+.pds-ai-insight-actions__btn {
+  display: inline-flex; padding: 0; margin: 0; border: 0; background: none; cursor: pointer;
+  color: var(--ai-insights-actions-fg);
+}
+.pds-ai-insight-actions__btn .pds-icon { --_icon: var(--ai-insights-actions-icon); }
+.pds-ai-insight-actions__btn:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; border-radius: 2px; } /* added in review — not in Figma */

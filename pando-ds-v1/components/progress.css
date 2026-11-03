@@ -1,0 +1,66 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Progress Indicator
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ File Upload ›
+   component set "Progress Indicator" (3164:1340), Theme × State = 12 variants.
+   Split out of File Upload so it can be reused. Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colours exactly as the Figma variants use them */
+  --progress-light-track: var(--border-input-light);   /* #E2EAEC */
+  --progress-light-fill:  var(--dark-highlight-green); /* #1FCD93 */
+  --progress-light-text:  var(--text-dark);            /* #313131 */
+
+  --progress-dark-track:  #484858;                     /* off-token in Figma — style "Dark/Input BG", not in tokens.css */
+  --progress-dark-fill:   var(--dark-highlight-green); /* #1FCD93 */
+  --progress-dark-text:   var(--dark-input-text);      /* #8A8A9E */
+
+  --progress-fill-shadow: var(--shadow-2);             /* 0 2px 4px 6% */
+
+  /* Measured from the component */
+  --progress-track-width: 50px;
+  --progress-track-height: 4px;
+  --progress-radius: 10px;   /* Figma 10 on a 4px bar → reads as a full pill */
+  --progress-fill-min: 4px;  /* State 0 still shows a 4px nub */
+  --progress-gap: 5px;       /* bar ↔ text */
+}
+
+/* ── Progress Indicator ────────────────────────────────────────── */
+.pds-progress {
+  --_track: var(--progress-light-track); --_fill: var(--progress-light-fill); --_text: var(--progress-light-text);
+  --_value: 0;               /* 0–100, set by progress.js (or inline style) */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--progress-gap);
+  font-family: var(--font-family);
+}
+.pds-progress--dark { --_track: var(--progress-dark-track); --_fill: var(--progress-dark-fill); --_text: var(--progress-dark-text); }
+
+.pds-progress__track {
+  position: relative;
+  flex: none;
+  width: var(--progress-track-width);
+  height: var(--progress-track-height);
+  border-radius: var(--progress-radius);
+  background: var(--_track);
+}
+.pds-progress__fill {
+  position: absolute; top: 0; left: 0;
+  height: 100%;
+  width: max(var(--progress-fill-min), calc(var(--_value) * 1%));
+  max-width: 100%;
+  border-radius: var(--progress-radius);
+  background: var(--_fill);
+  box-shadow: var(--progress-fill-shadow);
+  transition: width .2s ease;
+}
+/* State 0: the nub is rounded on the left only */
+.pds-progress[aria-valuenow="0"] .pds-progress__fill { border-radius: var(--progress-radius) 0 0 var(--progress-radius); }
+
+.pds-progress__text {
+  font: var(--type-10-regular); letter-spacing: .5px;  /* Figma style 10px/Regular/Sp0.5px */
+  color: var(--_text);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) { .pds-progress__fill { transition: none; } }

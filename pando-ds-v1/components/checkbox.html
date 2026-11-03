@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Checkbox · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="checkbox.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* checkbox page */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.vwrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.vpanel{border-radius:10px;border:1px solid var(--pg-line);overflow:hidden}
+.vpanel h3{margin:0;padding:10px 14px;font:600 12.5px var(--pg-ui);border-bottom:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink)}
+.vpanel.light .vbody{background:var(--white)}
+.vpanel.dark .vbody{background:var(--checkbox-dark-surface)}
+.vtable{width:100%;border-collapse:collapse;font:500 11px var(--pg-mono)}
+.vtable th{text-align:left;font-weight:500;padding:10px 12px;color:var(--text-light)}
+.vpanel.dark .vtable th{color:var(--dark-input-text)}
+.vtable td{padding:12px;vertical-align:top}
+.vtable td .pair{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.vtable .na{font:400 11px var(--pg-ui);color:var(--text-light)}
+.vpanel.dark .vtable .na{color:var(--dark-input-text)}
+.stage2{padding:28px;min-height:220px;display:flex;align-items:flex-start;border-radius:0 10px 10px 0;background:var(--white)}
+.stage2.dark{background:var(--checkbox-dark-surface)}
+.redbox{padding:40px 20px 30px;display:flex;justify-content:center;overflow-x:auto}
+.rl-wrap{position:relative;display:flex;align-items:center;gap:80px}
+.big{position:relative;width:112px;height:112px;border-radius:16px;background:var(--pando-blue);flex:none}
+.big svg{position:absolute;left:16px;top:24px;width:80px;height:64px;fill:#fff}
+.big-lbl{font:400 96px/1 "Open Sans",sans-serif;color:var(--text-dark);white-space:nowrap}
+:root[data-theme="dark"] .big-lbl{color:var(--pg-ink)}
+.added{display:inline-block;font:600 10.5px var(--pg-ui);letter-spacing:.04em;text-transform:uppercase;color:#7a4b00;background:#fdf1dc;border:1px solid #c98a1b;border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+:root[data-theme="dark"] .added{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+.open ul,.gaps ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.gaps{padding:12px 16px;font-size:13.5px}
+@media (max-width:760px){.vwrap{grid-template-columns:1fr}.stage2{border-radius:0 0 10px 10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Checkbox</h1>
+    <p class="lede">Checkboxes allow multiple selections from a set of options.</p>
+    <div class="meta"><span>Status: Reviewed 2026-10-23</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3331-3626" target="_blank" rel="noopener">Figma component 3331:3626 ↗</a><span>Files: checkbox.css · checkbox.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area="try"><h2>Try it</h2><p class="sub">A nested group: the parent shows indeterminate when its children are mixed. Tab to a box to see the focus ring. The group wrapper, group label and error text are <b>added in review — not in Figma</b>.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls" onsubmit="return false">
+    <label>Theme (component property)<select id="c-theme"><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <label class="chk"><input type="checkbox" id="c-error"> Error (shows group error text)</label>
+    <label class="chk"><input type="checkbox" id="c-disabled"> Disable the last child</label>
+    <label class="chk"><input type="checkbox" id="c-legend" checked> Show group label</label>
+  </form>
+  <div class="stage2" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area="variants"><h2>Variants</h2><p class="sub">Theme × State × Selection — the 18 published variants, each shown with Show Label off and on. Focus is shown as published (stroke swap) plus the review's focus ring. Indeterminate exists only for State=Default.</p>
+<div class="vwrap" id="vwrap"></div></section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma component, drawn at 8× size.</p>
+<div class="panel"><div class="redbox" id="redbox"></div>
+<div class="spec-table">
+  <div><b>Box</b><code>14 × 14px</code> · radius <code>2px</code></div>
+  <div><b>Stroke</b><code>1px</code> inside · unselected, focus, error</div>
+  <div><b>Check</b><code>10 × 8px</code> at <code>2, 3</code></div>
+  <div><b>Dash</b><code>8 × 2px</code> at <code>3, 6</code> · light: <code>8 × 1.8</code> cut-out</div>
+  <div><b>Box ↔ label</b><code>10px</code> · Dark selected states <code>11px</code></div>
+  <div><b>Label</b><code>.type-12-regular</code> · Figma line-height Auto</div>
+  <div><b>Label default</b><code>Show Label = false</code></div>
+  <div><b>Hit area</b><code>14 × 14px</code> box · label is clickable</div>
+</div>
+<div class="spec-table" id="colours"></div></div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Overview</h3><p>Checkboxes allow multiple selections from a set of options.</p></div>
+  <div class="panel card"><h3>Uses</h3><p>Checkboxes are used for multiple choices, not for mutually exclusive choices. Each checkbox works independently from other checkboxes in the list, therefore checking an additional box does not affect any other selections.</p></div>
+  <div class="panel card"><h3>Placement &amp; convention</h3><p>Checkboxes can be used alone, grouped, or nested. If a group contains a mix of checked and unchecked children, the parent will show an indeterminate state.</p></div>
+</div>
+<div class="cols" style="margin-top:14px">
+  <div class="panel card"><h3>Checkbox group <span class="added">added in review</span></h3><ul><li>Wrap related checkboxes in a <code>&lt;fieldset&gt;</code> with a group label (<code>&lt;legend&gt;</code>).</li><li>Items stack vertically, 10px apart. Nested children indent 24px so their boxes line up under the parent's label.</li><li>The whole label is part of the click target.</li></ul><p class="src">Sources: <a href="https://carbondesignsystem.com/components/checkbox/usage/" target="_blank" rel="noopener">Carbon Checkbox</a> · <a href="https://fluent2.microsoft.design/components/web/react/core/checkbox/usage" target="_blank" rel="noopener">Fluent 2 Checkbox</a> · <a href="https://ant.design/components/checkbox" target="_blank" rel="noopener">Ant Design Checkbox</a></p></div>
+  <div class="panel card"><h3>Error text <span class="added">added in review</span></h3><p>Error is shown on each box (red stroke / fill, as in Figma) and, at group level, as one line of text under the group: <code>--action-red</code>, <code>.type-11-regular</code>. Not in Figma.</p></div>
+</div>
+</section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Native checkbox</h3><p>Built on <code>&lt;input type="checkbox"&gt;</code> inside a <code>&lt;label&gt;</code>, so Space toggles it and the label text is the accessible name. With Show Label off, give the input an <code>aria-label</code>. Indeterminate is set in script (<code>checkbox.js</code>) and is announced as “mixed”.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html" target="_blank" rel="noopener">WCAG 2.2 · 4.1.2</a></p></div>
+  <div class="panel card"><h3>Focus ring <span class="added">added in review</span></h3><p>Figma's focus is a 1px stroke colour change. The review adds a 2px <code>--pando-blue</code> outline, 2px offset, on keyboard focus — not in Figma.</p><p class="src">Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html" target="_blank" rel="noopener">WCAG 2.2 · 2.4.7</a></p></div>
+  <div class="panel card"><h3>Group and error</h3><p>Groups use <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>. The error text is linked with <code>aria-describedby</code> on the fieldset and the inputs get <code>aria-invalid="true"</code>.</p></div>
+</div></section>
+
+<section id="open" data-flag-area="open"><h2>Open issues</h2>
+<div class="open"><ul>
+  <li>Dark / Disabled / Selected has a stray second check mark (#234357) beside the box, widening it to 34px. <b>Not reproduced</b> here; delete the extra vector in Figma.</li>
+  <li>Indeterminate exists only for State=Default — no Disabled, Focus or Error indeterminate (6 combinations missing). Not built.</li>
+  <li>Light disabled colours are off-token: box #D9D9D9, selected box #9C9C9C, selected label #9C9C9C (unselected label uses <code>--text-medium</code> #545454).</li>
+  <li>Dark Indeterminate uses #66B9FF (off-token, different from the Selected fill #9CD2FF); white dash on it is 2.11 : 1.</li>
+  <li>Light Indeterminate dash is a cut-out, so it takes the colour of whatever is behind the box (not always white). Built that way to match Figma.</li>
+  <li>Focus as published is nearly invisible on selected boxes: #005399 on #0076DD is 1.72 : 1 (light), #D5DAF4 on #9CD2FF is 1.16 : 1 (dark). The added ring covers this.</li>
+  <li>Light unselected stroke #A3A3A3 on white is 2.52 : 1 (below 3 : 1). Dark unselected #8A8A9E on #393945 is 3.37 : 1.</li>
+  <li>Light Focus+Selected turns the label #0076DD; every other state keeps the label colour.</li>
+  <li>Dark selected states (Selected, Focus+Selected, Error+Selected) use a 11px gap; all others use 10px. Kept as Figma.</li>
+  <li>Label line-height is Auto in Figma (16px box); built with <code>.type-12-regular</code> at 17px.</li>
+  <li>Box is 14 × 14 — under the 24 × 24 target minimum (WCAG 2.5.8) unless the label is used.</li>
+  <li>Dark presentation backdrop is #393944 in Figma; shown here with <code>--dark-bg</code> #393945.</li>
+  <li>The added focus ring uses <code>--pando-blue</code> in both themes; on the dark surface that is ~2.4 : 1. Needs a dark-theme ring colour.</li>
+  <li>Figma's “Variation Examples” doc panel is empty.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area="gaps"><h2>Industry gaps — not added</h2>
+<div class="panel gaps"><ul>
+  <li>“When not to use” line (radio for single choice, toggle for instant settings). <a href="https://fluent2.microsoft.design/components/web/react/core/checkbox/usage" target="_blank" rel="noopener">Fluent 2</a></li>
+  <li>24px hit area around the box. <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html" target="_blank" rel="noopener">WCAG 2.5.8</a></li>
+  <li>Read-only and warning states. <a href="https://carbondesignsystem.com/components/checkbox/usage/" target="_blank" rel="noopener">Carbon</a></li>
+  <li>Hover state (Carbon has none either). <a href="https://carbondesignsystem.com/components/checkbox/usage/" target="_blank" rel="noopener">Carbon</a></li>
+  <li>Disabled / Focus / Error indeterminate variants. <a href="https://carbondesignsystem.com/components/checkbox/usage/" target="_blank" rel="noopener">Carbon</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include the files; add <code>--dark</code> for Theme=Dark, <code>--error</code> for State=Error, <code>disabled</code> on the input for State=Disabled.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Group with nested parent (added in review):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="checkbox.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const CHECK='<svg class="pds-checkbox__mark" viewBox="0 0 10 8" aria-hidden="true"><path d="M3.28 5.72L8.74.09c.12-.12.3-.12.41 0l.76.78c.12.12.12.32 0 .44L3.48 7.91c-.11.12-.3.12-.41 0L.09 4.85c-.12-.12-.12-.32 0-.44l.74-.78c.12-.12.3-.12.42 0z"/></svg>';
+let uid=0;
+function cb({dark,state="Default",sel="Unselected",label=true,text="Input Label",extra=""}={}){
+  const cls=["pds-checkbox"];if(dark)cls.push("pds-checkbox--dark");if(state==="Focus")cls.push("pds-checkbox--focus");if(state==="Error")cls.push("pds-checkbox--error");
+  const attrs=[sel==="Selected"?"checked":"",sel==="Indeterminate"?"data-indeterminate":"",state==="Disabled"?"disabled":"",state==="Error"?'aria-invalid="true"':"",label?"":`aria-label="${text}"`,extra].filter(Boolean).join(" ");
+  return `<label class="${cls.join(" ")}"><input type="checkbox" class="pds-checkbox__input" ${attrs}><span class="pds-checkbox__box" aria-hidden="true">${CHECK}<span class="pds-checkbox__dash"></span></span>${label?`<span class="pds-checkbox__label">${text}</span>`:""}</label>`;
+}
+// variants
+const STATES=["Default","Disabled","Focus","Error"],SELS=["Unselected","Selected","Indeterminate"];
+$("#vwrap").innerHTML=[false,true].map(dark=>`<div class="vpanel ${dark?"dark":"light"}"><h3>Theme=${dark?"Dark":"Light"}</h3><div class="vbody"><table class="vtable"><thead><tr><th>State</th>${SELS.map(s=>`<th>${s}</th>`).join("")}</tr></thead><tbody>${STATES.map(st=>`<tr><th>${st}</th>${SELS.map(se=>`<td>${se==="Indeterminate"&&st!=="Default"?'<span class="na">not in Figma</span>':`<div class="pair">${cb({dark,state:st,sel:se,label:false})}${cb({dark,state:st,sel:se})}</div>`}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`).join("");
+// variant boxes are specimens: keep them out of the tab order
+$("#vwrap").querySelectorAll("input").forEach(i=>{i.tabIndex=-1;i.addEventListener("click",e=>e.preventDefault())});
+
+// try it
+function renderTry(){
+  const dark=$("#c-theme").value==="dark",err=$("#c-error").checked,dis=$("#c-disabled").checked,leg=$("#c-legend").checked;
+  const st=err?"Error":"Default";
+  const kid=(t,on,last)=>cb({dark,state:last&&dis?"Disabled":st,sel:on?"Selected":"Unselected",text:t});
+  $("#stage").className="stage2"+(dark?" dark":"");
+  $("#stage").innerHTML=`<fieldset class="pds-checkbox-group${dark?" pds-checkbox-group--dark":""}"${err?' aria-describedby="try-err"':""}>${leg?'<legend class="pds-checkbox-group__label">Group label</legend>':""}<div class="pds-checkbox-group__items">${cb({dark,state:st,extra:'data-pds-parent="try-kids"'})}<div class="pds-checkbox-group__nested" id="try-kids">${kid("Input Label",true)}${kid("Input Label",false)}${kid("Input Label",false,true)}</div></div>${err?'<p class="pds-checkbox-group__error" id="try-err">Error message</p>':""}</fieldset>`;
+  pdsCheckbox.init($("#stage"));
+}
+["c-theme","c-error","c-disabled","c-legend"].forEach(id=>$("#"+id).addEventListener("change",renderTry));renderTry();
+
+// redline at 8x
+$("#redbox").innerHTML=`<div class="rl-wrap"><div class="big">${CHECK.replace('class="pds-checkbox__mark"','')}</div><div class="big-lbl" style="font-size:96px">Input Label</div>
+<div class="rl h" style="left:0;width:112px;top:-22px"><span style="left:46px;top:-16px">14</span></div>
+<div class="rl v" style="left:-18px;top:0;height:112px"><span style="left:-24px;top:46px">14</span></div>
+<div class="rl box" style="left:16px;top:24px;width:80px;height:64px"><span style="left:10px;top:66px">check 10×8 @ 2,3</span></div>
+<div class="rl h" style="left:112px;width:80px;top:56px"><span style="left:30px;top:-16px">10</span></div>
+<div class="rl" style="left:-6px;top:118px"><span>radius 2 · stroke 1 inside</span></div></div>`;
+// colour table
+const COL=[["Unselected stroke","--grey-medium #A3A3A3","--dark-input-text #8A8A9E"],["Selected fill","--pando-blue #0076DD","--highlight-blue-light #9CD2FF"],["Check","--white","--pando-dark #234357"],["Indeterminate","--pando-blue + cut-out dash","#66B9FF (off-token) + white dash"],["Focus stroke","--pando-blue","--highlight-blue-light"],["Focus + selected stroke","--pando-blue-active #005399","--dark-label-text #D5DAF4"],["Error","--action-red #E25757","--accent-red-medium #D26568"],["Disabled","#D9D9D9 / #9C9C9C (off-token), check --grey-light","--grey-dark #515151, check --dark-input-text"],["Label","--text-dark · disabled --text-medium / #9C9C9C","--dark-label-text · disabled --dark-input-text"]];
+$("#colours").innerHTML=COL.map(([k,l,d])=>`<div><b>${k}</b>Light <code>${l}</code><br>Dark <code>${d}</code></div>`).join("");
+
+// code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/checkbox.css">
+<script src="components/checkbox.js"><\/script>
+
+`+cb({sel:"Selected"}).replace(/></g,">\n<");
+$("#code2").textContent=`<fieldset class="pds-checkbox-group" aria-describedby="grp-err">
+  <legend class="pds-checkbox-group__label">Group label</legend>
+  <div class="pds-checkbox-group__items">
+    <!-- parent: data-pds-parent points at the children's container -->
+    <label class="pds-checkbox"><input type="checkbox" class="pds-checkbox__input" data-pds-parent="kids">…</label>
+    <div class="pds-checkbox-group__nested" id="kids">
+      <label class="pds-checkbox">…</label>
+      <label class="pds-checkbox">…</label>
+    </div>
+  </div>
+  <p class="pds-checkbox-group__error" id="grp-err">Error message</p>
+</fieldset>`;
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

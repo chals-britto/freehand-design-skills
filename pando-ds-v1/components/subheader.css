@@ -1,0 +1,165 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Subheader (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟢 Header (0:1)
+   › component set "Subheader" (1:409), 6 variants:
+     Theme=Light, Size=Main        (3021:714)
+     Theme=Dark,  Size=Main        (407:3383)
+     Theme=Light, Size=Breadcrumb  (116:42)
+     Theme=Dark,  Size=Breadcrumb  (615:4190)
+     Theme=Light, Size=Back        (2850:606)
+     Theme=Light, Size=1440        (4446:3706)  — same layout as Main at 1440 wide
+   Booleans: Show Buttons (true) · Show Search · With Toggle · Show With Menu (false).
+   Built 2026-10-28 · no review yet, everything published = Keep.
+
+   Requires ../tokens.css, icons.css, button.css, button-group.css,
+   breadcrumb.css, toggle-tab.css (+ toggle-tab.js). Every atom inside is the
+   kit's own: this file lays the bar out and sets the theme colours only.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Light ─────────────────────────────────────────────────── */
+  --subheader-bg:            var(--white);
+  --subheader-border:        var(--border-blue);        /* #E9F1F5, 1px inside, all sides */
+  --subheader-divider:       var(--border-blue);        /* #E9F1F5 vertical 50px lines */
+  --subheader-menu-bg:       transparent;
+  --subheader-title-fg:      var(--pando-blue);         /* #0076DD "Subheader Active" */
+  --subheader-title-arrow:   var(--pando-dark);         /* #234357 Dropdown-Arrow Solid */
+  --subheader-search-fg:     var(--text-medium);        /* #545454 */
+  --subheader-back-caret:    var(--grey-dark);          /* #515151 Back caret */
+
+  /* ── Dark ──────────────────────────────────────────────────── */
+  --subheader-dark-bg:            var(--dark-bg);       /* #393945 */
+  --subheader-dark-border:        var(--pando-dark);    /* #234357 — Size=Main */
+  --subheader-dark-crumb-border:  #18283B;              /* off-token in Figma — Size=Breadcrumb border */
+  --subheader-dark-divider:       color-mix(in srgb, var(--dark-input-text) 50%, transparent); /* #8A8A9E @ 50% */
+  --subheader-dark-menu-bg:       var(--dark-darker);   /* #24242F menu area */
+  --subheader-dark-menu-lines:    var(--white);         /* Menu/Menu three lines (top line stays #0076DD) */
+  --subheader-dark-title-fg:      var(--dark-label-text); /* #D5DAF4 */
+  --subheader-dark-title-arrow:   var(--white);
+  --subheader-dark-search-fg:     var(--dark-input-text); /* #8A8A9E */
+  --subheader-dark-crumb-link:    var(--dark-label-text); /* #D5DAF4 "Previous" */
+  --subheader-dark-crumb-caret:   var(--dark-input-text); /* #8A8A9E */
+  --subheader-dark-crumb-current: var(--white);
+
+  /* ── Measured ──────────────────────────────────────────────── */
+  --subheader-height:        50px;
+  --subheader-pad-right:     20px;                      /* bar right padding; left is 0 */
+  --subheader-gap:           20px;                      /* title margins, divider ↔ button group, back caret ↔ label */
+  --subheader-menu-w:        60px;                      /* menu area: 20 + icon 20 + 20 */
+  --subheader-icon:          20px;
+  --subheader-title-tracking: 1px;                      /* SemiBold 14, UPPER, +1px */
+  --subheader-arrow-w:       8px;  --subheader-arrow-h: 5px;
+  --subheader-crumb-pad:     15px;                      /* breadcrumb left/right inset (Light) */
+  --subheader-dark-crumb-pad-left: 20px;                /* Dark breadcrumb left inset */
+  --subheader-search-gap:    var(--space-10);           /* icon ↔ "Search" */
+  --subheader-search-offset: 20px;                      /* Size=Main: after the title divider */
+  --subheader-search-offset-inner: var(--space-10);     /* Breadcrumb / Back */
+  --subheader-back-caret-w:  8px;  --subheader-back-caret-h: 14px;
+}
+
+/* ── Bar ───────────────────────────────────────────────────────── */
+.pds-subheader {
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+  height: var(--subheader-height);
+  padding: 0 var(--subheader-pad-right) 0 0;
+  background: var(--subheader-bg);
+  box-shadow: inset 0 0 0 1px var(--subheader-border);   /* Figma stroke is inside */
+  font-family: var(--font-family);
+}
+.pds-subheader__left, .pds-subheader__right {
+  display: flex; align-items: center; min-width: 0;
+}
+.pds-subheader__right { gap: var(--subheader-gap); justify-content: flex-end; }
+
+/* Vertical 50px line */
+.pds-subheader__divider {
+  flex: none; align-self: stretch; width: 1px;
+  background: var(--subheader-divider);
+}
+
+/* ── Menu area (Size=Main, and "Show With Menu" on Breadcrumb) ── */
+.pds-subheader__menu {
+  flex: none; align-self: stretch;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--subheader-menu-w);
+  margin: 0; padding: 0; border: 0;
+  background: var(--subheader-menu-bg);
+  cursor: pointer;
+}
+.pds-subheader__menu .pds-icon { --_icon: var(--subheader-icon); }
+
+/* ── Title with dropdown arrow (Size=Main) ─────────────────────── */
+.pds-subheader__title {
+  flex: none;
+  display: inline-flex; align-items: center; gap: var(--subheader-gap);
+  margin: 0 var(--subheader-gap); padding: 0; border: 0; background: none;
+  color: var(--subheader-title-fg);
+  font: var(--type-14-semibold);
+  text-transform: uppercase; letter-spacing: var(--subheader-title-tracking);
+  white-space: nowrap; cursor: pointer;
+}
+.pds-subheader__arrow { flex: none; width: var(--subheader-arrow-w); height: var(--subheader-arrow-h); color: var(--subheader-title-arrow); }
+.pds-subheader__arrow svg { display: block; width: 100%; height: 100%; }
+
+/* ── Breadcrumb (Size=Breadcrumb) — the kit Breadcrumb atom ─────── */
+.pds-subheader__crumb { flex: none; padding: 0 var(--subheader-crumb-pad); }
+
+/* ── Back (Size=Back) — caret button + current level ───────────── */
+.pds-subheader__back {
+  flex: none; align-self: stretch;
+  display: inline-flex; align-items: center;
+  margin: 0; padding: 0 0 0 var(--subheader-gap); border: 0; background: none;
+  color: var(--subheader-back-caret); cursor: pointer;
+}
+.pds-subheader__back svg { display: block; width: var(--subheader-back-caret-w); height: var(--subheader-back-caret-h); transform: rotate(180deg); }
+.pds-subheader--back .pds-subheader__crumb { padding: 0 var(--subheader-crumb-pad) 0 var(--subheader-gap); }
+
+/* ── Optional: Toggle Tab (kit .pds-toggle-tabs--icon, Dual Icon) ── */
+.pds-subheader .pds-toggle-tabs { flex: none; align-self: stretch; }
+
+/* ── Optional: Search trigger ──────────────────────────────────── */
+.pds-subheader__search {
+  flex: none;
+  display: inline-flex; align-items: center; gap: var(--subheader-search-gap);
+  margin: 0 0 0 var(--subheader-search-offset-inner); padding: 0; border: 0; background: none;
+  color: var(--subheader-search-fg);
+  font: var(--type-14-regular);
+  cursor: pointer;
+}
+.pds-subheader--main .pds-subheader__search { margin-left: var(--subheader-search-offset); }
+.pds-subheader__search .pds-icon { --_icon: var(--subheader-icon); }
+
+/* Optional parts hidden with [hidden] (Figma booleans) */
+.pds-subheader [hidden] { display: none !important; }
+
+/* ── Focus (added in review — not in Figma) ────────────────────── */
+.pds-subheader__menu:focus-visible, .pds-subheader__title:focus-visible,
+.pds-subheader__back:focus-visible, .pds-subheader__search:focus-visible {
+  outline: 2px solid var(--pando-blue); outline-offset: 2px;
+}
+
+/* ════ Theme = Dark ═══════════════════════════════════════════════ */
+.pds-subheader--dark {
+  --subheader-divider: var(--subheader-dark-divider);
+  --subheader-menu-bg: var(--subheader-dark-menu-bg);
+  --subheader-title-fg: var(--subheader-dark-title-fg);
+  --subheader-title-arrow: var(--subheader-dark-title-arrow);
+  --subheader-search-fg: var(--subheader-dark-search-fg);
+  background: var(--subheader-dark-bg);
+  box-shadow: inset 0 0 0 1px var(--subheader-dark-border);
+}
+.pds-subheader--dark.pds-subheader--breadcrumb { box-shadow: inset 0 0 0 1px var(--subheader-dark-crumb-border); }
+.pds-subheader--dark .pds-subheader__menu svg path:not(:first-child) { fill: var(--subheader-dark-menu-lines); }
+.pds-subheader--dark .pds-subheader__crumb { padding-left: var(--subheader-dark-crumb-pad-left); }
+.pds-subheader--dark.pds-subheader--breadcrumb .pds-subheader__left { gap: var(--space-10); }      /* Figma Left Section gap 10 */
+.pds-subheader--dark.pds-subheader--breadcrumb .pds-subheader__search { margin-left: 0; }
+/* Breadcrumb atom has no Dark variant in the kit — re-colour it here (Open issue) */
+.pds-subheader--dark .pds-breadcrumb {
+  --breadcrumb-link: var(--subheader-dark-crumb-link);
+  --breadcrumb-current: var(--subheader-dark-crumb-current);
+}
+.pds-subheader--dark .pds-breadcrumb__sep { color: var(--subheader-dark-crumb-caret); }

@@ -1,0 +1,40 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Button Group (molecule)
+   Figma: DS V2 – Molecules › 🟡 Button Group (page 2305:4669)
+   › component set "Button Group" (3153:4370), 2 variants:
+     Type=Buttons (2317:5331) · Type=Action Buttons (3152:4193).
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css and button.css — every button inside is the
+   kit Button atom (.pds-button …). This file only lays the row out.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Measured from the components ── */
+  --button-group-gap:        20px;              /* Type=Buttons — not on the spacing scale */
+  --button-group-action-gap: var(--space-10);   /* Type=Action Buttons — 10px */
+  --button-group-height:        30px;           /* Type=Buttons: Normal buttons, 30 tall */
+  --button-group-action-height: 22px;           /* Type=Action Buttons: Action buttons, 22 tall */
+}
+
+/* Type=Buttons — horizontal, right-aligned (Figma: primary axis MAX),
+   vertically centred, 20px apart. Order in Figma, left → right:
+   [Dropdown · Show All Buttons] [Secondary · Show Button 4]
+   [Dropdown · Show Button 3] Secondary  Primary */
+.pds-button-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--button-group-gap);
+  min-height: var(--button-group-height);
+}
+
+/* Type=Action Buttons — five Action buttons, 10px apart, right-aligned */
+.pds-button-group--action {
+  gap: var(--button-group-action-gap);
+  min-height: var(--button-group-action-height);
+}
+
+/* Optional slots are hidden by default in Figma (booleans default false).
+   Use the [hidden] attribute on the button; auto-layout closes the gap. */
+.pds-button-group > [hidden] { display: none; }

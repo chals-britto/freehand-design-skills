@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tag · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="tag.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* component page additions */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+h3.grp{font:600 13px var(--pg-ui);margin:0;padding:16px 20px 0;color:var(--pg-ink)}
+h3.grp span{font-weight:400;color:var(--pg-muted);margin-left:6px;font-size:12px}
+.vrow{display:flex;flex-wrap:wrap;gap:16px 22px;padding:14px 20px 18px;align-items:flex-end}
+.vrow.dark{background:var(--color-sidebar-bg);margin:0 20px 16px;border-radius:8px}
+.vrow.dark .vcell .lbl{color:#c9cfdb}
+.vrow .vcell{align-items:flex-start}
+.vrow .sw{min-height:30px;display:flex;align-items:center}
+.vt{border-collapse:collapse;width:100%;font-size:12.5px}.vt th,.vt td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--pg-line);vertical-align:top}.vt th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted)}.vt code{font:400 12px var(--pg-mono)}
+.vrow .vcell .lbl{font:500 11px var(--pg-mono);color:var(--pg-muted);max-width:210px}
+.open ul,.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.open li{font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Tag</h1>
+    <p class="lede">Tags can also serve as a label for content or display counts. Use short labels for easy scanning. Use two words only if necessary to describe the status and differentiate it from other tags.</p>
+    <div class="meta"><span>Status: Built from Figma 2026-10-23 · no review yet</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=206-0" target="_blank" rel="noopener">Figma page 206:0 ↗</a><span>Files: tag.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="variants" data-flag-area="variants"><h2>Variants</h2><p class="sub">Every published variant of the six tag components (93 in total), colours exactly as in Figma. Dark-mode variants sit on the sidebar background (#393945), as on the Figma canvas. Sample text is Figma’s.</p>
+<div class="panel" id="vpanel"></div></section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma components. Heights are fixed; width hugs the text.</p>
+<div class="panel" style="overflow-x:auto"><table class="vt">
+<thead><tr><th>Family</th><th>Height</th><th>Padding</th><th>Radius</th><th>Gap</th><th>Text</th><th>Border</th></tr></thead>
+<tbody>
+<tr><td>Small · Filled · square</td><td>15</td><td>0.5 / 2</td><td>2</td><td>—</td><td><code>.type-10-semibold</code>, no tracking</td><td>—</td></tr>
+<tr><td>Small · Filled · Rounded · Light</td><td>16.4</td><td>1 / 5 / 1.4 / 5</td><td>22</td><td>4</td><td><code>.type-10-semibold</code>, no tracking</td><td>—</td></tr>
+<tr><td>Small · Filled · Rounded · Dark</td><td>16</td><td>2.16 / 4.32 / 1.62</td><td>22</td><td>5.4</td><td>same · × 10</td><td>—</td></tr>
+<tr><td>Small · Outline · Rounded</td><td>16</td><td>1 / 4</td><td>20</td><td>2</td><td><code>.type-10-regular</code>, no tracking · × 8</td><td>0.5 outside · Status Medium</td></tr>
+<tr><td>Large · Filled · square</td><td>24</td><td>4 / 8</td><td>2</td><td>—</td><td><code>.type-12-bold</code>, Title Case</td><td>—</td></tr>
+<tr><td>Large · Filled · Rounded (Nimbus)</td><td>21</td><td>4 / 8 / 3</td><td>14</td><td>—</td><td><code>.type-10-bold</code>, UPPERCASE</td><td>—</td></tr>
+<tr><td>Medium (read-only label)</td><td>20</td><td>2</td><td>2</td><td>4</td><td>label <code>.type-10-regular</code> · value <code>.type-12-semibold</code></td><td>—</td></tr>
+<tr><td>Attachment</td><td>22</td><td>4</td><td>2</td><td>10 (icon↔name 4)</td><td><code>.type-10-bold</code>, UPPERCASE · × 8</td><td>—</td></tr>
+<tr><td>File (Outline · Left Icon)</td><td>22</td><td>4 / 8</td><td>12</td><td>5</td><td><code>.type-10-regular</code> · #000000</td><td>0.5 inside · <code>--accent-light-highlight</code></td></tr>
+<tr><td>Multiselect · Number Only</td><td>22</td><td>4 / 10</td><td>12</td><td>—</td><td><code>.type-10-semibold</code></td><td>2 centre · <code>--border-input-light</code></td></tr>
+<tr><td>Multiselect · Number + Unit</td><td>24</td><td>4 / 10</td><td>20</td><td>2</td><td><code>.type-11-regular</code></td><td>—</td></tr>
+<tr><td>Input Tag</td><td>24</td><td>4 / 10 (4 / 8 with ×)</td><td>12</td><td>4</td><td><code>.type-12-regular</code> · × 12</td><td>—</td></tr>
+<tr><td>Search Tag</td><td>32 field</td><td>8 / 10</td><td>25</td><td>15</td><td>label <code>.type-10-semibold</code> caps · value <code>.type-12-regular</code> +0.5</td><td>1 · <code>--border-input-light</code></td></tr>
+<tr><td>Filter Tag</td><td>24</td><td>4 / 10</td><td>12</td><td>—</td><td><code>.type-11-regular</code> (Figma line-height 16)</td><td>1 inside · <code>--border-grey</code></td></tr>
+<tr><td>Pointed Tag</td><td>14</td><td>0 / 2 right · tip 10×14</td><td>0 2 2 0</td><td>—</td><td><code>.type-10-semibold</code></td><td>—</td></tr>
+<tr><td>Tag/AI</td><td>15</td><td>0.5 / 2 (Dark 0.5 / 4 / 0.5 / 2)</td><td>2</td><td>5</td><td><code>.type-10-semibold</code> · Beta: Inter Semi Bold 8</td><td>—</td></tr>
+</tbody></table></div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Uses</h3><ul><li>Tags are used to label, organize, or categorize objects.</li><li>Use tags when content is mapped to multiple categories, and the user needs a way to differentiate between them.</li><li>Tags can also be used as a method of filtering data, to show only items within that particular category.</li></ul></div>
+  <div class="panel card"><h3>Placement &amp; convention</h3><p>Display tags as a single category, dimension or property related to adjacent content.</p></div>
+  <div class="panel card"><h3>Which tag (Figma descriptions)</h3><ul><li><b>Tag</b> — Tags, text tag, Attachment tag, nimbus tag, cell tag.</li><li><b>Multiselect Tag</b> — Show numbers, counts, units as tags.</li><li><b>Input Tag</b> — Use for displaying filled input as tags in fields, search and comments.</li><li><b>Filter Tag</b> — Filter Tags.</li><li><b>Pointed Tag</b> — Pointed Tag.</li></ul></div>
+</div></section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Remove ×</h3><p>The close × is a <code>&lt;button&gt;</code> with <code>aria-label="Remove &lt;tag text&gt;"</code>, reachable with Tab and pressed with Enter or Space. Focus ring: 2px Pando blue. <em>Added in review — not in Figma.</em></p></div>
+  <div class="panel card"><h3>Colour is not the only signal</h3><p>Every tag carries its meaning in text (“Rejected”, “Approved”). Keep it that way.</p></div>
+  <div class="panel card"><h3>Contrast below 4.5 : 1 (kept as Figma)</h3><ul><li>Nimbus Blue white text 2.27 · Nimbus Orange 2.74</li><li>Drop-down Tag Dark “#” 2.44</li><li>Rounded · Dark · Purple 3.00 · Square Dark Default 3.23 · Input Tag Dark 3.23</li><li>Red on Red Light 3.48 · Rounded Orange 3.38 · Square Dark Purple 3.58</li><li>Outline Red 4.00 · Outline Dark Red 3.84</li></ul></div>
+</div></section>
+
+<section id="open" data-flag-area="open"><h2>Open issues</h2>
+<div class="open"><ul>
+  <li>Variant names do not always match the look: <code>Type=Filled, Color=Brown, Rounded=Yes, Right Icon=True</code> (Light and Dark) is drawn as an Outline tag; rendered as drawn.</li>
+  <li>Rounded · Blue (Light) uses the <b>Sky Blue</b> palette (#B5E4FF / #09375D), not Blue.</li>
+  <li>Medium · Dark fills are 10% tints not in tokens.css (#362F30, #37333A, #433F3A, #3B4545, #2F362F); Red and Green share #2F362F. Dark Grey / Neutral / Blue medium tags do not exist.</li>
+  <li>Rounded · Dark padding is fractional (2.16 / 4.32 / 1.62, gap 5.4) — looks like a scaled copy.</li>
+  <li>Square Small · Light text is Text/Dark for every colour except Red; Dark mode Brown uses the Light fill.</li>
+  <li>Tag/AI “Beta” uses Inter Semi Bold 8 — not Open Sans and not in the type scale. Dark Beta colours #FFE01B / #003D31 and the spark gradient stop #19A476 are off-token.</li>
+  <li>File tag text is pure #000000 (off-token).</li>
+  <li><code>Read Only Label</code> boolean on Large tags: the label layer is hidden by default and was not rendered; Medium shows the same Label : Info pattern.</li>
+  <li>Line-height differences: Figma uses AUTO on most tag text (tokens: 10px → 12, 12px → 17); Filter Tag uses 11/16 vs <code>.type-11-regular</code> 11/15. Heights are fixed so the tags keep Figma’s size.</li>
+  <li>Text styles named “10px/Semibold/Normal” and “Regular 10” have no tracking, while <code>.type-10-*</code> classes add 0.5px — the component sets <code>letter-spacing: 0</code>.</li>
+  <li>No hover, focus, pressed or disabled states for any removable or filter tag.</li>
+  <li>Remove behaviour is not specified in Figma; the × is rendered but removing is left to the product.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area="gaps"><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>Selectable (checkable) tag with selected state — <a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a> · <a href="https://ant.design/components/tag" target="_blank" rel="noopener">Ant Design Tag</a></li>
+  <li>Operational tag that opens more tags (popover) — <a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a></li>
+  <li>Hover, focus and disabled states; skeleton — <a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a></li>
+  <li>Truncation rule with full text in a tooltip; ~20-character guidance — <a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a></li>
+  <li>Spacing between tags in a group (8px) and “+n” overflow tag — <a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a> · <a href="https://fluent2.microsoft.design/components/web/react/core/tag/usage" target="_blank" rel="noopener">Fluent 2 Tag</a></li>
+  <li>Interaction tag with a primary action plus dismiss — <a href="https://fluent2.microsoft.design/components/web/react/core/tag/usage" target="_blank" rel="noopener">Fluent 2 Tag</a></li>
+  <li>Keyboard model for dismiss (Tab to ×, Enter/Space removes) — <a href="https://carbondesignsystem.com/components/tag/usage/" target="_blank" rel="noopener">Carbon Tag</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include tokens and the component stylesheet. No JavaScript.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const X=(lab)=>`<button type="button" class="pds-tag__remove" aria-label="Remove ${lab}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M9.88911 2.1109C9.69385 1.91564 9.37727 1.91564 9.18201 2.1109L6.00001 5.29289L2.81803 2.11091L2.74878 2.05305C2.55391 1.91806 2.28449 1.93734 2.11092 2.11091C1.91566 2.30617 1.91566 2.62275 2.11092 2.81802L5.29291 6L2.11094 9.18197L2.05308 9.25122C1.91809 9.44608 1.93737 9.71551 2.11094 9.88908C2.3062 10.0843 2.62278 10.0843 2.81805 9.88908L6.00001 6.70711L9.18199 9.88908L9.25124 9.94694C9.44611 10.0819 9.71553 10.0626 9.8891 9.88908C10.0844 9.69382 10.0844 9.37724 9.8891 9.18198L6.70712 6L9.88911 2.81801L9.94697 2.74876C10.082 2.55389 10.0627 2.28447 9.88911 2.1109Z"/></svg></button>`;
+const PDF='<svg class="pds-tag__file-icon" viewBox="0 0 10 12" aria-hidden="true"><path d="M1.38339 0C0.996092 0 0.679214 0.330655 0.679214 0.734789V11.0218C0.679214 11.426 0.996092 11.7566 1.38339 11.7566H8.42512C8.81241 11.7566 9.12929 11.426 9.12929 11.0218V2.93916L6.3126 0H1.38339Z" fill="#E2E5E7"/><path d="M7.01678 2.93916H9.1293L6.31261 0V2.20437C6.31261 2.6085 6.62948 2.93916 7.01678 2.93916Z" fill="#B0B7BD"/><path d="M9.85842 8.97225C9.85842 9.20636 9.67358 9.39791 9.44766 9.39791H0.410768C0.184845 9.39791 0 9.20636 0 8.97225V4.71569C0 4.48158 0.184845 4.29004 0.410768 4.29004H9.44766C9.67358 4.29004 9.85842 4.48158 9.85842 4.71569V8.97225Z" fill="#F15642"/><rect x="0.704178" y="9.39792" width="8.45008" height="0.26087" fill="#B5C3CB"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.49522 8.11911C7.51388 8.13859 7.53655 8.14833 7.56322 8.14833H7.89522C7.92455 8.14833 7.94788 8.13859 7.96522 8.11911C7.98255 8.09963 7.99122 8.07598 7.99122 8.04815V6.4245H8.49122C8.51788 6.4245 8.54055 6.41476 8.55922 6.39528C8.57788 6.37581 8.58722 6.35215 8.58722 6.32433V6.07807C8.58722 6.05024 8.57788 6.02659 8.55922 6.00711C8.54055 5.98763 8.51788 5.97789 8.49122 5.97789H7.99122V5.83181C7.99122 5.7205 8.01255 5.63841 8.05522 5.58554C8.09788 5.53267 8.17122 5.50624 8.27522 5.50624H8.53122C8.55788 5.50624 8.58055 5.4965 8.59922 5.47702C8.61788 5.45754 8.62722 5.43389 8.62722 5.40607V5.15981C8.62722 5.13198 8.61788 5.10833 8.59922 5.08885C8.58055 5.06937 8.55788 5.05963 8.53122 5.05963H8.25522C7.99122 5.05963 7.79388 5.12154 7.66322 5.24537C7.53255 5.3692 7.46722 5.55772 7.46722 5.81094V5.97789H7.14322C7.11655 5.97789 7.09388 5.98763 7.07522 6.00711C7.05655 6.02659 7.04722 6.05024 7.04722 6.07807V6.32433C7.04722 6.35215 7.05655 6.37581 7.07522 6.39528C7.09388 6.41476 7.11655 6.4245 7.14322 6.4245H7.46722V8.04815C7.46722 8.07598 7.47655 8.09963 7.49522 8.11911ZM4.93922 7.92085C5.08322 8.10033 5.28988 8.19007 5.55922 8.19007C5.83655 8.19007 6.04855 8.09128 6.19522 7.89372V8.04815C6.19522 8.07598 6.20455 8.09963 6.22322 8.11911C6.24188 8.13859 6.26455 8.14833 6.29122 8.14833H6.61522C6.64455 8.14833 6.66788 8.13859 6.68522 8.11911C6.70255 8.09963 6.71122 8.07598 6.71122 8.04815V5.28502C6.71122 5.25441 6.70255 5.23007 6.68522 5.21198C6.66788 5.19389 6.64455 5.18485 6.61522 5.18485H6.26722C6.24055 5.18485 6.21788 5.19389 6.19922 5.21198C6.18055 5.23007 6.17122 5.25441 6.17122 5.28502V6.21163C6.01922 6.02798 5.81522 5.93615 5.55922 5.93615C5.28988 5.93615 5.08255 6.02728 4.93722 6.20954C4.79188 6.39181 4.71388 6.63041 4.70322 6.92537L4.69922 7.06311L4.70322 7.20085C4.71655 7.50137 4.79522 7.74137 4.93922 7.92085ZM2.36322 8.91424C2.38188 8.93233 2.40455 8.94137 2.43122 8.94137H2.77922C2.80855 8.94137 2.83188 8.93233 2.84922 8.91424C2.86655 8.89615 2.87522 8.87181 2.87522 8.8412V7.89372C3.01655 8.09128 3.22055 8.19007 3.48722 8.19007C3.75655 8.19007 3.96388 8.10033 4.10922 7.92085C4.25455 7.74137 4.33122 7.50555 4.33922 7.21337C4.34188 7.17998 4.34322 7.12989 4.34322 7.06311C4.34322 6.99633 4.34188 6.94624 4.33922 6.91285C4.32855 6.61511 4.25122 6.37789 4.10722 6.2012C3.96322 6.0245 3.75655 5.93615 3.48722 5.93615C3.20455 5.93615 2.99255 6.03911 2.85122 6.24502V6.07807C2.85122 6.05024 2.84188 6.02659 2.82322 6.00711C2.80455 5.98763 2.78055 5.97789 2.75122 5.97789H2.43122C2.40455 5.97789 2.38188 5.98694 2.36322 6.00502C2.34455 6.02311 2.33522 6.04746 2.33522 6.07807V8.8412C2.33522 8.87181 2.34455 8.89615 2.36322 8.91424ZM1.25922 8.11911C1.27788 8.13859 1.30055 8.14833 1.32722 8.14833H1.73122C1.76055 8.14833 1.78388 8.13859 1.80122 8.11911C1.81855 8.09963 1.82722 8.07598 1.82722 8.04815V7.62659C1.82722 7.59876 1.81788 7.57511 1.79922 7.55563C1.78055 7.53615 1.75788 7.52641 1.73122 7.52641H1.32722C1.30055 7.52641 1.27788 7.53615 1.25922 7.55563C1.24055 7.57511 1.23122 7.59876 1.23122 7.62659V8.04815C1.23122 8.07598 1.24055 8.09963 1.25922 8.11911ZM3.33522 7.73928C3.62055 7.73928 3.77255 7.55563 3.79122 7.18833C3.79388 7.1605 3.79522 7.11876 3.79522 7.06311C3.79522 7.00746 3.79388 6.96572 3.79122 6.93789C3.77255 6.57059 3.62055 6.38694 3.33522 6.38694C3.18322 6.38694 3.06988 6.43841 2.99522 6.54137C2.92055 6.64433 2.88055 6.76954 2.87522 6.91702C2.87255 6.95041 2.87122 7.00328 2.87122 7.07563C2.87122 7.14798 2.87255 7.20224 2.87522 7.23841C2.88055 7.37755 2.92188 7.4958 2.99922 7.5932C3.07655 7.69059 3.18855 7.73928 3.33522 7.73928ZM5.71122 7.73928C5.86322 7.73928 5.97588 7.6885 6.04922 7.58694C6.12255 7.48537 6.16322 7.35946 6.17122 7.2092C6.17388 7.17581 6.17522 7.12294 6.17522 7.05059C6.17522 6.97546 6.17388 6.9212 6.17122 6.88781C6.16588 6.74867 6.12455 6.63041 6.04722 6.53302C5.96988 6.43563 5.85788 6.38694 5.71122 6.38694C5.42588 6.38694 5.27388 6.57059 5.25522 6.93789L5.25122 7.06311L5.25522 7.18833C5.27388 7.55563 5.42588 7.73928 5.71122 7.73928Z" fill="#fff"/></svg>';
+const CARET='<svg class="pds-tag__caret" viewBox="0 0 8 5" aria-hidden="true"><path d="M7.5 1.20834L6.75041 0.5L4 3.10005L1.24907 0.500985L0.5 1.20834L3.62547 4.16183L4 4.5L4.37453 4.16183L7.5 1.20834Z"/></svg>';
+const TIP='<svg class="pds-tag__tip" viewBox="0 0 10 14" aria-hidden="true"><path d="M10 0L0 7L10 14V0Z"/></svg>';
+let gid=0;
+const SPARK=()=>{const i=++gid;return `<svg class="pds-tag__spark" viewBox="0 0 10 12.5" aria-hidden="true"><defs><linearGradient id="sg${i}a" x1="5" y1="20.26" x2="5" y2="-0.52" gradientUnits="userSpaceOnUse"><stop class="s0"/><stop class="s1" offset="1"/></linearGradient><linearGradient id="sg${i}b" x1="8.3" y1="6.52" x2="8.3" y2="1.12" gradientUnits="userSpaceOnUse"><stop class="s0"/><stop class="s1" offset="1"/></linearGradient></defs><path fill="url(#sg${i}a)" d="M5 0L5.6107 3.72156C5.77931 4.74902 6.56706 5.56441 7.5881 5.76832L10 6.25L7.5881 6.73168C6.56706 6.93559 5.77931 7.75098 5.6107 8.77844L5 12.5L4.3893 8.77844C4.22069 7.75098 3.43294 6.93559 2.4119 6.73168L0 6.25L2.4119 5.76832C3.43294 5.56441 4.22069 4.74902 4.3893 3.72156L5 0Z"/><path fill="url(#sg${i}b)" d="M8.3 1.24994L8.45878 2.21755C8.50262 2.48468 8.70744 2.69669 8.97291 2.7497L9.6 2.87494L8.97291 3.00018C8.70744 3.05319 8.50262 3.26519 8.45878 3.53233L8.3 4.49994L8.14122 3.53233C8.09738 3.26519 7.89256 3.05319 7.62709 3.00018L7 2.87494L7.62709 2.7497C7.89256 2.69669 8.09738 2.48469 8.14122 2.21755L8.3 1.24994Z"/></svg>`};
+const t=(cls,txt,extra="")=>`<span class="pds-tag ${cls}"><span class="pds-tag__text">${txt}</span>${extra}</span>`;
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+
+const GROUPS=[];
+function G(title,sub,light,dark){GROUPS.push({title,sub,light,dark})}
+// 1 Small Filled square
+G("Tag · Small · Filled · Rounded=No","16 · Color × Mode",
+  ["purple","red","maroon","brown","orange","cyan","blue","green","grey","yellow","default"].map(c=>[`Color=${cap(c)}`,t("pds-tag--"+c,"Tag Text")]),
+  ["purple","default","red","maroon","brown"].map(c=>[`Color=${cap(c)} · Dark`,t("pds-tag--dark pds-tag--"+c,"Tag Text")]));
+// 2 Rounded
+G("Tag · Small · Filled · Rounded=Yes","15 · Light hides the ×, Dark shows it",
+  ["maroon","brown","cyan","green","purple","yellow","blue","orange","red","default"].map(c=>[`Color=${cap(c)}`,t("pds-tag--rounded pds-tag--"+c,"Tag Text")]),
+  ["default","purple","red","maroon","brown"].map(c=>[`Color=${cap(c)} · Dark · ×`,t("pds-tag--rounded pds-tag--dark pds-tag--"+c,"Tag Text",X("Tag Text"))]));
+// 3 Outline
+G("Tag · Small · Outline · Rounded=Yes","17 · Right Icon = ×",
+  ["maroon","purple","brown","blue","green","red"].map(c=>[`Color=${cap(c)}`,t("pds-tag--outline pds-tag--"+c,"Tag Text")])
+  .concat(["maroon","purple","cyan","blue","green","red"].map(c=>[`Color=${cap(c)} · ×`,t("pds-tag--outline pds-tag--"+c,"Transporter",X("Transporter"))]))
+  .concat([["Filled · Brown · × (drawn as Outline)",t("pds-tag--outline pds-tag--brown","Transporter",X("Transporter"))],["Color=Neutral",t("pds-tag--outline pds-tag--neutral","Tag Text")]]),
+  [["Color=Maroon · Dark · ×",t("pds-tag--outline pds-tag--dark pds-tag--maroon","Tag Text",X("Tag Text"))],["Color=Red · Dark · ×",t("pds-tag--outline pds-tag--dark pds-tag--red","Tag Text",X("Tag Text"))],["Filled · Brown · Dark · × (drawn as Outline)",t("pds-tag--outline pds-tag--dark pds-tag--brown","Tag Text",X("Tag Text"))]]);
+// 4 Large
+G("Tag · Large · Filled · Rounded=No","7 · Read Only Label off",
+  ["brown","maroon","green","purple","cyan","red","blue"].map(c=>[`Color=${cap(c)}`,t("pds-tag--large pds-tag--"+c,"Text Here")]),[]);
+// 5 Nimbus
+G("Tag · Large · Filled · Rounded=Yes (Nimbus)","3",
+  [["Color=Orange",t("pds-tag--nimbus pds-tag--orange","Inbound")],["Color=Blue",t("pds-tag--nimbus pds-tag--blue","Start")],["Color=Default",t("pds-tag--nimbus pds-tag--default","Text")]],[]);
+// 6 Medium
+const md=(cls)=>`<span class="pds-tag pds-tag--medium ${cls}"><span class="pds-tag__label">Label</span><span class="pds-tag__label" aria-hidden="true">:</span><span class="pds-tag__value">Info</span></span>`;
+G("Tag · Medium · Filled (Label Readonly Text)","14",
+  ["maroon","purple","brown","cyan","green","blue","grey","neutral"].map(c=>[`Color=${cap(c)}`,md("pds-tag--"+c)]),
+  ["maroon","purple","brown","cyan","green","red"].map(c=>[`Color=${cap(c)} · Dark`,md("pds-tag--dark pds-tag--"+c)]));
+// 7 Attachment + file
+G("Tag · Attachment / File","4 · Left Icon = file format, Right Icon = ×",
+  [["Outline · Default · Left Icon",`<span class="pds-tag pds-tag--file">${PDF}<span class="pds-tag__text">LR_Receipt N...</span></span>`],
+   ["Outline · Default · Left + Right Icon",`<span class="pds-tag pds-tag--file">${PDF}<span class="pds-tag__text">LR_Receipt N...</span>${X("LR_Receipt N...")}</span>`],
+   ["Filled · Default · Left + Right Icon",`<span class="pds-tag pds-tag--attachment"><span class="pds-tag__file">${PDF}<span class="pds-tag__text">Filename.ext</span></span>${X("Filename.ext")}</span>`]],
+  [["Filled · Default · Dark · Left + Right Icon",`<span class="pds-tag pds-tag--attachment pds-tag--dark"><span class="pds-tag__file">${PDF}<span class="pds-tag__text">Filename.ext</span></span>${X("Filename.ext")}</span>`]]);
+// Multiselect
+G("Multiselect Tag","4 · Type × Theme",
+  [["Number Only",t("pds-tag--count","+ 2")],["Number + Unit",`<span class="pds-tag pds-tag--count-unit"><span>+ 2</span><span>Units</span></span>`]],
+  [["Number Only · Dark",t("pds-tag--count pds-tag--dark","+ 2")],["Number + Unit · Dark",`<span class="pds-tag pds-tag--count-unit pds-tag--dark"><span>+ 2</span><span>Units</span></span>`]]);
+// Input
+const dd=(cls)=>`<span class="pds-tag pds-tag--input pds-tag--input-dropdown ${cls}"><span><span class="pds-tag__hash">#</span> <span class="pds-tag__add">Add Tag</span></span>${CARET}</span>`;
+G("Input Tag","7 · Type × Mode × Remove",
+  [["Text Tag · Remove=Yes",t("pds-tag--input","Text Input",X("Text Input"))],["Text Tag · Remove=No",t("pds-tag--input","Text Input")],["Drop down Tag",dd("")],
+   ["Search Tag · Remove=Yes",`<span class="pds-tag pds-tag--search"><span class="pds-tag__search-label">Search Label</span><span class="pds-tag__search-field"><span class="pds-tag__text">Text Input</span>${X("Text Input")}</span></span>`]],
+  [["Text Tag · Dark · Remove=Yes",t("pds-tag--input pds-tag--dark","Text Input",X("Text Input"))],["Text Tag · Dark · Remove=No",t("pds-tag--input pds-tag--dark","Text Input")],["Drop down Tag · Dark",dd("pds-tag--dark")]]);
+// Filter
+G("Filter Tag","2",[["Mode=Light",t("pds-tag--filter","Filter Name")]],[["Mode=Dark",t("pds-tag--filter pds-tag--dark","Filter Name")]]);
+// Pointed
+G("Pointed Tag","2",[["Color=Red",`<span class="pds-tag pds-tag--pointed pds-tag--red">${TIP}<span class="pds-tag__body">Rejected</span></span>`],["Color=Green",`<span class="pds-tag pds-tag--pointed pds-tag--green">${TIP}<span class="pds-tag__body">Approved</span></span>`]],[]);
+// AI
+G("Tag/AI","2 · Beta = boolean (on)",[["Theme=Light",`<span class="pds-tag pds-tag--ai">${SPARK()}<span class="pds-tag__text">Tag Text</span><span class="pds-tag__beta">Beta</span></span>`]],
+  [["Theme=Dark",`<span class="pds-tag pds-tag--ai pds-tag--dark">${SPARK()}<span class="pds-tag__text">Tag Text</span><span class="pds-tag__beta">Beta</span></span>`]]);
+
+const P=$("#vpanel");let total=0;
+GROUPS.forEach(g=>{const h=document.createElement("h3");h.className="grp";h.innerHTML=`${g.title} <span>${g.sub}</span>`;P.appendChild(h);
+  [[g.light,""],[g.dark,"dark"]].forEach(([list,cls])=>{if(!list.length)return;const r=document.createElement("div");r.className="vrow "+cls;list.forEach(([lab,html])=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<div class="sw">${html}</div><span class="lbl">${lab}</span>`;r.appendChild(c);total++});P.appendChild(r)})});
+P.dataset.count=total;
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/tag.css">
+
+<!-- Small · Filled (square) · colour [· --dark] -->
+<span class="pds-tag pds-tag--purple"><span class="pds-tag__text">Tag Text</span></span>
+
+<!-- Rounded / Outline / Large / Nimbus: add the family class -->
+<span class="pds-tag pds-tag--rounded pds-tag--cyan"><span class="pds-tag__text">Tag Text</span></span>
+<span class="pds-tag pds-tag--outline pds-tag--blue">
+  <span class="pds-tag__text">Transporter</span>
+  <button type="button" class="pds-tag__remove" aria-label="Remove Transporter"><svg viewBox="0 0 12 12"><path d="…"/></svg></button>
+</span>
+<span class="pds-tag pds-tag--large pds-tag--green"><span class="pds-tag__text">Text Here</span></span>
+<span class="pds-tag pds-tag--nimbus pds-tag--orange"><span class="pds-tag__text">Inbound</span></span>
+
+<!-- Medium: read-only label -->
+<span class="pds-tag pds-tag--medium pds-tag--blue">
+  <span class="pds-tag__label">Label</span><span class="pds-tag__label" aria-hidden="true">:</span><span class="pds-tag__value">Info</span>
+</span>
+
+<!-- Other tag components -->
+<span class="pds-tag pds-tag--count">+ 2</span>
+<span class="pds-tag pds-tag--input"><span class="pds-tag__text">Text Input</span><button class="pds-tag__remove" …></button></span>
+<span class="pds-tag pds-tag--filter">Filter Name</span>
+<span class="pds-tag pds-tag--pointed pds-tag--red"><svg class="pds-tag__tip" …></svg><span class="pds-tag__body">Rejected</span></span>
+<span class="pds-tag pds-tag--ai"><svg class="pds-tag__spark" …></svg><span class="pds-tag__text">Tag Text</span><span class="pds-tag__beta">Beta</span></span>`;
+
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

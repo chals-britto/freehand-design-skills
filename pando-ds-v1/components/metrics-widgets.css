@@ -1,0 +1,334 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Metrics + Widgets
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › Filter w/Metrics (3027:387)
+     · Metrics          3029:4841  (11 variants)  → .pds-metric
+     · .Widget Type     3029:4839  (1)            → .pds-metric-group__type
+     · Widget Group     3028:3470  (5)            → .pds-metric-group
+     · Widgets          6025:2174  (9)            → .pds-widget
+   Built 2026-10-28 · no review yet, every published variant = Keep.
+   Requires ../tokens.css, icons.css, button.css (More Actions icon button).
+   Self-contained: every class is prefixed pds-metric / pds-metric-group /
+   pds-widget so Top Filter can compose it without collisions.
+   No charts in these sets — tiles are text + icons only.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Metrics: colours exactly as the Figma variants use them ─────── */
+  --metric-label:            #20354E;                       /* off-token in Figma */
+  --metric-num-from:         #3F6ABF;                       /* off-token in Figma — number gradient, light end (top) */
+  --metric-num-to:           #18283B;                       /* off-token in Figma — number gradient, dark end */
+  --metric-num:              linear-gradient(180deg, var(--metric-num-from) -4.15%, var(--metric-num-to) 162%);
+  --metric-icon:             #36577E;                       /* off-token in Figma — Dashboard indicator */
+  --metric-pin:              var(--metric-num-from);        /* #3F6ABF — Pin glyph (1-stop gradient = solid) */
+  --metric-unpin:            color-mix(in srgb, var(--metric-label) 50%, transparent); /* #20354E @ 50% */
+  --metric-pinbox-bg:        color-mix(in srgb, var(--white) 30%, transparent);
+  --metric-highlight:        #B495F7;                       /* off-token in Figma — Highlight Line */
+
+  --metric-noclick-border:   var(--white);                  /* No Click Default, 0.5 inside */
+  --metric-pinned-border:    color-mix(in srgb, var(--metric-label) 50%, transparent);
+  --metric-unpinned-bg:      color-mix(in srgb, var(--white) 50%, transparent);
+  --metric-unpinned-border:  color-mix(in srgb, var(--dark-label-text) 50%, transparent); /* #D5DAF4 @ 50% */
+
+  --metric-clickable-bg:     color-mix(in srgb, var(--white) 65%, transparent);
+  --metric-active-bg:        var(--metric-num-from);        /* #3F6ABF (1-stop gradient = solid) */
+  --metric-active-fg:        var(--white);
+  --metric-active-num:       #CADCFF;                       /* off-token in Figma */
+  --metric-hover-bg:         rgb(50 85 153 / .4);           /* #325599 @ 40% — off-token in Figma */
+  --metric-hover-fg:         var(--white);
+  --metric-hover-blur:       10px;
+
+  --metric-risk-bg:          var(--status-orange-light);    /* #FFF4E5 */
+  --metric-risk-icon:        var(--status-orange-dark);     /* #F94200 */
+  --metric-risk-num:         var(--action-red);             /* #E25757 */
+
+  --metric-pinnable-bg:      color-mix(in srgb, var(--grey-light) 30%, transparent); /* #E7E7E7 @ 30% */
+  --metric-pinnable-pinned-bg: color-mix(in srgb, var(--dark-label-text) 50%, transparent); /* #D5DAF4 @ 50% */
+
+  --metric-glass-bg:         color-mix(in srgb, var(--white) 80%, transparent); /* 1-stop radial, 80% */
+  --metric-glass-border:     var(--border-blue);            /* #E9F1F5, 0.5 centre */
+  --metric-glass-blur:       50px;
+  --metric-glass-pinned-bg:  linear-gradient(180deg, rgb(255 255 255 / .4), rgb(255 255 255 / 0)),
+                             color-mix(in srgb, var(--status-green-light) 40%, transparent); /* #D5F9D1 @ 40% */
+  --metric-glass-pinned-border: color-mix(in srgb, var(--dark-highlight-green) 50%, transparent); /* #1FCD93 @ 50% */
+  --metric-glass-pinned-fg:  var(--status-cyan-dark);       /* #006265 */
+  --metric-glass-pinned-num: linear-gradient(180deg, #19A476 -4.15%, var(--status-cyan-dark) 162%); /* #19A476 off-token in Figma */
+
+  /* ── Metrics: measured ───────────────────────────────────────────── */
+  --metric-width:        100px;   /* Clickable, No Click Default */
+  --metric-width-pin:    140px;   /* any tile with a pin */
+  --metric-height:       70px;
+  --metric-pad:          var(--space-10);
+  --metric-gap:          var(--space-10);
+  --metric-stat-gap:     6px;     /* icon ↔ number */
+  --metric-row-gap:      var(--space-10);
+  --metric-stat-icon:    10px;    /* 14px indicator drawn at 10 */
+  --metric-pinbox:       24px;
+  --metric-pinbox-pad:   5px;
+  --metric-pinbox-radius: var(--radius-12);
+  --metric-border-w:     .5px;
+  --metric-highlight-w:  1.5px;
+  --metric-hover-radius: 2px;
+  --metric-label-font:   600 10px/10px var(--font-family); /* Open Sans SemiBold 10 / 100% */
+  --metric-num-font:     700 20px/20px var(--font-family); /* Bold 20 / 100% (No Click) */
+  --metric-num-font-tight: 700 20px/16px var(--font-family); /* Bold 20 / 80% (Clickable, Pinnable) */
+
+  /* ── Widget Group + .Widget Type ─────────────────────────────────── */
+  --metric-type-width:   22px;
+  --metric-type-pad:     3px;
+  --metric-type-bg:      color-mix(in srgb, var(--white) 25%, transparent);
+  --metric-type-fg:      var(--dark-darker);            /* #24242F */
+  --metric-type-radius:  2px 0 0 2px;
+  --metric-type-font:    700 8px/8px var(--font-family); /* Bold 8 / 100%, +0.5 tracking, UPPER */
+  --metric-divider:      var(--border-blue-grey);       /* #B5C3CB */
+  --metric-divider-w:    .5px;
+  --metric-divider-h:    69px;
+  --metric-last-radius:  0 2px 0 0;
+
+  /* ── Widgets: colours ────────────────────────────────────────────── */
+  --widget-radius:       20px;
+  --widget-shadow:       0 4px 20px rgb(0 0 0 / .01);  /* Figma effect; not one of --shadow-1..4 */
+  --widget-dark-bg:      rgb(72 72 88 / .3);           /* #484858 @ 30% — off-token in Figma */
+  --widget-dark-disabled-bg: rgb(72 72 88 / .4);       /* #484858 @ 40% */
+  --widget-dark-grad:    linear-gradient(90deg, var(--status-green-dark), var(--dark-light)); /* #041F04 → #343440 */
+  --widget-dark-fg:      var(--white);
+  --widget-dark-heading: var(--pando-light);           /* #EEF2F4 */
+  --widget-dark-muted:   var(--dark-input-text);       /* #8A8A9E — disabled text, drag handle */
+  --widget-dark-edge:    var(--highlight-blue-light);  /* #9CD2FF — Default bottom edge */
+  --widget-dark-edge-muted: color-mix(in srgb, var(--dark-input-text) 30%, transparent); /* #8A8A9E @ 30% */
+  --widget-hover-edge:   #0078DD;                      /* off-token in Figma (≈ --pando-blue #0076DD) */
+  --widget-pin-bg:       #484858;                      /* off-token in Figma */
+
+  --widget-light-bg:     color-mix(in srgb, var(--white) 60%, transparent);
+  --widget-light-active-bg: var(--white);
+  --widget-light-edge:   var(--accent-green-medium);   /* #67AC5D */
+  --widget-light-heading: var(--text-medium);          /* #545454 */
+  --widget-light-divider: var(--border-blue-grey);     /* #B5C3CB */
+  --widget-dark-divider: var(--border-blue);           /* #E9F1F5 */
+  --widget-up:           var(--dark-highlight-green);  /* #1FCD93 */
+  --widget-down:         var(--action-red);            /* #E25757 */
+
+  --widget-solid-light-edge: #003D31;                  /* off-token in Figma */
+  --widget-solid-dark-edge:  var(--accent-dark-blue-bg); /* #E0EBF6 */
+  --widget-solid-dark-icon:  #FFE01B;                  /* off-token in Figma */
+  --widget-solid-blur:   4px;
+
+  /* ── Widgets: measured ───────────────────────────────────────────── */
+  --widget-width:        180px;
+  --widget-pad:          var(--space-10) var(--space-15);
+  --widget-pad-edit:     var(--space-10) var(--space-15) var(--space-10) var(--space-10);
+  --widget-gap:          4px;
+  --widget-row-gap:      6px;     /* Count ↔ Additional (dark) */
+  --widget-row-gap-light: var(--space-10);
+  --widget-edge:         1px;
+  --widget-hover-side:   .2px;
+  --widget-hover-edge-w: 1.5px;
+  --widget-divider-w:    24px;
+  --widget-side:         24px;    /* edit-mode right column */
+  --widget-drag-pad:     var(--space-10) var(--space-2) 0 0;
+  --widget-solid-width:  205px;
+  --widget-solid-pad:    var(--space-10) 20px var(--space-15) 20px;
+  --widget-solid-gap:    20px;
+  --widget-count-font:   700 24px/normal var(--font-family); /* Bold 24 / auto */
+  --widget-unit-font:    400 24px/normal var(--font-family); /* Regular 24 / auto */
+  --widget-heading-font: 400 12px/normal var(--font-family); /* Regular 12 / auto */
+  --widget-trend-font:   400 10px/normal var(--font-family);
+  --widget-label-font:   600 12px/12px var(--font-family);   /* SemiBold 12 / 100% */
+  --widget-num-font:     700 24px/19px var(--font-family);   /* Bold 24 / 80% */
+}
+
+/* ════════════════════════ Metric ════════════════════════ */
+.pds-metric {
+  --_bg: transparent; --_bd: transparent; --_fg: var(--metric-label);
+  --_num: var(--metric-num); --_icon: var(--metric-icon);
+  position: relative;
+  box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: flex-start;
+  gap: var(--metric-gap);
+  width: var(--metric-width); height: var(--metric-height);
+  padding: var(--metric-pad);
+  background: var(--_bg);
+  box-shadow: inset 0 0 0 var(--metric-border-w) var(--_bd); /* Figma stroke inside */
+  color: var(--_fg);
+  font-family: var(--font-family);
+  text-align: left;
+}
+/* Label: Figma text is "\nLabel" at 10/100% — an empty first line, so the word sits at the bottom of a 20px box */
+.pds-metric__label { display: block; margin: 0; padding-top: 10px; font: var(--metric-label-font); color: var(--_fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pds-metric > * { flex-shrink: 0; } /* Figma content is 74px in a 70px tile (pin rows): it overflows evenly, never squeezes the label */
+.pds-metric__row  { display: flex; align-items: center; justify-content: space-between; gap: var(--metric-row-gap); }
+.pds-metric__stat { display: inline-flex; align-items: center; gap: var(--metric-stat-gap); }
+.pds-metric__stat .pds-icon { width: var(--metric-stat-icon); height: var(--metric-stat-icon); color: var(--_icon); }
+.pds-metric__num {
+  font: var(--metric-num-font-tight);
+  background: var(--_num); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.pds-metric--no-click .pds-metric__num { font: var(--metric-num-font); }
+.pds-metric__num--solid { background: none; color: var(--_numc); -webkit-text-fill-color: var(--_numc); }
+
+/* Pin box: 24 circle, 5 padding, 14 glyph */
+.pds-metric__pin {
+  box-sizing: border-box; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--metric-pinbox); height: var(--metric-pinbox); padding: var(--metric-pinbox-pad);
+  border: 0; border-radius: var(--metric-pinbox-radius);
+  background: transparent; color: var(--metric-unpin); cursor: pointer;
+  position: relative; z-index: 1;
+}
+.pds-metric__pin .pds-icon { width: 14px; height: 14px; }
+.pds-metric__pin[aria-pressed="true"] { background: var(--metric-pinbox-bg); color: var(--metric-pin); }
+
+/* Highlight Line: 1.5px #B495F7 along the bottom edge (absolute in Figma) */
+.pds-metric--clickable::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: calc(-1 * var(--metric-highlight-w) / 2);
+  height: var(--metric-highlight-w); background: var(--metric-highlight); pointer-events: none;
+}
+
+/* Full-tile hit area for clickable tiles (so a pin button can sit on top) */
+.pds-metric__hit { position: absolute; inset: 0; border: 0; padding: 0; margin: 0; background: none; cursor: pointer; }
+.pds-metric__hit:focus-visible, .pds-metric__pin:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+
+/* With a pin row the content is centred vertically (Figma: primary CENTER) */
+.pds-metric--pin { width: var(--metric-width-pin); justify-content: center; }
+
+/* ── Type × State × Alt ─────────────────────────────────── */
+.pds-metric--no-click                       { --_bd: var(--metric-noclick-border); }
+.pds-metric--no-click.pds-metric--pinned    { --_bd: var(--metric-pinned-border); }
+.pds-metric--no-click.pds-metric--unpinned  { --_bg: var(--metric-unpinned-bg); --_bd: var(--metric-unpinned-border); }
+
+.pds-metric--clickable                      { --_bg: var(--metric-clickable-bg); }
+.pds-metric--clickable.is-hover,
+.pds-metric--clickable:not(.is-active):not(.pds-metric--risk):hover {
+  --_bg: var(--metric-hover-bg); --_fg: var(--metric-hover-fg);
+  border-radius: var(--metric-hover-radius);
+  -webkit-backdrop-filter: blur(var(--metric-hover-blur)); backdrop-filter: blur(var(--metric-hover-blur));
+}
+/* Figma Hover hides the number and its icon is an empty component — kept as Figma */
+.pds-metric--clickable.is-hover .pds-metric__stat,
+.pds-metric--clickable:not(.is-active):not(.pds-metric--risk):hover .pds-metric__stat { visibility: hidden; }
+.pds-metric--clickable.is-active            { --_bg: var(--metric-active-bg); --_fg: var(--metric-active-fg); --_icon: var(--metric-active-num); --_numc: var(--metric-active-num); }
+.pds-metric--clickable.is-active .pds-metric__num { background: none; color: var(--_numc); -webkit-text-fill-color: var(--_numc); }
+
+.pds-metric--risk                           { --_bg: var(--metric-risk-bg); --_icon: var(--metric-risk-icon); --_numc: var(--metric-risk-num); }
+.pds-metric--risk::after                    { content: none; }  /* Risk has no Highlight Line in Figma */
+.pds-metric--risk .pds-metric__num          { background: none; color: var(--_numc); -webkit-text-fill-color: var(--_numc); }
+
+.pds-metric--pinnable                       { --_bg: var(--metric-pinnable-bg); }
+.pds-metric--pinnable.pds-metric--pinned    { --_bg: var(--metric-pinnable-pinned-bg); }
+.pds-metric--glass {
+  --_bg: var(--metric-glass-bg); --_bd: var(--metric-glass-border);
+  -webkit-backdrop-filter: blur(var(--metric-glass-blur)); backdrop-filter: blur(var(--metric-glass-blur));
+}
+.pds-metric--glass.pds-metric--pinned {
+  --_bg: var(--metric-glass-pinned-bg); --_bd: var(--metric-glass-pinned-border);
+  --_fg: var(--metric-glass-pinned-fg); --_icon: var(--metric-glass-pinned-fg); --_num: var(--metric-glass-pinned-num);
+}
+.pds-metric--glass.pds-metric--pinned .pds-metric__pin[aria-pressed="true"] { color: var(--metric-glass-pinned-fg); }
+
+/* ════════════════════════ Widget Group ════════════════════════ */
+.pds-metric-group { display: inline-flex; align-items: center; height: var(--metric-height); }
+.pds-metric-group__type {
+  box-sizing: border-box; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  width: var(--metric-type-width); height: var(--metric-height); padding: 0 var(--metric-type-pad);
+  background: var(--metric-type-bg); border-radius: var(--metric-type-radius);
+}
+.pds-metric-group__type span {
+  writing-mode: vertical-rl; transform: rotate(180deg);  /* Figma: rotated 90°, reads bottom → top */
+  font: var(--metric-type-font); letter-spacing: .5px; text-transform: uppercase;
+  color: var(--metric-type-fg); white-space: nowrap;
+}
+.pds-metric-group__divider { flex: none; width: var(--metric-divider-w); height: var(--metric-divider-h); background: var(--metric-divider); }
+.pds-metric-group > .pds-metric:last-child { border-radius: var(--metric-last-radius); }
+
+/* ════════════════════════ Widget ════════════════════════ */
+.pds-widget {
+  --_bg: var(--widget-dark-bg); --_edge: var(--widget-dark-edge);
+  --_fg: var(--widget-dark-fg); --_heading: var(--widget-dark-heading); --_div: var(--widget-dark-divider);
+  position: relative; box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: center; gap: var(--widget-gap);
+  width: var(--widget-width); padding: var(--widget-pad);
+  border-radius: var(--widget-radius);
+  background: var(--_bg);
+  box-shadow: inset 0 calc(-1 * var(--widget-edge)) 0 var(--_edge), var(--widget-shadow); /* bottom stroke only, inside */
+  color: var(--_fg); font-family: var(--font-family); text-align: left;
+}
+.pds-widget__content { display: flex; flex-direction: column; gap: var(--widget-gap); min-width: 0; flex: 1; }
+.pds-widget__metrics { display: flex; align-items: center; gap: var(--widget-row-gap); }
+.pds-widget__count { font: var(--widget-count-font); color: var(--_fg); margin: 0; }
+.pds-widget__additional { display: inline-flex; align-items: center; gap: var(--widget-gap); }
+.pds-widget__additional::before { content: ""; width: var(--widget-divider-w); height: 1px; background: var(--_div); }
+.pds-widget__unit { font: var(--widget-unit-font); color: var(--_fg); }
+.pds-widget__heading { display: flex; align-items: center; gap: var(--widget-gap); font: var(--widget-heading-font); color: var(--_heading); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pds-widget__trend { margin: 0; font: var(--widget-trend-font); }
+.pds-widget__trend--up   { color: var(--widget-up); }
+.pds-widget__trend--down { color: var(--widget-down); }
+
+/* Theme=Light, Type=Transparent: gradient numbers */
+.pds-widget--light {
+  --_bg: var(--widget-light-bg); --_edge: var(--widget-light-edge);
+  --_heading: var(--widget-light-heading); --_div: var(--widget-light-divider);
+}
+.pds-widget--light .pds-widget__metrics { gap: var(--widget-row-gap-light); }
+.pds-widget--light .pds-widget__count,
+.pds-widget--light .pds-widget__unit {
+  background: var(--metric-num); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.pds-widget--light.is-active { --_bg: var(--widget-light-active-bg); }
+
+/* Theme=Dark states */
+.pds-widget--dark.is-active,
+.pds-widget--dark.pds-widget--edit { --_bg: var(--widget-dark-grad); --_edge: var(--widget-dark-edge-muted); }
+.pds-widget--dark.is-disabled { --_bg: var(--widget-dark-disabled-bg); --_edge: var(--widget-dark-edge-muted); --_heading: var(--widget-dark-muted); }
+.pds-widget--dark.is-disabled .pds-widget__content > .pds-widget__metrics > .pds-widget__count { color: var(--widget-dark-muted); }
+.pds-widget--dark.pds-widget--edit.is-hover,
+.pds-widget--dark.pds-widget--edit:not(.is-disabled):hover {
+  --_bg: var(--widget-dark-grad);
+  box-shadow: inset 0 0 0 var(--widget-hover-side) var(--widget-hover-edge),
+              inset 0 calc(-1 * var(--widget-hover-edge-w)) 0 var(--widget-hover-edge), var(--widget-shadow);
+}
+
+/* Mode=Edit: drag handle · content · actions column */
+.pds-widget--edit { flex-direction: row; align-items: center; gap: var(--widget-gap); padding: var(--widget-pad-edit); }
+.pds-widget__drag { flex: none; align-self: stretch; display: flex; align-items: flex-start; padding: var(--widget-drag-pad); color: var(--widget-dark-muted); cursor: grab; }
+.pds-widget__drag .pds-icon { width: 7px; height: 11px; }
+.pds-widget--edit.is-hover .pds-widget__drag,
+.pds-widget--edit:not(.is-disabled):hover .pds-widget__drag { color: var(--widget-hover-edge); }
+.pds-widget__side { flex: none; align-self: stretch; width: var(--widget-side); display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: var(--widget-gap); }
+/* More Actions = kit Button (Icon Button · No Background · Small); glyph white on the dark widget */
+.pds-widget__side .pds-button--icon-plain { --_fg: var(--widget-dark-fg); }
+.pds-widget__side .pds-button--icon-plain:hover:not(:disabled) { --_fg: var(--widget-dark-fg); --_bg: transparent; }
+.pds-widget__pin {
+  box-sizing: border-box; flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: var(--metric-pinbox); height: var(--metric-pinbox); padding: var(--metric-pinbox-pad);
+  border: 0; border-radius: var(--metric-pinbox-radius); background: var(--widget-pin-bg);
+  color: var(--widget-dark-fg); cursor: pointer;
+}
+.pds-widget__pin .pds-icon { width: 14px; height: 14px; }
+.pds-widget.is-disabled .pds-widget__pin { color: var(--widget-dark-muted); }
+.pds-widget__pin:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+
+/* Type=Solid: Label + stat (same anatomy as a Metric, larger) */
+.pds-widget--solid {
+  width: var(--widget-solid-width); padding: var(--widget-solid-pad); gap: var(--widget-solid-gap); justify-content: flex-start;
+  -webkit-backdrop-filter: blur(var(--widget-solid-blur)); backdrop-filter: blur(var(--widget-solid-blur));
+}
+.pds-widget--solid.pds-widget--light { --_edge: var(--widget-solid-light-edge); }
+.pds-widget--solid.pds-widget--dark  { --_bg: var(--widget-dark-grad); --_edge: var(--widget-solid-dark-edge); }
+.pds-widget__label { margin: 0; padding-top: 12px; font: var(--widget-label-font); color: var(--metric-label); } /* "\nLabel" at 12/100% */
+.pds-widget--dark .pds-widget__label { color: var(--widget-dark-fg); }
+.pds-widget__stat { display: inline-flex; align-items: center; gap: var(--metric-stat-gap); }
+.pds-widget__stat .pds-icon { width: var(--metric-stat-icon); height: var(--metric-stat-icon); color: var(--metric-icon); }
+.pds-widget--dark .pds-widget__stat .pds-icon { color: var(--widget-solid-dark-icon); }
+.pds-widget__num {
+  font: var(--widget-num-font);
+  background: var(--metric-num); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.pds-widget--dark .pds-widget__num { background: none; color: var(--widget-dark-heading); -webkit-text-fill-color: var(--widget-dark-heading); }
+
+/* Pin toggles carry both glyphs; aria-pressed picks one (Pin = pinned, Unpin = not pinned) */
+.pds-metric__pin .is-pin, .pds-widget__pin .is-pin { display: none; }
+.pds-metric__pin[aria-pressed="true"] .is-pin, .pds-widget__pin[aria-pressed="true"] .is-pin { display: inline-flex; }
+.pds-metric__pin[aria-pressed="true"] .is-unpin, .pds-widget__pin[aria-pressed="true"] .is-unpin { display: none; }

@@ -1,0 +1,231 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — New Main Menu (organism: 60px rail + 250px fly-out, 3 levels)
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟢 Menu (32:0)
+     › component set "New Main Menu" (2280:1704) — Type = Default · Analytics ·
+       Master Data · Procure · TMS · FAP · Integrations · Settings · Profile (310 × 718)
+     › parts: .Menu-Item (803:709, 3) · .Fly Out (2459:5585) · .Secondary menu
+       (2379:6919, 5) · .Secondary menu/Arrow/Default + /Hover (2459:5420, 2459:5423)
+       · .Menu-Heading (2455:5079, 2) · .Third level menu (2448:4408, 2)
+       · .Name (2282:4032) · .Logout (2769:15877, 2)
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css, icons.css, scrollbar.css, avatar.css, tooltip.css.
+   .pds-menu-item is its own block: the Old Menu (main-menu-legacy) reuses it.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colours ── */
+  --main-menu-bg:            var(--white);                 /* rail "Menu" frame #FFFFFF */
+  --menu-item-bg:            var(--white);                 /* .Menu-Item Default #FFFFFF */
+  --menu-item-bg-hover:      color-mix(in srgb, var(--grey-light) 30%, transparent); /* "Opacity/E7E7E7-Light-30" — #E7E7E7 @ 30% */
+  --menu-item-bg-active:     var(--accent-light-blue-bg);  /* .Menu-Item Active #F3F6FC */
+  --menu-item-icon:          var(--pando-dark);            /* single-colour icons (Menu/Close); two-colour Menu/* keep #0076DD + #234357 */
+  --main-menu-fly-bg:        var(--accent-light-blue-bg);  /* .Fly Out #F3F6FC */
+  --main-menu-heading-fg:    var(--pando-blue);            /* .Menu-Heading #0076DD */
+  --main-menu-row-fg:        var(--pando-dark);            /* .Secondary menu / .Third level text #234357 */
+  --main-menu-section-fg:    var(--pando-blue);            /* section label rows (instance override in Figma) #0076DD */
+  --main-menu-row-bg-hover:  var(--white);                 /* .Secondary menu Hover (Single, Arrow) #FFFFFF */
+  --main-menu-third-bg-hover:var(--pando-light);           /* .Third level menu hover + Arrow Expand Hover #EEF2F4 */
+  --main-menu-line:          var(--border-blue-grey);      /* "Sub menu line" #B5C3CB, 1px */
+  --main-menu-caret:         var(--pando-dark);            /* Navigation/Right-Caret #234357 */
+  --main-menu-avatar-bg:     var(--pando-light);           /* User-Image ellipse #EEF2F4 (kit Text Avatar is #FFFFFF) */
+  --main-menu-avatar-fg:     var(--pando-blue);            /* "FL" #0076DD */
+  --main-menu-name-fg:       var(--pando-dark);            /* .Name texts #234357 */
+  --main-menu-logout-bg-hover: var(--accent-light-highlight); /* .Logout Hover #E9F1F5 (style name says #EFF3F5) */
+  --main-menu-focus:         var(--pando-blue);            /* added in review — not in Figma */
+
+  /* ── Measured from the components ── */
+  --main-menu-rail-w:     60px;   /* "Menu" frame + .Menu-Item width */
+  --main-menu-fly-w:      250px;  /* .Fly Out */
+  --main-menu-height:     718px;  /* Figma sample height; in a shell the menu fills its container */
+  --menu-item-h:          50px;
+  --menu-item-pad:        15px 20px;
+  --menu-item-icon:       var(--icon-size-20);
+  --main-menu-profile-pad: 10px 0 20px; /* "Profile" frame; Type=Default has 15px top (75 tall) */
+  --main-menu-avatar:     40px;
+  --main-menu-heading-pad: var(--space-15);   /* 15 all round → 46 tall */
+  --main-menu-heading-ls: .3px;               /* 12px/Heading-AllCaps */
+  --main-menu-row-h:      36px;
+  --main-menu-row-pad:    10px var(--space-15); /* .Secondary menu: 10 / 15 */
+  --main-menu-third-pad:  var(--space-10);      /* .Third level menu: 10 all round */
+  --main-menu-arrow-pad:  10px var(--space-15); /* .Secondary menu/Arrow/*: 10 / 15, 184 wide */
+  --main-menu-line-col:   16px;   /* "Sub menu line" column: 15px left padding + 1px line */
+  --main-menu-line-x:     15px;
+  --main-menu-caret-w:    5px;
+  --main-menu-caret-h:    8px;
+  --main-menu-name-pad:   10px 10px 20px; /* .Name: 10 / 10 / 20 / 10 → 70 tall */
+  --main-menu-name-gap:   4px;            /* name ↔ role, text ↔ logout */
+  --main-menu-logout:     24px;           /* .Logout circle, padding 5, icon 14 */
+  --main-menu-logout-pad: 5px;
+  --main-menu-z:          900;
+}
+
+/* ════ .Menu-Item (803:709) — shared with the Old Menu ═════════════ */
+.pds-menu-item {
+  box-sizing: border-box;
+  display: flex; align-items: center; flex: none;
+  width: var(--main-menu-rail-w); height: var(--menu-item-h);
+  padding: var(--menu-item-pad);
+  margin: 0; border: 0; border-radius: 0;
+  background: var(--menu-item-bg);
+  color: var(--menu-item-icon);
+  cursor: pointer; text-decoration: none;
+}
+.pds-menu-item .pds-icon { --_icon: var(--menu-item-icon); }
+.pds-menu-item:hover,
+.pds-menu-item--hover { background: var(--menu-item-bg-hover); }
+.pds-menu-item--active,
+.pds-menu-item--active:hover { background: var(--menu-item-bg-active); }
+.pds-menu-item:focus-visible { outline: 2px solid var(--main-menu-focus); outline-offset: -2px; } /* added in review; inset so the rail does not clip it */
+
+/* ════ New Main Menu ═══════════════════════════════════════════════ */
+.pds-main-menu {
+  position: relative;
+  z-index: var(--main-menu-z);
+  box-sizing: border-box;
+  display: flex;
+  width: var(--main-menu-rail-w);
+  height: 100%;
+  font-family: var(--font-family);
+}
+.pds-main-menu[hidden] { display: none; }
+
+/* Rail ("Menu" frame): Close · scrolling items · Profile */
+.pds-main-menu__rail {
+  box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: space-between;
+  width: var(--main-menu-rail-w); height: 100%;
+  background: var(--main-menu-bg);
+  overflow: hidden;
+}
+.pds-main-menu__list {
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  margin: 0; padding: 0; list-style: none;
+}
+.pds-main-menu__list > li { display: block; }
+.pds-main-menu__profile {
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center; flex: none;
+  padding: var(--main-menu-profile-pad);
+}
+.pds-main-menu__avatar {
+  /* kit Text Avatar, with the menu's own fill (atom variant missing in kit) */
+  --_bg: var(--main-menu-avatar-bg); --_fg: var(--main-menu-avatar-fg);
+  border: 0; cursor: pointer;
+}
+.pds-main-menu__avatar:focus-visible { outline: 2px solid var(--main-menu-focus); outline-offset: 2px; }
+
+/* .Fly Out (2459:5585) */
+.pds-main-menu__fly {
+  position: absolute; top: 0; left: var(--main-menu-rail-w);
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  width: var(--main-menu-fly-w); height: 100%;
+  background: var(--main-menu-fly-bg);
+  /* no shadow, border or radius — as in Figma */
+}
+.pds-main-menu__fly[hidden] { display: none; }
+.pds-main-menu__fly--static { position: static; }
+.pds-main-menu__scroll {
+  flex: 1; min-height: 0;
+  margin: 0; padding: 0; list-style: none;
+}
+
+/* .Menu-Heading (2455:5079) — Default and Hover are identical in Figma */
+.pds-main-menu__heading {
+  box-sizing: border-box; flex: none;
+  margin: 0; padding: var(--main-menu-heading-pad);
+  font: var(--type-12-semibold); line-height: 16px;
+  letter-spacing: var(--main-menu-heading-ls);
+  text-transform: uppercase;
+  color: var(--main-menu-heading-fg);
+}
+
+/* .Secondary menu (2379:6919) — one row: Single · Arrow · Multiple header */
+.pds-main-menu__scroll ul { margin: 0; padding: 0; list-style: none; }
+.pds-main-menu__row {
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-10);
+  width: 100%; height: var(--main-menu-row-h);
+  margin: 0; padding: var(--main-menu-row-pad);
+  border: 0; border-radius: 0; background: none;
+  font: var(--type-12-semibold); line-height: 16px; text-align: left;
+  color: var(--main-menu-row-fg);
+  text-decoration: none; cursor: pointer;
+}
+.pds-main-menu__label { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pds-main-menu__row:hover,
+.pds-main-menu__row--hover { background: var(--main-menu-row-bg-hover); }
+.pds-main-menu__row:focus-visible,
+.pds-main-menu__third:focus-visible,
+.pds-main-menu__logout:focus-visible { outline: 2px solid var(--main-menu-focus); outline-offset: -2px; }
+
+/* Section label (Figma: a Secondary row whose text is overridden to Pando Blue; not a variant) */
+.pds-main-menu__section {
+  box-sizing: border-box; display: flex; align-items: center;
+  height: var(--main-menu-row-h); margin: 0; padding: var(--main-menu-row-pad);
+  font: var(--type-12-semibold); line-height: 16px;
+  color: var(--main-menu-section-fg);
+}
+
+/* Type=Arrow: caret on the right = collapsed group */
+.pds-main-menu__caret { flex: none; display: block; width: var(--main-menu-caret-w); height: var(--main-menu-caret-h); color: var(--main-menu-caret); }
+.pds-main-menu__caret svg { display: block; width: 100%; height: 100%; }
+/* Type=Multiple (expanded group): Figma shows no caret */
+.pds-main-menu__row[aria-expanded="true"] .pds-main-menu__caret { display: none; }
+
+/* Child block: "Sub menu line" + .Third level menu rows */
+.pds-main-menu__children {
+  display: flex;
+}
+.pds-main-menu__children[hidden] { display: none; }
+.pds-main-menu__line {
+  box-sizing: border-box; flex: none;
+  width: var(--main-menu-line-col);
+  padding-left: var(--main-menu-line-x);
+}
+.pds-main-menu__line::before { content: ""; display: block; width: 1px; height: 100%; background: var(--main-menu-line); }
+.pds-main-menu__children > ul { flex: 1; min-width: 0; }
+
+/* .Third level menu (2448:4408) */
+.pds-main-menu__third {
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-10);
+  width: 100%; height: var(--main-menu-row-h);
+  margin: 0; padding: var(--main-menu-third-pad);
+  border: 0; background: none;
+  font: var(--type-12-semibold); line-height: 16px; text-align: left;
+  color: var(--main-menu-row-fg); text-decoration: none; cursor: pointer;
+}
+.pds-main-menu__third:hover,
+.pds-main-menu__third--hover { background: var(--main-menu-third-bg-hover); }
+/* .Secondary menu/Arrow/Default + /Hover (2459:5420, 2459:5423) — 184 wide, 10/15 padding, caret */
+.pds-main-menu__third--arrow { padding: var(--main-menu-arrow-pad); }
+
+/* .Name (2282:4032) */
+.pds-main-menu__name {
+  box-sizing: border-box; flex: none;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--main-menu-name-gap);
+  padding: var(--main-menu-name-pad);
+  color: var(--main-menu-name-fg);
+}
+.pds-main-menu__who { display: flex; flex-direction: column; gap: var(--main-menu-name-gap); min-width: 0; }
+.pds-main-menu__who p { margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pds-main-menu__user { font: var(--type-12-regular); line-height: 16px; }
+.pds-main-menu__role { font: var(--type-10-regular); letter-spacing: .5px; }
+
+/* .Logout (2769:15877) */
+.pds-main-menu__logout {
+  box-sizing: border-box; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--main-menu-logout); height: var(--main-menu-logout);
+  padding: var(--main-menu-logout-pad);
+  border: 0; border-radius: 50%; background: none;
+  color: var(--main-menu-name-fg); cursor: pointer;
+}
+.pds-main-menu__logout .pds-icon { --_icon: var(--icon-size-14); }
+.pds-main-menu__logout:hover,
+.pds-main-menu__logout--hover { background: var(--main-menu-logout-bg-hover); }
+
+/* Rail tooltips: kit Tooltip (Style=Text, no title) at hug width as in Figma */
+.pds-main-menu-tip { width: max-content; }

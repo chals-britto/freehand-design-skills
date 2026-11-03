@@ -1,0 +1,125 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Chat Input Box (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟡 Comments (2305:4671)
+   › component set "Chat Input Box" 2394:7558 — 10 variants:
+     Theme Light/Dark × State Empty/Filled × Tag No/Yes/Edit (Filled has No/Yes only)
+     + booleans Show Attachment (default true) · Show Attached File (default false).
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css, button.css, button-group.css, tag.css, comment-thread.css.
+   Every atom inside is the kit's: Text buttons (.pds-button--text --small), the
+   Button Group row, Input Tags (.pds-tag--input, --input-dropdown), the attached
+   file tag (.pds-tag--attachment) and the typed text (.pds-comment).
+   This file only lays the box out and sets the box colours.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Box ── */
+  --chat-input-width:        400px;
+  --chat-input-text-h:       100px;                    /* Text frame: fixed 100 in Figma, grows here (see md) */
+  --chat-input-text-pad:     var(--space-10);          /* 10px all sides */
+  --chat-input-text-gap:     var(--space-10);          /* tag row ↔ text */
+  --chat-input-border-w:     1px;                      /* inside stroke, Text frame only */
+  --chat-input-bar-h:        34px;
+  --chat-input-bar-pad:      0 var(--space-15);        /* 0 15px */
+  --chat-input-attach-gap:   20px;                     /* clip ↔ attached file tag — not on the spacing scale */
+  --chat-input-icon:         14px;                     /* Misc/Attachment */
+
+  /* ── Light ── */
+  --chat-input-bg:           transparent;              /* no fill on the Light component or Text frame */
+  --chat-input-border:       var(--border-input-light);/* #E2EAEC */
+  --chat-input-bar-bg:       var(--accent-off-white);  /* #F8F8F8 */
+  --chat-input-icon-fg:      var(--pando-dark);        /* #234357 */
+  --chat-input-placeholder:  var(--text-light);        /* #6C6C6C, italic */
+  --chat-input-edit-fg:      var(--comment-fg);        /* #404040 — "|" in Tag=Edit (comment-thread.css token) */
+
+  /* ── Dark ── */
+  --chat-input-dark-bg:          var(--dark-bg);           /* #393945 */
+  --chat-input-dark-border:      #484858;                  /* off-token in Figma (same hex as the Comments bubble) */
+  --chat-input-dark-bar-bg:      #484858;                  /* off-token in Figma */
+  --chat-input-dark-icon-fg:     var(--dark-label-text);   /* #D5DAF4 */
+  --chat-input-dark-placeholder: var(--dark-input-text);   /* #8A8A9E, italic */
+  --chat-input-dark-edit-fg:     var(--white);             /* "|" in Tag=Edit */
+  --chat-input-dark-send:        var(--dark-highlight-green); /* #1FCD93 — enabled "Add", Dark (no such Text button in the kit) */
+}
+
+/* ── Root ──────────────────────────────────────────────────────── */
+.pds-chat-input {
+  --_bg: var(--chat-input-bg); --_bd: var(--chat-input-border); --_bar: var(--chat-input-bar-bg);
+  --_icon: var(--chat-input-icon-fg); --_ph: var(--chat-input-placeholder); --_edit: var(--chat-input-edit-fg);
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  width: var(--chat-input-width); max-width: 100%;
+  background: var(--_bg);
+  font-family: var(--font-family);
+}
+.pds-chat-input--dark {
+  --_bg: var(--chat-input-dark-bg); --_bd: var(--chat-input-dark-border); --_bar: var(--chat-input-dark-bar-bg);
+  --_icon: var(--chat-input-dark-icon-fg); --_ph: var(--chat-input-dark-placeholder); --_edit: var(--chat-input-dark-edit-fg);
+}
+
+/* ── Text area (Figma "Text") ──────────────────────────────────── */
+.pds-chat-input__text {
+  box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: var(--chat-input-text-gap);
+  min-height: var(--chat-input-text-h);
+  padding: var(--chat-input-text-pad);
+  border: var(--chat-input-border-w) solid var(--_bd);
+  cursor: text;
+}
+/* Typed text = the .Comment molecule (comment-thread.css). It fills the box width. */
+.pds-chat-input__field.pds-comment {
+  width: 100%;
+  min-height: 17px;
+  white-space: pre-wrap;
+  outline: none;
+}
+/* Placeholder: italic 12, Figma "Add comment here" */
+.pds-chat-input__placeholder,
+.pds-chat-input__field:empty::before {
+  margin: 0;
+  font: var(--type-12-regular); font-style: italic;
+  color: var(--_ph);
+}
+.pds-chat-input__field:empty::before { content: attr(data-placeholder); pointer-events: none; }
+.pds-chat-input__text:focus-within { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+
+/* Tag row: the kit Drop down Tag ("# Add Tag"), or the same tag while the name is typed (Tag=Edit) */
+.pds-chat-input__tag { flex: none; }
+button.pds-chat-input__tag { border: 0; margin: 0; font: inherit; cursor: pointer; }
+button.pds-chat-input__tag:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+.pds-chat-input__tag-caret,
+.pds-chat-input__tag-input { font: var(--type-12-regular); color: var(--_edit); }
+.pds-chat-input__tag-input {
+  box-sizing: content-box;
+  width: 1ch; min-width: 1ch; max-width: 200px;
+  margin: 0; padding: 0; border: 0; background: transparent; outline: none;
+  caret-color: var(--_edit);
+}
+/* Committed tag inside the text: .pds-comment__tag (comment-thread.css) */
+.pds-chat-input__field .pds-comment__tag { user-select: all; }
+
+/* ── Bottom bar (Figma "Bottom Fixed") ─────────────────────────── */
+.pds-chat-input__bar {
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: var(--chat-input-bar-h);
+  padding: var(--chat-input-bar-pad);
+  background: var(--_bar);
+}
+.pds-chat-input__attach { display: flex; align-items: center; flex-wrap: wrap; gap: var(--chat-input-attach-gap); min-width: 0; }
+.pds-chat-input__clip {
+  display: block; flex: none;
+  width: var(--chat-input-icon); height: var(--chat-input-icon);
+  margin: 0; padding: 0; border: 0; background: none;
+  color: var(--_icon); cursor: pointer;
+}
+.pds-chat-input__clip svg { display: block; width: 100%; height: 100%; }
+.pds-chat-input__clip:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; border-radius: 2px; } /* added in review — not in Figma */
+.pds-chat-input__file-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* Button Group (button-group.css) sits in a 34px bar: buttons are Text · Small (14 tall) */
+.pds-chat-input__actions.pds-button-group { min-height: 0; flex: none; }
+
+/* Dark enabled "Add" is green in Figma; the kit Dark Text button is white */
+.pds-chat-input--dark .pds-button--text.pds-chat-input__send:not(:disabled):not([aria-disabled="true"]) { --_fg: var(--chat-input-dark-send); }

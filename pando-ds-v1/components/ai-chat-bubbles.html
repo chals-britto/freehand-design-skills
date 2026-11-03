@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI Chat bubbles · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="skeleton.css">
+<link rel="stylesheet" href="comment-thread.css">
+<link rel="stylesheet" href="ai-chat-bubbles.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+.vgrid.one{grid-template-columns:minmax(0,1fr)}
+.vgrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.box{background:#fff;padding:16px;border-radius:6px;overflow-x:auto;border:1px solid var(--pg-line)}
+.box.on-dark{background:var(--dark-bg);border-color:var(--dark-bg)}
+.box.center{display:flex;justify-content:center;align-items:center}
+ul.plain{margin:0;padding:16px 18px 16px 36px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+ul.plain a{color:var(--pg-accent)}
+.vh{font:600 13px var(--pg-ui);margin:0;padding:16px 20px 0}
+.vnote{font-size:12.5px;color:var(--pg-muted);margin:4px 20px 0}
+table.diff{width:100%;border-collapse:collapse;font-size:12.5px}
+table.diff th,table.diff td{border-top:1px solid var(--pg-line);padding:8px 12px;text-align:left;vertical-align:top}
+table.diff th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted)}
+table.diff code{font:400 12px var(--pg-mono)}
+@media (max-width:760px){.vgrid.three{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Organisms</div>
+    <h1>AI Chat bubbles, PI and Loader</h1>
+    <p class="lede">The message pieces of the AI chat: chat bubbles (User, AI, Loading), the AI summary bubble with its buttons, the PI agent switcher and the Pi loader. The AI Chat window composes them.</p>
+    <div class="meta"><span>Status: As in Figma — no review yet</span><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=2814-5163" target="_blank" rel="noopener">Figma page 2814:5163 ↗</a><span>Files: ai-chat-bubbles.css</span><span>Uses: brand.css · skeleton.css · comment-thread.css · icons.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Every published variant, with the real classes. Dark variants sit on <code>--dark-bg</code> (#393945); Figma does not say which surface they sit on. Hover the buttons and PI to see the hover state; the typing dots and the loader run their Figma timing.</p>
+<div class="panel">
+  <h3 class="vh">Chat bubble — Type × Swapable × Theme (10) · <code>.pds-ai-bubble</code></h3>
+  <div class="vgrid" id="v-bubble"></div>
+  <h3 class="vh">Chat bubble — “Date/ Time” on (boolean, off by default)</h3>
+  <div class="vgrid" id="v-time"></div>
+  <h3 class="vh">AI bubble — Property 1 (2) · <code>.pds-ai-card</code></h3>
+  <div class="vgrid" id="v-card"></div>
+  <p class="vnote">The Loader variant uses the dark Skeleton (size 180) from <code>skeleton.css</code>. “Button” is a boolean (on by default); the third .button in the row is hidden in Figma.</p>
+  <div class="vgrid one" id="v-card-nobtn"></div>
+  <h3 class="vh">.button — State × Theme (5) · <code>.pds-ai-card__button</code></h3>
+  <div class="vgrid three" id="v-button"></div>
+  <h3 class="vh">PI — Theme × Property 1 × Type (6) · <code>.pds-ai-pi</code></h3>
+  <div class="vgrid" id="v-pi"></div>
+  <p class="vnote">There is no Light + FAP variant in Figma.</p>
+  <h3 class="vh">Loader — State (2) · <code>.pds-ai-loader</code></h3>
+  <div class="vgrid three" id="v-loader"></div>
+</div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="panel">
+<h3 class="vh">Chat bubble</h3>
+<div class="spec-table" style="margin-top:12px">
+  <div><b>Row gap</b><code>5px</code> avatar ↔ bubble · bubble ↔ time</div>
+  <div><b>Bubble padding</b><code>10px 15px</code> · text ↔ slot <code>8px</code></div>
+  <div><b>Bubble radius</b>AI <code>0 10 10 10</code> · User <code>10 0 10 10</code></div>
+  <div><b>Swapable = yes</b>bubble <code>200px</code> wide · slot fills (170)</div>
+  <div><b>Text</b><code>.type-12-semibold</code> (Figma 12/18)</div>
+  <div><b>Time</b><code>.type-10-regular</code> · 0.5px tracking · “10:39 AM”</div>
+  <div><b>Dark avatar</b><code>38px</code> · <code>--dark-darker</code> · 1px inside ring <code>--pando-dark</code> 20% · Freehand logo 21×22 <code>--freehand-orange</code></div>
+  <div><b>Light avatar</b><code>20px</code> · Pando Green #003D31 · Pi-Avatar small 16×17, mirrored</div>
+  <div><b>Dark fills</b>User <code>--dark-input-text</code> 50% · AI #484858 50% (off-token)</div>
+  <div><b>Dark text</b>User <code>--accent-off-white</code> · AI <code>--dark-label-text</code> · time <code>--dark-label-text</code></div>
+  <div><b>Light fills</b>User <code>--status-orange-light</code> · User swap <code>--status-skyblue-light</code> · AI <code>--accent-light-highlight</code></div>
+  <div><b>Light text</b><code>--text-dark</code> · time User <code>--text-light</code> · AI <code>--dark-label-text</code></div>
+  <div><b>Typing (dark)</b>padding <code>10px 15px</code> · radius <code>0 10 10 10</code> · #484858 50% · dots <code>--freehand-orange</code> / <code>--highlight-orange</code> 50%</div>
+  <div><b>Typing (light)</b>padding <code>8px 15px</code> · radius <code>16 16 16 1</code> · no fill · dots #0078DD / <code>--highlight-blue-light</code> 50%</div>
+  <div><b>Typing dots</b><code>6px</code>, active <code>8px</code>, gap <code>4px</code> · 9 frames, cycle 4.8 s</div>
+</div>
+<h3 class="vh">AI bubble · .button</h3>
+<div class="spec-table" style="margin-top:12px">
+  <div><b>Width</b>Content <code>400px</code> · Loader <code>340px</code></div>
+  <div><b>Padding · radius</b><code>20px</code> · <code>18px</code></div>
+  <div><b>Fill</b><code>--gradient-dark-purple</code></div>
+  <div><b>Gap</b>Content <code>15px</code> · Loader <code>10px</code> · rows <code>10px</code></div>
+  <div><b>Header</b>AI-Yellow icon <code>20px</code> + “Pi Summary” <code>.type-12-semibold</code> uppercase, 0.3px tracking, <code>--status-brown-medium</code></div>
+  <div><b>.button</b>padding <code>6px 10px</code> · radius <code>16px</code> · <code>.type-11-regular</code> · 1px inside stroke</div>
+  <div><b>.button Dark</b>fill <code>--accent-off-white</code> 20% · stroke <code>--dark-label-text</code> 50% · text white · hover fill <code>--dark-darker</code></div>
+  <div><b>.button Red</b>fill <code>--dark-darker</code> · stroke + text <code>--action-red</code></div>
+  <div><b>.button Light</b>fill <code>--status-blue-light</code> · text <code>--pando-blue-active</code> · hover fill <code>--accent-light-blue-bg</code>, stroke <code>--border-blue</code></div>
+  <div><b>Hover motion</b>Dissolve 1.02 s “Gentle” → <code>1s ease</code></div>
+</div>
+<h3 class="vh">PI · Loader</h3>
+<div class="spec-table" style="margin-top:12px">
+  <div><b>PI height · padding</b><code>28px</code> · <code>0 8px</code> · gap <code>10px</code> · radius <code>14px</code></div>
+  <div><b>PI label</b>Bold 14/16 (no 14-bold style) · Dark #FFA600 (off-token) · Light <code>--gradient-pando-green</code></div>
+  <div><b>PI icon</b>Dark: Freehand AI icon 14px #FFA600 · Light: ai-wand 19.5×17.7, Pando Green gradient</div>
+  <div><b>PI arrow</b>Navigation/Dropdown-Arrow solid 8×5 · Dark <code>--dark-input-text</code> · Light <code>--text-dark</code></div>
+  <div><b>PI hover</b>Dark FAP <code>--pando-light</code> · Dark PMA black 80% · Light <code>--pando-dark</code> 10% · 0.3 s ease-out</div>
+  <div><b>Loader</b><code>174px</code> · Pi-With Halo › Freehand (brand/pi-with-halo-freehand.svg)</div>
+  <div><b>Loader motion</b>State 1 0.5 s → 0.3 s linear → State 2 0.6 s → 0.15 s linear (outer ring fades) · cycle 1.55 s</div>
+</div>
+<h3 class="vh">.Loader vs Loader — near-duplicates; Loader (public) is built</h3>
+<div style="padding:12px 0 0;overflow-x:auto"><table class="diff">
+<tr><th></th><th>Loader 4158:14459 (built)</th><th>.Loader 3568:15030 (not built)</th></tr>
+<tr><td>Halo instance</td><td>Pi-With Halo › Property 1=Freehand (4409:5027)</td><td>Pi-With Halo (4280:39580, no variants)</td></tr>
+<tr><td>Ring colour</td><td>#FE6505 (<code>--freehand-orange</code>)</td><td>#FFE01B (Pando Yellow)</td></tr>
+<tr><td>Ellipse 02</td><td>9% → <b>1%</b> opacity</td><td>9%</td></tr>
+<tr><td>Ellipse 01 (glow)</td><td>10% opacity · blur 3.2 · at 52,52</td><td>90% opacity · blur 26.4 · at 50,50</td></tr>
+<tr><td>Ellipse 04 x</td><td>14</td><td>15</td></tr>
+<tr><td>Centre mark</td><td>Header-Logo/Apps › Freehand Logo (#FF6208 + gradient, shadow #90500F) + Freehand No-Bg sparkle</td><td>Pi-Avatar Large (shadow) + yellow ai-wand</td></tr>
+<tr><td>State 2 hold</td><td>0.6 s</td><td>0.3 s</td></tr>
+<tr><td>Other timing</td><td colspan="2">Same: State 1 holds 0.5 s → 0.3 s linear; State 2 → State 1 0.15 s linear. In both, State 2 drops the outer ring (Ellipse 05).</td></tr>
+</table></div>
+</div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>From Figma</h3><p>Figma has no usage text for these sets. What the variants show:</p><ul><li>User messages sit on the right with no avatar; AI messages and the Loading dots sit on the left after the avatar.</li><li>Swapable = yes adds the Swappable Content slot under the text (200px bubble).</li><li>The AI bubble shows a skeleton while loading, then the “Pi Summary” with content and buttons.</li><li>PI names the agent (FAP or Procurement) and shows a dropdown arrow.</li></ul></div>
+  <div class="panel card"><h3>Composition</h3><ul><li>The AI Chat window (later) composes these classes; each block is self-contained.</li><li>The slot inside bubbles and the AI bubble is <code>.pds-comment-thread__slot</code> from comment-thread.css.</li><li>The AI bubble loader uses <code>.pds-skeleton--180.pds-skeleton--dark</code> from skeleton.css.</li></ul></div>
+  <div class="panel card"><h3>Motion</h3><ul><li>Typing dots and the loader run in CSS only.</li><li>With <code>prefers-reduced-motion</code> they hold their first frame.</li></ul></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Loading states</h3><p>Typing dots and the loader carry <code>role="status"</code> with <code>aria-label="Loading"</code> — added in review, not in Figma.</p></div>
+  <div class="panel card"><h3>Controls</h3><p>.button and PI are <code>&lt;button type="button"&gt;</code>. Focus ring <code>2px --pando-blue</code>, offset 2 — added in review, not in Figma. Avatars and icons are decorative (<code>aria-hidden</code> / empty alt).</p></div>
+  <div class="panel card"><h3>Times</h3><p>Use <code>&lt;time&gt;</code> for the message time.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="panel"><ul class="plain">
+  <li>Contrast: Light AI time #D5DAF4 on white 1.4:1 (Figma uses the dark-theme colour); PI Dark FAP hover #FFA600 on #EEF2F4 1.7:1; .button Red #E25757 on #24242F 4.2:1; light typing dots (#9CD2FF 50%) on white 1.3:1. Kept as Figma.</li>
+  <li>Light User bubble is #FFF4E5 but Light User + Swapable = yes is #B5E4FF. Kept as Figma.</li>
+  <li>Dark PI hover differs by Type: FAP turns light (#EEF2F4), Procurement turns black 80%. Kept as Figma.</li>
+  <li>No Light + FAP PI variant; PI On-click has no destination (the dropdown it opens is not defined).</li>
+  <li>Line heights: bubble text Figma 12/18 → <code>.type-12-semibold</code> 17 (Light AI is 12/auto); .button 11/auto → <code>.type-11-regular</code> 15; “Pi Summary” 12/auto, 0.3px tracking (not the 0.5px <code>.caps</code>). PI label Bold 14/16 has no type style.</li>
+  <li>Off-token colours: #484858 (bubble / typing fill), #0078DD (light typing dot, Pando Blue is #0076DD), #FFA600 (PI dark label and icon), black 80% (PI hover).</li>
+  <li>Atom variant missing in kit: Header-Logo/Apps › Freehand, Variant=AI-Yellow (4405:7109) — inlined on this page, fill <code>--status-brown-medium</code>.</li>
+  <li>Not kit atoms, inlined: “Freehand_Ai_Icon 1” (PI dark) and “ai-wand 1” (PI light) are loose frames inside PI, not icon components. <code>refresh-line</code> slot icon inlined as on the Comments page.</li>
+  <li>Typing dots: the composer organism owns <code>.typing dark</code> / <code>.typing light</code> (9 frames). Built here as <code>.pds-ai-bubble__typing</code> because Chat bubble needs it; dedupe when ai-chat-composer lands. Light typing padding is an instance override (8/15; main is 8/20).</li>
+  <li>Typing frame 9 → frame 1 has no transition in Figma (instant jump); kept.</li>
+  <li>“DP” (User dark) and “Text Avatar” (User light) are hidden in every variant with no property to show them, so the user avatar is not built.</li>
+  <li>The Loading bubble's “Bubblechat” wrapper has a 0-width #EFEFEF stroke and radius but no fill — not rendered.</li>
+  <li>Loader art is exported from the Loader's own instance; the main Pi-With Halo › Freehand also carries yellow AI stars that the Loader hides.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel"><ul class="plain">
+  <li>AI label with an explainability popover on AI-generated content (the AI bubble has a header but no explain affordance) — <a href="https://carbondesignsystem.com/guidelines/carbon-for-ai/" target="_blank" rel="noopener">Carbon for AI</a></li>
+  <li>Revert-to-AI control when a person edits AI-suggested content — <a href="https://carbondesignsystem.com/guidelines/carbon-for-ai/" target="_blank" rel="noopener">Carbon for AI</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">CSS only. Include tokens and the reused files, then use the markup.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Markup:</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const ICON=n=>{const i=(window.PDS_ICONS||[]).find(x=>x.n===n);return i?i.svg.replace("<svg",'<svg aria-hidden="true" focusable="false"'):""};
+const LOGO=()=>ICON("logo-apps-freehand-logo");
+const ARROW=`<span class="pds-icon pds-ai-pi__arrow">${ICON("nav-dropdown-arrow-solid")}</span>`;
+const REFRESH='<svg class="pds-comment-thread__slot-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5525 3.69417C6.06463 2.38388 7.99916 1.66388 10 1.66667C14.6025 1.66667 18.3333 5.3975 18.3333 10C18.3333 11.78 17.775 13.43 16.825 14.7833L14.1667 10H16.6667C16.6668 8.69302 16.2827 7.41484 15.5622 6.32438C14.8417 5.23392 13.8166 4.3793 12.6143 3.86677C11.412 3.35424 10.0856 3.20642 8.79996 3.44168C7.51433 3.67694 6.32621 4.28492 5.38333 5.19L4.5525 3.69417ZM15.4475 16.3058C13.9354 17.6161 12.0008 18.3361 10 18.3333C5.3975 18.3333 1.66667 14.6025 1.66667 10C1.66667 8.22 2.225 6.57 3.175 5.21667L5.83333 10H3.33333C3.33323 11.307 3.71729 12.5852 4.43778 13.6756C5.15827 14.7661 6.18339 15.6207 7.38568 16.1332C8.58798 16.6458 9.9144 16.7936 11.2 16.5583C12.4857 16.3231 13.6738 15.7151 14.6167 14.81L15.4475 16.3058Z"/></svg>';
+const SLOT=`<div class="pds-comment-thread__slot"><span class="pds-comment-thread__slot-title">${REFRESH}Swappable Content</span><span>Swap this component out with another.</span></div>`;
+// Header-Logo/Apps › Freehand, AI-Yellow (4405:7109) — atom variant missing in kit; inlined
+const AI_YELLOW='<svg class="pds-ai-card__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3.16019 15.535C3.20685 15.446 3.36751 15.4524 3.4043 15.5459C3.52832 15.859 3.64749 16.1739 3.7627 16.4902C3.90026 16.8676 4.15963 17.1187 4.54102 17.2529C4.86061 17.3656 5.17877 17.4832 5.49512 17.6055C5.49656 17.606 5.498 17.6066 5.49943 17.6072C5.59065 17.6456 5.59525 17.81 5.50293 17.8457C5.17267 17.9749 4.84034 18.0982 4.50684 18.2188C4.14997 18.3475 3.90773 18.5893 3.77344 18.9375C3.64707 19.2658 3.52722 19.5966 3.40039 19.9248C3.36116 20.0264 3.19561 20.0244 3.15625 19.9229C3.03455 19.6089 2.91311 19.2949 2.79883 18.9785C2.66221 18.6015 2.40879 18.3441 2.02734 18.208C1.70787 18.094 1.38947 17.9782 1.07324 17.8555C0.972208 17.8161 0.977563 17.6404 1.07812 17.5998C1.0791 17.5994 1.08007 17.599 1.08105 17.5986C1.39687 17.476 1.71563 17.3591 2.03516 17.2451C2.41801 17.109 2.66555 16.8474 2.80078 16.4707C2.9118 16.1614 3.02977 15.8541 3.15332 15.5498C3.15535 15.5448 3.15765 15.5398 3.16019 15.535ZM9.7998 2.45898C9.95011 2.06743 10.4434 2.05267 10.6054 2.43954C10.6082 2.4461 10.6108 2.45259 10.6133 2.45898C11.0823 3.66176 11.524 4.8755 11.9688 6.08789C12.4333 7.35528 13.3019 8.20601 14.5518 8.67285C15.7532 9.12215 16.9567 9.56575 18.1504 10.0352C18.1604 10.0391 18.1703 10.0435 18.1801 10.0484C18.4544 10.185 18.4472 10.6989 18.1621 10.8115C16.9806 11.2739 15.7926 11.7183 14.6016 12.1562C13.284 12.6405 12.3949 13.5415 11.9189 14.8711C11.4934 16.0589 11.0556 17.2437 10.6074 18.4229C10.5398 18.6002 10.389 18.7458 10.1993 19.0174C10.1993 19.0175 10.1992 19.0176 10.1992 19.0177C10.1992 19.0183 10.1985 19.0185 10.1982 19.018C10.0237 18.7613 9.89668 18.6319 9.83789 18.4775C9.37931 17.2705 8.92489 16.0606 8.48633 14.8457C8.02428 13.566 7.18815 12.6712 5.91211 12.1982C4.69511 11.7481 3.47799 11.2948 2.27051 10.8184C2.26039 10.8143 2.25046 10.8098 2.24071 10.8048C1.96681 10.665 1.9762 10.146 2.2627 10.0342C3.41735 9.58225 4.57822 9.14312 5.74414 8.72266C7.07641 8.24273 8.00198 7.36813 8.48047 6.00977C8.89998 4.81929 9.34475 3.63635 9.7998 2.45898ZM16.9143 0.0717037C16.9655 -0.0261239 17.1498 -0.0235884 17.1904 0.0791016C17.3623 0.516357 17.5266 0.956619 17.6924 1.39648C17.8555 1.82876 18.1565 2.12128 18.5928 2.28125C19.03 2.44166 19.4671 2.60281 19.9014 2.77148C20.011 2.81419 20.0082 3.01623 19.8984 3.05859C19.4576 3.22989 19.0124 3.39154 18.5693 3.55762C18.1415 3.71803 17.8509 4.0156 17.6904 4.4375C17.5285 4.86314 17.3731 5.29159 17.21 5.7168C17.2075 5.7232 17.2048 5.72952 17.202 5.73581C17.1484 5.85296 16.9506 5.85851 16.9043 5.73828C16.7447 5.32716 16.5882 4.9147 16.4365 4.50098C16.2615 4.02191 15.9394 3.69627 15.4512 3.52539C15.0254 3.37631 14.6033 3.21528 14.1826 3.05273C14.0805 3.01327 14.077 2.83188 14.1738 2.7806C14.1789 2.77791 14.1841 2.77551 14.1895 2.77344C14.604 2.61389 15.021 2.46128 15.4395 2.31348C15.9246 2.14265 16.2543 1.82262 16.4307 1.34277C16.5851 0.921985 16.7432 0.501843 16.9082 0.0849609C16.91 0.0804459 16.912 0.0760303 16.9143 0.0717037Z"/></svg>';
+// "Freehand_Ai_Icon 1" inside PI (dark) — loose frame in Figma, inlined
+const FH_AI='<svg class="pds-ai-pi__icon" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><g fill="currentColor"><path d="M11.8416 6.51935H10.3189C8.73278 6.51935 7.44272 5.2293 7.44272 3.64317V2.12048C7.44272 1.97244 7.31583 1.8667 7.18895 1.8667H4.96836C4.82032 1.8667 4.71458 1.99359 4.71458 2.12048V3.64317C4.71458 5.2293 3.42452 6.51935 1.83839 6.51935H0.294552C0.146513 6.51935 0.0407715 6.64625 0.0407715 6.77313V8.99372C0.0407715 9.14176 0.167662 9.2475 0.294552 9.2475H1.81724C3.40337 9.2475 4.69343 10.5376 4.69343 12.1237V13.6464C4.69343 13.7944 4.82032 13.9001 4.94721 13.9001H7.16779C7.31583 13.9001 7.42158 13.7733 7.42158 13.6464V12.1237C7.42158 10.5376 8.71163 9.2475 10.2978 9.2475H11.8205C11.9684 9.2475 12.0742 9.12061 12.0742 8.99372V6.77313C12.0742 6.62509 11.9473 6.51935 11.8205 6.51935H11.8416Z"/><path d="M13.8299 1.78935H13.2553C12.6567 1.78935 12.1698 1.30249 12.1698 0.703883V0.129224C12.1698 0.0733542 12.1219 0.0334473 12.074 0.0334473H11.236C11.1801 0.0334473 11.1402 0.0813355 11.1402 0.129224V0.703883C11.1402 1.30249 10.6534 1.78935 10.0548 1.78935H9.47212C9.41625 1.78935 9.37634 1.83724 9.37634 1.88513V2.72317C9.37634 2.77904 9.42424 2.81895 9.47212 2.81895H10.0468C10.6454 2.81895 11.1323 3.30581 11.1323 3.90442V4.47907C11.1323 4.53494 11.1801 4.57485 11.228 4.57485H12.066C12.1219 4.57485 12.1619 4.52696 12.1619 4.47907V3.90442C12.1619 3.30581 12.6487 2.81895 13.2473 2.81895H13.8219C13.8778 2.81895 13.9178 2.77106 13.9178 2.72317V1.88513C13.9178 1.82926 13.8699 1.78935 13.8219 1.78935H13.8299Z"/></g></svg>';
+// "ai-wand 1" inside PI (light) — loose frame in Figma, inlined (unique gradient ids per copy)
+let wandN=0;
+const WAND=()=>{const k="w"+(++wandN);const A="M10.0678 16.1605C9.9196 15.9422 9.81171 15.8327 9.76184 15.7017C9.3736 14.6798 8.98838 13.6558 8.6171 12.6272C8.22599 11.544 7.51862 10.787 6.4385 10.3866C5.40827 10.0056 4.37804 9.62157 3.35588 9.21828C3.21426 9.16203 3.1174 8.98966 3 8.87052C3.1152 8.76247 3.2128 8.60782 3.34928 8.55455C4.32668 8.172 5.30921 7.80054 6.29614 7.44463C7.42397 7.0384 8.20764 6.29846 8.61269 5.14857C8.96783 4.14077 9.34429 3.13962 9.72951 2.14291C9.78744 1.99196 9.88546 1.77222 10.0568 1.75C10.2077 1.77222 10.3576 1.98827 10.4178 2.14291C10.8148 3.16108 11.189 4.18812 11.5655 5.21443C11.9587 6.28736 12.6939 7.00732 13.7521 7.40246C14.7691 7.78278 15.7876 8.15794 16.798 8.55529C16.9426 8.61227 17.0445 8.78171 17.1664 8.8986C17.0476 9.00595 16.9462 9.1576 16.8076 9.21234C15.8075 9.60377 14.8021 9.9804 13.7939 10.3511C12.6786 10.761 11.9257 11.5232 11.5229 12.6487C11.1626 13.6543 10.792 14.6569 10.4126 15.6551C10.3554 15.8053 10.2285 15.9288 10.0678 16.159V16.1605Z";
+const B="M4.2061 17.1041C4.15694 17.0177 4.12429 16.9741 4.10541 16.9254C4.00236 16.6596 3.89971 16.3936 3.80294 16.1258C3.6873 15.8066 3.47334 15.5886 3.15043 15.4734C2.87982 15.3769 2.60999 15.2792 2.34214 15.1752C2.28826 15.1542 2.24657 15.102 2.19897 15.0643C2.24853 15.028 2.29337 14.9794 2.34883 14.958C2.61629 14.8541 2.88611 14.7548 3.15671 14.6582C3.48081 14.543 3.69006 14.3215 3.80452 14.0027C3.89852 13.7407 3.99843 13.4807 4.10305 13.223C4.1239 13.1712 4.17857 13.133 4.2179 13.0886C4.25093 13.1323 4.29617 13.1708 4.31545 13.2198C4.42046 13.4849 4.52154 13.7512 4.61909 14.019C4.73551 14.3386 4.95459 14.5516 5.27751 14.6652C5.54811 14.7606 5.81754 14.8599 6.08539 14.9635C6.13456 14.9825 6.17192 15.03 6.2148 15.0646C6.17428 15.0997 6.13967 15.1488 6.09247 15.167C5.81282 15.2764 5.5312 15.3803 5.2488 15.4824C4.94672 15.5913 4.74181 15.7961 4.62813 16.0908C4.52115 16.3688 4.42007 16.6487 4.31269 16.9265C4.29381 16.9756 4.25841 17.0181 4.2061 17.1041Z";
+const C="M15.87 5.11104C15.8098 5.02161 15.7645 4.97451 15.743 4.91857C15.6078 4.57042 15.4752 4.22117 15.3468 3.87082C15.1986 3.46526 14.926 3.18998 14.5127 3.04535C14.1522 2.91912 13.795 2.78259 13.4388 2.64495C13.3883 2.62545 13.3509 2.57172 13.3074 2.53418C13.3527 2.49112 13.3905 2.42929 13.4448 2.40832C13.7957 2.27325 14.1489 2.14444 14.5031 2.01932C14.9138 1.87469 15.193 1.60383 15.3423 1.19753C15.473 0.84129 15.6067 0.485784 15.7464 0.132854C15.7671 0.0802281 15.8291 0.0437942 15.8719 0C15.9105 0.0423222 15.9654 0.0780199 15.9851 0.127703C16.1306 0.497929 16.2695 0.870363 16.4099 1.2428C16.548 1.60897 16.8027 1.85702 17.1723 1.99245C17.5425 2.12825 17.9124 2.26441 18.28 2.40721C18.3338 2.42818 18.3724 2.48817 18.4184 2.53013C18.3716 2.57134 18.332 2.6295 18.2773 2.65047C17.9041 2.79546 17.5276 2.93164 17.1525 3.07222C16.7902 3.20802 16.5439 3.46011 16.408 3.81746C16.271 4.17775 16.1396 4.53987 16.0015 4.8998C15.9776 4.96199 15.9305 5.01536 15.87 5.11104Z";
+const g=(id,x1,y1,x2,y2,s)=>`<linearGradient id="${k+id}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" gradientUnits="userSpaceOnUse">${s}</linearGradient>`;
+const G1='<stop stop-color="#003D31"/><stop offset="1" stop-color="#006265"/>',G2='<stop stop-color="#003D31"/><stop offset="1" stop-color="#003D31"/>',G3='<stop stop-color="#006265" stop-opacity=".4"/><stop offset="1" stop-color="#006265" stop-opacity=".7"/>';
+return `<svg class="pds-ai-pi__icon" viewBox="0 0 20 18" aria-hidden="true" focusable="false"><path d="${A}" fill="url(#${k}a)"/><path d="${A}" fill="url(#${k}b)" fill-opacity=".2"/><path d="${B}" fill="url(#${k}c)"/><path d="${B}" fill="url(#${k}d)" fill-opacity=".2"/><path d="${C}" fill="url(#${k}e)"/><path d="${C}" fill="url(#${k}f)" fill-opacity=".2"/><defs>${g("a",6.7536,1.06379,11.7022,15.7328,G1)}${g("b",8.33878,3.07954,11.8632,13.9474,G2)}${g("c",3.26303,12.8974,4.62341,16.9994,G1)}${g("d",3.71238,13.4591,4.68101,16.4975,G3)}${g("e",14.6616,-0.243383,16.393,4.97726,G1)}${g("f",15.2335,0.471554,16.4663,4.33848,G3)}</defs></svg>`};
+
+/* ── builders ── */
+const avatar=dark=>dark
+  ?`<span class="pds-ai-bubble__avatar" aria-hidden="true">${LOGO()}</span>`
+  :`<span class="pds-ai-bubble__avatar pds-ai-bubble__avatar--pi"><img src="brand/pi-avatar-small.svg" alt=""></span>`;
+const typing=(stat)=>`<span class="pds-ai-bubble__typing${stat?" pds-ai-bubble__typing--static":""}" role="status" aria-label="Loading"><span class="pds-ai-bubble__dot"></span><span class="pds-ai-bubble__dot"></span><span class="pds-ai-bubble__dot"></span></span>`;
+function bubble({theme="dark",type="ai",swap=false,time=false}){
+  const dark=theme==="dark";
+  const cls=`pds-ai-bubble pds-ai-bubble--${theme} pds-ai-bubble--${type}${swap?" pds-ai-bubble--swap":""}`;
+  if(type==="loading")return `<div class="${cls}">\n  ${avatar(dark)}\n  ${typing()}\n</div>`;
+  const body=`<div class="pds-ai-bubble__body">\n    <div class="pds-ai-bubble__message"><p class="pds-ai-bubble__text">Input text here</p>${swap?SLOT:""}</div>${time?`\n    <time class="pds-ai-bubble__time">10:39 AM</time>`:""}\n  </div>`;
+  return `<div class="${cls}">${type==="ai"?"\n  "+avatar(dark):""}\n  ${body}\n</div>`;
+}
+const btn=({light=false,red=false,hover=false}={})=>`<button type="button" class="pds-ai-card__button${light?" pds-ai-card__button--light":""}${red?" pds-ai-card__button--red":""}${hover?" is-hover":""}">Button</button>`;
+function card(kind,buttons=true){
+  if(kind==="loader")return `<div class="pds-ai-card pds-ai-card--loader" role="status" aria-label="Loading">
+  <div class="pds-ai-card__row">${AI_YELLOW}
+    <div class="pds-skeleton pds-skeleton--180 pds-skeleton--dark"><span class="pds-skeleton__block"></span><span class="pds-skeleton__block"></span></div>
+  </div>
+</div>`;
+  return `<section class="pds-ai-card">
+  <h3 class="pds-ai-card__header">${AI_YELLOW}<span class="pds-ai-card__title">Pi Summary</span></h3>
+  ${SLOT}${buttons?`
+  <div class="pds-ai-card__actions">${btn()}${btn()}</div>`:""}
+</section>`;
+}
+function pi({theme="dark",type="fap",hover=false}){
+  const light=theme==="light";
+  const label=type==="fap"?"Pi - Freight Pay Specialist":"Pi - Freight Procurement Analyst";
+  return `<button type="button" class="pds-ai-pi pds-ai-pi--${theme} pds-ai-pi--${type}${hover?" is-hover":""}">${light?WAND():FH_AI}<span class="pds-ai-pi__label">${label}</span>${ARROW}</button>`;
+}
+const loader=state=>`<span class="pds-ai-loader${state?" pds-ai-loader--state-"+state:""}" role="status" aria-label="Loading"><img class="pds-ai-loader__art" src="brand/pi-with-halo-freehand.svg" alt=""></span>`;
+
+const cell=(host,label,html,bg)=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${label}</span><div class="box${bg==="dark"?" on-dark":""}${bg==="center"?" center":""}">${html}</div>`;$(host).appendChild(c)};
+
+[["dark","Dark"],["light","Light"]].forEach(([t,T])=>{
+  cell("#v-bubble",`Type=Loading, Swapable=No, Theme=${T}`,bubble({theme:t,type:"loading"}),t);
+  [["user","User"],["ai","AI"]].forEach(([y,Y])=>[false,true].forEach(s=>cell("#v-bubble",`Type=${Y}, Swapable=${s?"yes":"No"}, Theme=${T}`,bubble({theme:t,type:y,swap:s}),t)));
+  [["user","User"],["ai","AI"]].forEach(([y,Y])=>cell("#v-time",`Type=${Y}, Theme=${T} · Date/ Time = on`,bubble({theme:t,type:y,time:true}),t));
+});
+cell("#v-card","Property 1=Loader",card("loader"));
+cell("#v-card","Property 1=Content",card("content"));
+cell("#v-card-nobtn","Property 1=Content · Button = off",card("content",false));
+cell("#v-button","State=Default, Theme=Dark",btn(),"dark");
+cell("#v-button","State=Hover, Theme=Dark",btn({hover:true}),"dark");
+cell("#v-button","State=Red, Theme=Dark",btn({red:true}),"dark");
+cell("#v-button","State=Default, Theme=Light",btn({light:true}));
+cell("#v-button","State=Hover, Theme=Light",btn({light:true,hover:true}));
+[["dark","fap"],["dark","procurement"],["light","procurement"]].forEach(([t,y])=>[false,true].forEach(h=>cell("#v-pi",`Theme=${t==="dark"?"Dark":"Light"}, Property 1=${h?"Hover":"Default"}, Type=${y==="fap"?"FAP":"Procurement Manage Agent"}`,pi({theme:t,type:y,hover:h}),t)));
+cell("#v-loader","State=1 (static)",loader(1),"center");
+cell("#v-loader","State=2 (static)",loader(2),"center");
+cell("#v-loader","Animated (State 1 ⇄ 2)",loader(0),"center");
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/brand.css">
+<link rel="stylesheet" href="components/skeleton.css">
+<link rel="stylesheet" href="components/comment-thread.css">
+<link rel="stylesheet" href="components/ai-chat-bubbles.css">`;
+const strip=s=>s.replace(/<svg[\s\S]*?<\/svg>/g,"<svg …/>");
+$("#code2").textContent=[
+"<!-- Chat bubble: AI, dark, with time -->",strip(bubble({theme:"dark",type:"ai",time:true})),
+"\n<!-- Chat bubble: User, light, Swapable = yes -->",strip(bubble({theme:"light",type:"user",swap:true})),
+"\n<!-- Chat bubble: Loading, light -->",strip(bubble({theme:"light",type:"loading"})),
+"\n<!-- AI bubble -->",strip(card("content")),
+"\n<!-- .button variants: --light, --red -->",btn({red:true}),
+"\n<!-- PI -->",strip(pi({theme:"dark",type:"fap"})),
+"\n<!-- Loader -->",loader(0)].join("\n");
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

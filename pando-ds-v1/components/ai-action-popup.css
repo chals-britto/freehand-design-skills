@@ -1,0 +1,315 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — AI Action popup, AI input, options
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 AI Chat (2814:5163)
+   › section "Freehand - ai - component":
+     · "Action - popup"              4514:13504 (2)  → .pds-ai-popup
+     · ".Option"                     4514:10881 (2)  → .pds-ai-option
+     · ".Input"                      4514:13465 (3)  → .pds-ai-input
+     · ".Input - Text"               4519:6595  (2)  → .pds-ai-input-text
+     · ".Responding_Text animation"  4524:7918  (4)  → .pds-ai-popup-responding
+   Requires ../tokens.css, radio.css, button.css, button-group.css,
+   input.css (Input - Text / .Base Input), ai-chat-composer.css (bar + .send).
+   Every atom inside is the kit class; this file only adds the layout and
+   the overrides Figma makes on the instances. Built 2026-10-28, not reviewed.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Action - popup (Context card) ── */
+  --ai-popup-bg:            var(--white);
+  --ai-popup-border:        var(--status-brown-medium);       /* #FAAE3C, 1px inside */
+  --ai-popup-radius:        8px;
+  --ai-popup-shadow:        0 0 42px -12px rgb(0 0 0 / .16);  /* off-token in Figma — drop shadow 0 0 42 −12, #000 16% */
+  --ai-popup-pad:           20px;
+  --ai-popup-gap:           20px;                             /* header · body · actions */
+  --ai-popup-body-gap:      var(--space-10);                  /* Type=Default: summary ↔ input */
+  --ai-popup-body-gap-opt:  var(--space-15);                  /* Type=Option: options ↔ input */
+  --ai-popup-header-pad:    0 5px;
+  --ai-popup-heading:       600 16px/22px var(--font-family); /* Open Sans SemiBold 16/auto — no 16 SemiBold in tokens */
+  --ai-popup-heading-fg:    var(--status-brown-dark);         /* #422500 */
+  /* Summary (Type=Default) */
+  --ai-popup-summary-bg:    linear-gradient(90deg, #FFF7ED, var(--white)); /* off-token in Figma — #FFF7ED → #FFF, layer 80% */
+  --ai-popup-summary-opacity: .8;
+  --ai-popup-summary-stroke: var(--highlight-orange);          /* #FF8C54, 0.1px inside */
+  --ai-popup-summary-radius: 4px;
+  --ai-popup-summary-pad:   var(--space-10);
+  --ai-popup-summary-label: var(--text-dark);                 /* #313131 SemiBold 12 */
+  --ai-popup-summary-from:  var(--dark-input-text);           /* #8A8A9E SemiBold 13 */
+  --ai-popup-summary-arrow: #1E2939;                          /* off-token in Figma — " → " SemiBold 13 */
+  --ai-popup-summary-to:    var(--freehand-orange);           /* #FE6505 SemiBold 13 */
+  --ai-popup-summary-lh:    22px;                             /* Figma line height 22 (last run 20) */
+  /* Actions (kit Button Group, Type=Buttons, overridden) */
+  --ai-popup-actions-gap:   var(--space-10);                  /* Figma instance: gap 10, space-between */
+  --ai-popup-button-ink:    linear-gradient(90deg, var(--status-green-dark), var(--dark-light)); /* #041F04 → #343440 — Skip label + Confirm fill */
+  /* Footer disclaimer */
+  --ai-popup-footer-pad:    var(--space-10) var(--space-10) 0;
+  --ai-popup-footer:        400 9.5px/12px var(--font-family); /* Open Sans Regular 9.5/12 — not in tokens */
+  --ai-popup-footer-fg:     var(--text-medium);               /* #545454 */
+
+  /* ── .Option ── */
+  --ai-option-pad:          var(--space-10);
+  --ai-option-h:            36px;
+  --ai-option-gap:          var(--space-10);                  /* radio ↔ text (popup instances) */
+  --ai-option-divider:      var(--border-input-light);        /* #E2EAEC, 0.5px bottom, inside */
+  --ai-option-fg:           var(--text-dark);                 /* #313131 */
+  --ai-option-font:         400 12px/16px var(--font-family); /* master: Regular 12/auto */
+  --ai-option-font-popup:   600 12px/16px var(--font-family); /* popup instances: SemiBold 12/auto */
+  --ai-option-hover-bg:     var(--white);
+  --ai-option-hover-fg:     var(--freehand-orange);           /* #FE6505 */
+  --ai-option-radius:       4px;
+  --ai-option-arrow:        10px;                             /* Navigation/Filter Arrow, rotated to point right */
+  --ai-option-selected-bg:  var(--ai-popup-summary-bg);       /* same gradient, 80% */
+  --ai-option-selected-stroke: var(--highlight-orange);       /* #FF8C54, 0.1px */
+  --ai-option-radio:        var(--freehand-orange);           /* #FE6505 — instance override of Radio Selected (kit #0076DD) */
+
+  /* ── .Input - Text (kit Input - Text + .Base Input, no label) ── */
+  --ai-input-text-h:        42px;
+  --ai-input-text-radius:   4px;
+  --ai-input-text-icon:     var(--pando-dark);                /* Indicator Icon/Edit, #234357, 10px */
+  --ai-input-text-ph:       400 12px/16px var(--font-family); /* Regular 12/auto, #6C6C6C (kit placeholder) */
+  --ai-input-caret:         #295EFF;                          /* off-token in Figma — Cursor/Typing (GIF) colour layer */
+  --ai-input-caret-w:       1.5px;
+  --ai-input-caret-h:       13px;
+  --ai-input-caret-x:       22px;                             /* Figma: cursor at x 22, y 13 inside the 256 × 42 field */
+
+  /* ── .Input (prompt bar = ai-chat-composer, overridden) ── */
+  --ai-input-bar-pad:       var(--space-15) var(--space-15) var(--space-10); /* 15 15 10 15 */
+  --ai-input-bar-gap:       var(--space-15);
+  --ai-input-bar-border:    var(--border-grey);               /* #EFEFEF 1px inside */
+  --ai-input-bar-shadow:    var(--shadow-3);                  /* 0 2 14 10% */
+  --ai-input-ph:            #737373;                          /* off-token in Figma — "Ask Freehand" Regular 12 */
+  --ai-input-add:           var(--text-light);                /* #6C6C6C — Indicator Icon/Add override */
+  --ai-input-send:          28px;                             /* .send instance scaled 30 → 28 */
+  --ai-input-send-glyph:    18.67px;                          /* 20 × 28/30 */
+  /* Prompt chip (Prompt · Theme=Light, State=Default, Type=Simple — atom missing in kit) */
+  --ai-input-chip-pad:      6px 12px 6px 8px;
+  --ai-input-chip-gap:      8px;
+  --ai-input-chip-bg:       var(--accent-alternate-white);    /* #F9FAFA */
+  --ai-input-chip-border:   var(--border-input-light);        /* #E2EAEC 1px inside */
+  --ai-input-chip-radius:   14px;
+  --ai-input-chip-fg:       var(--text-dark);                 /* #313131 text + icon */
+  --ai-input-chip-font:     400 10px/12px var(--font-family); /* Regular 10/12, no tracking */
+  /* Floating message (Skipped Action) + Tagged context */
+  --ai-input-float-pad:     0 var(--space-10);
+  --ai-input-float-bg:      #FFF7ED;                          /* off-token in Figma — white + #FFF7ED */
+  --ai-input-float-inner-pad: 6px var(--space-15) var(--space-12); /* 6 15 12 15 */
+  --ai-input-float-radius:  var(--radius-12) var(--radius-12) 0 0;
+  --ai-input-float-overlap: -7px;                             /* Figma gap −7: the message tucks under the bar */
+  --ai-input-hint:          400 10px/12px var(--font-family); /* Regular 10/12 */
+  --ai-input-hint-fg:       var(--text-medium);               /* #545454 */
+  --ai-input-link:          600 10px/14px var(--font-family); /* SemiBold 10/auto */
+  --ai-input-link-fg:       var(--status-brown-dark);         /* #422500 */
+  --ai-input-tag-pad:       5px var(--space-10);
+  --ai-input-tag-radius:    6px;
+  --ai-input-tag-gap:       4px;                              /* tag ↔ bar */
+  --ai-input-tag-close:     var(--grey-dark);                 /* #515151 Navigation/Close-Tag, 10px */
+
+  /* ── .Responding_Text animation ── */
+  --ai-responding-gap:      4px;
+  --ai-responding-fg:       var(--text-dark);                 /* #313131 */
+  --ai-responding-dim-a:    var(--grey-medium);               /* #A3A3A3 gradient start */
+  --ai-responding-dim-b:    #DCDCDC;                          /* off-token in Figma — gradient end */
+  --ai-responding-spinner:  12px;
+  --ai-responding-spinner-fg: var(--pando-blue);              /* GIF is a #047ADC ramp; nearest token */
+  --ai-responding-step:     .3s;                              /* Smart animate 300 ms ease-out per frame */
+  --ai-focus-ring:          2px solid var(--pando-blue);      /* added in review */
+}
+
+/* ════ Action - popup ═══════════════════════════════════════════════ */
+.pds-ai-popup { display: flex; flex-direction: column; width: 100%; font-family: var(--font-family); box-sizing: border-box; }
+.pds-ai-popup *, .pds-ai-popup *::before, .pds-ai-popup *::after { box-sizing: border-box; }
+.pds-ai-popup__card {
+  display: flex; flex-direction: column; gap: var(--ai-popup-gap);
+  padding: var(--ai-popup-pad);
+  background: var(--ai-popup-bg);
+  border-radius: var(--ai-popup-radius);
+  box-shadow: inset 0 0 0 1px var(--ai-popup-border), var(--ai-popup-shadow);
+}
+.pds-ai-popup__header { display: flex; align-items: center; justify-content: space-between; padding: var(--ai-popup-header-pad); }
+.pds-ai-popup__heading { margin: 0; font: var(--ai-popup-heading); color: var(--ai-popup-heading-fg); }
+.pds-ai-popup__body { display: flex; flex-direction: column; gap: var(--ai-popup-body-gap); }
+.pds-ai-popup--option .pds-ai-popup__body { gap: var(--ai-popup-body-gap-opt); }
+
+/* Summary: bullet list of field changes (label : from → to) */
+.pds-ai-popup__summary {
+  position: relative; isolation: isolate;
+  margin: 0; padding: var(--ai-popup-summary-pad); list-style: none;
+  border-radius: var(--ai-popup-summary-radius);
+}
+.pds-ai-popup__summary::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: var(--ai-popup-summary-bg); opacity: var(--ai-popup-summary-opacity);
+  box-shadow: inset 0 0 0 .1px var(--ai-popup-summary-stroke);
+}
+.pds-ai-popup__summary li { position: relative; padding-left: 18px; font: 600 13px/var(--ai-popup-summary-lh) var(--font-family); color: var(--ai-popup-summary-arrow); }
+.pds-ai-popup__summary li::before { content: "•"; position: absolute; left: 6px; color: var(--ai-popup-summary-label); }
+.pds-ai-popup__label { font-size: 12px; color: var(--ai-popup-summary-label); }
+.pds-ai-popup__from { color: var(--ai-popup-summary-from); }
+.pds-ai-popup__to { color: var(--ai-popup-summary-to); }
+
+/* Options list */
+.pds-ai-popup__options { display: flex; flex-direction: column; margin: 0; padding: 0; border: 0; min-width: 0; }
+.pds-ai-popup__legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* heading repeated for screen readers */
+
+/* Actions: kit Button Group, Type=Buttons — the instance is space-between, gap 10 */
+.pds-ai-popup__actions.pds-button-group { justify-content: space-between; gap: var(--ai-popup-actions-gap); }
+.pds-ai-popup__skip.pds-button--secondary > span {
+  background: var(--ai-popup-button-ink); -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.pds-ai-popup__skip.pds-button--secondary:hover:not(:disabled) > span { -webkit-text-fill-color: currentColor; background: none; } /* kit hover look */
+.pds-ai-popup__confirm.pds-button:not(:hover):not(:disabled):not(.is-hover) { background: var(--ai-popup-button-ink); }
+
+/* Footer disclaimer (also used under .Input) */
+.pds-ai-popup__footer, .pds-ai-input__footer {
+  margin: 0; padding: var(--ai-popup-footer-pad);
+  font: var(--ai-popup-footer); color: var(--ai-popup-footer-fg); text-align: center;
+}
+
+/* ════ .Option ═════════════════════════════════════════════════════ */
+.pds-ai-option {
+  display: flex; align-items: center; gap: var(--ai-option-gap);
+  min-height: var(--ai-option-h); padding: var(--ai-option-pad);
+  box-shadow: inset 0 -.5px 0 var(--ai-option-divider);
+  font: var(--ai-option-font); color: var(--ai-option-fg);
+  cursor: pointer; position: relative; isolation: isolate; box-sizing: border-box;
+}
+.pds-ai-option__text { flex: 1 1 auto; min-width: 0; }
+.pds-ai-option__arrow { flex: none; width: var(--ai-option-arrow); height: var(--ai-option-arrow); transform: rotate(-90deg); color: var(--ai-option-hover-fg); visibility: hidden; }
+.pds-ai-option__arrow svg { display: block; width: 100%; height: 100%; }
+/* State=Hover (Figma: On hover → Change to Hover) */
+.pds-ai-option:hover, .pds-ai-option.is-hover {
+  background: var(--ai-option-hover-bg); border-radius: var(--ai-option-radius);
+  box-shadow: none; color: var(--ai-option-hover-fg);
+}
+.pds-ai-option:hover .pds-ai-option__arrow, .pds-ai-option.is-hover .pds-ai-option__arrow { visibility: visible; }
+/* Inside the popup: kit Radio in the left slot, SemiBold text */
+.pds-ai-option--radio { font: var(--ai-option-font-popup); }
+.pds-ai-option--radio .pds-radio__input { --_selected: var(--ai-option-radio); }
+/* Selected row (instance override on the first option) */
+.pds-ai-option.is-selected, .pds-ai-option:has(.pds-radio__input:checked) { box-shadow: none; border-radius: var(--ai-option-radius); }
+.pds-ai-option.is-selected::before, .pds-ai-option:has(.pds-radio__input:checked)::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: var(--ai-option-selected-bg); opacity: var(--ai-popup-summary-opacity);
+  box-shadow: inset 0 0 0 .1px var(--ai-option-selected-stroke);
+}
+.pds-ai-option:has(.pds-radio__input:focus-visible) { outline: var(--ai-focus-ring); outline-offset: -2px; } /* added in review */
+.pds-ai-option .pds-radio__input:focus-visible { outline: none; }
+
+/* ════ .Input - Text (kit Input - Text, Default Standard, no label) ═ */
+.pds-ai-input-text.pds-input { width: 100%; }
+.pds-ai-input-text .pds-input__box {
+  height: var(--ai-input-text-h); justify-content: center;
+  border-radius: var(--ai-input-text-radius);
+}
+.pds-ai-input-text .pds-input__row { flex: none; }
+.pds-ai-input-text .pds-input__icon { color: var(--ai-input-text-icon); }
+.pds-ai-input-text .pds-input__icon svg { display: block; width: 100%; height: 100%; }
+.pds-ai-input-text .pds-input__control::placeholder { font: var(--ai-input-text-ph); }
+/* Property 1=Hover = Input - Text State=Active (blue border) + Cursor/Typing */
+.pds-ai-input-text .pds-input__box:hover,
+.pds-ai-input-text.is-hover .pds-input__box { border-color: var(--input-border-active); }
+.pds-ai-input-text__caret {
+  position: absolute; left: var(--ai-input-caret-x); top: 50%;
+  width: var(--ai-input-caret-w); height: var(--ai-input-caret-h); margin-top: calc(var(--ai-input-caret-h) / -2);
+  background: var(--ai-input-caret);
+  animation: pds-ai-caret 1s steps(1) infinite;
+  display: none; pointer-events: none;
+}
+.pds-ai-input-text.is-hover .pds-ai-input-text__caret { display: block; }
+@keyframes pds-ai-caret { 50% { opacity: 0; } }
+
+/* ════ .Input (prompt bar) ═════════════════════════════════════════ */
+.pds-ai-input { display: flex; flex-direction: column; width: 100%; font-family: var(--font-family); box-sizing: border-box; }
+.pds-ai-input *, .pds-ai-input *::before, .pds-ai-input *::after { box-sizing: border-box; }
+.pds-ai-input--skipped { gap: 0; }
+.pds-ai-input--skipped .pds-ai-input__float { margin-bottom: var(--ai-input-float-overlap); }
+.pds-ai-input--tagged { gap: var(--ai-input-tag-gap); }
+/* The bar is the kit composer (stacked, Light) with the .Input values */
+.pds-ai-input .pds-ai-composer {
+  position: relative; z-index: 1;
+  padding: var(--ai-input-bar-pad); gap: var(--ai-input-bar-gap);
+  box-shadow: inset 0 0 0 1px var(--ai-input-bar-border), var(--ai-input-bar-shadow);
+  --_ph: var(--ai-input-ph); --_add: var(--ai-input-add);
+}
+.pds-ai-input .pds-ai-composer__field::placeholder,
+.pds-ai-input .pds-ai-composer__field--ph { font: var(--ai-input-text-ph); color: var(--ai-input-ph); }
+.pds-ai-input .pds-ai-composer__divider { display: none; } /* "header-border" is hidden in Figma */
+.pds-ai-input .pds-ai-composer__send { --button-icon-size: var(--ai-input-send); --button-icon-glyph: var(--ai-input-send-glyph); }
+.pds-ai-input .pds-ai-composer:focus-within { outline: var(--ai-focus-ring); outline-offset: 2px; } /* added in review */
+/* Prompt chip */
+.pds-ai-input__chip {
+  display: inline-flex; align-items: center; gap: var(--ai-input-chip-gap);
+  padding: var(--ai-input-chip-pad); margin: 0;
+  background: var(--ai-input-chip-bg); border: 0; border-radius: var(--ai-input-chip-radius);
+  box-shadow: inset 0 0 0 1px var(--ai-input-chip-border);
+  font: var(--ai-input-chip-font); color: var(--ai-input-chip-fg); cursor: pointer; white-space: nowrap;
+}
+.pds-ai-input__chip svg { width: 14px; height: 14px; flex: none; display: block; }
+.pds-ai-input__chip:focus-visible, .pds-ai-input__link:focus-visible, .pds-ai-input__tag-close:focus-visible { outline: var(--ai-focus-ring); outline-offset: 2px; }
+/* Floating message (Skipped Action) */
+.pds-ai-input__float { padding: var(--ai-input-float-pad); }
+.pds-ai-input__float-inner {
+  display: flex; align-items: center; gap: var(--space-10);
+  padding: var(--ai-input-float-inner-pad);
+  background: var(--ai-input-float-bg); border-radius: var(--ai-input-float-radius);
+}
+.pds-ai-input__hint { flex: 1 1 auto; min-width: 0; margin: 0; font: var(--ai-input-hint); color: var(--ai-input-hint-fg); }
+.pds-ai-input__link {
+  display: inline-flex; align-items: center; gap: var(--space-10); flex: none;
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font: var(--ai-input-link); color: var(--ai-input-link-fg);
+}
+.pds-ai-input__link svg { width: 10px; height: 10px; transform: rotate(-90deg); display: block; }
+/* Tagged context */
+.pds-ai-input__tag { padding: var(--ai-input-float-pad); }
+.pds-ai-input__tag-inner {
+  display: flex; align-items: center; gap: var(--space-10);
+  padding: var(--ai-input-tag-pad);
+  background: var(--ai-input-float-bg); border-radius: var(--ai-input-tag-radius);
+}
+.pds-ai-input__tag-text { flex: 1 1 auto; min-width: 0; margin: 0; font: var(--ai-input-hint); color: var(--ai-input-hint-fg); }
+.pds-ai-input__tag-text b { font: var(--ai-input-link); line-height: 12px; color: var(--ai-input-link-fg); }
+.pds-ai-input__tag-close { flex: none; width: 10px; height: 10px; padding: 0; margin: 0; border: 0; background: none; color: var(--ai-input-tag-close); cursor: pointer; }
+.pds-ai-input__tag-close svg { display: block; width: 100%; height: 100%; }
+
+/* ════ .Responding_Text animation ══════════════════════════════════ */
+@property --pds-ai-resp-a { syntax: "<color>"; inherits: true; initial-value: #313131; }
+@property --pds-ai-resp-b { syntax: "<color>"; inherits: true; initial-value: #313131; }
+@property --pds-ai-resp-dots { syntax: "<number>"; inherits: true; initial-value: 1; }
+.pds-ai-popup-responding {
+  --pds-ai-resp-a: var(--ai-responding-fg); --pds-ai-resp-b: var(--ai-responding-fg); --pds-ai-resp-dots: 1;
+  display: inline-flex; align-items: center; gap: var(--ai-responding-gap);
+  font-family: var(--font-family);
+}
+.pds-ai-popup-responding__spinner { flex: none; width: var(--ai-responding-spinner); height: var(--ai-responding-spinner); color: var(--ai-responding-spinner-fg); }
+.pds-ai-popup-responding .pds-button__spinner { width: 100%; height: 100%; display: block; }
+.pds-ai-popup-responding__text, .pds-ai-popup-responding__dots {
+  background: linear-gradient(to top, var(--pds-ai-resp-a) -62%, var(--pds-ai-resp-b) 98%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--ai-responding-fg);
+}
+.pds-ai-popup-responding__text { font: 600 12px/16px var(--font-family); }
+.pds-ai-popup-responding__dots { font: 400 12px/16px var(--font-family); opacity: var(--pds-ai-resp-dots); }
+/* Static frames (Property 1 = Default · 2 · 3 · 4) */
+.pds-ai-popup-responding--f2 { --pds-ai-resp-a: var(--ai-responding-dim-a); --pds-ai-resp-b: var(--ai-responding-dim-b); --pds-ai-resp-dots: 0; }
+.pds-ai-popup-responding--f3 { --pds-ai-resp-a: var(--ai-responding-dim-a); --pds-ai-resp-b: var(--ai-responding-dim-b); }
+.pds-ai-popup-responding--f4 { --pds-ai-resp-dots: 0; }
+.pds-ai-popup-responding--f1 .pds-button__spinner,
+.pds-ai-popup-responding--f2 .pds-button__spinner,
+.pds-ai-popup-responding--f3 .pds-button__spinner,
+.pds-ai-popup-responding--f4 .pds-button__spinner { animation: none; }
+/* Live loop: Default → 2 → 3 → 4 → Default, each 300 ms ease-out (Figma After delay ≈ 0 + Smart animate 300 ms) */
+.pds-ai-popup-responding--live { animation: pds-ai-responding calc(var(--ai-responding-step) * 4) infinite; }
+@keyframes pds-ai-responding {
+  0%   { --pds-ai-resp-a: var(--ai-responding-fg);    --pds-ai-resp-b: var(--ai-responding-fg);    --pds-ai-resp-dots: 1; animation-timing-function: ease-out; }
+  25%  { --pds-ai-resp-a: var(--ai-responding-dim-a); --pds-ai-resp-b: var(--ai-responding-dim-b); --pds-ai-resp-dots: 0; animation-timing-function: ease-out; }
+  50%  { --pds-ai-resp-a: var(--ai-responding-dim-a); --pds-ai-resp-b: var(--ai-responding-dim-b); --pds-ai-resp-dots: 1; animation-timing-function: ease-out; }
+  75%  { --pds-ai-resp-a: var(--ai-responding-fg);    --pds-ai-resp-b: var(--ai-responding-fg);    --pds-ai-resp-dots: 0; animation-timing-function: ease-out; }
+  100% { --pds-ai-resp-a: var(--ai-responding-fg);    --pds-ai-resp-b: var(--ai-responding-fg);    --pds-ai-resp-dots: 1; }
+}
+
+/* Reduced motion: hold frame 1 (Default), stop the spinner and the caret blink */
+@media (prefers-reduced-motion: reduce) {
+  .pds-ai-popup-responding--live { animation: none; }
+  .pds-ai-popup-responding .pds-button__spinner { animation: none; }
+  .pds-ai-input-text__caret { animation: none; }
+}

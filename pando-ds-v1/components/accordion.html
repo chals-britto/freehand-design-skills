@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Accordion · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="accordion.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* accordion page */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.vlist{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;padding:20px}
+.vlist .pds-accordion{max-width:577px}
+.vlist h3{font:600 13px var(--pg-ui);margin:10px 0 0;color:var(--pg-muted)}
+.ctrls .note{font-size:11.5px;color:var(--pg-muted)}
+.astage{padding:24px;background:var(--pg-soft);border-radius:0 10px 10px 0;display:flex;flex-direction:column;gap:1px;min-height:240px}
+.astage .pds-accordion{max-width:577px;width:100%}
+.ex-content{padding:12px 15px;background:var(--white);color:var(--text-medium);font:400 12px/17px "Open Sans",sans-serif}
+.open-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.slotrow{display:flex;gap:28px;flex-wrap:wrap;align-items:center;padding:4px 0 0}
+@media (max-width:760px){.astage{border-radius:0 0 10px 10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Accordion</h1>
+    <p class="lede">The Accordion is a collapsible content container that allows users to progressively show or hide related sections of information. It reduces cognitive load by keeping the UI clean and scannable — users expand only the content they need.</p>
+    <div class="meta"><span>Status: Built 2026-10-23 · no review yet (all published variants kept)</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=295-25" target="_blank" rel="noopener">Figma component 295:25 ↗</a><span>Files: accordion.css · accordion.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area="try"><h2>Try it</h2><p class="sub">Click a header (or Tab to it and press Enter / Space) to open and close it. Hover shows the Figma hover state where one exists.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls">
+    <label>Type<select id="c-type"><option value="vertical">Vertical</option><option value="slideout">Slideout</option><option value="page">Page</option></select></label>
+    <label>Theme<select id="c-theme"><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <label>Header title<input type="text" id="c-title" value="Accordion Header"></label>
+    <label class="chk"><input type="checkbox" id="c-sec"> Show secondary text</label>
+    <label>With additional details<select id="c-det"><option value="">None</option><option value="toggle">Toggle Inputs</option><option value="stats">Stats</option><option value="status">Text Status</option></select></label>
+    <p class="note" id="c-note"></p>
+  </form>
+  <div class="astage" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area="variants"><h2>Variants</h2><p class="sub">All 19 variants in the Figma set, rendered with the real classes. Hover variants use the <code>.is-hover</code> class to show the state statically.</p>
+<div class="panel vlist" id="vlist"></div></section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma component.</p>
+<div class="panel">
+<div class="spec-table">
+  <div><b>Header height</b><code>35px</code> Vertical / Slideout · Page <code>31px</code> (<code>28px</code> with details)</div>
+  <div><b>Width</b>fluid · <code>577px</code> in Figma</div>
+  <div><b>Padding</b><code>0 10px 0 15px</code> · Page <code>6px 20px</code></div>
+  <div><b>Indicator</b><code>2px</code> bar, left edge, full height</div>
+  <div><b>Gaps</b>title↔secondary <code>5px</code> · slot↔toggle <code>20px</code> · Page heading↔switch <code>10px</code></div>
+  <div><b>Toggle icon</b><code>20px</code> box · glyph <code>11px</code> · arrow shaft <code>12px</code> / <code>19px</code> on dark hover</div>
+  <div><b>Boxed toggle</b>white · <code>0.5px</code> <code>--pando-light</code> · radius <code>2px</code></div>
+  <div><b>Title</b><code>.type-12-semibold</code> uppercase · tracking <code>0.3px</code></div>
+  <div><b>Page title</b><code>.type-14-semibold</code> · <code>--pando-blue-active</code></div>
+  <div><b>Page action</b><code>.type-10-semibold</code> caps, no tracking · <code>--accent-tertiary-action</code></div>
+  <div><b>Page radius</b><code>4px</code></div>
+  <div><b>Page panel</b>pad <code>10 8 10 15</code> · inner <code>--accent-alternate-white</code> pad <code>10</code> gap <code>4</code></div>
+  <div><b>Shadow</b>none</div>
+</div>
+<div class="spec-table" id="colour-table" style="margin-top:0"></div>
+</div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2><p class="sub">Text below is from the Figma documentation frames on the Accordion page.</p>
+<div class="cols">
+  <div class="panel card"><h3>Which type</h3><ul><li><b>Vertical</b> — best for data tables and detail panels where users browse selectively.</li><li><b>Slideout</b> — best inside navigation drawers with grouped menu items. Communicates direction with arrows.</li><li><b>Page</b> — best for dashboards where entire sections can be toggled. Includes swappable content slots.</li></ul></div>
+  <div class="panel card"><h3>Theme &amp; details</h3><ul><li>Light theme by default. Dark theme only in dark-mode sidebars or on dark backgrounds.</li><li>Use inline metadata headers for data grids so users can scan without expanding every row.</li></ul></div>
+</div>
+<div class="cols" style="margin-top:14px">
+  <div class="panel card"><h3>Do</h3><ul><li>Use when content sections are long and users may only need specific parts.</li><li>Keep accordion headers short, clear, and scannable (ideally under 5 words).</li><li>Use Vertical for page body; Slideout for navigation panels; Page for section grouping.</li><li>Use Additional Details = True to show metadata that helps users decide to expand.</li><li>Maintain consistent accordion types within the same context.</li></ul></div>
+  <div class="panel card"><h3>Don’t</h3><ul><li>Nest accordions more than 2 levels deep.</li><li>Use for content users always need to see — show it directly instead.</li><li>Place critical actions or alerts inside collapsed content.</li><li>Truncate important header info just to force expansion.</li><li>Mix Vertical and Slideout types in the same list.</li><li>Use when only 1–2 items exist — just show the content.</li></ul></div>
+</div>
+</section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Header is a button</h3><p>Each header is a <code>&lt;button&gt;</code> with <code>aria-expanded</code> and <code>aria-controls</code>. Tab reaches it; Enter or Space toggles it. The panel is a labelled region. Figma: “Headers must be keyboard-focusable. Use aria-expanded to communicate open/closed state.”</p></div>
+  <div class="panel card"><h3>Header slots are visual only</h3><p>The switch, checkbox and tags in the header are drawn, not interactive, because controls can’t sit inside a button. A real control there needs a split header (open issue).</p></div>
+  <div class="panel card"><h3>Open for the accessibility pass</h3><p>Dark closed title 3.6 : 1 · Page action 3.0 : 1 · Light toggle icons 1.7–1.8 : 1. No focus style in Figma (browser default ring shown). Kept as Figma for now.</p></div>
+</div></section>
+
+<section id="open" data-flag-area="open"><h2>Open issues</h2>
+<div class="panel card"><ul class="open-list">
+  <li>Light Slideout hover arrows point the other way to their resting state (Closed · Hover ←, Open · Hover →). Built as drawn.</li>
+  <li>Missing states: no Hover for Vertical · Light · Open, Vertical · Dark or Page; no Dark Page; no Additional Details for Slideout or Dark; no focus, pressed or disabled.</li>
+  <li>Slideout · Light · Closed title is #234357; the other Light Slideout states use #313131.</li>
+  <li>Slideout · Light · Open · Hover indicator is #EEF2F4 — barely visible on #F8F8F8.</li>
+  <li>Page title is an unstyled fill (#005399); Page action uses the temporary style “Temp/ Greyblue” (#6D8EB4).</li>
+  <li>Off-token colours: panel body text #000000; boxed minus #404040; Dark Slideout Open background is #24242F at 80%.</li>
+  <li>Type: title tracking 0.3px (the <code>.caps</code> class uses 0.5px); Figma line-heights are “auto” vs the type classes; the Page header with details is 28px tall (heading line-height 16) instead of 31px.</li>
+  <li>Page header always shows an “ACTIVE” switch with no property to hide it. A hidden “Status/Indent Type” icon and “Pointed Tag” have no property — not built.</li>
+  <li>Vertical and Slideout have no content panel in Figma — the panel shows whatever content is passed.</li>
+  <li>Secondary text colour in Dark is never set in Figma (always hidden); #234357 is used.</li>
+  <li>The Figma documentation frames disagree with the component (hover bg, header text colour, dark bg, Slideout bg, “content bg #F8F8F8”) and ask for a 200ms ease-in-out transition — not built. Three near-duplicate doc frames and loose fragments sit on the page.</li>
+  <li>Contrast below 4.5 : 1 — see Accessibility.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area="gaps"><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul class="open-list">
+  <li>Disabled state and focus state. <span class="src"><a href="https://carbondesignsystem.com/components/accordion/usage/" target="_blank" rel="noopener">Carbon Accordion</a></span></li>
+  <li>Flush alignment for side panels (no indent until hover/focus). <span class="src"><a href="https://carbondesignsystem.com/components/accordion/usage/" target="_blank" rel="noopener">Carbon Accordion</a></span></li>
+  <li>Chevron at the start of the header as an option. <span class="src"><a href="https://carbondesignsystem.com/components/accordion/usage/" target="_blank" rel="noopener">Carbon</a> · <a href="https://fluent2.microsoft.design/components/web/react/core/accordion/usage" target="_blank" rel="noopener">Fluent 2</a></span></li>
+  <li>“One open at a time” (single-expand) option. <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/accordion/usage" target="_blank" rel="noopener">Fluent 2 Accordion</a></span></li>
+  <li>Titles wrapped in a heading element (h1–h6) to fit the page outline. <span class="src"><a href="https://carbondesignsystem.com/components/accordion/usage/" target="_blank" rel="noopener">Carbon Accordion</a></span></li>
+  <li>Sentence-case headers (V1 uses all caps). <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/accordion/usage" target="_blank" rel="noopener">Fluent 2 Accordion</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include the files, then build accordions with <code>pdsAccordion.build()</code> or wire existing markup with <code>pdsAccordion.init()</code>.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup (what <code>accordion.js</code> produces):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="accordion.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const SAMPLE='<div class="ex-content">Panel content goes here. Figma has no content style for Vertical or Slideout.</div>';
+
+// Try it
+function renderTry(){
+  const type=$("#c-type").value; let theme=$("#c-theme").value; let det=$("#c-det").value;
+  const notes=[];
+  if(type==="page"&&theme==="dark"){theme="light";notes.push("Page exists in Light only.")}
+  if(det&&(type==="slideout"||theme==="dark")){notes.push("Figma has Additional Details only for Light Vertical and Light Page — shown anyway.")}
+  if(type==="page"&&$("#c-sec").checked)notes.push("Page has no secondary text.");
+  $("#c-note").textContent=notes.join(" ");
+  const st=$("#stage");st.replaceChildren();
+  st.style.background=theme==="dark"?"var(--dark-bg)":"";
+  for(let i=0;i<3;i++)st.appendChild(pdsAccordion.build({type,theme,open:i===0,title:i?$("#c-title").value+" "+(i+1):$("#c-title").value,secondary:$("#c-sec").checked&&type!=="page"?"Secondary Text":"",details:det||null,content:type==="page"?null:SAMPLE}));
+}
+$("#ctrls").addEventListener("input",renderTry);$("#ctrls").addEventListener("submit",e=>e.preventDefault());renderTry();
+
+// Variants (Figma order)
+const V=[
+ ["Vertical","Light","Closed",0,0],["Vertical","Light","Closed",1,0],["Vertical","Light","Open",0,0],
+ ["Vertical","Dark","Closed",0,0],["Vertical","Dark","Open",0,0],
+ ["Slideout","Light","Closed",0,0],["Slideout","Light","Closed",1,0],["Slideout","Light","Open",0,0],["Slideout","Light","Open",1,0],
+ ["Slideout","Dark","Closed",0,0],["Slideout","Dark","Closed",1,0],["Slideout","Dark","Open",0,0],["Slideout","Dark","Open",1,0],
+ ["Vertical","Light","Closed",0,"toggle"],["Vertical","Light","Open",0,"stats"],
+ ["Page","Light","Collapsed",0,0],["Page","Light","Open",0,0],["Page","Light","Collapsed",0,"stats"],["Page","Light","Open",0,"stats"]
+];
+const vl=$("#vlist");
+V.forEach(([t,th,s,h,d])=>{
+  const lbl=document.createElement("span");lbl.className="lbl";
+  lbl.textContent=`Theme=${th}, Type=${t}, State=${s}, Hover=${h?"True":"False"}, With Additional Details=${d?"True":"False"}`;
+  const wrap=document.createElement("div");wrap.className="vcell";wrap.appendChild(lbl);
+  const a=pdsAccordion.build({type:t.toLowerCase(),theme:th.toLowerCase(),open:s==="Open",details:d||null,content:t==="Page"?null:""});
+  if(h)a.querySelector(".pds-accordion__header").classList.add("is-hover");
+  wrap.appendChild(a);vl.appendChild(wrap);
+});
+{const h=document.createElement("h3");h.textContent="Header slot — “Additional Info - Swappable with Local” (Type = Toggle Inputs · Stats · Text Status)";vl.appendChild(h);
+ const r=document.createElement("div");r.className="slotrow";
+ ["toggle","stats","status"].forEach(k=>{const tmp=pdsAccordion.build({details:k});const s=tmp.querySelector(".pds-accordion__right > span");r.appendChild(s)});vl.appendChild(r);}
+{const a=pdsAccordion.build({secondary:"Secondary Text"});const w=document.createElement("div");w.className="vcell";w.innerHTML='<span class="lbl">Show Secondary Text = true (Vertical · Light · Closed)</span>';w.appendChild(a);vl.appendChild(w);}
+
+// colour table
+$("#colour-table").innerHTML=[
+ ["Light closed bg","--accent-off-white"],["Light open bg","--white"],["Vertical hover bg","--accent-light-blue-bg"],["Slideout hover bg","--accent-light-highlight"],
+ ["Light title","--pando-dark / --text-dark"],["Light icon","--border-blue-grey"],["Dark bg","--dark-light"],["Dark Slideout open bg","#24242F @ 80%"],
+ ["Dark title","--dark-input-text → --dark-label-text"],["Page header","--pando-light"],["Page title","--pando-blue-active"],["Page action","--accent-tertiary-action"]
+].map(([k,v])=>`<div><b>${k}</b><code>${v}</code></div>`).join("");
+
+// code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/accordion.css">
+<script src="components/accordion.js"><\/script>
+
+<script>
+  const acc = pdsAccordion.build({
+    type: 'vertical',        // vertical | slideout | page
+    theme: 'light',          // light | dark (Vertical, Slideout)
+    title: 'Accordion Header',
+    secondary: '',           // optional secondary text
+    details: null,           // null | 'toggle' | 'stats' | 'status'
+    open: false,
+    content: myPanelNode
+  });
+  list.appendChild(acc);
+  // or wire server-rendered markup:
+  pdsAccordion.init(document);
+<\/script>`;
+$("#code2").textContent=pdsAccordion.build({title:"Accordion Header",content:"…"}).outerHTML.replace(/></g,">\n<");
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

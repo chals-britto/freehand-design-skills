@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Badges &amp; Callouts · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="badge.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.vh{font-size:14px;font-weight:600;margin:20px 0 8px}.vh span{font:400 11.5px var(--pg-mono);color:var(--pg-muted);margin-left:6px}
+.vcell>div{display:flex;align-items:center;min-height:24px}
+.card a{color:var(--pg-accent)}
+.open ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Badges &amp; Callouts</h1>
+    <p class="lede">Three static components from one Figma page: Badge, Callout (Subheader Notification) and Indicator Ribbon (“Ribbon for listing card”). Figma has no other description; the page’s documentation block is an empty template.</p>
+    <div class="meta"><span>Status: Built from Figma 2026-10-23 · not reviewed</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3185-1868" target="_blank" rel="noopener">Figma page 3185:1868 ↗</a><span>Files: badge.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="variants" data-flag-area="variants"><h2>Variants</h2><p class="sub">Every published variant, colours exactly as in Figma. Figma’s own sample text.</p>
+<h3 class="vh">Callout / Subheader Notification <span>3241:3594 · Property 1</span></h3>
+<div class="panel vgrid">
+  <div class="vcell"><span class="lbl">Property 1=Info</span><div><div class="pds-callout pds-callout--info"><span class="pds-callout__icon" aria-hidden="true"></span><p class="pds-callout__text">Notification title goes here</p></div></div></div>
+  <div class="vcell"><span class="lbl">Property 1=Error</span><div><div class="pds-callout pds-callout--error"><span class="pds-callout__icon" aria-hidden="true"></span><p class="pds-callout__text">Notification title goes here</p></div></div></div>
+  <div class="vcell"><span class="lbl">Property 1=Success</span><div><div class="pds-callout pds-callout--success"><span class="pds-callout__icon" aria-hidden="true"></span><p class="pds-callout__text">Notification title goes here</p></div></div></div>
+</div>
+<h3 class="vh">Badge <span>3241:3574 · Type × Size × Color</span></h3>
+<div class="panel vgrid">
+  <div class="vcell"><span class="lbl">Type=Count, Size=Small, Color=Blue</span><div><span class="pds-badge pds-badge--count">+3</span></div></div>
+  <div class="vcell"><span class="lbl">Type=Text, Size=Small, Color=Green</span><div><span class="pds-badge pds-badge--sm pds-badge--green"><span class="pds-badge__dot" aria-hidden="true"></span><span class="pds-badge__value">1 Sep 2022 - 10:35 AM</span></span></div></div>
+  <div class="vcell"><span class="lbl">Type=Text, Size=Small, Color=Red</span><div><span class="pds-badge pds-badge--sm pds-badge--red"><span class="pds-badge__dot" aria-hidden="true"></span><span class="pds-badge__value">2 Sep 2022 - 5:35 PM</span></span></div></div>
+  <div class="vcell"><span class="lbl">Type=Text, Size=Large, Color=Red</span><div><span class="pds-badge pds-badge--lg pds-badge--red"><span class="pds-badge__dot" aria-hidden="true"></span><span class="pds-badge__label">difference</span><span class="pds-badge__value"><span class="pds-badge__light">+</span> USD 50.00 <span class="pds-badge__light">more</span></span></span></div></div>
+  <div class="vcell"><span class="lbl">Type=Text, Size=Large, Color=Blue</span><div><span class="pds-badge pds-badge--lg pds-badge--blue"><span class="pds-badge__dot" aria-hidden="true"></span><span class="pds-badge__label">total approval amount</span><span class="pds-badge__value">USD 2,617.99</span></span></div></div>
+  <div class="vcell"><span class="lbl">Type=Text, Size=Large, Color=Green</span><div><span class="pds-badge pds-badge--lg pds-badge--green"><span class="pds-badge__dot" aria-hidden="true"></span><span class="pds-badge__label">amount</span><span class="pds-badge__value">USD 2,617.99</span></span></div></div>
+  <div class="vcell"><span class="lbl">Type=Text, Size=Large, Color=Blue · Show Label=false</span><div><span class="pds-badge pds-badge--lg pds-badge--blue"><span class="pds-badge__dot" aria-hidden="true"></span><span class="pds-badge__value">USD 2,617.99</span></span></div></div>
+</div>
+<h3 class="vh">Indicator Ribbon <span>2533:905 · State × Show Checkbox</span></h3>
+<div class="panel vgrid" id="ribbons"></div>
+</section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="panel">
+<div class="spec-table">
+  <div><b>Callout size</b><code>34px</code> high · width hugs</div>
+  <div><b>Callout padding · gap</b><code>0 20px</code> · <code>10px</code></div>
+  <div><b>Callout icon</b><code>16px</code> ring 10% + <code>8px</code> gradient dot</div>
+  <div><b>Callout text</b><code>.type-12-semibold</code></div>
+  <div><b>Badge Small</b><code>16px</code> high · <code>0 5px</code> · gap <code>5px</code> · radius <code>4px</code></div>
+  <div><b>Badge Large</b><code>24px</code> high · <code>4px 8px</code> · gap <code>8px</code> · radius <code>2px</code></div>
+  <div><b>Badge dot</b><code>5px</code></div>
+  <div><b>Badge text</b>Small <code>.type-12-semibold</code> · Large label <code>.type-10-semibold</code> caps, 0 tracking · value <code>.type-12-bold</code> caps</div>
+  <div><b>Badge Count</b><code>16 × 16</code> · <code>1px 2px</code> · round · <code>.type-10-semibold</code></div>
+  <div><b>Ribbon size</b><code>52px</code> high · tail <code>20px</code></div>
+  <div><b>Ribbon padding · gap</b><code>10 10 10 15</code> (Warning <code>10</code>) · <code>10px</code></div>
+  <div><b>Ribbon radius · text</b><code>2px 0 0 2px</code> · <code>.type-12-semibold</code> caps</div>
+  <div><b>Shadow</b>none on any of the three</div>
+</div></div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>From Figma</h3><p>Indicator Ribbon: “Ribbon for listing card”. Nothing else is documented. The documentation block on the page still reads “Enter Description” and “Enter suggestion here”.</p></div>
+  <div class="panel card"><h3>Properties</h3><ul><li>Callout: <code>Notification Text</code></li><li>Badge: <code>Show Label</code> (Large), <code>Count</code> (default “+3”)</li><li>Ribbon: <code>Show Checkbox</code> (default off)</li></ul></div>
+</div></section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Static text</h3><p>Nothing here takes focus. Dots and icons are decorative (<code>aria-hidden</code>); the text must carry the meaning.</p></div>
+  <div class="panel card"><h3>Open for the accessibility pass</h3><p>Below 4.5 : 1: Callout Error 3.48 · Badge Small Red 3.14 · Badge Large Red value 3.31 · Ribbon Error 3.66. Kept as Figma for now.</p></div>
+</div></section>
+
+<section id="open" data-flag-area="open"><h2>Open issues</h2>
+<div class="open"><ul>
+  <li>The documentation block on the page is an empty template. There are no usage rules.</li>
+  <li>Callout <b>Info</b> uses the Status/Brown palette (reads as a warning). The variant property is still named “Property 1”.</li>
+  <li>Callout icon colours #A05A00, #760000, #1F7600, #1CCA00, #570000, #115700 are not in tokens.css.</li>
+  <li>Badge colour names don’t match: Small “Red” is Status/Orange-Dark #F94200; Small “Green” text is Status/Cyan-Dark #006265.</li>
+  <li>Badge Large Red value is raw #E25757 (no style). Its sample mixes weights (“+” and “more” regular, the amount bold).</li>
+  <li>Only 6 of 12 Badge combinations exist: no Small Blue, no Large or Red/Green Count.</li>
+  <li>Figma line heights are “auto”. The kit uses 17px (12 semibold) and 14px (12 bold). Label and Count use 0 tracking, where <code>.type-10-semibold</code> has 0.5px.</li>
+  <li>Ribbon set name has a typo (“Indicator Ribbbon”). The notch on the tail is rounded in Figma; the kit draws a close SVG curve.</li>
+  <li>Ribbon “Show Checkbox” uses the Checkbox component, which is not in the kit yet. A native 14px checkbox stands in.</li>
+  <li>Contrast below 4.5 : 1 on four variants (see Accessibility).</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area="gaps"><h2>Industry gaps — not added</h2><p class="sub">Standard features other systems have. Listed only; nothing was built.</p>
+<div class="panel card"><ul>
+  <li>Count overflow (“99+”) and hide-at-zero rules. <a href="https://ant.design/components/badge" target="_blank" rel="noopener">Ant Design Badge</a></li>
+  <li>Dot-only badge placed on another element (avatar, icon) with an offset. <a href="https://ant.design/components/badge" target="_blank" rel="noopener">Ant Design Badge</a> · <a href="https://fluent2.microsoft.design/components/web/react/core/badge/usage" target="_blank" rel="noopener">Fluent 2 Badge</a></li>
+  <li>Max width with truncation for long badge text. <a href="https://fluent2.microsoft.design/components/web/react/core/badge/usage" target="_blank" rel="noopener">Fluent 2 Badge</a></li>
+  <li>Accessible label for icon/count-only badges. <a href="https://fluent2.microsoft.design/components/web/react/core/badge/usage" target="_blank" rel="noopener">Fluent 2 Badge</a></li>
+  <li>Ribbon placement start / end. <a href="https://ant.design/components/badge" target="_blank" rel="noopener">Ant Design Badge.Ribbon</a></li>
+  <li>Callout with a body line and an optional link (not just a title); a Warning type. <a href="https://carbondesignsystem.com/components/notification/usage/" target="_blank" rel="noopener">Carbon Notification (callout)</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include tokens and the component stylesheet. No script needed.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const TAIL='<svg class="pds-ribbon__tail" viewBox="0 0 20 52" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0H20L5.3 21.4Q2.2 25.8 5.3 30.3L20 52H0Z"/></svg>';
+const ribbon=(st,cb)=>`<div class="pds-ribbon pds-ribbon--${st}"><div class="pds-ribbon__body">${cb?'<input type="checkbox" class="pds-ribbon__checkbox" aria-label="Select">':''}<p class="pds-ribbon__text">Error Text Here</p></div>${TAIL}</div>`;
+$("#ribbons").innerHTML=["error","info","warning"].flatMap(st=>[false,true].map(cb=>`<div class="vcell"><span class="lbl">State=${st[0].toUpperCase()+st.slice(1)}, Show Checkbox=${cb}</span><div>${ribbon(st,cb)}</div></div>`)).join("");
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/badge.css">
+
+<!-- Callout: --info | --error | --success -->
+<div class="pds-callout pds-callout--error">
+  <span class="pds-callout__icon" aria-hidden="true"></span>
+  <p class="pds-callout__text">Notification title goes here</p>
+</div>
+
+<!-- Badge Small: --green | --red -->
+<span class="pds-badge pds-badge--sm pds-badge--green">
+  <span class="pds-badge__dot" aria-hidden="true"></span>
+  <span class="pds-badge__value">1 Sep 2022 - 10:35 AM</span>
+</span>
+
+<!-- Badge Large: --red | --blue | --green · label optional -->
+<span class="pds-badge pds-badge--lg pds-badge--blue">
+  <span class="pds-badge__dot" aria-hidden="true"></span>
+  <span class="pds-badge__label">total approval amount</span>
+  <span class="pds-badge__value">USD 2,617.99</span>
+</span>
+
+<!-- Badge Count -->
+<span class="pds-badge pds-badge--count">+3</span>
+
+<!-- Ribbon: --error | --info | --warning -->
+${ribbon("error",false)}`;
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

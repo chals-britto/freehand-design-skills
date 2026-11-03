@@ -1,0 +1,128 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — List (one list row, molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ List (1:870)
+     component set "List"              2478:9036  (Type × State, Light = 5)
+     component set ".Base List"        2498:9649  (Default · Hover = 2)
+     component set ".Options in Right" 5417:2388  (Action · Status = 2)
+     component set ".Table Style"      5447:3704  (BG White · Alternate = 2)
+   Built 2026-10-28 from Figma (no review — everything published kept).
+   Requires ../tokens.css and the kit pieces inside a row:
+   list-column.css (+ tag/status/skeleton as the columns need) ·
+   checkbox.css · button.css · button-group.css · status.css.
+   Behaviour (row select, expand/collapse icon): list.js → window.pdsList.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colours — exactly as the Figma variants use them */
+  --list-bg:            var(--white);                 /* State=Default, BG=White */
+  --list-bg-hover:      var(--pando-light);           /* #EEF2F4 State=Hover */
+  --list-bg-alternate:  var(--accent-alternate-white);/* #F9FAFA BG=Alternate */
+  --list-divider:       var(--border-grey);           /* #EFEFEF Table Style bottom stroke */
+  --list-indicator:     var(--accent-red-medium);     /* #D26568 Error-Indication */
+  --list-shadow:        var(--shadow-2);              /* 0 2 4 6% */
+
+  /* Measured */
+  --list-radius:        2px;    /* row corner radius */
+  --list-pad:           5px var(--space-15);            /* Standard · Swappable · .Base List */
+  --list-pad-table:     var(--space-10) var(--space-15) 9px; /* Table Style: 10/15, bottom 9 + 1px divider (Figma inside stroke) = 57 */
+  --list-gap:           20px;   /* row items, Standard content, data columns */
+  --list-gap-table:     var(--space-15); /* Table Style: Data ↔ Options */
+  --list-min-h:         48px;   /* .Base List / Swappable (empty row 38 content + 5/5) */
+  --list-indicator-w:   4px;    /* Error-Indication, full height, left edge */
+  --list-toggle:        20px;   /* Navigation/List-Type icon */
+  --list-toggle-x:      -10px;  /* icon sits half outside the left edge */
+  --list-toggle-shadow: drop-shadow(0 2px 4px rgb(0 0 0 / .06)); /* = --shadow-2 as a filter (icon's own shadow) */
+}
+
+/* ── Row ───────────────────────────────────────────────────────── */
+.pds-list {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--list-gap);
+  width: 100%;
+  min-width: max-content;          /* columns keep their fixed widths */
+  min-height: var(--list-min-h);
+  padding: var(--list-pad);
+  background: var(--list-bg);
+  border-radius: var(--list-radius);
+  box-shadow: var(--list-shadow);
+  font-family: var(--font-family);
+}
+.pds-list *, .pds-list *::before { box-sizing: border-box; }
+
+/* State=Hover (Figma prototype: On hover → Change to Hover) */
+.pds-list:hover, .pds-list.is-hover { background: var(--list-bg-hover); }
+/* Type=Swappable has no Hover variant */
+.pds-list--swappable:hover { background: var(--list-bg); }
+
+/* Type=Table Style / .Table Style set: flat, bottom divider, 10/15 */
+.pds-list--table {
+  padding: var(--list-pad-table);
+  box-shadow: none;
+  border-bottom: 1px solid var(--list-divider);
+}
+.pds-list--table.pds-list--alternate { background: var(--list-bg-alternate); }
+.pds-list--table:hover, .pds-list--table.is-hover { background: var(--list-bg-hover); }
+/* List Type=Table Style, State=Default only: the row wrapper carries the shadow */
+.pds-list--table.pds-list--shadow { box-shadow: var(--list-shadow); }
+.pds-list--table.pds-list--shadow:hover, .pds-list--table.pds-list--shadow.is-hover { box-shadow: none; }
+
+/* ── Parts ─────────────────────────────────────────────────────── */
+/* Show Checkbox (kit Checkbox, Light, Default) — first item, gap 20 */
+.pds-list__check { flex: none; display: inline-flex; }
+
+/* Show Info Indicator — 4px red bar on the left edge */
+.pds-list__indicator {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: var(--list-indicator-w);
+  background: var(--list-indicator);
+  border-radius: var(--list-radius) 0 0 var(--list-radius);
+}
+
+/* Expand/Collapse — Navigation/List-Type icon, centred on the left edge */
+.pds-list__toggle {
+  position: absolute; left: var(--list-toggle-x); top: 50%;
+  width: var(--list-toggle); height: var(--list-toggle);
+  margin-top: calc(var(--list-toggle) / -2);
+  padding: 0; border: 0; background: none; cursor: pointer;
+  display: inline-flex;
+}
+.pds-list__toggle svg {
+  display: block; width: var(--list-toggle); height: var(--list-toggle);
+  filter: var(--list-toggle-shadow);
+}
+.pds-list__toggle [hidden] { display: none; }
+.pds-list__toggle:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+
+/* Content — Data on the left, options on the right */
+.pds-list__content {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: row; align-items: center; justify-content: space-between;
+  gap: var(--list-gap);
+}
+.pds-list--table .pds-list__content { gap: var(--list-gap-table); }
+
+.pds-list__data {
+  flex: 1 1 auto;
+  display: flex; flex-direction: row; align-items: center;
+  gap: var(--list-gap);
+}
+.pds-list--table .pds-list__data { flex: 0 0 auto; }   /* Table Style: Data hugs */
+.pds-list__data > * { flex: none; }                     /* List Columns keep their width */
+.pds-list__data > [hidden] { display: none; }           /* Show Column 5–8 */
+
+/* .Options in Right — Action (Button Group) or Status, bottom-aligned column */
+.pds-list__options {
+  flex: none;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end;
+  gap: var(--space-10);
+}
+.pds-list__options > .pds-status { width: auto; }       /* Figma 85–95, hugs the label */
+
+/* Type=Swappable — the slot fills the row */
+.pds-list--swappable > .pds-list-column--slot,
+.pds-list--swappable > .pds-list__slot { flex: 1 1 auto; width: auto; }
+.pds-list--swappable > .pds-list-column--slot > .pds-list-column__slot-placeholder { width: 100%; }

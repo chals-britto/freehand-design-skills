@@ -1,0 +1,49 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Empty State
+   Figma: DS V2 – Molecules › 🟢 Empty States & Loaders (77:4762)
+   37 component sets (2463:8699–8725, 2463:9228–9237) + "No File Uploaded - Small" (2466:10306).
+   Each set = Theme=Light / Theme=Dark. The component is the illustration only:
+   a raster image (backdrop shape + picture) with no live text. Manifest: empty-state/data.js.
+   Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Measured from the components */
+  --empty-state-art-w: 200px;
+  --empty-state-art-h: 160px;
+  --empty-state-small: 40px;   /* No File Uploaded - Small */
+
+  /* Backdrop colours. Baked into the raster art — listed for reference and for
+     placing the art on a matching surface. Not used to paint anything. */
+  --empty-state-light-bg: var(--border-grey);   /* #EFEFEF */
+  --empty-state-dark-bg:  #282833;              /* off-token in Figma */
+}
+
+/* ── Empty state ──────────────────────────────────────────────────
+   Figma: "Center of the section". The block centres itself in its container. */
+.pds-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-inline: auto;
+  text-align: center;
+  font-family: var(--font-family);
+}
+
+.pds-empty__art {
+  display: block;
+  width: var(--empty-state-art-w);
+  height: var(--empty-state-art-h);
+  object-fit: contain;
+  user-select: none;
+}
+
+/* Theme variants (.pds-empty--light / .pds-empty--dark): pick the matching art file from
+   data.js. The modifier is a hook only — the backdrop colour is part of the image. */
+
+/* Small size — No File Uploaded - Small (2466:10306), used inside File Upload */
+.pds-empty--small .pds-empty__art {
+  width: var(--empty-state-small);
+  height: var(--empty-state-small);
+}

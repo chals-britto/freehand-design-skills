@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Label Readonly Text · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="readonly.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* readonly page */
+.vcell .surf{padding:24px 20px;border-radius:8px;border:1px solid var(--pg-line);display:flex;align-items:center;min-height:72px}
+.surf.light{background:var(--white)}
+.surf.dark{background:var(--dark-bg);border-color:var(--dark-bg)}
+.redline{width:auto;display:inline-block;margin:44px 40px 40px}
+.redline .pds-readonly{gap:8px}
+.redline .pds-readonly__label,.redline .pds-readonly__sep,.redline .pds-readonly__value{font-size:24px;line-height:32px}
+.redline .pds-readonly>*{outline:1px dashed var(--pg-red)}
+.gapmark{display:inline-block;width:8px;height:32px;background:rgb(229 72 77 / .18)}
+.open ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.gaps{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.gaps a{color:var(--pg-accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Label Readonly Text</h1>
+    <p class="lede">Detail and Information. A single read-only line: a label, a colon, then the value in semibold.</p>
+    <div class="meta"><span>Status: Built from Figma 2026-10-27 · no review yet</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3212-3376" target="_blank" rel="noopener">Figma component 3212:3376 ↗</a><span>Files: readonly.css · no JS</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Theme = Light · Dark. Same layout and type; only the text colour changes. Figma’s own sample text.</p>
+<div class="panel vgrid">
+  <div class="vcell"><span class="lbl">Theme=Light · 563:3</span>
+    <div class="surf light"><div class="pds-readonly pds-readonly--light"><span class="pds-readonly__label">Label Text</span><span class="pds-readonly__sep">:</span><span class="pds-readonly__value">Information Text</span></div></div></div>
+  <div class="vcell"><span class="lbl">Theme=Dark · 3212:3375 · shown on --dark-bg</span>
+    <div class="surf dark"><div class="pds-readonly pds-readonly--dark"><span class="pds-readonly__label">Label Text</span><span class="pds-readonly__sep">:</span><span class="pds-readonly__value">Information Text</span></div></div></div>
+</div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma component, drawn at 2× size. Dashed boxes are the three text parts; the red bands are the 4px gaps.</p>
+<div class="panel"><div class="spec">
+  <div class="redline"><div class="pds-readonly pds-readonly--light" style="gap:0"><span class="pds-readonly__label">Label Text</span><span class="gapmark" aria-hidden="true"></span><span class="pds-readonly__sep">:</span><span class="gapmark" aria-hidden="true"></span><span class="pds-readonly__value">Information Text</span></div></div>
+</div>
+<div class="spec-table">
+  <div><b>Layout</b>horizontal · hugs content</div>
+  <div><b>Gap</b><code>4px</code> label · “:” · value</div>
+  <div><b>Padding</b><code>0</code></div>
+  <div><b>Height</b><code>16px</code> in Figma · 17px in code</div>
+  <div><b>Label</b><code>.type-12-regular</code> · Figma 12px/Body (12/16)</div>
+  <div><b>Separator</b><code>.type-12-regular</code> · Figma Label/Regular/Normal (12/auto)</div>
+  <div><b>Value</b><code>.type-12-semibold</code> · Figma 12px/Heading (12/auto)</div>
+  <div><b>Light colour</b><code>--text-dark</code> #313131</div>
+  <div><b>Dark colour</b><code>--dark-label-text</code> #D5DAF4</div>
+  <div><b>Fill · border · shadow</b>none</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>What it is for</h3><p>Detail and Information: showing a value with its label where it can’t be edited. <span class="ex-note">(Figma description)</span></p></div>
+  <div class="panel card"><h3>Theme</h3><ul><li><b>Light</b> on white and light surfaces.</li><li><b>Dark</b> on the dark (sidebar) surfaces. Figma doesn’t name the surface; <code>--dark-bg</code> is assumed.</li></ul></div>
+  <div class="panel card"><h3>Not in Figma</h3><p>No usage text, no layout for several pairs, no long-value or empty-value rule. See Open issues.</p></div>
+</div>
+</section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Plain text</h3><p>It is static text, read in order: label, colon, value. Not focusable, no ARIA needed.</p></div>
+  <div class="panel card"><h3>Contrast</h3><ul><li>Light #313131 on white: 13.0 : 1</li><li>Dark #D5DAF4 on <code>--dark-bg</code>: 8.2 : 1</li><li>Dark on white: 1.4 : 1 — wrong surface, don’t.</li></ul></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul>
+  <li>Line height: Figma is 16px (label) and auto (≈16px) for “:” and value; the kit’s <code>.type-12-*</code> classes are 17px, so the line is 1px taller in code.</li>
+  <li>Several pairs: Figma shows only one line. No row, column or grid of pairs, no spacing between pairs, no label-column width — not built.</li>
+  <li>Long values: no wrap or truncation rule in Figma. In code the value wraps within its own column.</li>
+  <li>Empty value: no empty or placeholder state in Figma.</li>
+  <li>Dark surface: the Dark variant has no background in Figma; <code>--dark-bg</code> is assumed on this page.</li>
+  <li>The atoms audit calls the second row “faded/disabled”; it is <code>Theme=Dark</code>, not a disabled state.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul class="gaps">
+  <li>Read-only form controls that stay focusable but can’t be edited — a field state, not this text line; the input read-only state is in <a href="input.html">Input</a>. <span class="src"><a href="https://carbondesignsystem.com/patterns/read-only-states-pattern/" target="_blank" rel="noopener">Carbon read-only states</a></span></li>
+  <li>Carbon: don’t use the read-only state for static information that has no enabled state — consistent with keeping this as plain text. <span class="src"><a href="https://carbondesignsystem.com/patterns/read-only-states-pattern/" target="_blank" rel="noopener">Carbon read-only states</a></span></li>
+  <li>Top-aligned labels as the default; side labels only when space is short. This component is side-label only; no top-label variant. <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/field/usage" target="_blank" rel="noopener">Fluent 2 Field</a></span></li>
+  <li>Short, sentence-case labels. Figma’s sample uses Title Case. <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/field/usage" target="_blank" rel="noopener">Fluent 2 Field</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the two stylesheets. Add <code>--dark</code> on dark surfaces.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/readonly.css">
+
+<!-- Light (default) -->
+<div class="pds-readonly">
+  <span class="pds-readonly__label">Label Text</span>
+  <span class="pds-readonly__sep">:</span>
+  <span class="pds-readonly__value">Information Text</span>
+</div>
+
+<!-- Dark surface -->
+<div class="pds-readonly pds-readonly--dark">
+  <span class="pds-readonly__label">Label Text</span>
+  <span class="pds-readonly__sep">:</span>
+  <span class="pds-readonly__value">Information Text</span>
+</div>`;
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

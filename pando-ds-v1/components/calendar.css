@@ -1,0 +1,312 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Calendar (date picker, molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟢 Calendar (138:494)
+     · component set "Calendar" (164:3009) — 11 variants
+     · ".Single Date" (2353:7563) — 12 day-cell states
+     · ".Weekdays & Weeks" (2353:9160) — 6 month grids
+     · ".Date Selector" (1935:4981) — 2 tab states
+   Atoms reused (link them too): button.css (Reset / Now / Today / Cancel =
+   Text Only Small, Apply = Primary Small), icons (Navigation/Right-Caret,
+   inlined from icons/nav-right-caret.svg), input.css + input.js (the field
+   it opens from), timepicker.css + .js (the Time field, optional).
+   Built 2026-10-28. Requires ../tokens.css, button.css.
+   "added in review" = not in Figma (focus ring, keyboard, attach, presets).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Light ───────────────────────────────────────────────────── */
+  --calendar-bg:              var(--white);
+  --calendar-shadow:          var(--shadow-4);              /* 0 14 28 · 6% */
+  --calendar-title:           var(--pando-dark);            /* #234357 month / year title */
+  --calendar-caret:           var(--pando-dark);            /* Navigation/Right-Caret */
+  --calendar-head-bg:         var(--accent-alternate-white);/* #F9FAFA double-month header bar */
+  --calendar-divider:         var(--border-grey);           /* #EFEFEF */
+  --calendar-weekday:         var(--text-dark);             /* #313131 */
+  --calendar-day:             var(--text-dark);             /* #313131 */
+  --calendar-day-outside:     var(--accent-blue-grey);      /* #CBD4D8 Disabled=Yes, Range=No */
+  --calendar-day-disabled:    var(--grey-medium);           /* #A3A3A3 Disabled=Yes, Range=Yes text */
+  --calendar-day-disabled-bg: var(--border-grey);           /* #EFEFEF Disabled=Yes, Range=Yes fill */
+  --calendar-range-bg:        var(--accent-light-highlight);/* #E9F1F5 */
+  --calendar-selected-bg:     var(--pando-blue);            /* #0076DD (Day range draws #0078DD) */
+  --calendar-selected-fg:     var(--white);
+  /* .Date Selector tabs + "Last Day of Month" chip */
+  --calendar-selector-bg:     var(--white);
+  --calendar-selector-fg:     var(--text-medium);           /* #545454 */
+  --calendar-selector-on-bg:  color-mix(in srgb, var(--pando-dark) 10%, transparent); /* #234357 @ 10% */
+  --calendar-selector-on-fg:  #18283B;                      /* off-token in Figma */
+  --calendar-chip-bg:         color-mix(in srgb, var(--grey-light) 30%, transparent); /* #E7E7E7 @ 30% */
+  /* Cell Input Field (remote atom — built here) */
+  --calendar-field-bg:        var(--white);
+  --calendar-field-border:    var(--border-input-light);    /* #E2EAEC */
+  --calendar-field-border-active: var(--pando-blue);        /* added in review — kit input Active border */
+  --calendar-field-fg:        #616161;                      /* off-token in Figma — date / time value */
+  --calendar-preset-fg:       var(--text-medium);           /* #545454 presets + times */
+  --calendar-time-label:      var(--pando-blue-active);     /* #005399 "Select Time" */
+  --calendar-focus-ring:      var(--pando-blue);            /* added in review — not in Figma */
+
+  /* ── Dark ────────────────────────────────────────────────────── */
+  --calendar-dark-bg:         var(--dark-darker);           /* #24242F */
+  --calendar-dark-shadow-double: var(--shadow-2);           /* 0 2 4 · 6% on the double-month panels */
+  --calendar-dark-title:      var(--white);
+  --calendar-dark-caret:      var(--pando-light);           /* #EEF2F4 single month (double: white) */
+  --calendar-dark-head-bg:    #484858;                      /* off-token in Figma — Dark/Input BG */
+  --calendar-dark-divider:    #484858;                      /* off-token in Figma */
+  --calendar-dark-weekday:    var(--dark-label-text);       /* #D5DAF4 */
+  --calendar-dark-day:        var(--dark-label-text);       /* #D5DAF4 */
+  --calendar-dark-day-outside: var(--dark-input-text);      /* #8A8A9E */
+  --calendar-dark-day-disabled: var(--dark-input-text);     /* #8A8A9E */
+  --calendar-dark-day-disabled-bg: color-mix(in srgb, var(--dark-input-text) 50%, transparent); /* #8A8A9E @ 50% */
+  --calendar-dark-range-bg:   color-mix(in srgb, var(--dark-label-text) 50%, transparent);  /* #D5DAF4 @ 50% */
+  --calendar-dark-field-bg:   #484858;                      /* off-token in Figma */
+  --calendar-dark-field-fg:   var(--white);
+
+  /* ── Size & spacing ──────────────────────────────────────────── */
+  --calendar-radius:          4px;      /* single panels; double = 0, Multi Date = 2 */
+  --calendar-radius-sm:       2px;      /* Multi Date panel + .Date Selector */
+  --calendar-pad:             var(--space-10) var(--space-15);  /* single panels */
+  --calendar-gap:             var(--space-10);
+  --calendar-head-h:          36px;     /* double header bar */
+  --calendar-caret-w:         7.5px;    /* Navigation/Right-Caret instance 7.5 × 12 */
+  --calendar-caret-h:         12px;
+  --calendar-months-gap:      var(--space-15);
+  --calendar-months-h:        200px;    /* double month row */
+  /* compact grid = .Weekdays & Weeks (Month variants) */
+  --calendar-cell-w:          34px;
+  --calendar-cell-h:          28px;
+  --calendar-dot:             28px;     /* Selected circle */
+  --calendar-wd-w:            32px;
+  --calendar-wd-gap:          var(--space-2);
+  --calendar-wd-pad-b:        var(--space-10);  /* dark: 15 */
+  /* wide grid = Day + Multi Date variants (drawn, not the .Weeks component) */
+  --calendar-wide-cell-w:     32px;
+  --calendar-wide-col-gap:    var(--space-10);
+  --calendar-wide-cell-h:     30px;
+  --calendar-wide-row-gap:    1px;
+  --calendar-wide-dot:        30px;
+  --calendar-wide-wd-pad-b:   var(--space-15);
+  --calendar-band-radius:     20px;     /* Range-1 / Range-2 ends */
+  /* year grid */
+  --calendar-year-w:          70px;
+  --calendar-year-h:          38px;
+  --calendar-year-pill-h:     28px;     /* assumed — selected year size not read */
+  /* parts */
+  --calendar-field-w:         120px;
+  --calendar-field-h:         34px;
+  --calendar-field-pad:       9px var(--space-10);
+  --calendar-selector-h:      24px;
+  --calendar-selector-pad:    4px 8px;
+  --calendar-tabs-gap:        5px;
+  --calendar-actions-gap:     20px;     /* Reset ↔ Now / Today; time presets */
+  --calendar-presets-gap:     16px;
+  --calendar-offset:          0px;      /* gap to the field when attached */
+}
+
+/* ── Panel ─────────────────────────────────────────────────────── */
+.pds-calendar {
+  box-sizing: border-box;
+  position: relative;
+  display: inline-flex; flex-direction: column; align-items: stretch;
+  gap: var(--calendar-gap);
+  padding: var(--calendar-pad);
+  background: var(--calendar-bg);
+  border-radius: var(--calendar-radius);
+  box-shadow: var(--calendar-shadow);
+  font-family: var(--font-family);
+  color: var(--calendar-day);
+  vertical-align: top;
+  --_title: var(--calendar-title); --_caret: var(--calendar-caret); --_divider: var(--calendar-divider);
+  --_wd: var(--calendar-weekday); --_day: var(--calendar-day); --_out: var(--calendar-day-outside);
+  --_dis: var(--calendar-day-disabled); --_dis-bg: var(--calendar-day-disabled-bg); --_range: var(--calendar-range-bg);
+  --_head-bg: var(--calendar-head-bg); --_wd-pad: var(--calendar-wd-pad-b);
+}
+.pds-calendar *, .pds-calendar *::before, .pds-calendar *::after { box-sizing: border-box; }
+
+/* Double month: no radius, no panel padding, header bar */
+.pds-calendar--double { padding: 0; border-radius: 0; }
+/* Day (single): no header, padding 15 */
+.pds-calendar--day:not(.pds-calendar--double) { padding: var(--space-15); }
+
+/* ── Header ───────────────────────────────────────────────────── */
+.pds-calendar__head {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 16px;
+}
+.pds-calendar--double .pds-calendar__head {
+  min-height: var(--calendar-head-h); padding: var(--space-10); gap: 0;
+  background: var(--_head-bg);
+}
+.pds-calendar--multi .pds-calendar__head { justify-content: flex-start; gap: var(--space-10); }
+.pds-calendar__titles { display: contents; }
+.pds-calendar--double .pds-calendar__titles { display: flex; gap: var(--calendar-months-gap); }
+.pds-calendar__title {
+  margin: 0; text-align: center;
+  font: var(--type-12-semibold); line-height: 16px; letter-spacing: .3px; text-transform: uppercase;
+  color: var(--_title); white-space: nowrap;
+}
+.pds-calendar--double .pds-calendar__title { width: var(--_month-w, 242px); }
+.pds-calendar--multi .pds-calendar__titles { gap: var(--space-10); }
+.pds-calendar--multi .pds-calendar__title { width: 280px; }  /* Figma: 280 titles, gap 10 */
+.pds-calendar__nav {
+  flex: none; display: grid; place-items: center;
+  width: var(--calendar-caret-w); height: var(--calendar-caret-h);
+  margin: 0; padding: 0; border: 0; background: none; color: var(--_caret); cursor: pointer;
+}
+.pds-calendar__nav svg { width: 100%; height: 100%; display: block; }
+.pds-calendar__nav--prev svg { transform: scaleX(-1); }
+.pds-calendar__nav:focus-visible { outline: 2px solid var(--calendar-focus-ring); outline-offset: 2px; } /* added in review */
+
+/* ── Months ───────────────────────────────────────────────────── */
+.pds-calendar__body { display: flex; flex-direction: column; gap: var(--calendar-gap); }
+.pds-calendar--dark .pds-calendar__body { gap: var(--space-15); }
+.pds-calendar__months { display: flex; justify-content: center; }
+.pds-calendar--double .pds-calendar__months {
+  align-items: center; gap: var(--calendar-months-gap);
+  min-height: var(--calendar-months-h); padding: 0 var(--space-10);
+}
+.pds-calendar__sep { align-self: stretch; width: 0; border-left: 1px solid var(--_divider); margin: 0 -.5px; }
+
+.pds-calendar__month { display: flex; flex-direction: column; align-items: center; width: 242px; padding: 0 1px; }
+
+/* Weekday row */
+.pds-calendar__weekdays {
+  display: grid; grid-template-columns: repeat(7, var(--calendar-wd-w)); column-gap: var(--calendar-wd-gap);
+  padding: 0 2px var(--_wd-pad);
+}
+.pds-calendar__wd {
+  font: var(--type-11-regular); text-align: center; text-transform: uppercase; color: var(--_wd);
+}
+.pds-calendar--dark .pds-calendar__wd { font: var(--type-12-regular); line-height: 16px; letter-spacing: .5px; }
+
+/* Day grid */
+.pds-calendar__grid { display: grid; grid-template-columns: repeat(7, var(--calendar-cell-w)); }
+.pds-calendar__row { display: contents; }
+.pds-calendar__cell {
+  position: relative; display: grid; place-items: center;
+  height: var(--calendar-cell-h);
+}
+.pds-calendar__day {
+  position: relative; z-index: 1;
+  display: grid; place-items: center;
+  min-width: var(--calendar-dot); height: var(--calendar-dot);
+  margin: 0; padding: 0 var(--space-10); border: 0; border-radius: var(--calendar-band-radius);
+  background: none; color: var(--_day);
+  font: var(--type-12-semibold); line-height: 16px;
+  cursor: pointer;
+}
+.pds-calendar__grid .pds-calendar__day { width: var(--calendar-dot); padding: 0; }
+.pds-calendar__day:focus-visible { outline: 2px solid var(--calendar-focus-ring); outline-offset: 0; } /* added in review */
+
+/* States = .Single Date */
+.pds-calendar__cell.is-range { background: var(--_range); }
+.pds-calendar__cell.is-selected .pds-calendar__day { background: var(--calendar-selected-bg); color: var(--calendar-selected-fg); }
+.pds-calendar__cell.is-outside .pds-calendar__day { color: var(--_out); cursor: default; }
+.pds-calendar__cell.is-disabled { background: var(--_dis-bg); }
+.pds-calendar__cell.is-disabled .pds-calendar__day { color: var(--_dis); cursor: not-allowed; }
+.pds-calendar__cell.is-empty { visibility: hidden; }
+
+/* ── Wide grid (Day + Multi Date) ─────────────────────────────── */
+.pds-calendar--wide { --_month-w: 284px; }
+.pds-calendar--wide .pds-calendar__month { width: 284px; padding: 0; }
+.pds-calendar--wide .pds-calendar__weekdays { grid-template-columns: repeat(7, var(--calendar-wide-cell-w)); column-gap: var(--calendar-wide-col-gap); padding: 0 0 var(--calendar-wide-wd-pad-b); }
+.pds-calendar--wide .pds-calendar__wd { font: var(--type-12-regular); line-height: 16px; letter-spacing: .5px; }
+.pds-calendar--wide .pds-calendar__grid {
+  grid-template-columns: repeat(7, var(--calendar-wide-cell-w));
+  column-gap: var(--calendar-wide-col-gap); row-gap: var(--calendar-wide-row-gap);
+}
+.pds-calendar--wide .pds-calendar__cell { height: var(--calendar-wide-cell-h); }
+.pds-calendar--wide .pds-calendar__grid .pds-calendar__day { width: var(--calendar-wide-dot); min-width: var(--calendar-wide-dot); height: var(--calendar-wide-dot); border-radius: 24px; }
+/* Range band runs through the column gaps and rounds at its ends (Range-1 / Range-2) */
+.pds-calendar--wide .pds-calendar__cell.is-range { background: none; }
+.pds-calendar--wide .pds-calendar__cell.is-range::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -5px; right: -5px; background: var(--_range);
+}
+.pds-calendar--wide .pds-calendar__cell.is-range:nth-child(7n+1)::before { left: 0; }
+.pds-calendar--wide .pds-calendar__cell.is-range:nth-child(7n)::before { right: 0; }
+.pds-calendar--wide .pds-calendar__cell.is-start::before { left: 0; border-radius: var(--calendar-band-radius) 0 0 var(--calendar-band-radius); }
+.pds-calendar--wide .pds-calendar__cell.is-end::before { right: 0; border-radius: 0 var(--calendar-band-radius) var(--calendar-band-radius) 0; }
+.pds-calendar--wide .pds-calendar__cell.is-start.is-end::before { border-radius: var(--calendar-band-radius); }
+.pds-calendar--wide .pds-calendar__cell.is-disabled { background: none; }
+.pds-calendar--wide .pds-calendar__cell.is-disabled .pds-calendar__day { background: var(--_dis-bg); }
+
+/* ── Year grid ────────────────────────────────────────────────── */
+.pds-calendar__grid--years { grid-template-columns: repeat(4, var(--calendar-year-w)); padding: 0 1px; }
+.pds-calendar__grid--years .pds-calendar__cell { height: var(--calendar-year-h); }
+.pds-calendar__grid--years .pds-calendar__day { width: auto; height: var(--calendar-year-pill-h); padding: 0 var(--space-10); }
+
+/* ── Divider ──────────────────────────────────────────────────── */
+.pds-calendar__divider { flex: none; height: 0; border-top: 1px solid var(--_divider); margin: 0; }
+.pds-calendar--double .pds-calendar__divider { margin-top: 0; }
+
+/* ── Cell Input Field (atom variant missing in kit — built here) ─ */
+.pds-calendar__fields { display: flex; gap: var(--space-10); }
+.pds-calendar--dark .pds-calendar__fields { gap: 14px; }
+.pds-calendar__fieldwrap { position: relative; }
+.pds-calendar__field {
+  display: block; width: var(--calendar-field-w); height: var(--calendar-field-h);
+  margin: 0; padding: calc(9px - 1px) calc(var(--space-10) - 1px); /* 1px border inside, like Figma's inside stroke */
+  background: var(--calendar-field-bg); border: 1px solid var(--calendar-field-border); border-radius: 0;
+  font: var(--type-12-semibold); line-height: 16px; color: var(--calendar-field-fg);
+  outline: none; text-align: left;
+}
+.pds-calendar__field:focus, .pds-calendar__fieldwrap.pds-input--active .pds-calendar__field { border-color: var(--calendar-field-border-active); } /* added in review */
+.pds-calendar__field:focus-visible { outline: 2px solid var(--calendar-focus-ring); outline-offset: 2px; }
+button.pds-calendar__field { width: auto; cursor: pointer; color: var(--calendar-preset-fg); white-space: nowrap; }
+.pds-calendar__field--time { width: auto; color: var(--calendar-preset-fg); }
+.pds-calendar__field.is-on { border-color: var(--calendar-field-border-active); } /* added in review — preset applied */
+
+/* ── Footer rows ──────────────────────────────────────────────── */
+.pds-calendar__actions { display: flex; align-items: center; justify-content: space-between; gap: 30px; min-height: 24px; }
+.pds-calendar__secondary { display: flex; align-items: center; gap: var(--calendar-actions-gap); }
+.pds-calendar--double .pds-calendar__actions { min-height: 34px; padding: 0 var(--space-15) var(--space-10); }
+.pds-calendar__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-10); }
+.pds-calendar__foot .pds-calendar__actions { padding: 0 var(--space-15) var(--space-10); gap: var(--calendar-actions-gap); justify-content: flex-start; }
+.pds-calendar__extras { display: flex; align-items: center; gap: var(--calendar-actions-gap); padding: 0 var(--space-15) var(--space-10); }
+.pds-calendar__presets { display: flex; align-items: center; gap: var(--calendar-presets-gap); }
+.pds-calendar__time-label { margin: 0; font: var(--type-12-semibold); line-height: 16px; color: var(--calendar-time-label); white-space: nowrap; }
+
+/* ── .Date Selector (tabs above Multi Date; chip in Day) ───────── */
+.pds-calendar__tabs {
+  display: flex; align-items: center; gap: var(--calendar-tabs-gap);
+  min-height: 44px; padding: var(--space-10);
+  background: var(--calendar-bg); border-radius: var(--calendar-radius-sm) var(--calendar-radius-sm) 0 0;
+}
+.pds-calendar__selector {
+  display: inline-flex; align-items: center; height: var(--calendar-selector-h);
+  margin: 0; padding: var(--calendar-selector-pad); border: 0; border-radius: var(--calendar-radius-sm);
+  background: var(--calendar-selector-bg); color: var(--calendar-selector-fg);
+  font: var(--type-12-semibold); line-height: 16px; white-space: nowrap; cursor: pointer;
+}
+.pds-calendar__selector[aria-selected="true"], .pds-calendar__selector[aria-pressed="true"] { background: var(--calendar-selector-on-bg); color: var(--calendar-selector-on-fg); }
+.pds-calendar__selector--chip { background: var(--calendar-chip-bg); }
+.pds-calendar__selector:focus-visible { outline: 2px solid var(--calendar-focus-ring); outline-offset: 2px; } /* added in review */
+.pds-calendar__chips { display: flex; align-items: center; gap: var(--calendar-tabs-gap); padding: var(--space-10) 0; }
+
+/* Multi Date: tabs bar + calendar body stacked; shadow on the body */
+.pds-calendar--multi { padding: 0; gap: 0; background: none; box-shadow: none; border-radius: 0; }
+.pds-calendar--multi > .pds-calendar__panel {
+  display: flex; flex-direction: column; gap: var(--calendar-gap);
+  background: var(--calendar-bg); box-shadow: var(--calendar-shadow);
+  border-radius: 0 0 var(--calendar-radius-sm) var(--calendar-radius-sm);
+}
+.pds-calendar__panel { display: contents; }
+
+/* ── Dark ─────────────────────────────────────────────────────── */
+.pds-calendar--dark {
+  background: var(--calendar-dark-bg);
+  --_title: var(--calendar-dark-title); --_caret: var(--calendar-dark-caret); --_divider: var(--calendar-dark-divider);
+  --_wd: var(--calendar-dark-weekday); --_day: var(--calendar-dark-day); --_out: var(--calendar-dark-day-outside);
+  --_dis: var(--calendar-dark-day-disabled); --_dis-bg: var(--calendar-dark-day-disabled-bg); --_range: var(--calendar-dark-range-bg);
+  --_head-bg: var(--calendar-dark-head-bg); --_wd-pad: var(--space-15);
+}
+.pds-calendar--dark.pds-calendar--double { box-shadow: var(--calendar-dark-shadow-double); --_caret: var(--calendar-dark-title); }
+.pds-calendar--dark .pds-calendar__field { background: var(--calendar-dark-field-bg); border-color: transparent; color: var(--calendar-dark-field-fg); }
+.pds-calendar--dark .pds-calendar__field:focus { border-color: var(--calendar-field-border-active); }
+
+/* ── Attached to a kit input ──────────────────────────────────── */
+.pds-calendar--popup { position: absolute; left: 0; top: calc(100% + var(--calendar-offset)); z-index: 30; }
+.pds-calendar--popup[hidden] { display: none; }
+
+/* Parts shown alone on the doc page (.Single Date / .Weekdays & Weeks / .Date Selector) */
+.pds-calendar.pds-calendar-part { padding: 0; gap: 0; border-radius: 0; box-shadow: none; background: var(--calendar-bg); }
+.pds-calendar.pds-calendar-part.pds-calendar--dark { background: var(--calendar-dark-bg); }
+.pds-calendar-part > .pds-calendar__cell { width: var(--calendar-cell-w); }

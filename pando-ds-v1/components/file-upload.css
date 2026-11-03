@@ -1,0 +1,134 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — File Upload
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ File Upload (2463:9238)
+   › component set "File Upload" (2466:10340), Theme × Type = 4 variants:
+     Dark · Not Uploaded (2466:10323)   Light · Not Uploaded (2466:10324)
+     Light · Uploaded   (2466:10325)    Light · Verified     (2466:10334)
+   Built 2026-10-28, no review yet (every published item treated as Keep).
+   Requires ../tokens.css and the kit atoms it is built from:
+     button.css · readonly.css · progress.css · empty-state.css · tag.css · icons.css
+   "added in build" = not in Figma (chosen-file list, drop highlight, focus).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colours, exactly as the Figma variants use them ── */
+  --file-upload-bg:              var(--white);              /* Light variants, style "White" */
+  --file-upload-empty-fg:        #616161;                   /* off-token in Figma — fill #616161 on style "Text/Medium-#737373" */
+  --file-upload-dark-empty-fg:   var(--dark-input-text);    /* #8A8A9E · style Dark/Input-Text */
+  --file-upload-name-fg:         #404040;                   /* off-token in Figma — style "Text/Dark-#404040" (tokens.css Text/Dark is #313131) */
+  --file-upload-dark-button-bg:  var(--dark-light);         /* #343440 · override on a Light Primary button instance */
+  --file-upload-check:           var(--dark-highlight-green); /* #1FCD93 · override on System-Status/Selected-Multi */
+
+  /* ── Type ── */
+  --file-upload-empty-font:      var(--type-12-semibold);   /* Open Sans SemiBold 12 / auto (tokens 12/17) */
+  --file-upload-name-font:       400 12px/16px var(--font-family); /* style 12px/Body 12/16 — nearest .type-12-regular is 12/17 */
+
+  /* ── Measured from the components ── */
+  --file-upload-width:           380px;   /* Light variants, fixed */
+  --file-upload-dark-width:      280px;   /* Dark variant, fixed */
+  --file-upload-pad-empty:       8px 10px;  /* Light · Not Uploaded → 56 tall */
+  --file-upload-pad:             15px 10px; /* Light · Uploaded / Verified → 54 tall */
+  --file-upload-status-gap:      9px;     /* art/icon ↔ text (Not Uploaded, Uploaded) */
+  --file-upload-verified-gap:    var(--space-10); /* icon ↔ name ↔ check (Verified) */
+  --file-upload-buttons-gap:     20px;    /* Add Files ↔ Upload */
+  --file-upload-min-gap:         24px;    /* Uploaded: row gap; Not Uploaded / Verified use 61 (space-between wins) */
+  --file-upload-icon-w:          20px;    /* Misc/File-Types 20 × 24 */
+  --file-upload-icon-h:          24px;
+  --file-upload-check-w:         10px;    /* System-Status/Selected-Multi 10 × 8 */
+  --file-upload-check-h:         8px;
+
+  /* ── Chosen-file list (added in build — not in Figma) ── */
+  --file-upload-list-gap:        var(--space-10);
+  --file-upload-list-pad:        0 10px 15px;
+  --file-upload-drop-ring:       var(--pando-blue);   /* drop target + focus, same as the kit focus ring */
+}
+
+/* ── Row ───────────────────────────────────────────────────────── */
+.pds-file-upload {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: var(--file-upload-width);
+  max-width: 100%;
+  background: var(--file-upload-bg);
+  font-family: var(--font-family);
+}
+.pds-file-upload__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--file-upload-min-gap);
+  padding: var(--file-upload-pad);
+  min-width: 0;
+}
+.pds-file-upload--empty .pds-file-upload__row { padding: var(--file-upload-pad-empty); }
+
+/* Status: art / file icon + text */
+.pds-file-upload__status {
+  display: flex; align-items: center;
+  gap: var(--file-upload-status-gap);
+  min-width: 0;
+}
+.pds-file-upload--verified .pds-file-upload__status { gap: var(--file-upload-verified-gap); }
+.pds-file-upload__status .pds-empty { margin: 0; }   /* the 40 × 40 art sits at the start, not centred */
+
+.pds-file-upload__empty-text {
+  margin: 0;
+  font: var(--file-upload-empty-font);
+  color: var(--file-upload-empty-fg);
+  white-space: nowrap;
+}
+.pds-file-upload__name {
+  margin: 0;
+  font: var(--file-upload-name-font);
+  color: var(--file-upload-name-fg);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pds-file-upload__type {           /* wrapper for icons/file-*.svg */
+  display: block; flex: none;
+  width: var(--file-upload-icon-w);
+  height: var(--file-upload-icon-h);
+}
+.pds-file-upload__check {          /* System-Status/Selected-Multi, coloured by override */
+  display: block; flex: none;
+  width: var(--file-upload-check-w);
+  height: var(--file-upload-check-h);
+  color: var(--file-upload-check);
+}
+
+/* Verified: file name is a Label Readonly Text (readonly.css), underlined in Figma, #404040 */
+.pds-file-upload .pds-readonly { --_fg: var(--file-upload-name-fg); }
+.pds-file-upload__file-link .pds-readonly__label { text-decoration: underline; }
+.pds-file-upload__file-link { min-width: 0; }
+
+.pds-file-upload__actions { display: flex; align-items: flex-start; gap: var(--file-upload-buttons-gap); flex: none; }
+
+/* ── Dark · Not Uploaded ── no fill, no padding, 280 wide ── */
+.pds-file-upload--dark { width: var(--file-upload-dark-width); background: none; }
+.pds-file-upload--dark .pds-file-upload__row,
+.pds-file-upload--dark.pds-file-upload--empty .pds-file-upload__row { padding: 0; }
+.pds-file-upload--dark .pds-file-upload__empty-text { color: var(--file-upload-dark-empty-fg); }
+/* Primary button with the #343440 fill Figma puts on this instance (atom variant missing in kit) */
+.pds-file-upload--dark .pds-button:not(.pds-button--dark):not(:hover):not(:disabled) { --_bg: var(--file-upload-dark-button-bg); }
+
+/* ── Chosen files (added in build — not in Figma) ── */
+.pds-file-upload__list {
+  list-style: none; margin: 0;
+  display: flex; flex-direction: column;
+  gap: var(--file-upload-list-gap);
+  padding: var(--file-upload-list-pad);
+}
+.pds-file-upload__list:empty { display: none; }
+.pds-file-upload--dark .pds-file-upload__list { padding: var(--file-upload-list-gap) 0 0; }
+.pds-file-upload__item {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--file-upload-list-gap);
+  min-width: 0;
+}
+.pds-file-upload__item .pds-tag { min-width: 0; max-width: 70%; }
+.pds-file-upload__item .pds-tag__file-icon { width: 10px; height: 12px; }
+
+/* Drop target + focus (added in build — not in Figma) */
+.pds-file-upload.is-dragover { outline: 2px solid var(--file-upload-drop-ring); outline-offset: 2px; }
+.pds-file-upload .pds-button:focus-visible { outline: 2px solid var(--file-upload-drop-ring); outline-offset: 2px; }
+.pds-file-upload__input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }

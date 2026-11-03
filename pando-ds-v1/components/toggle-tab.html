@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Toggle Tab · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="toggle-tab.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+h3.grp{font-size:13px;font-weight:600;margin:0;color:var(--pg-muted);text-transform:uppercase;letter-spacing:.05em}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+/* playground */
+.play{padding:20px;display:flex;flex-direction:column;gap:12px}
+.ctrls{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--pg-ink)}
+.ctrls label{display:flex;align-items:center;gap:6px}
+.ctrls select{font:400 13px var(--pg-ui)}
+.stage{border-radius:8px;padding:20px;overflow-x:auto;background:#fff}
+.stage.dark{background:var(--dark-bg)}
+.log{font:400 12px var(--pg-mono);color:var(--pg-muted)}
+/* variants */
+.vlist{display:flex;flex-direction:column;gap:18px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.vbox{background:#fff;padding:12px;border-radius:6px;overflow-x:auto;border:1px solid var(--pg-line)}
+.vbox.on-dark{background:var(--dark-bg)}
+.states{display:flex;gap:20px 28px;flex-wrap:wrap;align-items:flex-start}
+.states .vcell{align-items:flex-start}
+.solo{background:none!important;box-shadow:none!important}
+/* spec */
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-radius:10px;overflow:hidden}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.plain{margin:0;padding:14px 16px 14px 34px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+.pds-toggle-tabs__option:focus-visible{outline:2px solid var(--pando-blue)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>Toggle Tab</h1>
+    <p class="lede">Segmented single selection: one option of two to four is always selected. Five types — icon tabs, numbered steps with a description, outlined pills and the pill-shaped Toggle Tab — in light, plus a dark Toggle Tab.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · not yet reviewed</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=2386-7366" target="_blank" rel="noopener">Figma Toggle Tab 2386:7366 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=2427-8105" target="_blank" rel="noopener">.Individual Tab 2427:8105 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=2533-9614" target="_blank" rel="noopener">.Toggle Base 2533:9614 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=3247-1197" target="_blank" rel="noopener">.Option 3247:1197 ↗</a><span>Files: toggle-tab.css · toggle-tab.js · uses icons.css + icons/</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Click an option, or Tab into the group and use the arrow keys (Home / End jump to the ends). Only the selected option is a tab stop.</p>
+<div class="panel play">
+  <div class="ctrls">
+    <label>Type <select id="c-type">
+      <option value="segment">Toggle Tab</option>
+      <option value="pills">Single Selection</option>
+      <option value="steps">Single Selection with Description</option>
+      <option value="icon2">Dual Icon</option>
+      <option value="icon3">3 Option Icon</option>
+    </select></label>
+    <label><input type="checkbox" id="c-dark"> Theme = Dark <span class="log">(Toggle Tab only)</span></label>
+  </div>
+  <div class="stage" id="stage"></div>
+  <div class="log" id="log" aria-live="polite">Selected: Option 1</div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub"><code>Toggle Tab</code>: 13 variants (Theme × Type × Selection), then the three base sets. Sample text and icons exactly as in Figma. Specimens are static; the Dark Toggle Tab is shown on the dark surface (Figma draws it on white).</p>
+<div class="panel vlist" id="vset"></div>
+<div class="panel vlist" id="vbase" style="margin-top:14px"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="spec-table">
+  <div><b>Icon types · option</b><code>44 × 50</code> · padding <code>15 / 12</code> · radius <code>2</code> · icon <code>20</code></div>
+  <div><b>Icon types · group</b>gap <code>1px</code> · fill <code>--white</code> · active <code>--border-input-light</code></div>
+  <div><b>Description type</b>description ↔ options <code>15</code> · options gap <code>10</code> · description <code>.type-12-semibold</code> #2A4255</div>
+  <div><b>Step · inactive</b><code>24 × 24</code> circle · padding <code>5</code> · <code>--white</code> · <code>--shadow-1</code> · icon 14 / number <code>--pando-dark</code></div>
+  <div><b>Step · active</b>pill radius <code>14</code> · padding <code>5 / 10</code> · #0078DD · <code>.type-10-bold</code> uppercase white</div>
+  <div><b>Single Selection</b>gap <code>15</code> · padding <code>4 / 10</code> · radius <code>--radius-12</code> · inactive 1px inside <code>--border-blue-grey</code> · active #0078DD SemiBold</div>
+  <div><b>Toggle Tab · light</b><code>--accent-off-white</code> · 1px outside <code>--border-input-light</code> · radius <code>12</code> · gap <code>1</code></div>
+  <div><b>Toggle Tab · active</b><code>--pando-blue</code> · radius <code>12</code> · inset 0 0 4 #234357 @ 50% · inactive radius <code>2</code></div>
+  <div><b>Toggle Tab · dark</b>#484858 @ 30% · 1px outside <code>--dark-input-text</code> @ 10% · labels <code>--white</code></div>
+  <div><b>Labels</b><code>.type-12-regular</code> · Figma auto line-height → <code>16px</code></div>
+</div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Usage text</h3><p>Figma has no description or usage text for this set. Used by Subheader and Sort-1 (molecules inventory).</p></div>
+  <div class="panel card"><h3>Behaviour</h3><ul><li>One option is always selected.</li><li>Click selects; arrow keys move and select (wraps); Home / End.</li><li>Description type: only the selected option shows its label; the others show an icon or a number.</li><li>Tab 3 is on and Tab 4 off by default (2–4 options).</li><li>No hover, focus or disabled state in Figma.</li></ul></div>
+  <div class="panel card"><h3>Related</h3><p>The Atoms <a href="toggle.html">Toggle Tab</a> (<code>.pds-toggle-tab</code>) is an older, square-cornered 2-option segment with different dark colours. <a href="tabs.html">Tab Group</a> switches panels (<code>tablist</code>); this set picks a value or view in place (<code>radiogroup</code>).</p></div>
+</div>
+</section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Roles</h3><p><code>role="radiogroup"</code> with an <code>aria-label</code> (or <code>aria-labelledby</code> the description); options are <code>role="radio"</code> buttons with <code>aria-checked</code>. <code>toggle-tab.js</code> fills in missing roles.</p></div>
+  <div class="panel card"><h3>One tab stop</h3><p>Roving tabindex: only the selected option has <code>tabindex="0"</code>. Arrow keys move and select.</p></div>
+  <div class="panel card"><h3>Names</h3><p>Icon-only options need <code>aria-label</code>. In the Description type each step keeps its label in the DOM (visually hidden until selected), so it is always named.</p></div>
+  <div class="panel card"><h3>Focus ring</h3><p><code>2px solid --pando-blue</code>, offset 2px. Added in review — not in Figma.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul class="plain" style="padding:0 0 0 18px">
+  <li>Naming: the Atoms kit already owns <code>.pds-toggle-tab</code> and <code>--toggle-tab-*</code> (toggle.css), so this molecule uses <code>.pds-toggle-tabs</code> / <code>--toggle-tabs-*</code> / <code>pdsToggleTab</code>.</li>
+  <li>Relation to the Atoms Toggle Tab: same idea as this set's Type = Toggle Tab, but the atom is radius 2 with a 1px inside border and fixed 69px options, and its dark version is #484858 @ 50% with a #D9E6FF active option; here the container and active option are pill-shaped (radius 12, inactive option radius 2), the border is outside, and dark is #484858 @ 30% with the same blue active option as light. Two sources disagree — pick one.</li>
+  <li>Relation to Tab Group (tabs.*): different pattern (tablist + panels, underline indicator). Not affected.</li>
+  <li>Two blues: Single Selection and the Description type use #0078DD (“Highlight/Blue-Dark”, not in tokens.css); Toggle Tab uses <code>--pando-blue</code> #0076DD.</li>
+  <li>Off-token: description text #2A4255 (unstyled), dark container #484858 @ 30% (unstyled; the atom uses 50%), #8A8A9E @ 10% border.</li>
+  <li>Type = Single Selection exists only for Selection = Option 1 (no Option 2 / 3 variants); built from the <code>.Option</code> base. Type = Toggle Tab exists only for 2 options. Dark exists only for Toggle Tab.</li>
+  <li>Active Single Selection option is SemiBold, inactive Regular — widths 70 vs 69, so the row shifts by 1px on selection. Light Toggle Tab active is Regular; Dark <code>.Option</code> Active is Regular too.</li>
+  <li>Icon: Figma uses a remote <code>Menu/Payments</code> (2427:9604). Not in the kit manifest by that name; built with the kit's <code>Menu/India Payments</code> (same ₹ notes drawing, 21 viewBox). <code>.Toggle Base</code> exposes an icon swap; samples use Payments + Rules.</li>
+  <li><code>.Option</code> “Show Icon” (Indicator Icon/Details 14, hidden) exists only on the Dark variants; the icon colour inside the blue option is not specified — shown in its drawn colour <code>--pando-dark</code>.</li>
+  <li><code>.Individual Tab</code> has no Icon · Active variant; when a step is selected it always becomes the text pill.</li>
+  <li>Line-height: Figma auto (≈16) for 12px; <code>.type-12-*</code> is 17, so a component token <code>--toggle-tabs-lh: 16px</code> keeps the 24px height.</li>
+  <li>Missing states: no hover, focus, pressed or disabled in Figma. Focus added in review.</li>
+  <li>Contrast (deferred): Toggle Tab light inactive frame #E2EAEC on white 1.22:1 (boundary only, WCAG 1.4.11). White on #0076DD 4.53:1, on #0078DD 4.44:1 (below 4.5). Single Selection inactive border #B5C3CB on white 1.81:1. Description type inactive circles rely on a 10% shadow only. Icon type active fill #E2EAEC vs white 1.22:1 — the selected icon tab is hard to tell apart. Dark Toggle Tab drawn on white in Figma: white labels on #484858 @ 30% over white 1.67:1 (on <code>--dark-bg</code> 10.5:1).</li>
+  <li>No Figma usage, description or Do / Don’t text for this set.</li>
+</ul></div>
+<p class="sub" style="margin-top:10px">Not adopted: loose Toggle Tab instances 3246:1120 and 2533:9615 (Dual Icon samples) · loose groups 2386:7381 (“01 Optimization and Planning / 02 Master Data Upload”) and 2386:7384 (“Delivery Picklist / Optima Rules / Edit Planned Output”) — usage sketches · backdrop rectangle 2426:8065 · Tab Group and .Tab on the same page are built as <a href="tabs.html">Tab Group</a>.</p>
+</section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>Hover, focus and disabled states (whole group and single options) — <a href="https://carbondesignsystem.com/components/content-switcher/usage/" target="_blank" rel="noopener">Carbon Content switcher</a>, <a href="https://ant.design/components/segmented" target="_blank" rel="noopener">Ant Segmented</a></li>
+  <li>Sizes (Carbon 32 / 40 / 48, Ant 24 / 32 / 40) and full-width (block) mode — <a href="https://carbondesignsystem.com/components/content-switcher/usage/" target="_blank" rel="noopener">Carbon</a>, <a href="https://ant.design/components/segmented" target="_blank" rel="noopener">Ant</a></li>
+  <li>Equal-width text options sized to the longest label; square icon options — <a href="https://carbondesignsystem.com/components/content-switcher/usage/" target="_blank" rel="noopener">Carbon</a></li>
+  <li>Tooltips on icon-only options; vertical orientation — <a href="https://ant.design/components/segmented" target="_blank" rel="noopener">Ant Segmented</a></li>
+  <li>Manual activation (arrow moves focus, Enter selects) as an option — <a href="https://carbondesignsystem.com/components/content-switcher/usage/" target="_blank" rel="noopener">Carbon</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the files and write the markup; <code>toggle-tab.js</code> wires every group on load. Call <code>pdsToggleTab.init(root)</code> for markup added later.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="toggle-tab.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const ICON=n=>{const i=(window.PDS_ICONS||[]).find(x=>x.n===n);return i?i.svg:""};
+const ico=(n,s)=>`<span class="pds-icon pds-icon--${s}" aria-hidden="true">${ICON(n)}</span>`;
+const PAY=()=>ico("menu-india-payments",20), RULES=()=>ico("menu-rules",20), DETAILS=()=>ico("indicator-details-14",14);
+
+/* builders — sel = selected index, n = option count */
+const opt=(on,inner,extra="")=>`<button class="pds-toggle-tabs__option" role="radio" aria-checked="${on}"${extra}>${inner}</button>`;
+function bIcon(sel,n,attrs=""){const icons=n===2?[["Payments",PAY],["Rules",RULES]]:[["Payments",PAY],["Payments",PAY],["Rules",RULES]];
+  return `<div class="pds-toggle-tabs pds-toggle-tabs--icon" role="radiogroup" aria-label="View"${attrs}>${icons.map(([l,f],i)=>opt(i===sel,f(),` aria-label="${l}"`)).join("")}</div>`}
+function bSteps(sel,n,attrs="",uid="d"+Math.random().toString(36).slice(2,7)){let h="";for(let i=0;i<n;i++)h+=opt(i===sel,`<span class="pds-toggle-tabs__mark">${DETAILS()}</span><span class="pds-toggle-tabs__label">Option ${i+1}</span>`);
+  return `<div class="pds-toggle-tabs pds-toggle-tabs--steps"><span class="pds-toggle-tabs__desc" id="${uid}">Description</span><div class="pds-toggle-tabs__options" role="radiogroup" aria-labelledby="${uid}"${attrs}>${h}</div></div>`}
+function bPills(sel,attrs=""){let h="";for(let i=0;i<3;i++)h+=opt(i===sel,`Option ${i+1}`);return `<div class="pds-toggle-tabs pds-toggle-tabs--pills" role="radiogroup" aria-label="Options"${attrs}>${h}</div>`}
+function bSeg(sel,dark,attrs=""){let h="";for(let i=0;i<2;i++)h+=opt(i===sel,`Option ${i+1}`);return `<div class="pds-toggle-tabs pds-toggle-tabs--segment${dark?" pds-toggle-tabs--dark":""}" role="radiogroup" aria-label="Options"${attrs}>${h}</div>`}
+
+/* playground */
+function renderDemo(){const t=$("#c-type").value,d=$("#c-dark").checked&&t==="segment";
+  $("#stage").classList.toggle("dark",d);
+  $("#stage").innerHTML=t==="segment"?bSeg(0,d):t==="pills"?bPills(0):t==="steps"?bSteps(0,3):bIcon(0,t==="icon2"?2:3);
+  pdsToggleTab.init($("#stage"));$("#log").textContent="Selected: "+(t.startsWith("icon")?"Payments":"Option 1")}
+$("#c-type").addEventListener("change",renderDemo);$("#c-dark").addEventListener("change",renderDemo);
+$("#stage").addEventListener("pds-change",e=>{$("#log").textContent="Selected: "+e.detail.value});
+renderDemo();
+
+/* variants — Toggle Tab set (13) */
+const S=' data-pds-static="1"';
+const cell=(lbl,html,dark)=>`<div class="vcell"><span class="lbl">${lbl}</span><div class="vbox${dark?" on-dark":""}">${html}</div></div>`;
+const group=(title,cells)=>`<h3 class="grp">${title}</h3><div class="states">${cells.join("")}</div>`;
+let v="";
+v+=group("Type = Dual Icon",[0,1].map(s=>cell(`Theme=Light, Selection=Option ${s+1}`,bIcon(s,2,S))));
+v+=group("Type = 3 Option Icon",[0,1,2].map(s=>cell(`Theme=Light, Selection=Option ${s+1}`,bIcon(s,3,S))));
+v+=group("Type = Single Selection with Description",[0,1,2].map(s=>cell(`Theme=Light, Selection=Option ${s+1}`,bSteps(s,3,S,"vd"+s))));
+v+=group("Type = Single Selection",[cell("Theme=Light, Selection=Option 1",bPills(0,S))]);
+v+=group("Type = Toggle Tab",[cell("Theme=Light, Selection=Option 1",bSeg(0,false,S)),cell("Theme=Light, Selection=Option 2",bSeg(1,false,S)),cell("Theme=Dark, Selection=Option 1",bSeg(0,true,S),true),cell("Theme=Dark, Selection=Option 2",bSeg(1,true,S),true)]);
+$("#vset").innerHTML=v;
+
+/* variants — base sets */
+let b="";
+b+=group(".Toggle Base (2)",[cell("State=Active Tab",`<div class="pds-toggle-tabs pds-toggle-tabs--icon" role="radiogroup" aria-label=".Toggle Base Active"${S}>${opt(true,PAY(),' aria-label="Payments"')}</div>`),cell("State=Inactive Tab",`<div class="pds-toggle-tabs pds-toggle-tabs--icon" role="radiogroup" aria-label=".Toggle Base Inactive"${S}>${opt(false,PAY(),' aria-label="Payments"')}</div>`)]);
+const ind=(on,mark,label)=>`<div class="pds-toggle-tabs pds-toggle-tabs--steps"><div class="pds-toggle-tabs__options" role="radiogroup" aria-label=".Individual Tab"${S}>${opt(on,`<span class="pds-toggle-tabs__mark">${mark}</span><span class="pds-toggle-tabs__label">${label}</span>`)}</div></div>`;
+b+=group(".Individual Tab (3)",[cell("Type=Icon, State=Inactive",ind(false,DETAILS(),"Option 1")),cell("Type=Text, State=Inactive",ind(false,"2","Option 2")),cell("Type=Text, State=Active",ind(true,"","Option 1"))]);
+const one=(cls,on,inner,dark)=>`<div class="pds-toggle-tabs ${cls} solo" role="radiogroup" aria-label=".Option"${S}>${opt(on,inner)}</div>`;
+b+=group(".Option (4 + Show Icon)",[cell("Theme=Light, State=Active",one("pds-toggle-tabs--pills",true,"Option 1")),cell("Theme=Light, State=Inactive",one("pds-toggle-tabs--pills",false,"Option 1")),cell("Theme=Dark, State=Active",one("pds-toggle-tabs--segment pds-toggle-tabs--dark",true,"Option 1"),true),cell("Theme=Dark, State=Inactive",one("pds-toggle-tabs--segment pds-toggle-tabs--dark",false,"Option 1"),true),cell("Theme=Dark, State=Active, Show Icon=true",one("pds-toggle-tabs--segment pds-toggle-tabs--dark",true,`<span class="pds-toggle-tabs__icon pds-icon pds-icon--14" style="color:var(--pando-dark)" aria-hidden="true">${ICON("indicator-details-14")}</span>Option 1`),true)]);
+$("#vbase").innerHTML=b;
+pdsToggleTab.init();
+
+/* code */
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/toggle-tab.css">
+<script src="components/toggle-tab.js"><\/script>
+
+<!-- Type = Toggle Tab (add .pds-toggle-tabs--dark for Theme = Dark) -->
+<div class="pds-toggle-tabs pds-toggle-tabs--segment" role="radiogroup" aria-label="View">
+  <button class="pds-toggle-tabs__option" role="radio" aria-checked="true">Option 1</button>
+  <button class="pds-toggle-tabs__option" role="radio" aria-checked="false">Option 2</button>
+</div>
+
+<!-- Type = Single Selection: .pds-toggle-tabs--pills, same markup, up to 3 options -->
+
+<!-- Type = Dual Icon / 3 Option Icon: icons from components/icons/ -->
+<div class="pds-toggle-tabs pds-toggle-tabs--icon" role="radiogroup" aria-label="View">
+  <button class="pds-toggle-tabs__option" role="radio" aria-checked="true" aria-label="Payments">
+    <span class="pds-icon pds-icon--20" aria-hidden="true"><!-- icons/menu-india-payments.svg --></span>
+  </button>
+  <button class="pds-toggle-tabs__option" role="radio" aria-checked="false" aria-label="Rules">
+    <span class="pds-icon pds-icon--20" aria-hidden="true"><!-- icons/menu-rules.svg --></span>
+  </button>
+</div>
+
+<!-- Type = Single Selection with Description (2–4 steps) -->
+<div class="pds-toggle-tabs pds-toggle-tabs--steps">
+  <span class="pds-toggle-tabs__desc" id="d1">Description</span>
+  <div class="pds-toggle-tabs__options" role="radiogroup" aria-labelledby="d1">
+    <button class="pds-toggle-tabs__option" role="radio" aria-checked="true">
+      <span class="pds-toggle-tabs__mark"><!-- icons/indicator-details-14.svg, or a number --></span>
+      <span class="pds-toggle-tabs__label">Option 1</span>
+    </button>
+    <button class="pds-toggle-tabs__option" role="radio" aria-checked="false">
+      <span class="pds-toggle-tabs__mark">2</span>
+      <span class="pds-toggle-tabs__label">Option 2</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('pds-change', e => console.log(e.detail)); // { index, value }
+  // pdsToggleTab.select(radiogroupEl, 1);
+<\/script>`;
+
+/* theme */
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

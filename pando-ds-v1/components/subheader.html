@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Subheader · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="button-group.css">
+<link rel="stylesheet" href="breadcrumb.css">
+<link rel="stylesheet" href="toggle-tab.css">
+<link rel="stylesheet" href="subheader.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+.stage{min-height:140px;display:block;padding:24px;overflow-x:auto}
+.vgrid{grid-template-columns:1fr}
+.scroller{overflow-x:auto;border:1px dashed var(--pg-line);border-radius:6px;background:var(--pg-soft);padding:12px}
+.scroller .fit{min-width:var(--w,1280px)}
+.olist{margin:0;padding:16px 18px 16px 36px;font-size:13.5px;display:flex;flex-direction:column;gap:6px}
+.ctrls .chk input:disabled+span{opacity:.45}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>Subheader</h1>
+    <p class="lede">Subheader used below header in either landing pages or inner pages. <em>(Figma description)</em></p>
+    <div class="meta"><span>Status: Built 2026-10-28 · not reviewed</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=1-409" target="_blank" rel="noopener">Figma component set 1:409 ↗</a><span>Files: subheader.css · uses button.css, button-group.css, breadcrumb.css, toggle-tab.css/.js, icons.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#optional">Optional parts</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">The Figma properties. Dark exists only for Main and Breadcrumb; each size only offers the booleans its Figma variant has.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls">
+    <label>Theme<select id="c-theme"><option>Light</option><option>Dark</option></select></label>
+    <label>Size<select id="c-size"><option>Main</option><option>Breadcrumb</option><option>Back</option><option>1440</option></select></label>
+    <label class="chk"><input type="checkbox" id="c-buttons" checked><span>Show Buttons</span></label>
+    <label class="chk"><input type="checkbox" id="c-search"><span>Show Search</span></label>
+    <label class="chk"><input type="checkbox" id="c-toggle"><span>With Toggle</span></label>
+    <label class="chk"><input type="checkbox" id="c-menu"><span>Show With Menu</span></label>
+  </form>
+  <div class="stage" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">All 6 variants at their Figma width (1280, or 1440) with Figma’s defaults: Show Buttons on, the other booleans off. Scroll sideways on narrow screens. The bar itself is fluid (width 100%).</p>
+<div class="panel vgrid" id="vgrid"></div></section>
+
+<section id="optional" data-flag-area><h2>Optional parts</h2><p class="sub">The booleans switched on. The first two match loose Subheader instances on the Figma page (2448:12035 and 6768:3135).</p>
+<div class="panel vgrid" id="ogrid"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma component set. Buttons, breadcrumb and toggle keep their atom’s own sizes and states.</p>
+<div class="panel">
+<div class="spec-table">
+  <div><b>Height</b><code>50px</code> fixed · width fills (1280 / 1440 in Figma)</div>
+  <div><b>Padding</b>right <code>20px</code> · left 0</div>
+  <div><b>Border</b>1px inside · Light <code>--border-blue</code> #E9F1F5 · Dark Main <code>--pando-dark</code> #234357 · Dark Breadcrumb #18283B (off-token)</div>
+  <div><b>Background</b>Light <code>--white</code> · Dark <code>--dark-bg</code> #393945</div>
+  <div><b>Dividers</b>1 × 50 · Light #E9F1F5 · Dark #8A8A9E @ 50%</div>
+  <div><b>Menu area</b><code>60 × 50</code>, icon Menu/Menu 20 · Dark fill <code>--dark-darker</code> #24242F, lines white</div>
+  <div><b>Title</b>Open Sans SemiBold 14 · UPPER · +1px · Light <code>--pando-blue</code> · Dark <code>--dark-label-text</code></div>
+  <div><b>Title spacing</b><code>20px</code> each side · arrow 8 × 5, <code>20px</code> after text · Light #234357 · Dark white</div>
+  <div><b>Breadcrumb</b>kit atom · inset 15 (Dark: 20 left, 15 right) · Dark: Previous #D5DAF4, caret #8A8A9E, current white</div>
+  <div><b>Back</b>caret 8 × 14 pointing left, <code>--grey-dark</code> #515151 · 20 left · 20 to label</div>
+  <div><b>Search</b>Menu/Search 20 · gap 10 · Regular 14 · Light #545454 · Dark #8A8A9E · 20 after divider (Main), 10 (others)</div>
+  <div><b>Toggle</b>kit Toggle Tab · Dual Icon · 89 × 50 · before the title divider</div>
+  <div><b>Right side</b>divider · gap <code>20px</code> · kit Button Group (Normal buttons). Back has no divider.</div>
+  <div><b>Sample text</b>“Subheader Active” · “Previous” › “Current Page” · “Button Text” · “Label” · “Search”</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Placement</h3><p>Main subheader to be placed on listing or landing pages. Any inside page will have a breadcrumb based subheader. <em>(Figma .documentation)</em></p></div>
+  <div class="panel card"><h3>Position</h3><p>Used below header in either landing pages or inner pages. <em>(Figma description)</em></p></div>
+  <div class="panel card"><h3>Seen on the Figma page</h3><p>Main at 1280 with Toggle and Buttons; 1440 with Buttons; Breadcrumb with no buttons. Read from loose instances, not added as rules.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Real controls</h3><p>Menu, title, back and search are <code>&lt;button&gt;</code>s. The menu and back buttons have no visible text, so they carry <code>aria-label</code> (“Menu”, “Back”). The title opens a menu: <code>aria-haspopup="menu"</code> + <code>aria-expanded</code>.</p></div>
+  <div class="panel card"><h3>Atoms</h3><p>Breadcrumb is a <code>&lt;nav aria-label="Breadcrumb"&gt;</code> with <code>aria-current="page"</code>. Toggle is a radiogroup with arrow keys (toggle-tab.js). Buttons as the Button atom.</p></div>
+  <div class="panel card"><h3>Focus &amp; contrast</h3><p>Focus ring 2px Pando Blue — added in review, not in Figma. Contrast failures are listed under Open issues (fixes deferred).</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="panel"><ol class="olist">
+  <li>Atom variant missing in kit: Breadcrumb has no Dark theme. The subheader re-colours the kit atom (#D5DAF4 / #8A8A9E / white) through its tokens.</li>
+  <li>Dark Breadcrumb border is #18283B (not in tokens.css); Dark Main uses #234357. Two different dark borders.</li>
+  <li>Contrast: Search text #8A8A9E on #393945 ≈ 2.9 : 1; Dark divider lines are decorative. Light “Previous” #545454 on white passes.</li>
+  <li>Dark Search icon colours not read (the instance exposed no vectors); built with the Light two-colour icon (#0076DD / #234357), which is nearly invisible on #393945.</li>
+  <li>Toggle icons: Figma uses “Menu/Payments” + “Menu/Rules”; the kit manifest has no Menu/Payments, so the Toggle Tab kit’s <code>menu-india-payments</code> is used.</li>
+  <li>Boolean coverage differs by variant: With Toggle only on Light Main / 1440 / Light Breadcrumb; Show With Menu only on Light Breadcrumb; Dark and Back have no toggle.</li>
+  <li>Small Figma differences not reproduced: Size=Main has 0.5px top/bottom padding; left section right padding 20 (Light) / 15 (Dark); Breadcrumb right group has an extra 10px left padding. None is visible because the bar is space-between.</li>
+  <li>Size=1440 is the same layout as Main at 1440 wide — a width, not a variant. Kept as published.</li>
+  <li>Title dropdown has no open/hover/active state in Figma; the menu it opens is “Subheader Menu” (Dropdown page), built separately.</li>
+  <li>No hover, focus or pressed states for menu, title, back or search in Figma. Focus ring added in review.</li>
+  <li>Title line-height is “auto” in Figma (19px for 14px Open Sans) — matches <code>--type-14-semibold</code>.</li>
+  <li>px values not on the spacing scale: 20 (gaps, right padding), 60 (menu area), 50 (height); icon boxes 8×5 and 8×14.</li>
+</ol></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel"><ul class="olist">
+  <li>Collapse links and menus into a hamburger panel on small screens. <a href="https://carbondesignsystem.com/components/UI-shell-header/usage/" target="_blank" rel="noopener">Carbon UI shell header</a></li>
+  <li>Click targets span the full height of the bar. <a href="https://carbondesignsystem.com/components/UI-shell-header/usage/" target="_blank" rel="noopener">Carbon UI shell header</a></li>
+  <li>The menu chevron points up while its menu is open. <a href="https://carbondesignsystem.com/components/UI-shell-header/usage/" target="_blank" rel="noopener">Carbon UI shell header</a></li>
+  <li>Hamburger only when there is a collapsible left navigation. <a href="https://carbondesignsystem.com/components/UI-shell-header/usage/" target="_blank" rel="noopener">Carbon UI shell header</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the atoms and this file. Hide optional parts with <code>hidden</code> (or leave them out).</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Size = Breadcrumb, Dark:</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="button.js"></script>
+<script src="toggle-tab.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const ICON=n=>{const i=(window.PDS_ICONS||[]).find(x=>x.n===n);return i?i.svg:""};
+const ico=(n,s)=>`<span class="pds-icon pds-icon--${s}" aria-hidden="true">${ICON(n)}</span>`;
+const ARROW=`<span class="pds-subheader__arrow" aria-hidden="true">${ICON("nav-dropdown-arrow-solid")}</span>`;
+const CARET='<span class="pds-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 5 8"><path fill="currentColor" d="M1.208.5 .5 1.25 3.1 4 .501 6.751 1.208 7.5l2.954-3.125L4.5 4l-.338-.375L1.208.5Z"/></svg></span>';
+const BACK='<svg viewBox="0 0 5 8" aria-hidden="true"><path fill="currentColor" d="M1.208.5 .5 1.25 3.1 4 .501 6.751 1.208 7.5l2.954-3.125L4.5 4l-.338-.375L1.208.5Z"/></svg>';
+const BCARET='<svg class="pds-button__caret" viewBox="0 0 10 8" aria-hidden="true"><path fill="currentColor" d="M0.24 1.25C0.56 0.91 1.09 0.91 1.42 1.25L5 4.93L8.57 1.25C8.90 0.91 9.43 0.91 9.75 1.25C10.08 1.58 10.08 2.12 9.75 2.46L5.58 6.74C5.26 7.08 4.73 7.08 4.41 6.74L0.24 2.46C-0.08 2.12 -0.08 1.58 0.24 1.25Z"/></svg>';
+const DIV='<span class="pds-subheader__divider" aria-hidden="true"></span>';
+
+/* Which booleans each Figma variant has */
+const AVAIL={"Light/Main":["buttons","search","toggle"],"Dark/Main":["buttons","search"],"Light/Breadcrumb":["menu","toggle","search","buttons"],"Dark/Breadcrumb":["search","buttons"],"Light/Back":["search","buttons"],"Light/1440":["toggle","search","buttons"]};
+
+function sub(o){
+  const theme=o.theme||"Light", size=o.size||"Main", dark=theme==="Dark";
+  const sizeCls=size==="1440"?"main":size.toLowerCase();
+  const d=dark?" pds-button--dark":"";
+  const lbl=t=>`<span class="pds-button__label">${t}</span>`;
+  const menu=`<button type="button" class="pds-subheader__menu" aria-label="Menu">${ico("menu-menu",20)}</button>`;
+  const toggle=o.toggle?`<div class="pds-toggle-tabs pds-toggle-tabs--icon" role="radiogroup" aria-label="View"><button class="pds-toggle-tabs__option" role="radio" aria-checked="true" aria-label="Payments">${ico("menu-india-payments",20)}</button><button class="pds-toggle-tabs__option" role="radio" aria-checked="false" aria-label="Rules">${ico("menu-rules",20)}</button></div>`:"";
+  const search=o.search?`<button type="button" class="pds-subheader__search">${ico("menu-search",20)}<span>Search</span></button>`:"";
+  let left="";
+  if(sizeCls==="main"){
+    left=`${menu}\n    ${DIV}\n    <button type="button" class="pds-subheader__title" aria-haspopup="menu" aria-expanded="false">Subheader Active${ARROW}</button>${toggle?"\n    "+toggle:""}\n    ${DIV}${search?"\n    "+search:""}`;
+  } else if(size==="Breadcrumb"){
+    const crumb=`<nav class="pds-breadcrumb pds-subheader__crumb" aria-label="Breadcrumb"><ol class="pds-breadcrumb__list"><li class="pds-breadcrumb__item"><a class="pds-breadcrumb__link" href="#">Previous</a>${CARET}</li><li class="pds-breadcrumb__item pds-breadcrumb__item--current"><span class="pds-breadcrumb__current" aria-current="page">Current Page</span></li></ol></nav>`;
+    left=`${o.menu?menu+"\n    "+DIV+"\n    ":""}${crumb}${toggle?"\n    "+toggle:""}\n    ${DIV}${search?"\n    "+search:""}`;
+  } else { /* Back */
+    const crumb=`<nav class="pds-breadcrumb pds-subheader__crumb" aria-label="Breadcrumb"><ol class="pds-breadcrumb__list"><li class="pds-breadcrumb__item pds-breadcrumb__item--current"><span class="pds-breadcrumb__current" aria-current="page">Current Page</span></li></ol></nav>`;
+    left=`<button type="button" class="pds-subheader__back" aria-label="Back">${BACK}</button>\n    ${crumb}\n    ${DIV}${search?"\n    "+search:""}`;
+  }
+  const dd=size==="Breadcrumb"&&!dark?`<button type="button" class="pds-button pds-button--dropdown" aria-haspopup="menu" aria-expanded="false">${lbl("Label")}${BCARET}</button>\n      `:"";
+  const right=o.buttons===false?"":`\n  <div class="pds-subheader__right">\n    ${size==="Back"?"":DIV+"\n    "}<div class="pds-button-group">\n      ${dd}<button type="button" class="pds-button pds-button--secondary${d}">${lbl("Button Text")}</button>\n      <button type="button" class="pds-button${d}">${lbl("Button Text")}</button>\n    </div>\n  </div>`;
+  return `<div class="pds-subheader pds-subheader--${sizeCls}${size==="Back"?"":""}${dark?" pds-subheader--dark":""}">\n  <div class="pds-subheader__left">\n    ${left}\n  </div>${right}\n</div>`;
+}
+
+/* playground */
+const KEYS={buttons:"#c-buttons",search:"#c-search",toggle:"#c-toggle",menu:"#c-menu"};
+function render(){
+  const size=$("#c-size").value; const darkOk=size==="Main"||size==="Breadcrumb";
+  $("#c-theme").querySelector("option:last-child").disabled=!darkOk; if(!darkOk)$("#c-theme").value="Light";
+  const av=AVAIL[$("#c-theme").value+"/"+size];
+  const o={theme:$("#c-theme").value,size};
+  for(const k in KEYS){const el=$(KEYS[k]);el.disabled=!av.includes(k);o[k]=!el.disabled&&el.checked}
+  $("#stage").innerHTML=`<div class="fit" style="min-width:${size==="1440"?1440:1280}px">${sub(o)}</div>`;
+  pdsToggleTab.init($("#stage"));
+}
+$("#ctrls").addEventListener("change",render);render();
+
+const box=(l,o)=>`<div class="vcell"><span class="lbl">${l}</span><div class="scroller"><div class="fit" style="--w:${o.size==="1440"?1440:1280}px">${sub(o)}</div></div></div>`;
+const D={buttons:true};
+$("#vgrid").innerHTML=[
+ ["Theme=Light, Size=Main · 3021:714",{...D,theme:"Light",size:"Main"}],
+ ["Theme=Dark, Size=Main · 407:3383",{...D,theme:"Dark",size:"Main"}],
+ ["Theme=Light, Size=Breadcrumb · 116:42",{...D,theme:"Light",size:"Breadcrumb"}],
+ ["Theme=Dark, Size=Breadcrumb · 615:4190",{...D,theme:"Dark",size:"Breadcrumb"}],
+ ["Theme=Light, Size=Back · 2850:606",{...D,theme:"Light",size:"Back"}],
+ ["Theme=Light, Size=1440 · 4446:3706",{...D,theme:"Light",size:"1440"}],
+].map(([l,o])=>box(l,o)).join("");
+$("#ogrid").innerHTML=[
+ ["Light, Main · With Toggle=true",{...D,size:"Main",toggle:true}],
+ ["Light, Breadcrumb · Show Buttons=false",{theme:"Light",size:"Breadcrumb",buttons:false}],
+ ["Light, Main · Show Search=true",{...D,size:"Main",search:true}],
+ ["Dark, Main · Show Search=true",{...D,theme:"Dark",size:"Main",search:true}],
+ ["Light, Breadcrumb · Show With Menu, With Toggle, Show Search = true",{...D,size:"Breadcrumb",menu:true,toggle:true,search:true}],
+ ["Dark, Breadcrumb · Show Search=true",{...D,theme:"Dark",size:"Breadcrumb",search:true}],
+ ["Light, Back · Show Search=true",{...D,size:"Back",search:true}],
+].map(([l,o])=>box(l,o)).join("");
+pdsToggleTab.init(document);
+document.addEventListener("click",e=>{if(e.target.closest(".pds-subheader a[href='#']"))e.preventDefault()});
+
+const short=h=>h.replace(/<span class="pds-icon pds-icon--20" aria-hidden="true"><svg[\s\S]*?<\/svg><\/span>/g,m=>'<span class="pds-icon pds-icon--20" aria-hidden="true"><!-- icons/… .svg --></span>').replace(/<svg[\s\S]*?<\/svg>/g,"<svg>…</svg>");
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/button-group.css">
+<link rel="stylesheet" href="components/breadcrumb.css">
+<link rel="stylesheet" href="components/toggle-tab.css">
+<link rel="stylesheet" href="components/subheader.css">
+<script src="components/toggle-tab.js"><\/script>  <!-- only with the Toggle -->
+
+<!-- Theme=Light, Size=Main (Size=1440 is the same markup) -->
+`+short(sub({...D,size:"Main"}));
+$("#code2").textContent=short(sub({...D,theme:"Dark",size:"Breadcrumb"}));
+
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

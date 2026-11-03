@@ -1,0 +1,203 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — List Column (one cell of a list row)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ List (1:870)
+     component set "List Column"            2479:10402  (Type × Size = 15)
+     component set "List-Data (Adjustable)" 360:6       (Data points × Checkbox = 4)
+     component set ".Route"                 6199:2264   (Single · Multi = 2)
+   Built 2026-10-28 from Figma (no review — everything published kept).
+   Requires ../tokens.css and, for the atoms inside, tag.css · status.css ·
+   skeleton.css · checkbox.css. No JS.
+   Self-contained: the List molecule reuses these classes as-is.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colours — exactly as the Figma variants use them */
+  --list-column-main:        var(--text-dark);          /* #313131 Main Text / Col */
+  --list-column-sub:         var(--text-medium);        /* #545454 Additional Text / codes */
+  --list-column-via:         var(--pando-blue-active);  /* #005399 "VIA" */
+  --list-column-arrow:       var(--border-blue-grey);   /* #B5C3CB route arrows */
+  --list-column-data-bg:     var(--white);              /* List-Data cell fill */
+  --list-column-slot-bg:     var(--pando-light);        /* #EEF2F4 .Swappable Content */
+  --list-column-slot-title:  var(--pando-dark);         /* #234357 */
+  --list-column-slot-body:   #000000; /* off-token in Figma */
+
+  /* Widths per Size (List Column is fixed-width, height hugs) */
+  --list-column-w-small:     80px;
+  --list-column-w-default:   120px;
+  --list-column-w-large:     180px;
+  --list-column-w-xlarge:    220px;
+  --list-column-w-text-tag:  160px;  /* Type=Text + Tag */
+  --list-column-w-status:    130px;  /* Type=Status, Size=Default and Small */
+  --list-column-w-status-lg: 160px;  /* Type=Status, Size=Large */
+  --list-column-w-place:     100px;  /* each place in a Route */
+
+  /* Measured */
+  --list-column-lh:          16px;   /* Figma 12px text, auto line-height (16px box); tokens use 17 */
+  --list-column-gap:         5px;    /* Main ↔ Additional text */
+  --list-column-gap-tag-v:   4px;    /* Text + Tag: row ↔ (hidden) Additional text */
+  --list-column-gap-row:     6px;    /* text ↔ tag, tag ↔ tag */
+  --list-column-code-lh:     12px;   /* Route code line, 10/12 */
+
+  /* Route */
+  --list-column-via-w:       30px;   /* Connector with "VIA" */
+  --list-column-via-pad:     12px 8px 5px;  /* List Column Type=Route */
+  --list-column-via-pad-set: 12px 8px 10px; /* .Route set */
+  --list-column-via-arrow:   14px;
+  --list-column-arrow-w:     28px;   /* plain arrow between places */
+  --list-column-arrow-pad:   12px 8px;
+  --list-column-arrow-line:  12px;
+  --list-column-arrow-head:  7px;    /* svg box height around the 0-high Figma line */
+
+  /* List-Data (Adjustable) */
+  --list-column-data-pad:      var(--space-10);  /* Single Data Point */
+  --list-column-data-pad-dual: 8px 10px;         /* Dual Data Points */
+  --list-column-data-gap:      var(--space-10);  /* checkbox ↔ data */
+  --list-column-data-gap-v:    4px;              /* Col ↔ Col$Na */
+
+  /* Swappable slot placeholder (.Swappable Content 3217:4896) */
+  --list-column-slot-pad:      3px 10px;
+  --list-column-slot-gap:      20px;
+  --list-column-slot-title-gap:8px;
+  --list-column-slot-icon:     20px;
+  --list-column-slot-body-w:   150px;
+}
+
+/* ── List Column ───────────────────────────────────────────────── */
+.pds-list-column {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--list-column-gap);
+  width: var(--list-column-w-default);
+  min-width: 0;
+  font-family: var(--font-family);
+}
+.pds-list-column *, .pds-list-column *::before { box-sizing: border-box; }
+
+/* Size */
+.pds-list-column--small   { width: var(--list-column-w-small); }
+.pds-list-column--default { width: var(--list-column-w-default); }
+.pds-list-column--large   { width: var(--list-column-w-large); }
+.pds-list-column--xlarge  { width: var(--list-column-w-xlarge); }
+
+/* Text parts (Type=Text) */
+.pds-list-column__main,
+.pds-list-column__sub {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* Figma truncates in Route only — see Open issues */
+}
+.pds-list-column__main { font: var(--type-12-semibold); line-height: var(--list-column-lh); color: var(--list-column-main); }
+.pds-list-column__sub  { font: var(--type-12-regular);  line-height: var(--list-column-lh); color: var(--list-column-sub); }
+/* Route codes: 10 Regular 10/12, +0.5 tracking, caps */
+.pds-list-column__sub--code {
+  font: var(--type-10-regular); line-height: var(--list-column-code-lh);
+  letter-spacing: .5px; text-transform: uppercase;
+}
+
+/* Type=Text + Tag — text and count tag on one row */
+.pds-list-column--text-tag { width: var(--list-column-w-text-tag); gap: var(--list-column-gap-tag-v); }
+.pds-list-column__row {
+  display: flex; flex-direction: row; align-items: center;
+  gap: var(--list-column-gap-row);
+  width: 100%; min-width: 0;
+}
+.pds-list-column__row > .pds-list-column__main { flex: 1 1 auto; min-width: 0; }
+
+/* Type=Tag — Input Tag(s) then a count tag (tag.css atoms) */
+.pds-list-column--tag { flex-direction: row; align-items: center; gap: var(--list-column-gap-row); }
+.pds-list-column--tag > .pds-tag--input { min-width: 0; }
+
+/* Type=Status — the #Status atom fills the column */
+.pds-list-column--status { width: var(--list-column-w-status); gap: var(--list-column-gap-row); }
+.pds-list-column--status.pds-list-column--large { width: var(--list-column-w-status-lg); }
+.pds-list-column--status > .pds-status { width: 100%; }
+.pds-list-column--status > .pds-status--small { width: var(--status-width-small); }
+
+/* Type=Skeleton — width comes from the skeleton size class */
+.pds-list-column--skeleton { width: fit-content; gap: var(--list-column-gap-row); }
+
+/* Type=Swappable — a slot; put any content inside */
+.pds-list-column--slot { width: fit-content; gap: var(--list-column-gap-row); }
+.pds-list-column__slot-placeholder {
+  display: flex; flex-direction: row; align-items: center;
+  gap: var(--list-column-slot-gap);
+  padding: var(--list-column-slot-pad);
+  background: var(--list-column-slot-bg);
+}
+.pds-list-column__slot-title {
+  display: inline-flex; align-items: center; gap: var(--list-column-slot-title-gap);
+  font: var(--type-12-semibold); line-height: var(--list-column-lh); color: var(--list-column-slot-title);
+  white-space: nowrap;
+}
+.pds-list-column__slot-title svg { flex: none; width: var(--list-column-slot-icon); height: var(--list-column-slot-icon); fill: currentColor; }
+.pds-list-column__slot-body {
+  width: var(--list-column-slot-body-w); margin: 0;
+  font: var(--type-12-regular); line-height: var(--list-column-lh); color: var(--list-column-slot-body);
+}
+
+/* ── Type=Route (List Column) and the .Route set ───────────────── */
+.pds-list-column--route {
+  width: fit-content;
+  flex-direction: row;
+  align-items: flex-start;   /* List Column Type=Route: top-aligned */
+  gap: 0;
+}
+.pds-list-column--route-center { align-items: center; }  /* .Route set: centred */
+
+.pds-list-column__place {
+  display: flex; flex-direction: column; gap: var(--list-column-gap);
+  flex: none; width: var(--list-column-w-place); min-width: 0;
+}
+
+/* Connector with "VIA" */
+.pds-list-column__via {
+  flex: none; align-self: stretch;
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--list-column-gap);
+  width: var(--list-column-via-w);
+  padding: var(--list-column-via-pad);
+}
+.pds-list-column--route-center > .pds-list-column__via { padding: var(--list-column-via-pad-set); }
+.pds-list-column__via-label {
+  font: var(--type-8-regular); font-weight: 600; line-height: normal; /* Figma 8 SemiBold, auto — no token */
+  text-transform: uppercase; color: var(--list-column-via);
+}
+
+/* Plain arrow between places */
+.pds-list-column__arrow {
+  flex: none; align-self: stretch;
+  display: flex; flex-direction: column; align-items: flex-start;
+  width: var(--list-column-arrow-w);
+  padding: var(--list-column-arrow-pad);
+}
+
+/* The arrow line itself is 0 high in Figma; the svg is centred on it */
+.pds-list-column__line {
+  position: relative; flex: none; height: 0;
+  width: var(--list-column-arrow-line);
+  color: var(--list-column-arrow);
+}
+.pds-list-column__via .pds-list-column__line { width: var(--list-column-via-arrow); }
+.pds-list-column__line svg {
+  position: absolute; left: 0; top: calc(var(--list-column-arrow-head) / -2);
+  width: 100%; height: var(--list-column-arrow-head); overflow: visible;
+}
+
+/* Count tag after a place (Size=Default route / .Route Multi) */
+.pds-list-column--route > .pds-tag--count { flex: none; }
+
+/* ── List-Data (Adjustable) — a white cell, optional checkbox ──── */
+.pds-list-column--data {
+  width: fit-content;
+  flex-direction: row; align-items: center;
+  gap: var(--list-column-data-gap);
+  padding: var(--list-column-data-pad);
+  background: var(--list-column-data-bg);
+}
+.pds-list-column--data.pds-list-column--dual { padding: var(--list-column-data-pad-dual); }
+.pds-list-column__data {
+  display: flex; flex-direction: column; gap: var(--list-column-data-gap-v);
+  min-width: 0;
+}

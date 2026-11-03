@@ -1,0 +1,152 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Modal (organism)
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 Modals (32:443)
+   › component set "Modal" (1312:877), 6 variants, and the slot
+   component ".Swappable Content" (2238:4148).
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css, icons.css, button.css, button-group.css,
+   input.css. Every atom inside is the kit atom; this file only lays
+   the dialog out and colours its own text.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Box (all 6 variants) ── */
+  --modal-width:   350px;                 /* fixed; content 320 */
+  --modal-pad:     var(--space-15);       /* 15 all sides */
+  --modal-gap:     16px;                  /* between rows — not on the spacing scale */
+  --modal-radius:  2px;                   /* not on the radius scale */
+  --modal-shadow:  var(--shadow-3);       /* 0 2 14 10% */
+  --modal-close:   12px;                  /* Navigation/Close-Tag */
+  --modal-overlay: var(--color-overlay);  /* Pando Dark @ 20% */
+  --modal-z:       1100;
+  --modal-edge:    16px;                  /* min distance from the viewport edge when positioned (behaviour, not in Figma) */
+
+  /* ── Type=Light ── */
+  --modal-light-bg:      var(--white);
+  --modal-light-heading: var(--pando-dark);    /* #234357 */
+  --modal-light-text:    var(--text-dark);     /* #313131 */
+  --modal-light-close:   var(--grey-dark);     /* #515151 */
+
+  /* ── Type=Dark ── */
+  --modal-dark-bg:       var(--dark-darker);   /* #24242F */
+  --modal-dark-heading:  var(--dark-label-text); /* #D5DAF4 */
+  --modal-dark-text:     var(--dark-label-text);
+  --modal-dark-close:    var(--dark-label-text);
+
+  /* ── Button Group row ── */
+  --modal-actions-gap:      var(--space-10);          /* Light (all) + Dark Swappable: 10 */
+  --modal-actions-gap-dark: var(--button-group-gap);  /* Dark Text / Text with Options: 20 */
+
+  /* ── .Swappable Content (2238:4148) ── */
+  --modal-slot-bg:         var(--pando-light);   /* #EEF2F4 — same on Light and Dark */
+  --modal-slot-pad:        var(--space-10);
+  --modal-slot-gap:        var(--space-10);
+  --modal-slot-title-gap:  8px;                  /* not on the spacing scale */
+  --modal-slot-icon:       20px;
+  --modal-slot-title:      var(--pando-dark);    /* #234357 */
+  --modal-slot-text:       #000000;              /* off-token in Figma */
+  --modal-slot-text-w:     150px;                /* fixed text width in Figma */
+}
+
+/* ── Overlay (behaviour layer, see modal.js) ─────────────────────── */
+.pds-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--modal-z);
+  background: var(--modal-overlay);
+  display: grid;
+  place-items: center;          /* default placement: centre of the screen */
+  padding: var(--modal-edge);
+}
+.pds-modal-overlay[hidden] { display: none; }
+.pds-modal-overlay--anchored { display: block; }
+.pds-modal-overlay--anchored > .pds-modal { position: absolute; }
+
+/* ── Modal box ─────────────────────────────────────────────────── */
+.pds-modal {
+  --_bg: var(--modal-light-bg); --_heading: var(--modal-light-heading);
+  --_text: var(--modal-light-text); --_close: var(--modal-light-close);
+  --_actions-gap: var(--modal-actions-gap);
+  box-sizing: border-box;
+  width: var(--modal-width);
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--modal-gap);
+  padding: var(--modal-pad);
+  background: var(--_bg);
+  border-radius: var(--modal-radius);
+  box-shadow: var(--modal-shadow);
+  font-family: var(--font-family);
+  color: var(--_text);
+  text-align: left;
+}
+.pds-modal--dark {
+  --_bg: var(--modal-dark-bg); --_heading: var(--modal-dark-heading);
+  --_text: var(--modal-dark-text); --_close: var(--modal-dark-close);
+  --_actions-gap: var(--modal-actions-gap-dark);
+}
+.pds-modal--dark.pds-modal--swappable { --_actions-gap: var(--modal-actions-gap); }
+.pds-modal:focus { outline: none; }
+
+/* Top Section: heading left, close × right */
+.pds-modal__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0;
+}
+.pds-modal__title {
+  flex: 1; min-width: 0; margin: 0;
+  font: var(--type-14-semibold);     /* Figma: SemiBold 14 / 16 — see Open issues */
+  color: var(--_heading);
+}
+.pds-modal__close {
+  flex: none;
+  width: var(--modal-close); height: var(--modal-close);
+  padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--_close);
+  display: grid; place-items: center;
+}
+.pds-modal__close .pds-icon { --_icon: var(--modal-close); }
+.pds-modal__close:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; border-radius: 2px; } /* added in review — not in Figma */
+
+/* Message ("Content") */
+.pds-modal__message {
+  margin: 0;
+  font: var(--type-12-regular);      /* Figma: Regular 12 / auto — see Open issues */
+  color: var(--_text);
+}
+
+/* Field slot: Input - Text (Light, fills 320) or Text Area (Dark, 310 fixed) */
+.pds-modal__field { display: flex; }
+.pds-modal__field > .pds-input:not(.pds-input--textarea) { --_w: 100%; flex: 1; }
+
+/* Actions: the Button Group molecule, right-aligned */
+.pds-modal__actions.pds-button-group { gap: var(--_actions-gap); min-height: 0; }
+
+/* ── .Swappable Content slot ───────────────────────────────────── */
+.pds-modal__slot {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--modal-slot-gap);
+  padding: var(--modal-slot-pad);
+  background: var(--modal-slot-bg);
+}
+.pds-modal__slot-title {
+  display: flex; align-items: center; gap: var(--modal-slot-title-gap);
+  margin: 0;
+  font: var(--type-12-semibold);
+  color: var(--modal-slot-title);
+}
+.pds-modal__slot-title .pds-icon { --_icon: var(--modal-slot-icon); color: var(--modal-slot-title); }
+.pds-modal__slot-text {
+  width: var(--modal-slot-text-w);
+  margin: 0;
+  font: var(--type-12-regular);
+  color: var(--modal-slot-text);
+}

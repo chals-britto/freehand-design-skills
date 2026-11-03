@@ -1,0 +1,174 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Search Section + Search chat (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟡 Search (60:273)
+          › component "Search Section" (61:377) — booleans 1st / 2nd / 3rd Row
+          › component "Search chat" (6764:2582)
+          › component set ".Search_Menu" (6763:2419) — Property 1 = Default | Hover
+   Built 2026-10-28 · no review — every published item kept as in Figma.
+   Requires ../tokens.css, icons.css, input.css (+ input.js, Input - Text
+   fields), button.css (Text Only / Primary Small), button-group.css and
+   search-input.css (Search chat field). Nothing here re-implements those.
+   Built here (no kit atom): the All / Chats / Artifacts filter chips and
+   the .Search_Menu result row — see search-advanced.md › Open issues.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Shared container (both Search Section and Search chat) */
+  --search-advanced-bg:        var(--white);                 /* #FFFFFF */
+  --search-advanced-radius:    4px;
+  --search-advanced-shadow:    var(--shadow-3);              /* 0 2 14 10% */
+
+  /* Search Section */
+  --search-advanced-pad:       var(--space-10);
+  --search-advanced-gap:       var(--space-10);
+  --search-advanced-field-w:   200px;                        /* Input - Text Size=Standard (200) */
+  --search-advanced-cols:      3;
+
+  /* Search chat */
+  --search-advanced-chat-w:    520px;
+  --search-advanced-head-pad:  var(--space-2) var(--space-2) var(--space-10) var(--space-2);  /* 2 / 2 / 10 / 2 */
+  --search-advanced-tools-right: 13px;                       /* clear · line · × group, absolute in the header */
+  --search-advanced-tools-top:   13px;
+  --search-advanced-tools-gap:   var(--space-10);
+  --search-advanced-divider:     var(--border-input-light);  /* #E2EAEC Line 1 */
+  --search-advanced-divider-h:   14px;
+  --search-advanced-close-fg:    var(--grey-dark);           /* #515151 Navigation/Close-Tag */
+  --search-advanced-close:       12px;
+
+  /* Filter chips (All / Chats / Artifacts) — no kit atom */
+  --search-advanced-chips-gap:   6px;
+  --search-advanced-chips-pad:   0 var(--space-10);
+  --search-advanced-chip-pad:    3px 6px;
+  --search-advanced-chip-radius: 14px;
+  --search-advanced-chip-font:   400 10px/14px var(--font-family);   /* Regular 10, line Auto (14), tracking 0, caps */
+  --search-advanced-chip-bg:     var(--accent-alternate-white);      /* #F9FAFA */
+  --search-advanced-chip-fg:     #18283B;                            /* off-token in Figma */
+  --search-advanced-chip-shadow: var(--shadow-1);                    /* Figma 0 1 3 10% — shadow-1 is 0 2 3 10% */
+  --search-advanced-chip-on-bg:  var(--pando-blue);                  /* #0076DD */
+  --search-advanced-chip-on-fg:  var(--white);
+
+  /* Results list + .Search_Menu row */
+  --search-advanced-list-pad:    var(--space-10);
+  --search-advanced-list-gap:    var(--space-2);
+  --search-advanced-item-h:      36px;
+  --search-advanced-item-pad:    var(--space-10);
+  --search-advanced-item-gap:    4px;
+  --search-advanced-item-inner-gap: var(--space-10);
+  --search-advanced-item-radius: 4px;
+  --search-advanced-item-hover:  var(--pando-light);         /* #EEF2F4 Property 1=Hover */
+  --search-advanced-item-fg:     #404040;                    /* off-token in Figma — title + meta */
+  --search-advanced-item-icon-fg: var(--text-dark);          /* #313131 indicator icon */
+  --search-advanced-item-line-h: 16px;                       /* Figma 12 SemiBold, line Auto (16) vs 17 in .type-12-semibold */
+
+  --search-advanced-focus: 2px solid var(--pando-blue);      /* added — not in Figma (keyboard focus) */
+}
+
+.pds-search-advanced, .pds-search-advanced *, .pds-search-advanced *::before, .pds-search-advanced *::after { box-sizing: border-box; }
+
+/* ══ Search Section (61:377) ═════════════════════════════════════ */
+.pds-search-advanced {
+  display: inline-flex; flex-direction: column; align-items: flex-end;   /* counter axis MAX → buttons right */
+  gap: var(--search-advanced-gap);
+  padding: var(--search-advanced-pad);
+  background: var(--search-advanced-bg);
+  border-radius: var(--search-advanced-radius);
+  box-shadow: var(--search-advanced-shadow);
+  font-family: var(--font-family);
+}
+.pds-search-advanced__block { display: flex; flex-direction: column; }
+.pds-search-advanced__row {
+  display: grid;
+  grid-template-columns: repeat(var(--search-advanced-cols), var(--search-advanced-field-w));
+}
+.pds-search-advanced__row[hidden] { display: none; }        /* booleans 1st / 2nd / 3rd Row */
+.pds-search-advanced__actions { flex: none; min-height: 0; } /* .pds-button-group (kit); Small buttons → hugs 24, not the group's 30 */
+
+/* ══ Search chat (6764:2582) ═════════════════════════════════════ */
+.pds-search-advanced--chat {
+  display: flex; align-items: stretch; gap: 0;
+  width: var(--search-advanced-chat-w);
+  padding: 0;
+}
+.pds-search-advanced__head {
+  position: relative;
+  padding: var(--search-advanced-head-pad);
+}
+.pds-search-advanced__head .pds-search-input { --search-input-w: 100%; width: 100%; }
+/* leave room under the absolute tools group so typed text never runs beneath it */
+.pds-search-advanced__head .pds-search-input__input { padding-right: 64px; }
+
+.pds-search-advanced__tools {
+  position: absolute; top: var(--search-advanced-tools-top); right: var(--search-advanced-tools-right);
+  display: flex; align-items: center; gap: var(--search-advanced-tools-gap);
+}
+.pds-search-advanced__divider {
+  flex: none; width: 1px; height: var(--search-advanced-divider-h);
+  margin-inline: -0.5px;                                     /* Figma line is 0 wide in layout */
+  background: var(--search-advanced-divider);
+}
+.pds-search-advanced__close {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  margin: 0; padding: 0; border: 0; background: none;
+  color: var(--search-advanced-close-fg); cursor: pointer;
+}
+.pds-search-advanced__close .pds-icon { --_icon: var(--search-advanced-close); }
+.pds-search-advanced__close:focus-visible { outline: var(--search-advanced-focus); outline-offset: 2px; }
+
+/* Filter chips */
+.pds-search-advanced__chips {
+  display: flex; align-items: flex-start; gap: var(--search-advanced-chips-gap);
+  padding: var(--search-advanced-chips-pad);
+}
+.pds-search-advanced__chip {
+  flex: none; margin: 0; border: 0; cursor: pointer;
+  padding: var(--search-advanced-chip-pad);
+  border-radius: var(--search-advanced-chip-radius);
+  font: var(--search-advanced-chip-font); letter-spacing: 0; text-transform: uppercase;
+  background: var(--search-advanced-chip-bg);
+  color: var(--search-advanced-chip-fg);
+  box-shadow: var(--search-advanced-chip-shadow);
+}
+.pds-search-advanced__chip[aria-pressed="true"] {
+  background: var(--search-advanced-chip-on-bg);
+  color: var(--search-advanced-chip-on-fg);
+  box-shadow: none;
+}
+.pds-search-advanced__chip:focus-visible { outline: var(--search-advanced-focus); outline-offset: 2px; }
+
+/* Results list */
+.pds-search-advanced__list {
+  display: flex; flex-direction: column; gap: var(--search-advanced-list-gap);
+  margin: 0; padding: var(--search-advanced-list-pad);
+  list-style: none;
+}
+
+/* ══ .Search_Menu row (6763:2419) ════════════════════════════════ */
+.pds-search-advanced__item {
+  display: flex; align-items: center; gap: var(--search-advanced-item-gap);
+  height: var(--search-advanced-item-h);
+  padding: var(--search-advanced-item-pad);
+  border-radius: var(--search-advanced-item-radius);
+  color: var(--search-advanced-item-fg);
+  font-family: var(--font-family);
+  cursor: pointer;
+}
+.pds-search-advanced__item[hidden] { display: none; }
+.pds-search-advanced__item:hover,
+.pds-search-advanced__item.is-active { background: var(--search-advanced-item-hover); }   /* Property 1=Hover */
+.pds-search-advanced__item-main {
+  flex: 1; min-width: 0;
+  display: flex; align-items: flex-end; gap: var(--search-advanced-item-inner-gap);   /* counter axis MAX */
+}
+.pds-search-advanced__item-icon { --_icon: var(--icon-size-14); color: var(--search-advanced-item-icon-fg); }
+.pds-search-advanced__item-title {
+  min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font: var(--type-12-semibold); line-height: var(--search-advanced-item-line-h);
+}
+.pds-search-advanced__item-meta {
+  flex: none; white-space: nowrap;
+  font: var(--type-10-regular); letter-spacing: .5px;        /* .type-10-regular: 10/12 +0.5 */
+}
+/* Search chat instance: the highlighted row shows "↵ Enter" in place of its time */
+.pds-search-advanced__item-hint { display: none; }
+.pds-search-advanced--chat .pds-search-advanced__item.is-active .pds-search-advanced__item-time { display: none; }
+.pds-search-advanced--chat .pds-search-advanced__item.is-active .pds-search-advanced__item-hint { display: inline; }

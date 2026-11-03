@@ -1,0 +1,91 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Table
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟢 Table (76:339) ›
+     "Column" 211:52 (Header + 10 body cells, 148 wide)
+     "Row - FOR REFERENCE" 104:363 (Header | Row | Alternate-Row | Child)
+     "Table - FOR REFERENCE" 2379:13135 (Using Columns | Using Rows)
+   Built 2026-10-28. A composed pattern — every cell is a kit Table Cell.
+   Requires ../tokens.css, scrollbar.css, checkbox.css, table-cell.css;
+   skeleton.css (loading state) and empty-state.css (empty state).
+
+   <div class="pds-table [pds-table--dark] [pds-table--sticky]">
+     <div class="pds-table__scroll pds-scroll" role="region" tabindex="0" aria-label="…">
+       <table class="pds-table__grid"> thead/tbody of .pds-table-cell cells </table>
+     </div>
+   </div>
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Frame (Table - FOR REFERENCE: 1px stroke inside, radius 2, clips content) */
+  --table-bg:          var(--white);        /* #FFFFFF frame fill */
+  --table-border:      var(--border-grey);  /* #EFEFEF style Border/Grey-#EFEFEF */
+  --table-radius:      2px;
+  --table-border-w:    1px;
+
+  /* Dark composition — no Dark table in Figma; frame follows the Dark Table Cell */
+  --table-dark-bg:     var(--table-cell-dark-bg);    /* #343440 */
+  --table-dark-border: var(--table-cell-dark-line);  /* #8A8A9E @ 50% */
+
+  /* Column widths from the reference sets (the column sets the width in product) */
+  --table-col-w:       148px;  /* Column 211:52 / Table Using Columns */
+  --table-row-col-w:   100px;  /* Row - FOR REFERENCE / Table Using Rows */
+
+  /* Sticky header — added (not in Figma). Set a height on the scroll area to use it. */
+  --table-max-h:       none;
+  --table-sticky-z:    2;
+
+  /* Empty state row — added (not in Figma): the art sits centred with this padding */
+  --table-empty-pad:   var(--space-15);
+}
+
+/* ── Frame ───────────────────────────────────────────────────── */
+.pds-table {
+  --_bg: var(--table-bg); --_border: var(--table-border);
+  box-sizing: border-box;
+  max-width: 100%;
+  background: var(--_bg);
+  border: var(--table-border-w) solid var(--_border);
+  border-radius: var(--table-radius);
+  overflow: hidden;                         /* Figma: clip content */
+  font-family: var(--font-family);
+}
+.pds-table--dark { --_bg: var(--table-dark-bg); --_border: var(--table-dark-border); }
+.pds-table--inline { display: inline-block; vertical-align: top; }  /* hug the columns */
+
+/* ── Scroll area (horizontal + vertical) — kit scrollbar ────────── */
+.pds-table__scroll { overflow: auto; max-height: var(--table-max-h); }
+.pds-table__scroll:focus-visible { outline: var(--table-cell-focus); outline-offset: -2px; } /* added in review — not in Figma */
+.pds-table--dark .pds-table__scroll { --_track: var(--scroll-track-dark); --_thumb: var(--scroll-thumb-dark); }
+
+/* ── Grid ────────────────────────────────────────────────────── */
+.pds-table__grid {
+  border-collapse: separate;   /* each cell draws its own 1px top line (table-cell.css) */
+  border-spacing: 0;
+  table-layout: fixed;
+  width: max-content;
+  min-width: 100%;
+}
+.pds-table__grid col { width: var(--table-col-w); }
+.pds-table--rows .pds-table__grid col { width: var(--table-row-col-w); }
+
+/* ── Sticky header — added (not in Figma) ───────────────────────── */
+.pds-table--sticky .pds-table__grid thead th {
+  position: sticky;
+  top: 0;
+  z-index: var(--table-sticky-z);
+}
+
+/* ── Rows ────────────────────────────────────────────────────── */
+/* Selected rows: Figma has no selected style — the row only carries aria-selected. */
+.pds-table__row--disabled .pds-checkbox { pointer-events: none; }
+
+/* ── Loading — kit Skeleton in every body cell ──────────────────── */
+/* Size picked to fit the column: 148 col → Size 120 · 100 col → Size 80 (table.js). */
+.pds-table__grid .pds-skeleton { max-width: 100%; }
+
+/* ── Empty — kit Empty State, centred across all columns ────────── */
+.pds-table__empty {
+  padding: var(--table-empty-pad);
+  background: var(--_bg);
+  text-align: center;
+}

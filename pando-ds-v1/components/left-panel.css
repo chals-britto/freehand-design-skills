@@ -1,0 +1,296 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Left Menu Panel (organism) + panel Header
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › ✏️ Panel (2116:447)
+     · Left Menu Panel     2127:3654  Type × Collapsed = 4 variants
+     · .Menu               2592:19102 13 variants (Primary 4 · Secondary 9)
+     · .Menu-Item          2592:18253 3 variants (Panel's own, not the Menu page's)
+     · .Third level menu   2592:19139 4 variants
+     · Header              2943:8187  3 variants
+     · .Swappable Content  2943:8249  placeholder
+     · .State              2592:18924 3 variants (Completed · Current · Future)
+   Figma page is marked in progress (✏️). Built 2026-10-28, no review.
+   Requires ../tokens.css, tabs.css, button.css, button-group.css, icons.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colours ── */
+  --left-panel-bg:               var(--accent-light-blue-bg);   /* #F3F6FC */
+  --left-panel-heading-fg:       var(--pando-dark);             /* #234357 Header title */
+  --left-panel-heading-collapsed-fg: var(--pando-blue);         /* #0076DD title when Collapsed=Yes */
+  --left-panel-slot-bg:          var(--pando-light);            /* #EEF2F4 .Swappable Content */
+  --left-panel-slot-fg:          var(--pando-dark);             /* #234357 slot title */
+  --left-panel-slot-body-fg:     #000000;                       /* off-token in Figma (pure black body text) */
+
+  /* .Menu-Item (Type=Menu list) */
+  --left-panel-item-fg:          var(--action-blue);            /* #376F99 Default + Hover */
+  --left-panel-item-hover-bg:    color-mix(in srgb, var(--pando-dark) 10%, transparent); /* #234357 @ 10% */
+  --left-panel-item-active-bg:   var(--white);                  /* #FFFFFF */
+  --left-panel-item-active-fg:   var(--pando-dark);             /* #234357 */
+  --left-panel-item-sub-fg:      #737373;                       /* off-token in Figma (Sub header) */
+  --left-panel-item-code-fg:     var(--pando-dark);             /* #234357 Code 01 */
+
+  /* .Menu Primary */
+  --left-panel-primary-fg:          var(--pando-dark);          /* #234357 Default */
+  --left-panel-primary-hover-bg:    var(--accent-light-highlight); /* #E9F1F5 */
+  --left-panel-primary-hover-fg:    #0078DD;                    /* off-token in Figma (≈ --pando-blue #0076DD) */
+  --left-panel-primary-hover-caret: var(--pando-blue);          /* #0076DD Dropdown-Arrow */
+  --left-panel-primary-active-fg:   var(--pando-blue);          /* #0076DD */
+  --left-panel-primary-disabled-fg: var(--grey-medium);         /* #A3A3A3 */
+
+  /* .Menu Secondary (stages) + .State */
+  --left-panel-stage-fg:         var(--pando-dark);             /* #234357 */
+  --left-panel-connector:        var(--accent-blue-grey);       /* #CBD4D8 dashed 1/4 */
+  --left-panel-state-done:       var(--accent-green-highlight); /* #008D5E Completed */
+  --left-panel-state-done-glyph: var(--white);
+  --left-panel-state-current:    var(--pando-blue);             /* #0076DD Current dot + halo */
+  --left-panel-state-halo:       color-mix(in srgb, var(--pando-blue) 12%, transparent); /* Ellipse 124 opacity .12 */
+  --left-panel-state-future:     var(--accent-blue-grey);       /* #CBD4D8 Future */
+  --left-panel-warn-bg:          var(--highlight-orange);       /* #FF8C54 Warning-Circle fill on this page */
+  --left-panel-warn-glyph:       var(--grey-dark);              /* #515151 Warning-Circle glyph on this page */
+
+  /* .Third level menu */
+  --left-panel-sub-line:         var(--accent-blue-grey);       /* #CBD4D8 solid 1px */
+  --left-panel-tertiary-fg:      var(--text-dark);              /* #313131 */
+  --left-panel-tertiary-hover-bg: var(--pando-light);           /* #EEF2F4 */
+  --left-panel-tertiary-active-fg: var(--pando-blue-active);    /* #005399 */
+
+  /* ── Sizes (measured) ── */
+  --left-panel-width:            260px;
+  --left-panel-width-collapsed:  52px;
+  --left-panel-pad-bottom:       5px;
+  --left-panel-pad-x:            var(--space-15);   /* 15px rows + header */
+  --left-panel-header-pad-y:     var(--space-10);   /* 10px */
+  --left-panel-header-gap:       var(--space-10);
+  --left-panel-header-tabs-pad-top: 5px;
+  --left-panel-heading-tracking: .3px;              /* Figma letter-spacing 0.3px */
+  --left-panel-row-h:            32px;              /* .Menu row + .Third level menu row */
+  --left-panel-row-gap:          var(--space-10);   /* timeline ↔ label ↔ icon */
+  --left-panel-row-radius:       2px;
+  --left-panel-item-pad:         9px 15px;          /* .Menu-Item */
+  --left-panel-item-gap:         4px;               /* header ↔ sub text */
+  --left-panel-item-code-gap:    8px;               /* header ↔ Code 01 */
+  --left-panel-item-sub-gap:     18px;              /* sub text ↔ Code 02 */
+  --left-panel-timeline-w:       16px;
+  --left-panel-connector-top:    9px;
+  --left-panel-connector-bottom: 8px;
+  --left-panel-state-size:       16px;
+  --left-panel-state-done-size:  14px;
+  --left-panel-state-glyph:      8px;
+  --left-panel-state-current-dot: 8px;
+  --left-panel-state-future-size: 10px;
+  --left-panel-warn-size:        12px;
+  --left-panel-caret-w:          12px;
+  --left-panel-sub-indent:       40px;              /* sub-menu line sits 40px in */
+  --left-panel-sub-line-w:       41px;              /* frame holding that line */
+  --left-panel-tertiary-pad:     10px 15px;
+  --left-panel-slot-pad:         20px;              /* .Swappable Content as panel body */
+  --left-panel-slot-pad-header:  var(--space-10);   /* .Swappable Content as Header */
+  --left-panel-slot-gap:         var(--space-10);
+  --left-panel-slot-title-gap:   8px;
+  --left-panel-slot-icon:        20px;
+}
+
+/* ═══ Panel ═══════════════════════════════════════════════════════ */
+.pds-left-panel {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: var(--left-panel-width);
+  height: 100%;
+  padding-bottom: var(--left-panel-pad-bottom);
+  background: var(--left-panel-bg);
+  font-family: var(--font-family);
+  overflow: hidden;
+}
+.pds-left-panel *, .pds-left-panel *::before, .pds-left-panel *::after { box-sizing: border-box; }
+.pds-left-panel__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+.pds-left-panel__body[hidden] { display: none; }
+
+/* ═══ Header (Header Type = Header | Tab Group | Swappable) ═══════ */
+.pds-left-panel__header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--left-panel-header-gap);
+  padding: var(--left-panel-header-pad-y) var(--left-panel-pad-x);
+  height: 36px;
+}
+.pds-left-panel__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: var(--left-panel-heading-fg);
+  font: var(--type-12-semibold);
+  letter-spacing: var(--left-panel-heading-tracking);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pds-left-panel__header .pds-button-group { flex: none; min-height: 0; }
+
+/* Header Type=Tab Group — the kit Tab Group, stretched to the panel width */
+.pds-left-panel__header--tabs { padding: var(--left-panel-header-tabs-pad-top) 0 0; min-height: 35px; }
+.pds-left-panel__header--tabs .pds-tabs { display: flex; flex: 1 1 auto; padding-inline: var(--left-panel-pad-x); }
+
+/* Header Type=Swappable — a .Swappable Content slot */
+.pds-left-panel__header--swap { padding: 0; min-height: 40px; }
+.pds-left-panel__header--swap .pds-left-panel__slot { flex: 1 1 auto; padding: var(--left-panel-slot-pad-header); }
+
+/* ═══ Collapsed=Yes — 52px rail, header turned −90° ═══════════════ */
+.pds-left-panel--collapsed { width: var(--left-panel-width-collapsed); }
+.pds-left-panel--collapsed .pds-left-panel__header {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);               /* reads bottom → top, as Figma */
+  justify-content: flex-end;               /* title ends up below the button */
+  align-self: stretch;
+  min-height: 0;
+  width: var(--left-panel-width-collapsed);
+  padding: var(--left-panel-pad-x) var(--left-panel-header-pad-y);
+}
+.pds-left-panel--collapsed .pds-left-panel__title { flex: none; color: var(--left-panel-heading-collapsed-fg); }
+.pds-left-panel--collapsed .pds-left-panel__body { display: none; }
+
+/* ═══ .Menu-Item (Type=Menu list) ═════════════════════════════════ */
+.pds-left-panel__items { list-style: none; margin: 0; padding: 0; }
+.pds-left-panel__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--left-panel-item-gap);
+  width: 100%;
+  min-height: 46px;
+  margin: 0;
+  padding: var(--left-panel-item-pad);
+  border: 0;
+  background: transparent;
+  color: var(--left-panel-item-fg);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pds-left-panel__item-row { display: flex; align-items: center; gap: var(--left-panel-item-code-gap); min-width: 0; }
+.pds-left-panel__item-row--sub { gap: var(--left-panel-item-sub-gap); }
+.pds-left-panel__item-title { flex: 1 1 auto; min-width: 0; font: var(--type-12-semibold); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pds-left-panel__item-code { flex: none; font: var(--type-12-regular); color: var(--left-panel-item-code-fg); }
+.pds-left-panel__item-sub  { flex: 1 1 auto; min-width: 0; font: var(--type-10-semibold); letter-spacing: 0; color: var(--left-panel-item-sub-fg); }
+.pds-left-panel__item-row--sub .pds-left-panel__item-code { color: var(--left-panel-item-sub-fg); }
+.pds-left-panel__item:hover, .pds-left-panel__item.is-hover { background: var(--left-panel-item-hover-bg); }
+.pds-left-panel__item[aria-current], .pds-left-panel__item.is-active { background: var(--left-panel-item-active-bg); color: var(--left-panel-item-active-fg); }
+
+/* ═══ .Menu — shared row ══════════════════════════════════════════ */
+.pds-left-panel__menu, .pds-left-panel__sub { list-style: none; margin: 0; padding: 0; }
+.pds-left-panel__row {
+  display: flex;
+  align-items: center;
+  gap: var(--left-panel-row-gap);
+  width: 100%;
+  min-height: var(--left-panel-row-h);
+  margin: 0;
+  padding: 0 var(--left-panel-pad-x);
+  border: 0;
+  border-radius: var(--left-panel-row-radius);
+  background: transparent;
+  font: var(--type-12-semibold);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pds-left-panel__label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Menu=Primary — Default · Hover · Active · Disable */
+.pds-left-panel__row--primary { color: var(--left-panel-primary-fg); }
+.pds-left-panel__caret { display: none; width: var(--left-panel-caret-w); color: var(--left-panel-primary-hover-caret); }
+.pds-left-panel__row--primary:hover:not([aria-disabled="true"]), .pds-left-panel__row--primary.is-hover {
+  background: var(--left-panel-primary-hover-bg); color: var(--left-panel-primary-hover-fg);
+}
+.pds-left-panel__row--primary:hover:not([aria-disabled="true"]) .pds-left-panel__caret,
+.pds-left-panel__row--primary.is-hover .pds-left-panel__caret { display: inline-flex; }
+.pds-left-panel__row--primary[aria-current], .pds-left-panel__row--primary.is-active { color: var(--left-panel-primary-active-fg); }
+.pds-left-panel__row--primary[aria-disabled="true"] { color: var(--left-panel-primary-disabled-fg); cursor: default; }
+
+/* Menu=Secondary — stage row with timeline */
+.pds-left-panel__row--stage { color: var(--left-panel-stage-fg); }
+.pds-left-panel__timeline {
+  display: flex; flex: none; flex-direction: column; align-items: center;
+  width: var(--left-panel-timeline-w);
+  align-self: stretch;
+}
+.pds-left-panel__timeline::before, .pds-left-panel__timeline::after {
+  content: ""; flex: none; width: 0;
+  border-left: 1px dashed var(--left-panel-connector);  /* Figma dash 1 / gap 4 — CSS dashes are approximate */
+}
+.pds-left-panel__timeline::before { height: var(--left-panel-connector-top); }
+.pds-left-panel__timeline::after  { flex: 1 1 auto; max-height: var(--left-panel-connector-bottom); } /* Figma 9 + 16 + 8 = 33 in a 32 row: the lower line takes what is left */
+.pds-left-panel__row--stage { height: var(--left-panel-row-h); }
+/* Location=First hides the line above, Location=Last the line below (opacity 0 in Figma) */
+.pds-left-panel__stage--first > .pds-left-panel__row .pds-left-panel__timeline::before,
+.pds-left-panel__row--first .pds-left-panel__timeline::before { opacity: 0; }
+.pds-left-panel__stage--last > .pds-left-panel__row .pds-left-panel__timeline::after,
+.pds-left-panel__row--last .pds-left-panel__timeline::after { opacity: 0; }
+
+/* .State marker — Completed · Current · Future */
+.pds-left-panel__state {
+  position: relative; display: inline-flex; flex: none; align-items: center; justify-content: center;
+  width: var(--left-panel-state-size); height: var(--left-panel-state-size);
+}
+.pds-left-panel__state::before { content: ""; border-radius: 50%; }
+.pds-left-panel__state--completed::before { width: var(--left-panel-state-done-size); height: var(--left-panel-state-done-size); background: var(--left-panel-state-done); }
+.pds-left-panel__state--completed .pds-icon { position: absolute; width: var(--left-panel-state-glyph); height: var(--left-panel-state-glyph); color: var(--left-panel-state-done-glyph); }
+.pds-left-panel__state--current { border-radius: 50%; background: var(--left-panel-state-halo); }
+.pds-left-panel__state--current::before { width: var(--left-panel-state-current-dot); height: var(--left-panel-state-current-dot); background: var(--left-panel-state-current); }
+.pds-left-panel__state--future::before { width: var(--left-panel-state-future-size); height: var(--left-panel-state-future-size); background: var(--left-panel-state-future); }
+
+/* Warning-Circle on a stage (Active variants) — kit icon, recoloured to this page's fills */
+.pds-left-panel__warn { width: var(--left-panel-warn-size); height: var(--left-panel-warn-size); }
+.pds-left-panel__warn circle { fill: var(--left-panel-warn-bg); }
+.pds-left-panel__warn path   { fill: var(--left-panel-warn-glyph); }
+
+/* ═══ Secondary Level — .Third level menu children ═════════════════ */
+.pds-left-panel__sub {
+  position: relative;
+  padding-left: var(--left-panel-sub-line-w);
+}
+.pds-left-panel__sub::before {           /* Sub menu line: 1px, 40px in */
+  content: ""; position: absolute; top: 0; bottom: 0;
+  left: var(--left-panel-sub-indent);
+  border-left: 1px solid var(--left-panel-sub-line);
+}
+.pds-left-panel__sub[hidden] { display: none; }
+.pds-left-panel__tertiary {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%;
+  height: var(--left-panel-row-h);
+  margin: 0;
+  padding: var(--left-panel-tertiary-pad);
+  border: 0;
+  background: transparent;
+  color: var(--left-panel-tertiary-fg);
+  font: var(--type-12-semibold);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pds-left-panel__tertiary:hover, .pds-left-panel__tertiary.is-hover { background: var(--left-panel-tertiary-hover-bg); }
+.pds-left-panel__tertiary[aria-current], .pds-left-panel__tertiary.is-active { color: var(--left-panel-tertiary-active-fg); }
+/* State=Swappable — a row holding a kit Action Button */
+.pds-left-panel__tertiary--swap { cursor: default; }
+.pds-left-panel__tertiary--swap:hover { background: transparent; }
+
+/* ═══ .Swappable Content ══════════════════════════════════════════ */
+.pds-left-panel__slot {
+  display: flex; flex-direction: column; gap: var(--left-panel-slot-gap);
+  padding: var(--left-panel-slot-pad);
+  background: var(--left-panel-slot-bg);
+}
+.pds-left-panel__body.pds-left-panel__slot { flex: 1 1 auto; }
+.pds-left-panel__slot-title { display: flex; align-items: center; gap: var(--left-panel-slot-title-gap); color: var(--left-panel-slot-fg); font: var(--type-12-semibold); margin: 0; }
+.pds-left-panel__slot-icon { flex: none; width: var(--left-panel-slot-icon); height: var(--left-panel-slot-icon); }
+.pds-left-panel__slot-body { margin: 0; color: var(--left-panel-slot-body-fg); font: 400 12px/16px var(--font-family); max-width: 150px; }
+
+/* ═══ Focus — added in review, not in Figma ═══════════════════════ */
+.pds-left-panel__item:focus-visible,
+.pds-left-panel__row:focus-visible,
+.pds-left-panel__tertiary:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: -2px; }
+
+@media (prefers-reduced-motion: reduce) { .pds-left-panel, .pds-left-panel * { transition: none !important; } }

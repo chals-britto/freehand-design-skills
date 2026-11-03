@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Breadcrumb · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="breadcrumb.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* breadcrumb page */
+.flagbar{display:flex;justify-content:flex-end;margin-top:8px}
+.bstage{padding:28px 24px;background:var(--white);border-radius:0 10px 10px 0;min-height:120px;display:flex;align-items:flex-start}
+.vgrid .vcell .demo{background:var(--white);padding:16px;border-radius:6px;border:1px solid var(--pg-line)}
+.open-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.redline{width:auto}
+.bc2x{position:relative;display:inline-block;transform:scale(2);transform-origin:top left;margin:30px 0 60px 30px}
+@media (max-width:760px){.bstage{border-radius:0 0 10px 10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Breadcrumb</h1>
+    <p class="lede">Breadcrumbs show users their location during navigation and allow them to easily move up a level or levels in a hierarchy of pages.</p>
+    <div class="meta"><span>Status: Built 2026-10-23 · no review yet (all published variants kept)</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3044-1280" target="_blank" rel="noopener">Figma component 3044:1280 ↗</a><span>Files: breadcrumb.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area="try"><h2>Try it</h2><p class="sub">Hover an earlier level to see the Hover state. Links here go nowhere.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls">
+    <label>Type<select id="c-type"><option value="default">Default</option><option value="dropdown">Dropdown</option></select></label>
+    <label class="chk"><input type="checkbox" id="c-step"> Additional step</label>
+    <label class="chk"><input type="checkbox" id="c-status"> Status</label>
+    <label class="chk"><input type="checkbox" id="c-match"> Match Type</label>
+  </form>
+  <div class="bstage" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area="variants"><h2>Variants</h2><p class="sub">Type × the three booleans. The Hover variant uses <code>.is-hover</code> to show the state statically.</p>
+<div class="panel vgrid" id="vgrid"></div></section>
+
+<section id="spec" data-flag-area="spec"><h2>Spec</h2><p class="sub">Measured from the Figma component. Dropdown drawn at 2×.</p>
+<div class="panel"><div class="spec" id="spec-box"></div>
+<div class="spec-table">
+  <div><b>Height</b><code>16px</code></div>
+  <div><b>Gap</b><code>10px</code> between every level, caret and slot</div>
+  <div><b>Text</b><code>.type-13-semibold</code> (13/16)</div>
+  <div><b>Earlier level</b><code>--text-medium</code> · hover <code>--pando-blue-active</code></div>
+  <div><b>Current level</b><code>--pando-blue-active</code></div>
+  <div><b>Caret</b><code>5×8</code> · glyph <code>4×7</code> · link colour</div>
+  <div><b>Dropdown box</b><code>--pando-light</code> · padding <code>0 10px</code> · arrow <code>8×5</code> <code>--pando-dark</code></div>
+  <div><b>Status tag</b><code>--status-green-light</code> · <code>10px</code> SemiBold · pad <code>0.5px 10px</code> · radius <code>2px</code></div>
+  <div><b>Match type</b><code>.type-10-semibold .caps</code> · <code>--text-dark</code></div>
+</div></div></section>
+
+<section id="usage" data-flag-area="usage"><h2>Usage</h2><p class="sub">Text from the Figma documentation.</p>
+<div class="cols">
+  <div class="panel card"><h3>Uses</h3><ul><li>Place breadcrumbs in the top left corner, typically above the page title.</li><li>Show progress from the highest navigation level to the lowest, without skipping a step.</li></ul></div>
+  <div class="panel card"><h3>Placement &amp; convention</h3><p>Used on the sub-header.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area="a11y"><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Structure</h3><p><code>&lt;nav aria-label="Breadcrumb"&gt;</code> around an ordered list. The current level has <code>aria-current="page"</code>. Carets are hidden from assistive tech.</p></div>
+  <div class="panel card"><h3>Keyboard</h3><p>Earlier levels are links (Tab, Enter). The Dropdown current level is a button with <code>aria-haspopup</code>; Figma has no menu, so none is wired.</p></div>
+  <div class="panel card"><h3>Contrast</h3><p>#545454 on white 7.6 : 1 · #005399 on white 7.8 : 1 — both pass. No focus style in Figma (browser default ring shown).</p></div>
+</div></section>
+
+<section id="open" data-flag-area="open"><h2>Open issues</h2>
+<div class="panel card"><ul class="open-list">
+  <li>The Figma current-level text is “ Current” with a leading space. Built without it.</li>
+  <li>Default has a hidden caret before the Status tag with no property; Status and Match Type follow the current level 10px apart with no separator.</li>
+  <li>Match Type frame has a hidden #FFEAEE @ 30% fill and a 0 2 2 0 radius — looks unfinished.</li>
+  <li>Status tag text style taken from the shared Tag Small (10px SemiBold); not read on the instance itself.</li>
+  <li>Dropdown has no open state, menu or hover; no focus, disabled or truncation states anywhere.</li>
+  <li>Match Type line-height is “auto” in Figma vs 12px in <code>.type-10-semibold</code>.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area="gaps"><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul class="open-list">
+  <li>Overflow: collapse middle levels into an overflow menu; never wrap to a second line. <span class="src"><a href="https://carbondesignsystem.com/components/breadcrumb/usage/" target="_blank" rel="noopener">Carbon</a> · <a href="https://fluent2.microsoft.design/components/web/react/core/breadcrumb/usage" target="_blank" rel="noopener">Fluent 2</a></span></li>
+  <li>Small and medium sizes. <span class="src"><a href="https://carbondesignsystem.com/components/breadcrumb/usage/" target="_blank" rel="noopener">Carbon Breadcrumb</a></span></li>
+  <li>Label truncation (30 characters) with a tooltip. <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/breadcrumb/usage" target="_blank" rel="noopener">Fluent 2 Breadcrumb</a></span></li>
+  <li>Disabled (focusable) level for hierarchy steps without a page. <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/breadcrumb/usage" target="_blank" rel="noopener">Fluent 2 Breadcrumb</a></span></li>
+  <li>Reflow: show only the last level at 400% zoom / small viewports. <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/breadcrumb/usage" target="_blank" rel="noopener">Fluent 2 Breadcrumb</a></span></li>
+  <li>Location- vs path-based breadcrumb guidance. <span class="src"><a href="https://carbondesignsystem.com/components/breadcrumb/usage/" target="_blank" rel="noopener">Carbon Breadcrumb</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area="code"><h2>Code</h2><p class="sub">Include the stylesheet and write the markup. No JavaScript.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const CARET='<span class="pds-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 5 8"><path fill="currentColor" d="M1.208.5 .5 1.25 3.1 4 .501 6.751 1.208 7.5l2.954-3.125L4.5 4l-.338-.375L1.208.5Z"/></svg></span>';
+const ARROW='<span class="pds-breadcrumb__arrow" aria-hidden="true"><svg viewBox="0 0 8 5"><path fill="currentColor" d="M0 0h8L4 5z"/></svg></span>';
+function bc({type="default",step=false,status=false,match=false,hover=false}={}){
+  const lvl=(h)=>`<li class="pds-breadcrumb__item${h?" is-hover":""}"><a class="pds-breadcrumb__link" href="#">Previous</a>${CARET}</li>`;
+  const cur=type==="dropdown"
+    ?`<li class="pds-breadcrumb__item pds-breadcrumb__item--current"><button type="button" class="pds-breadcrumb__current pds-breadcrumb__current--dropdown" aria-current="page" aria-haspopup="menu">Current${ARROW}</button></li>`
+    :`<li class="pds-breadcrumb__item pds-breadcrumb__item--current"><span class="pds-breadcrumb__current" aria-current="page">Current</span></li>`;
+  return `<nav class="pds-breadcrumb" aria-label="Breadcrumb"><ol class="pds-breadcrumb__list">${lvl(hover)}${step?lvl(false):""}${cur}${status?'<li class="pds-breadcrumb__item"><span class="pds-breadcrumb__tag">Tag Text</span></li>':""}${match?'<li class="pds-breadcrumb__item"><span class="pds-breadcrumb__match">3-way match</span></li>':""}</ol></nav>`;
+}
+document.addEventListener("click",e=>{if(e.target.closest(".pds-breadcrumb a[href='#']"))e.preventDefault()});
+function renderTry(){$("#stage").innerHTML=bc({type:$("#c-type").value,step:$("#c-step").checked,status:$("#c-status").checked,match:$("#c-match").checked})}
+$("#ctrls").addEventListener("input",renderTry);$("#ctrls").addEventListener("submit",e=>e.preventDefault());renderTry();
+
+const V=[
+ ["Type=Default",{}],["Type=Hover",{hover:true}],["Type=Dropdown",{type:"dropdown"}],
+ ["Type=Default, Additional step=true",{step:true}],["Type=Default, Status=true",{status:true}],["Type=Default, Match Type=true",{match:true}],
+ ["Type=Dropdown, Additional step=true, Status=true",{type:"dropdown",step:true,status:true}],["Type=Hover, Match Type=true",{hover:true,match:true}]
+];
+$("#vgrid").innerHTML=V.map(([l,o])=>`<div class="vcell"><span class="lbl">${l}</span><div class="demo">${bc(o)}</div></div>`).join("");
+$("#spec-box").innerHTML=`<div class="bc2x">${bc({type:"dropdown"})}</div>`;
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/breadcrumb.css">
+
+`+bc({step:false}).replace(/></g,">\n<")+`
+
+<!-- Dropdown current level -->
+<li class="pds-breadcrumb__item pds-breadcrumb__item--current">
+  <button type="button" class="pds-breadcrumb__current pds-breadcrumb__current--dropdown" aria-current="page" aria-haspopup="menu">Current<span class="pds-breadcrumb__arrow" aria-hidden="true">…svg…</span></button>
+</li>
+<!-- Optional slots -->
+<li class="pds-breadcrumb__item"><span class="pds-breadcrumb__tag">Tag Text</span></li>
+<li class="pds-breadcrumb__item"><span class="pds-breadcrumb__match">3-way match</span></li>`;
+
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

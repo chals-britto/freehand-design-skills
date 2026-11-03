@@ -1,0 +1,171 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Checkbox
+   Figma: DS V2 – Atoms › Checkbox page (3267:3636) › component set "Checkbox" (3331:3626)
+   Reviewed 2026-10-23. Requires ../tokens.css.
+   Theme (Light | Dark) is a component property in Figma → .pds-checkbox--dark.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Light theme (Figma Theme=Light) ─────────────────────────── */
+  --checkbox-border:             var(--grey-medium);        /* #A3A3A3 unselected stroke */
+  --checkbox-fill-on:            var(--pando-blue);         /* #0076DD selected */
+  --checkbox-mark:               var(--white);              /* check on selected */
+  --checkbox-label:              var(--text-dark);          /* #313131 */
+  --checkbox-focus-border:       var(--pando-blue);         /* Focus, unselected stroke */
+  --checkbox-focus-on-border:    var(--pando-blue-active);  /* #005399 Focus, selected stroke */
+  --checkbox-focus-on-label:     var(--pando-blue);         /* label turns blue on Focus+Selected (Figma) */
+  --checkbox-error:              var(--action-red);         /* #E25757 stroke / fill */
+  --checkbox-error-mark:         var(--white);
+  --checkbox-disabled-fill:      #D9D9D9;                   /* off-token in Figma */
+  --checkbox-disabled-on-fill:   #9C9C9C;                   /* off-token in Figma */
+  --checkbox-disabled-mark:      var(--grey-light);         /* #E7E7E7 */
+  --checkbox-disabled-label:     var(--text-medium);        /* #545454 */
+  --checkbox-disabled-on-label:  #9C9C9C;                   /* off-token in Figma */
+  --checkbox-ind-fill:           var(--pando-blue);         /* dash is a cut-out (shows the surface behind) */
+  --checkbox-ind-dash:           transparent;
+
+  /* ── Dark theme (Figma Theme=Dark) ───────────────────────────── */
+  --checkbox-dark-border:             var(--dark-input-text);      /* #8A8A9E */
+  --checkbox-dark-fill-on:            var(--highlight-blue-light); /* #9CD2FF */
+  --checkbox-dark-mark:               var(--pando-dark);           /* #234357 */
+  --checkbox-dark-label:              var(--dark-label-text);      /* #D5DAF4 */
+  --checkbox-dark-focus-border:       var(--highlight-blue-light);
+  --checkbox-dark-focus-on-border:    var(--dark-label-text);
+  --checkbox-dark-focus-on-label:     var(--dark-label-text);
+  --checkbox-dark-error:              var(--accent-red-medium);    /* #D26568 */
+  --checkbox-dark-error-mark:         var(--white);
+  --checkbox-dark-disabled-fill:      var(--grey-dark);            /* #515151 */
+  --checkbox-dark-disabled-on-fill:   var(--grey-dark);
+  --checkbox-dark-disabled-mark:      var(--dark-input-text);
+  --checkbox-dark-disabled-label:     var(--dark-input-text);
+  --checkbox-dark-disabled-on-label:  var(--dark-input-text);
+  --checkbox-dark-ind-fill:           #66B9FF;                     /* off-token in Figma (style Color/Accent/Blue-Light-#66B9FF) */
+  --checkbox-dark-ind-dash:           var(--white);
+  --checkbox-dark-surface:            var(--dark-bg);              /* Figma backdrop #393944, one step off dark-bg */
+
+  /* ── Measured ────────────────────────────────────────────────── */
+  --checkbox-size: 14px;
+  --checkbox-radius: 2px;
+  --checkbox-stroke: 1px;
+  --checkbox-gap: var(--space-10);      /* box ↔ label */
+  --checkbox-gap-dark-on: 11px;         /* Dark Selected / Focus+Selected / Error+Selected use 11 in Figma */
+  --checkbox-mark-w: 10px;  --checkbox-mark-h: 8px;   /* check at (2,3) */
+  --checkbox-dash-w: 8px;   --checkbox-dash-h: 2px;   /* dash at (3,6); light cut-out is 1.8 high */
+
+  /* ── Group (added in review — not in Figma) ─────────────────── */
+  --checkbox-group-gap: var(--space-10);  /* between items */
+  --checkbox-nest-indent: 24px;           /* box 14 + gap 10: children line up under the parent label */
+  --checkbox-group-error: var(--action-red);
+  --checkbox-focus-ring: var(--pando-blue);
+}
+
+/* ── Checkbox ──────────────────────────────────────────────────── */
+.pds-checkbox {
+  --_border: var(--checkbox-border);   --_fill-on: var(--checkbox-fill-on);   --_mark: var(--checkbox-mark);
+  --_label: var(--checkbox-label);
+  --_focus-border: var(--checkbox-focus-border); --_focus-on-border: var(--checkbox-focus-on-border); --_focus-on-label: var(--checkbox-focus-on-label);
+  --_error: var(--checkbox-error); --_error-mark: var(--checkbox-error-mark);
+  --_dis-fill: var(--checkbox-disabled-fill); --_dis-on-fill: var(--checkbox-disabled-on-fill); --_dis-mark: var(--checkbox-disabled-mark);
+  --_dis-label: var(--checkbox-disabled-label); --_dis-on-label: var(--checkbox-disabled-on-label);
+  --_ind-fill: var(--checkbox-ind-fill); --_ind-dash: var(--checkbox-ind-dash);
+  --_gap: var(--checkbox-gap);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--_gap);
+  font: var(--type-12-regular);
+  color: var(--_label);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.pds-checkbox--dark {
+  --_border: var(--checkbox-dark-border); --_fill-on: var(--checkbox-dark-fill-on); --_mark: var(--checkbox-dark-mark);
+  --_label: var(--checkbox-dark-label);
+  --_focus-border: var(--checkbox-dark-focus-border); --_focus-on-border: var(--checkbox-dark-focus-on-border); --_focus-on-label: var(--checkbox-dark-focus-on-label);
+  --_error: var(--checkbox-dark-error); --_error-mark: var(--checkbox-dark-error-mark);
+  --_dis-fill: var(--checkbox-dark-disabled-fill); --_dis-on-fill: var(--checkbox-dark-disabled-on-fill); --_dis-mark: var(--checkbox-dark-disabled-mark);
+  --_dis-label: var(--checkbox-dark-disabled-label); --_dis-on-label: var(--checkbox-dark-disabled-on-label);
+  --_ind-fill: var(--checkbox-dark-ind-fill); --_ind-dash: var(--checkbox-dark-ind-dash);
+}
+.pds-checkbox--dark:has(.pds-checkbox__input:checked) { --_gap: var(--checkbox-gap-dark-on); }
+
+/* Native input stays in the tree (keyboard, forms, screen readers); it sits invisibly over the box */
+.pds-checkbox__input {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: var(--checkbox-size); height: var(--checkbox-size);
+  margin: 0; opacity: 0; cursor: inherit;
+}
+
+.pds-checkbox__box {
+  --_b: var(--_border); --_f: transparent; --_m: var(--_mark);
+  flex: none; position: relative; box-sizing: border-box;
+  width: var(--checkbox-size); height: var(--checkbox-size);
+  border: var(--checkbox-stroke) solid var(--_b);
+  border-radius: var(--checkbox-radius);
+  background: var(--_f);
+  pointer-events: none;
+}
+.pds-checkbox__mark {
+  position: absolute; left: 1px; top: 2px;        /* (2,3) inside the 1px border */
+  width: var(--checkbox-mark-w); height: var(--checkbox-mark-h);
+  fill: var(--_m); display: none;
+}
+.pds-checkbox__dash {
+  position: absolute; left: 2px; top: 5px;        /* (3,6) inside the 1px border */
+  width: var(--checkbox-dash-w); height: var(--checkbox-dash-h);
+  background: var(--_ind-dash); display: none;
+}
+/* Indeterminate fill lives on ::before so the light cut-out can be masked without clipping the focus ring */
+.pds-checkbox__box::before {
+  content: ""; position: absolute; inset: calc(-1 * var(--checkbox-stroke));
+  border-radius: var(--checkbox-radius); background: var(--_ind-fill); display: none;
+}
+.pds-checkbox__label { color: inherit; }
+
+/* Selected */
+.pds-checkbox__input:checked ~ .pds-checkbox__box { --_b: var(--_fill-on); --_f: var(--_fill-on); }
+.pds-checkbox__input:checked ~ .pds-checkbox__box .pds-checkbox__mark { display: block; }
+
+/* Indeterminate (Figma: State=Default only) */
+.pds-checkbox__input:indeterminate ~ .pds-checkbox__box { --_b: transparent; --_f: transparent; }
+.pds-checkbox__input:indeterminate ~ .pds-checkbox__box::before { display: block; }
+.pds-checkbox__input:indeterminate ~ .pds-checkbox__box .pds-checkbox__mark { display: none; }
+.pds-checkbox__input:indeterminate ~ .pds-checkbox__box .pds-checkbox__dash { display: block; }
+/* Light: the dash is a hole (8 × 1.8 at 3,6) — as built in Figma */
+.pds-checkbox:not(.pds-checkbox--dark) .pds-checkbox__input:indeterminate ~ .pds-checkbox__box::before {
+  -webkit-mask: linear-gradient(#000 0 0), linear-gradient(#000 0 0) 3px 6px / 8px 1.8px no-repeat;
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0), linear-gradient(#000 0 0) 3px 6px / 8px 1.8px no-repeat;
+          mask-composite: exclude;
+}
+
+/* Focus — Figma state is a stroke colour swap; shown on keyboard focus or with --focus (static) */
+.pds-checkbox--focus .pds-checkbox__box,
+.pds-checkbox__input:focus-visible ~ .pds-checkbox__box { --_b: var(--_focus-border); }
+.pds-checkbox--focus .pds-checkbox__input:checked ~ .pds-checkbox__box,
+.pds-checkbox__input:checked:focus-visible ~ .pds-checkbox__box { --_b: var(--_focus-on-border); }
+.pds-checkbox--focus:has(.pds-checkbox__input:checked),
+.pds-checkbox:has(.pds-checkbox__input:checked:focus-visible) { color: var(--_focus-on-label); }
+/* Focus ring — added in review, not in Figma */
+.pds-checkbox--focus .pds-checkbox__box,
+.pds-checkbox__input:focus-visible ~ .pds-checkbox__box {
+  outline: 2px solid var(--checkbox-focus-ring); outline-offset: 2px;
+}
+
+/* Error */
+.pds-checkbox--error .pds-checkbox__box { --_b: var(--_error); }
+.pds-checkbox--error .pds-checkbox__input:checked ~ .pds-checkbox__box { --_b: var(--_error); --_f: var(--_error); --_m: var(--_error-mark); }
+
+/* Disabled (last: wins over focus / error) */
+.pds-checkbox:has(.pds-checkbox__input:disabled) { cursor: not-allowed; color: var(--_dis-label); }
+.pds-checkbox:has(.pds-checkbox__input:disabled:checked) { color: var(--_dis-on-label); }
+.pds-checkbox__input:disabled ~ .pds-checkbox__box { --_b: var(--_dis-fill); --_f: var(--_dis-fill); }
+.pds-checkbox__input:disabled:checked ~ .pds-checkbox__box { --_b: var(--_dis-on-fill); --_f: var(--_dis-on-fill); --_m: var(--_dis-mark); }
+
+/* ── Checkbox group — added in review, not in Figma ───────────── */
+.pds-checkbox-group { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--checkbox-group-gap); }
+.pds-checkbox-group__label { padding: 0; margin: 0 0 var(--checkbox-group-gap); font: var(--type-12-semibold); color: var(--checkbox-label); }
+.pds-checkbox-group--dark .pds-checkbox-group__label { color: var(--checkbox-dark-label); }
+.pds-checkbox-group__items { display: flex; flex-direction: column; align-items: flex-start; gap: var(--checkbox-group-gap); }
+.pds-checkbox-group__nested { display: flex; flex-direction: column; align-items: flex-start; gap: var(--checkbox-group-gap); padding-left: var(--checkbox-nest-indent); }
+.pds-checkbox-group__error { margin: 0; font: var(--type-11-regular); color: var(--checkbox-group-error); }

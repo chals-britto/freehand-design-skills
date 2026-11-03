@@ -1,0 +1,145 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Comments (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟡 Comments (2305:4671)
+     · ".Comment"      component set 2388:7828 (4 variants)  → .pds-comment
+     · "Chat Comment"  component set 4420:6522 (2 variants)  → .pds-comment-thread--chat
+     · "Comments"      component set 5425:20667 (4 variants) → .pds-comment-thread--message
+     · ".User Tag"     component set 5425:20692 (2 variants) → .pds-comment-thread__user-tag
+   No review file — every published variant kept as in Figma.
+   Requires ../tokens.css, avatar.css, tag.css (atoms are reused, not redrawn).
+   .pds-comment is its own class: the Chat Input Box molecule reuses it.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── .Comment ── */
+  --comment-width:        380px;
+  --comment-fg:           #404040;                 /* off-token in Figma (no #404040 in tokens.css) */
+  --comment-dark-fg:      var(--white);            /* #FFFFFF */
+  --comment-tag-gap:      5px;                     /* Input Tag ↔ text (Line 01) */
+  --comment-line-gap:     4px;                     /* Line 01 ↔ Line 02 */
+  --comment-tag-pad:      4px 8px;                 /* Input Tag "Remove=Yes" padding, × hidden */
+
+  /* ── Chat Comment ── */
+  --comment-thread-chat-width: 400px;
+  --comment-thread-chat-gap:   5px;                /* header ↔ comment ↔ attachment */
+  --comment-thread-meta-gap:   6px;                /* avatar ↔ name, and min gap to time */
+  --comment-thread-name:       var(--text-dark);   /* #313131 */
+  --comment-thread-time:       var(--text-light);  /* #6C6C6C */
+  --comment-thread-dark-name:  var(--dark-label-text); /* #D5DAF4 */
+  --comment-thread-dark-time:  var(--dark-input-text); /* #8A8A9E */
+
+  /* ── Comments (message bubbles) — dark only in Figma ── */
+  --comment-thread-msg-gap:    5px;                /* user info ↔ bubble ↔ time */
+  --comment-thread-info-gap:   5px;                /* user tag ↔ name */
+  --comment-thread-bubble-bg:  #484858;            /* off-token in Figma (same hex as the 50% avatar fill) */
+  --comment-thread-bubble-fg:  var(--dark-label-text); /* #D5DAF4 */
+  --comment-thread-bubble-pad: var(--space-10);    /* 10px */
+  --comment-thread-bubble-gap: 5px;                /* text ↔ swappable content */
+  --comment-thread-bubble-r:   8px;
+  --comment-thread-msg-name:   var(--dark-label-text); /* #D5DAF4 */
+  --comment-thread-msg-time:   var(--dark-input-text); /* #8A8A9E */
+  --comment-thread-swap-width: 190px;              /* Swapable=yes bubble width */
+
+  /* ── .Swappable Content (slot placeholder inside the bubble) ── */
+  --comment-thread-slot-bg:    var(--pando-light); /* #EEF2F4 */
+  --comment-thread-slot-pad:   var(--space-10);
+  --comment-thread-slot-gap:   4px;
+  --comment-thread-slot-title-gap: 8px;
+  --comment-thread-slot-icon:  20px;
+  --comment-thread-slot-title: var(--pando-dark);  /* #234357 */
+  --comment-thread-slot-fg:    #000000;            /* off-token in Figma (pure black) */
+
+  /* ── .User Tag ── */
+  --comment-thread-user-tag-bg:          var(--dark-bg);              /* #393945 */
+  --comment-thread-user-tag-shipper:     var(--dark-highlight-green); /* #1FCD93 */
+  --comment-thread-user-tag-transporter: var(--dark-input-text);      /* #8A8A9E */
+}
+
+/* ── .Comment ──────────────────────────────────────────────────── */
+.pds-comment {
+  box-sizing: border-box;
+  width: var(--comment-width);
+  max-width: 100%;
+  margin: 0;
+  font: var(--type-12-regular);   /* Figma 12/18 — see Open issues */
+  color: var(--comment-fg);
+  overflow-wrap: anywhere;
+}
+.pds-comment--dark { color: var(--comment-dark-fg); }
+/* Type=.Tag + Comment: Input Tag (tag.css) at the start of the text */
+.pds-comment__tag {
+  vertical-align: middle;
+  margin: 0 var(--comment-tag-gap) var(--comment-line-gap) 0;
+}
+.pds-comment__tag.pds-tag--input { padding: var(--comment-tag-pad); }
+
+/* ── Shared ────────────────────────────────────────────────────── */
+.pds-comment-thread {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family);
+}
+
+/* ── Chat Comment ──────────────────────────────────────────────── */
+.pds-comment-thread--chat {
+  width: var(--comment-thread-chat-width);
+  max-width: 100%;
+  gap: var(--comment-thread-chat-gap);
+  --_name: var(--comment-thread-name); --_time: var(--comment-thread-time);
+}
+.pds-comment-thread--chat.pds-comment-thread--dark { --_name: var(--comment-thread-dark-name); --_time: var(--comment-thread-dark-time); }
+.pds-comment-thread--chat .pds-comment { width: var(--comment-width); }
+.pds-comment-thread__meta {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--comment-thread-meta-gap);
+}
+.pds-comment-thread__author { display: flex; align-items: center; gap: var(--comment-thread-meta-gap); min-width: 0; }
+.pds-comment-thread--chat .pds-comment-thread__name { font: var(--type-10-regular); letter-spacing: .5px; color: var(--_name); }
+.pds-comment-thread--chat .pds-comment-thread__time { font: var(--type-10-regular); letter-spacing: .5px; color: var(--_time); flex: none; }
+.pds-comment-thread__attachment { align-self: flex-start; }
+
+/* ── Comments (message bubble) ─────────────────────────────────── */
+.pds-comment-thread--message {
+  gap: var(--comment-thread-msg-gap);
+  align-items: flex-start;
+}
+.pds-comment-thread--user { align-items: flex-end; }
+.pds-comment-thread--swap .pds-comment-thread__bubble { width: var(--comment-thread-swap-width); }
+.pds-comment-thread__info { display: flex; align-items: center; gap: var(--comment-thread-info-gap); }
+.pds-comment-thread--message .pds-comment-thread__name { font: var(--type-10-semibold); letter-spacing: 0; color: var(--comment-thread-msg-name); }
+.pds-comment-thread__bubble {
+  box-sizing: border-box;
+  display: flex; flex-direction: column; gap: var(--comment-thread-bubble-gap);
+  max-width: 100%;
+  padding: var(--comment-thread-bubble-pad);
+  background: var(--comment-thread-bubble-bg);
+  color: var(--comment-thread-bubble-fg);
+  border-radius: 0 var(--comment-thread-bubble-r) var(--comment-thread-bubble-r) var(--comment-thread-bubble-r); /* Shipper: square top-left */
+}
+.pds-comment-thread--user .pds-comment-thread__bubble {
+  border-radius: var(--comment-thread-bubble-r) 0 var(--comment-thread-bubble-r) var(--comment-thread-bubble-r); /* User: square top-right */
+}
+.pds-comment-thread__text { margin: 0; font: var(--type-12-regular); overflow-wrap: anywhere; } /* Figma 12/16 */
+.pds-comment-thread--message .pds-comment-thread__time { font: var(--type-10-regular); letter-spacing: .5px; color: var(--comment-thread-msg-time); }
+
+/* ── .Swappable Content (slot placeholder) ─────────────────────── */
+.pds-comment-thread__slot {
+  box-sizing: border-box;
+  display: flex; flex-direction: column; gap: var(--comment-thread-slot-gap);
+  padding: var(--comment-thread-slot-pad);
+  background: var(--comment-thread-slot-bg);
+  color: var(--comment-thread-slot-fg);
+  font: var(--type-12-regular);   /* Figma 12/16 */
+}
+.pds-comment-thread__slot-title {
+  display: flex; align-items: center; gap: var(--comment-thread-slot-title-gap);
+  font: var(--type-12-semibold); color: var(--comment-thread-slot-title);
+}
+.pds-comment-thread__slot-icon { display: block; flex: none; width: var(--comment-thread-slot-icon); height: var(--comment-thread-slot-icon); }
+.pds-comment-thread__slot-icon path { fill: currentColor; }
+
+/* ── .User Tag (Comment Avatar shape from avatar.css, own colours) ── */
+.pds-comment-thread__user-tag.pds-avatar--comment { --_bg: var(--comment-thread-user-tag-bg); --_fg: var(--comment-thread-user-tag-transporter); }
+.pds-comment-thread__user-tag.pds-avatar--shipper     { --_fg: var(--comment-thread-user-tag-shipper); }
+.pds-comment-thread__user-tag.pds-avatar--transporter { --_fg: var(--comment-thread-user-tag-transporter); }

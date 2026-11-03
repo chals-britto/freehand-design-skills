@@ -1,0 +1,173 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Toggle Tab (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ Tabs (51:0)
+     · component set "Toggle Tab" (2386:7366) — 13 variants
+         Theme (Light | Dark) × Type × Selection (Option 1 | 2 | 3)
+         Type: Dual Icon · 3 Option Icon · Single Selection with Description
+               · Single Selection · Toggle Tab
+     · base ".Individual Tab" (2427:8105) — 3 · Type × State
+     · base ".Toggle Base"    (2533:9614) — 2 · State (Active Tab | Inactive Tab)
+     · base ".Option"         (3247:1197) — 4 · Theme × State (+ Show Icon)
+   No review yet: everything published kept. Requires ../tokens.css and icons.css.
+
+   Class prefix is .pds-toggle-tabs (plural) because the Atoms kit already owns
+   .pds-toggle-tab and --toggle-tab-* (toggle.css). See toggle-tab.md › Open issues.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Shared ────────────────────────────────────────────────── */
+  --toggle-tabs-blue:        #0078DD;   /* off-token in Figma — "Highlight/Blue-Dark-#0078DD" (Single Selection, .Individual Tab, .Option Light Active) */
+  --toggle-tabs-on-blue:     var(--white);
+  --toggle-tabs-fg:          var(--text-dark);          /* #313131 */
+  --toggle-tabs-lh:          16px;      /* Figma "auto" line-height for 12px Open Sans; .type-12-* tokens are 17px */
+
+  /* ── Type = Dual Icon / 3 Option Icon (.Toggle Base) ───────── */
+  --toggle-tabs-icon-bg:        var(--white);
+  --toggle-tabs-icon-active-bg: var(--border-input-light); /* #E2EAEC "Border/Input-Light" */
+  --toggle-tabs-icon-pad:       var(--space-15) var(--space-12); /* 15 / 12 → 44 × 50 */
+  --toggle-tabs-icon-radius:    var(--space-2);         /* 2px */
+  --toggle-tabs-icon-gap:       1px;
+
+  /* ── Type = Single Selection with Description (.Individual Tab) ── */
+  --toggle-tabs-desc-fg:        #2A4255;   /* off-token in Figma — unstyled fill on "Description" */
+  --toggle-tabs-desc-gap:       var(--space-15);        /* description ↔ options */
+  --toggle-tabs-steps-gap:      var(--space-10);        /* option ↔ option */
+  --toggle-tabs-step-size:      24px;                   /* inactive circle */
+  --toggle-tabs-step-pad:       5px;                    /* inactive padding all round / active top-bottom */
+  --toggle-tabs-step-bg:        var(--white);
+  --toggle-tabs-step-shadow:    var(--shadow-1);        /* 0 2 3 #000 10% */
+  --toggle-tabs-step-mark:      var(--pando-dark);      /* #234357 — icon / number */
+  --toggle-tabs-step-radius:    14px;                   /* active pill (inactive is 20 → full circle) */
+
+  /* ── Type = Single Selection (.Option Light) ───────────────── */
+  --toggle-tabs-pills-gap:      var(--space-15);
+  --toggle-tabs-pill-pad:       4px var(--space-10);
+  --toggle-tabs-pill-radius:    var(--radius-12);
+  --toggle-tabs-pill-border:    var(--border-blue-grey); /* #B5C3CB, 1px inside */
+
+  /* ── Type = Toggle Tab (segmented) ─────────────────────────── */
+  --toggle-tabs-seg-bg:         var(--accent-off-white); /* #F8F8F8 */
+  --toggle-tabs-seg-border:     var(--border-input-light); /* #E2EAEC, 1px outside */
+  --toggle-tabs-seg-active-bg:  var(--pando-blue);       /* #0076DD */
+  --toggle-tabs-seg-shadow:     inset 0 0 4px color-mix(in srgb, var(--pando-dark) 50%, transparent); /* #234357 @ 50% blur 4 — not a --shadow-* token */
+  --toggle-tabs-seg-radius:     var(--radius-12);        /* container + active option */
+  --toggle-tabs-seg-rest-radius: var(--space-2);         /* inactive option: 2px */
+  --toggle-tabs-seg-gap:        1px;
+  --toggle-tabs-dark-seg-bg:    #4848584D;  /* off-token in Figma — #484858 @ 30% (unstyled) */
+  --toggle-tabs-dark-seg-border: color-mix(in srgb, var(--dark-input-text) 10%, transparent); /* #8A8A9E @ 10%, 1px outside */
+  --toggle-tabs-dark-fg:        var(--white);            /* Dark inactive label */
+}
+
+/* ── Group (role="radiogroup") ─────────────────────────────────── */
+.pds-toggle-tabs {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-family);
+}
+.pds-toggle-tabs__options { display: inline-flex; align-items: center; }
+
+.pds-toggle-tabs__option {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--toggle-tabs-fg);
+  font: var(--type-12-regular);
+  line-height: var(--toggle-tabs-lh);
+  white-space: nowrap;
+  cursor: pointer;
+}
+/* Focus — added in review, not in Figma */
+.pds-toggle-tabs__option:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; }
+
+/* ════════ Type = Dual Icon / 3 Option Icon ═══════════════════════ */
+.pds-toggle-tabs--icon {
+  gap: var(--toggle-tabs-icon-gap);
+  border-radius: var(--toggle-tabs-icon-radius);
+  background: var(--toggle-tabs-icon-bg);
+}
+.pds-toggle-tabs--icon .pds-toggle-tabs__option {
+  padding: var(--toggle-tabs-icon-pad);
+  border-radius: var(--toggle-tabs-icon-radius);
+}
+.pds-toggle-tabs--icon .pds-toggle-tabs__option[aria-checked="true"] { background: var(--toggle-tabs-icon-active-bg); }
+
+/* ════════ Type = Single Selection with Description ═══════════════ */
+.pds-toggle-tabs--steps { gap: var(--toggle-tabs-desc-gap); }
+.pds-toggle-tabs__desc {
+  color: var(--toggle-tabs-desc-fg);
+  font: var(--type-12-semibold);
+  line-height: var(--toggle-tabs-lh);
+  white-space: nowrap;
+}
+.pds-toggle-tabs--steps .pds-toggle-tabs__options { gap: var(--toggle-tabs-steps-gap); }
+.pds-toggle-tabs--steps .pds-toggle-tabs__option {         /* .Individual Tab · Inactive */
+  min-width: var(--toggle-tabs-step-size);
+  height: var(--toggle-tabs-step-size);
+  padding: var(--toggle-tabs-step-pad);
+  border-radius: calc(var(--toggle-tabs-step-size) / 2);
+  background: var(--toggle-tabs-step-bg);
+  box-shadow: var(--toggle-tabs-step-shadow);
+  color: var(--toggle-tabs-step-mark);
+  font: var(--type-10-bold);                                /* "Button/Small-Bold" 10/14 */
+  text-transform: uppercase;
+}
+.pds-toggle-tabs__mark { display: inline-flex; align-items: center; justify-content: center; min-width: 14px; height: 14px; }
+.pds-toggle-tabs--steps .pds-toggle-tabs__label {          /* label is visually hidden until selected */
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+.pds-toggle-tabs--steps .pds-toggle-tabs__option[aria-checked="true"] {   /* .Individual Tab · Text Active */
+  padding: var(--toggle-tabs-step-pad) var(--space-10);
+  border-radius: var(--toggle-tabs-step-radius);
+  background: var(--toggle-tabs-blue);
+  box-shadow: none;
+  color: var(--toggle-tabs-on-blue);
+}
+.pds-toggle-tabs--steps .pds-toggle-tabs__option[aria-checked="true"] .pds-toggle-tabs__mark { display: none; }
+.pds-toggle-tabs--steps .pds-toggle-tabs__option[aria-checked="true"] .pds-toggle-tabs__label {
+  position: static; width: auto; height: auto; overflow: visible; clip: auto;
+}
+
+/* ════════ Type = Single Selection (pills, .Option Light) ═════════ */
+.pds-toggle-tabs--pills { gap: var(--toggle-tabs-pills-gap); }
+.pds-toggle-tabs--pills .pds-toggle-tabs__option {
+  padding: var(--toggle-tabs-pill-pad);
+  border-radius: var(--toggle-tabs-pill-radius);
+  box-shadow: inset 0 0 0 1px var(--toggle-tabs-pill-border);   /* 1px inside */
+}
+.pds-toggle-tabs--pills .pds-toggle-tabs__option[aria-checked="true"] {
+  background: var(--toggle-tabs-blue);
+  box-shadow: none;
+  color: var(--toggle-tabs-on-blue);
+  font-weight: 600;                                         /* "Input/Semibold/Normal" */
+}
+
+/* ════════ Type = Toggle Tab (segmented, Light + Dark) ════════════ */
+.pds-toggle-tabs--segment {
+  gap: var(--toggle-tabs-seg-gap);
+  border-radius: var(--toggle-tabs-seg-radius);
+  background: var(--toggle-tabs-seg-bg);
+  box-shadow: 0 0 0 1px var(--toggle-tabs-seg-border);     /* 1px outside */
+}
+.pds-toggle-tabs--segment .pds-toggle-tabs__option {
+  padding: var(--toggle-tabs-pill-pad);                     /* 4 / 10 */
+  border-radius: var(--toggle-tabs-seg-rest-radius);
+}
+.pds-toggle-tabs--segment .pds-toggle-tabs__option[aria-checked="true"] {
+  border-radius: var(--toggle-tabs-seg-radius);
+  background: var(--toggle-tabs-seg-active-bg);
+  box-shadow: var(--toggle-tabs-seg-shadow);
+  color: var(--toggle-tabs-on-blue);
+}
+.pds-toggle-tabs--segment.pds-toggle-tabs--dark {
+  background: var(--toggle-tabs-dark-seg-bg);
+  box-shadow: 0 0 0 1px var(--toggle-tabs-dark-seg-border);
+}
+.pds-toggle-tabs--dark .pds-toggle-tabs__option { color: var(--toggle-tabs-dark-fg); }
+
+/* .Option "Show Icon" (Dark variants only in Figma; hidden by default) */
+.pds-toggle-tabs__icon { margin-right: var(--space-10); }

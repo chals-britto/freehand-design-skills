@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Timepicker · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="input.css">
+<link rel="stylesheet" href="timepicker.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* timepicker page */
+.tp-stage{padding:24px;min-height:320px;background:var(--pg-soft);border-radius:0 10px 10px 0;display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+.tp-stage .lbl,.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.tp-out{font:500 12.5px var(--pg-mono);color:var(--pg-ink)}
+.vgrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.vcell .box{background:var(--pg-soft);border-radius:8px;padding:20px;min-height:280px;display:flex;align-items:flex-start;justify-content:center}
+.vcell .note{font-size:11.5px;color:var(--pg-muted)}
+.open-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+@media (max-width:760px){.vgrid.three{grid-template-columns:1fr}.tp-stage{border-radius:0 0 10px 10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>Timepicker</h1>
+    <p class="lede">Hour and minute columns with a selection band, and Cancel / Apply. Opens under a time field.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · not reviewed</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=3447-624" target="_blank" rel="noopener">Figma component 3447:624 ↗</a><span>Files: timepicker.css · timepicker.js · uses button.css, input.css</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Click the field (or press ↓ in it) to open the picker. Scroll a column, click a value, or use the arrow keys; Enter applies, Esc cancels. The value in the band is the one that is applied.</p>
+<div class="panel play">
+  <div class="ctrls">
+    <label>Minute step<select id="c-step"><option value="5" selected>5 (Figma)</option><option value="1">1</option><option value="15">15</option></select></label>
+    <div class="tp-out">Last event: <span id="c-out">—</span></div>
+  </div>
+  <div class="tp-stage">
+    <div><div class="lbl" style="margin-bottom:6px">Attached to the kit input</div><div id="try-field"></div></div>
+    <div><div class="lbl" style="margin-bottom:6px">Standalone</div><div id="try-solo"></div></div>
+  </div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Figma has one variant. Shown as drawn (02 : 10 in the band), with keyboard focus, and open under a field.</p>
+<div class="panel vgrid three" id="vgrid"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma component 3447:624.</p>
+<div class="panel">
+<div class="spec-table">
+  <div><b>Size</b><code>160 × 204</code> · radius <code>4px</code></div>
+  <div><b>Surface</b><code>--white</code> · <code>--shadow-4</code> (0 14 28 · 6%)</div>
+  <div><b>Layout</b>vertical, gap <code>10px</code>: time · divider · buttons</div>
+  <div><b>Columns</b><code>45 × 150</code>, padding <code>15px</code>, row gap <code>10px</code>, clip</div>
+  <div><b>Hour ↔ “:” ↔ Minute</b>gap <code>20px</code>, centred</div>
+  <div><b>Values</b><code>.type-12-semibold</code> +0.5 tracking · <code>--text-dark</code></div>
+  <div><b>Colon</b><code>.type-12-semibold</code> · #000000 (off-token)</div>
+  <div><b>Selection band</b>2 × 1px <code>--border-input-light</code>, <code>30px</code> apart, top <code>61px</code>, <code>10px</code> in from each side</div>
+  <div><b>Divider</b>1px <code>--border-grey</code>, full width</div>
+  <div><b>Buttons row</b>padding <code>0 15 10</code>, space-between · height 34</div>
+  <div><b>Cancel</b>Button · Text Only · Light · Small</div>
+  <div><b>Apply</b>Button · Text Button · Primary · Small</div>
+  <div><b>Hours</b>00–23 (Figma draws 00–18)</div>
+  <div><b>Minutes</b>00–55, step 5</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>From Figma</h3><p>“Adjust the Selection Border padding to suit the width of the dropdown. 10px padding on Left and Right.” — the band is inset 10px each side, so it follows the panel width.</p></div>
+  <div class="panel card"><h3>Opening from a field</h3><ul><li><code>pdsTimepicker.attach(input)</code> opens the panel under a kit input, as wide as the field (min 160).</li><li>Apply writes <code>HH:MM</code> (24-hour) into the field. Cancel, Esc or a click outside leave it unchanged.</li><li>While open, the field shows its Active border.</li></ul><p class="src">Behaviour added in review — Figma shows the panel only.</p></div>
+  <div class="panel card"><h3>Format</h3><ul><li>24-hour, hours 00–23, no AM/PM (Figma has none).</li><li>Minutes in steps of 5. A typed value between steps rounds down.</li></ul></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Roles</h3><p>Each column is a <code>listbox</code> (“Hours”, “Minutes”) with <code>aria-activedescendant</code> on the value in the band. The attached panel is a <code>dialog</code> (“Choose time”); the field gets <code>aria-haspopup</code>, <code>aria-expanded</code>, <code>aria-controls</code>.</p></div>
+  <div class="panel card"><h3>Keyboard</h3><ul><li>↓ in the field opens the panel and focuses Hours.</li><li>↑ / ↓ change the value, Home / End jump to first / last.</li><li>← / → switch column. Tab reaches Cancel and Apply.</li><li>Enter applies, Esc cancels; focus returns to the field.</li></ul></div>
+  <div class="panel card"><h3>Open for the accessibility pass</h3><p>Focus ring on a column (2px <code>--pando-blue</code> inset) is added in review — not in Figma. Cancel and Apply keep the kit button contrast notes.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul class="open-list">
+  <li>Figma draws hours 00–18 only (the column is clipped); built as 00–23 since the list runs past 12. Confirm 24-hour is intended — no AM/PM in Figma.</li>
+  <li>No visual difference for the selected value — only the band lines mark it. No hover state for values in Figma.</li>
+  <li>Colon is #000000, not in tokens.css (values use <code>--text-dark</code> #313131).</li>
+  <li>Column padding is 15px in Figma; extended to 67px top and bottom so 00 and the last value can reach the band (added in review).</li>
+  <li>Value line height: Figma uses auto (16px rows); <code>.type-12-semibold</code> is 17px — overridden to 16px.</li>
+  <li>Cancel and Apply render in the kit button’s uppercase. Figma copy is “Cancel” / “Apply”; check the button text case.</li>
+  <li>Attached width: Figma is 160 fixed; the attached panel takes the field width (min 160), per the Figma note about the band padding. Confirm.</li>
+  <li>No disabled times, no “Now”, no typed entry inside the panel in Figma.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>12-hour format with AM/PM column. <span class="src"><a href="https://ant.design/components/time-picker" target="_blank" rel="noopener">Ant TimePicker</a></span></li>
+  <li>Seconds column. <span class="src"><a href="https://ant.design/components/time-picker" target="_blank" rel="noopener">Ant</a></span></li>
+  <li>Disabled / hidden times (e.g. outside working hours). <span class="src"><a href="https://ant.design/components/time-picker" target="_blank" rel="noopener">Ant</a></span></li>
+  <li>“Now” button. <span class="src"><a href="https://ant.design/components/time-picker" target="_blank" rel="noopener">Ant</a></span></li>
+  <li>Clear (×) on the field. <span class="src"><a href="https://ant.design/components/time-picker" target="_blank" rel="noopener">Ant</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the files, build a kit input, then attach the picker.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup (what <code>timepicker.js</code> produces):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="button.js"></script>
+<script src="input.js"></script>
+<script src="timepicker.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const out=t=>{$("#c-out").textContent=t};
+
+// try it
+let tp, solo;
+function mountTry(){
+  const step=+$("#c-step").value;
+  const f=pdsInput.build({});
+  $("#try-field").replaceChildren(f);
+  tp=pdsTimepicker.attach(f.querySelector("input"),{minuteStep:step,onApply:v=>out("Apply "+v),onCancel:()=>out("Cancel")});
+  solo=pdsTimepicker.build({minuteStep:step});
+  $("#try-solo").replaceChildren(solo);
+  pdsTimepicker.init(solo,{onApply:v=>out("Apply "+v),onCancel:()=>{pdsTimepicker.setValue(solo,"02:10");out("Cancel")}});
+}
+$("#c-step").addEventListener("change",mountTry);
+mountTry();
+
+// variants
+const V=[
+ {lbl:"Default · as Figma",note:"02 : 10 in the band",make:()=>{const e=pdsTimepicker.build({static:true});return e}},
+ {lbl:"Focus · hour column",note:"added in review — not in Figma",make:()=>{const e=pdsTimepicker.build({static:true});e.querySelector(".pds-timepicker__col").style.boxShadow="inset 0 0 0 2px var(--timepicker-focus-ring)";e.querySelector(".pds-timepicker__col").style.borderRadius="var(--timepicker-radius)";return e}},
+ {lbl:"Open under a field",note:"attach() — added in review",make:()=>{const w=document.createElement("div");w.style.minHeight="300px";const f=pdsInput.build({state:"active",value:"02:10"});w.appendChild(f);const t=pdsTimepicker.build({static:true});t.classList.add("pds-timepicker--popup");f.appendChild(t);return w}},
+];
+V.forEach(v=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${v.lbl}</span>`;const b=document.createElement("div");b.className="box";b.appendChild(v.make());c.appendChild(b);c.insertAdjacentHTML("beforeend",`<span class="note">${v.note}</span>`);$("#vgrid").appendChild(c)});
+const syncV=()=>document.querySelectorAll("#vgrid .pds-timepicker").forEach(pdsTimepicker.sync);requestAnimationFrame(syncV);document.fonts&&document.fonts.ready.then(syncV);
+
+// code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/input.css">
+<link rel="stylesheet" href="components/timepicker.css">
+<script src="components/input.js"><\/script>
+<script src="components/timepicker.js"><\/script>
+
+<script>
+  const field = pdsInput.build({ label: 'Input Label' });
+  form.appendChild(field);
+  pdsTimepicker.attach(field.querySelector('input'), {
+    minuteStep: 5,                 // Figma: 00, 05 … 55
+    onApply: v => { /* 'HH:MM' */ },
+    onCancel: () => {}
+  });
+
+  // or standalone
+  const el = pdsTimepicker.build({ value: '02:10' });
+  host.appendChild(el);
+  pdsTimepicker.init(el, { onApply: v => {}, onCancel: () => {} });
+<\/script>`;
+$("#code2").textContent=pdsTimepicker.build({static:true}).outerHTML.replace(/<li /g,"\n  <li ").replace(/><(?!\/li)/g,">\n<");
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

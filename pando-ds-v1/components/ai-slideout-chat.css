@@ -1,0 +1,242 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Slideout Chat (full AI drawer) · organism
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟡 AI Chat (2814:5163)
+   › section "Freehand - ai - component" › component set "Slideout  Chat"
+     4514:9012 (name has a double space), 4 variants:
+     Type (Slideout · Full page) × Swappable (No · Yes)
+     booleans Insights (default true), Quick Actions (default true), slot "Swap".
+   Composes the kit — nothing below re-draws an atom or a composed organism:
+     ai-insights.css   (.Insights → .pds-ai-insights / .pds-ai-insight)
+     ai-action-popup.css (.Option → .pds-ai-option, .Input → .pds-ai-input,
+                          Action - popup + Responding in the slot demo)
+     ai-chat-composer.css (bar + .send inside .Input)
+     ai-chat-bubbles.css (PI → .pds-ai-pi, the "Chat name" title)
+     slideout.css/js   (live drawer: overlay layer, slide, Esc, focus trap)
+     button.css (Action Button "Artifacts"), icons.css + icons/
+   This file only adds the frame, header, welcome block, background
+   pattern and the instance overrides Figma makes. Built 2026-10-28,
+   not reviewed — every published variant kept.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Frame ── */
+  --ai-slideout-chat-w:          420px;                          /* Type=Slideout */
+  --ai-slideout-chat-w-full:     1200px;                         /* Type=Full page */
+  --ai-slideout-chat-h:          760px;
+  --ai-slideout-chat-frame-bg:   var(--white);                   /* component fill, padding 2 */
+  --ai-slideout-chat-frame-pad:  var(--space-2);
+  --ai-slideout-chat-edge:       var(--border-grey);             /* #EFEFEF, 1px left stroke only, inside */
+  --ai-slideout-chat-bg:         #FFFBFA;                        /* off-token in Figma — "AI Chat" fill */
+  --ai-slideout-chat-radius:     4px 4px 0 0;                    /* Slideout only; Full page 0 */
+  --ai-slideout-chat-pad:        var(--space-10) var(--space-15); /* Content 10 / 15 */
+  --ai-slideout-chat-gap:        var(--space-15);                /* Content gap (Full page · Swappable=Yes: 10) */
+  --ai-slideout-chat-gap-full-swap: var(--space-10);
+  --ai-slideout-chat-col:        740px;                          /* Full page content column */
+
+  /* ── Background pattern ("Mask group": 30px squares, 1px #A3A3A3, 29px pitch,
+        masked by a radial #D9D9D9 20% → 0% at 96%, group opacity 34%) ── */
+  --ai-slideout-chat-grid:       var(--grey-medium);             /* #A3A3A3 */
+  --ai-slideout-chat-grid-pitch: 29px;
+  --ai-slideout-chat-grid-h:     600px;                          /* Slideout: rectangle 430 × 600 at the top */
+  --ai-slideout-chat-grid-alpha: .2;                             /* mask gradient start alpha */
+  --ai-slideout-chat-grid-opacity: .34;
+
+  /* ── Header (28 tall, space-between) ── */
+  --ai-slideout-chat-header-h:   28px;
+  --ai-slideout-chat-header-gap: var(--space-15);
+  --ai-slideout-chat-left-gap:   var(--space-10);                /* Menu ↔ PI */
+  --ai-slideout-chat-right-gap:  var(--space-10);                /* icons · divider · close */
+  --ai-slideout-chat-icons-gap:  var(--space-15);                /* Swappable=No: icon row gap 15 */
+  --ai-slideout-chat-icons-gap-swap: 16px;                       /* Swappable=Yes: icon row gap 16 */
+  --ai-slideout-chat-icons-pad:  5px;                            /* icon row padding-right */
+  --ai-slideout-chat-icon:       var(--icon-size-14);
+  --ai-slideout-chat-icon-fg:    var(--pando-dark);              /* #234357 Menu, Add, Details, Expand */
+  --ai-slideout-chat-close-fg:   var(--grey-dark);               /* #515151 Navigation/Close-Tag */
+  --ai-slideout-chat-divider:    var(--border-input-light);      /* #E2EAEC, 1 × 16 */
+  --ai-slideout-chat-divider-h:  16px;
+  /* PI instance ("Chat name"): icon hidden, label overridden */
+  --ai-slideout-chat-pi-font:    600 13px/16px var(--font-family); /* Open Sans SemiBold 13/16 — not in tokens */
+  --ai-slideout-chat-pi-fg:      var(--text-dark);               /* #313131 */
+  /* Action Button "Artifacts" (Full page · Swappable=Yes) */
+  --ai-slideout-chat-artifacts-fg: var(--pando-dark);            /* #234357 — kit Action #376F99 overridden */
+  --ai-slideout-chat-artifacts-gap: var(--space-10);             /* kit Action gap 4 overridden to 10 */
+
+  /* ── Section 01 (welcome) ── */
+  --ai-slideout-chat-welcome-pad: 100px var(--space-10) 0;       /* Slideout: 100 / 10 / 0 / 10 */
+  --ai-slideout-chat-welcome-pad-full: 100px var(--space-10) 20px; /* Full page: 100 / 10 / 20 / 10 */
+  --ai-slideout-chat-welcome-gap: 8px;
+  --ai-slideout-chat-logo-bg:    color-mix(in srgb, var(--freehand-orange) 10%, transparent); /* #FE6505 @ 10% */
+  --ai-slideout-chat-logo-pad:   var(--space-10);
+  --ai-slideout-chat-logo-radius: 10px;                           /* no --radius-10 in tokens */
+  --ai-slideout-chat-logo-fg:    var(--freehand-orange);         /* Header-Logo/Apps › Freehand, Variant=Logo */
+  --ai-slideout-chat-title:      700 14px/19px var(--font-family); /* Open Sans Bold 14/auto — no 14 Bold in tokens */
+  --ai-slideout-chat-title-fg:   var(--text-dark);               /* #313131 */
+  --ai-slideout-chat-desc-fg:    #737373;                        /* off-token in Figma (same value as --ai-input-ph) */
+
+  /* ── Quick Actions ── */
+  --ai-slideout-chat-qa-label-pad: 0 8px;                        /* header padding 0 / 8 */
+  --ai-slideout-chat-qa-label-fg:  var(--dark-input-text);       /* #8A8A9E SemiBold 10 UPPER +0.5 */
+  --ai-slideout-chat-qa-font:    400 10px/14px var(--font-family); /* .Option text override: Regular 10/auto, no tracking */
+  --ai-slideout-chat-qa-h:       34px;                           /* 10 + 14 + 10 */
+  --ai-slideout-chat-col-pad:    0 var(--space-10);              /* Full page: .Insights + Quick Actions padding 0 / 10 */
+}
+
+/* ════ Frame ═════════════════════════════════════════════════════════ */
+.pds-ai-slideout-chat {
+  box-sizing: border-box;
+  display: flex; flex-direction: column;
+  width: var(--ai-slideout-chat-w); max-width: 100%;
+  height: var(--ai-slideout-chat-h);
+  padding: var(--ai-slideout-chat-frame-pad);
+  background: var(--ai-slideout-chat-frame-bg);
+  box-shadow: inset 1px 0 0 var(--ai-slideout-chat-edge);    /* 1px left stroke, inside */
+  font-family: var(--font-family);
+  color: var(--text-dark);
+}
+.pds-ai-slideout-chat *, .pds-ai-slideout-chat *::before, .pds-ai-slideout-chat *::after { box-sizing: border-box; }
+.pds-ai-slideout-chat--full { width: var(--ai-slideout-chat-w-full); }
+
+/* "AI Chat" surface */
+.pds-ai-slideout-chat__surface {
+  position: relative; isolation: isolate;
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column;
+  background: var(--ai-slideout-chat-bg);
+  border-radius: var(--ai-slideout-chat-radius);
+  overflow: hidden;
+}
+.pds-ai-slideout-chat--full .pds-ai-slideout-chat__surface { border-radius: 0; }
+
+/* Background pattern */
+.pds-ai-slideout-chat__pattern {
+  position: absolute; z-index: -1; left: 0; top: 0; right: 0;
+  height: var(--ai-slideout-chat-grid-h);
+  pointer-events: none;
+  opacity: var(--ai-slideout-chat-grid-opacity);
+  background-image:
+    linear-gradient(to right, var(--ai-slideout-chat-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ai-slideout-chat-grid) 1px, transparent 1px);
+  background-size: var(--ai-slideout-chat-grid-pitch) var(--ai-slideout-chat-grid-pitch);
+  background-position: -3px -4px;
+  -webkit-mask-image: radial-gradient(closest-side, rgb(0 0 0 / var(--ai-slideout-chat-grid-alpha)), rgb(0 0 0 / 0) 96%);
+          mask-image: radial-gradient(closest-side, rgb(0 0 0 / var(--ai-slideout-chat-grid-alpha)), rgb(0 0 0 / 0) 96%);
+}
+.pds-ai-slideout-chat--full .pds-ai-slideout-chat__pattern { bottom: 0; height: auto; }
+
+/* Content */
+.pds-ai-slideout-chat__content {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; align-items: center;
+  gap: var(--ai-slideout-chat-gap);
+  padding: var(--ai-slideout-chat-pad);
+}
+.pds-ai-slideout-chat--full.pds-ai-slideout-chat--swappable .pds-ai-slideout-chat__content { gap: var(--ai-slideout-chat-gap-full-swap); }
+.pds-ai-slideout-chat__content > * { width: 100%; flex: none; }
+.pds-ai-slideout-chat--full .pds-ai-slideout-chat__content > :not(.pds-ai-slideout-chat__header) { width: var(--ai-slideout-chat-col); max-width: 100%; }
+
+/* Scroll area: welcome + Insights + Quick Actions (Swappable=No) or the slot (Yes).
+   Not a Figma frame — added so taller content scrolls instead of pushing the input out. */
+.pds-ai-slideout-chat__body {
+  flex: 1 1 auto !important; min-height: 0;
+  display: flex; flex-direction: column;
+  gap: var(--ai-slideout-chat-gap);
+  overflow-y: auto;
+}
+.pds-ai-slideout-chat__body > * { flex: none; }
+/* Figma: the blocks sit directly above the input — push them down (margin-top:auto keeps overflow scrollable) */
+.pds-ai-slideout-chat__body > .pds-ai-slideout-chat__welcome { margin-top: auto; }
+.pds-ai-slideout-chat__body > .pds-ai-slideout-chat__slot { flex: 1 1 auto; }
+
+/* ════ Header ════════════════════════════════════════════════════════ */
+.pds-ai-slideout-chat__header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--ai-slideout-chat-header-gap);
+  min-height: var(--ai-slideout-chat-header-h);
+}
+.pds-ai-slideout-chat__header[hidden] { display: none; }        /* Full page · Swappable=No: header hidden in Figma */
+.pds-ai-slideout-chat__left { display: flex; align-items: center; gap: var(--ai-slideout-chat-left-gap); min-width: 0; }
+.pds-ai-slideout-chat__right { display: flex; align-items: center; gap: var(--ai-slideout-chat-right-gap); flex: none; }
+.pds-ai-slideout-chat__icons {
+  display: flex; align-items: center;
+  gap: var(--ai-slideout-chat-icons-gap);
+  padding-right: var(--ai-slideout-chat-icons-pad);
+}
+.pds-ai-slideout-chat--swappable .pds-ai-slideout-chat__icons { gap: var(--ai-slideout-chat-icons-gap-swap); }
+.pds-ai-slideout-chat__icon {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: var(--ai-slideout-chat-icon); height: var(--ai-slideout-chat-icon);
+  padding: 0; margin: 0; border: 0; background: none; cursor: pointer;
+  color: var(--ai-slideout-chat-icon-fg);
+}
+.pds-ai-slideout-chat__icon svg { display: block; width: 100%; height: 100%; }
+.pds-ai-slideout-chat__icon--close { color: var(--ai-slideout-chat-close-fg); }
+.pds-ai-slideout-chat__icon:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+.pds-ai-slideout-chat__divider {
+  flex: none; width: 1px; height: var(--ai-slideout-chat-divider-h);
+  background: var(--ai-slideout-chat-divider);
+}
+/* PI instance as the chat title: icon hidden, SemiBold 13 #313131 */
+.pds-ai-slideout-chat__pi .pds-ai-pi__label { font: var(--ai-slideout-chat-pi-font); color: var(--ai-slideout-chat-pi-fg); }
+/* Action Button "Artifacts" */
+.pds-ai-slideout-chat__artifacts.pds-button--action {
+  --button-action-fg: var(--ai-slideout-chat-artifacts-fg);
+  --button-action-gap: var(--ai-slideout-chat-artifacts-gap);
+}
+
+/* ════ Section 01 (welcome) ══════════════════════════════════════════ */
+.pds-ai-slideout-chat__welcome {
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: var(--ai-slideout-chat-welcome-gap);
+  padding: var(--ai-slideout-chat-welcome-pad);
+}
+.pds-ai-slideout-chat--full .pds-ai-slideout-chat__welcome { padding: var(--ai-slideout-chat-welcome-pad-full); }
+.pds-ai-slideout-chat__logo {
+  display: inline-flex; padding: var(--ai-slideout-chat-logo-pad);
+  border-radius: var(--ai-slideout-chat-logo-radius);
+  background: var(--ai-slideout-chat-logo-bg);
+  color: var(--ai-slideout-chat-logo-fg);
+}
+.pds-ai-slideout-chat__logo svg { display: block; width: 27px; height: 28px; }
+.pds-ai-slideout-chat__title { margin: 0; font: var(--ai-slideout-chat-title); color: var(--ai-slideout-chat-title-fg); }
+.pds-ai-slideout-chat__desc { margin: 0; font: var(--type-12-regular); color: var(--ai-slideout-chat-desc-fg); }
+
+/* ════ .Insights (kit) — sits at the panel width; Full page = Size Large, padding 0 / 10 ════ */
+.pds-ai-slideout-chat .pds-ai-insights { width: 100%; }
+.pds-ai-slideout-chat--full .pds-ai-insights { padding: var(--ai-slideout-chat-col-pad); }
+
+/* ════ Quick Actions (kit .Option, overridden) ═══════════════════════ */
+.pds-ai-slideout-chat__qa { display: flex; flex-direction: column; }
+.pds-ai-slideout-chat--full .pds-ai-slideout-chat__qa { padding: var(--ai-slideout-chat-col-pad); }
+.pds-ai-slideout-chat__qa-label {
+  margin: 0; padding: var(--ai-slideout-chat-qa-label-pad);
+  font: var(--type-10-semibold); letter-spacing: .5px; text-transform: uppercase;
+  color: var(--ai-slideout-chat-qa-label-fg);
+}
+.pds-ai-slideout-chat__qa-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+/* The kit .Option on a <button>: Regular 10, no divider (stroke weight 0 on every instance) */
+.pds-ai-slideout-chat__qa-list .pds-ai-option {
+  width: 100%; min-height: var(--ai-slideout-chat-qa-h);
+  margin: 0; border: 0; background: none; text-align: left;
+  font: var(--ai-slideout-chat-qa-font);
+  box-shadow: none;
+}
+.pds-ai-slideout-chat__qa-list .pds-ai-option:hover { background: var(--ai-option-hover-bg); }
+.pds-ai-slideout-chat__qa-list .pds-ai-option:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: -2px; } /* added in review — not in Figma */
+.pds-ai-slideout-chat .pds-ai-insight[data-ai-chat] { cursor: pointer; }   /* click target added in review — not in Figma */
+.pds-ai-slideout-chat .pds-ai-insight[data-ai-chat]:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+
+/* ════ Swap slot (Swappable=Yes) ═════════════════════════════════════ */
+.pds-ai-slideout-chat__slot { display: flex; flex-direction: column; gap: var(--space-10); }
+.pds-ai-slideout-chat__slot:empty { min-height: 1px; }
+/* Demo content in the slot — page only, not in Figma */
+.pds-ai-slideout-chat__slot [data-demo] { outline: 1px dashed var(--grey-medium); outline-offset: 4px; }
+
+/* Input (kit .Input) */
+.pds-ai-slideout-chat .pds-ai-input { flex: none; }
+
+/* ════ Live drawer (slideout.css layer) ══════════════════════════════
+   <div class="pds-slideout-layer"><div class="pds-slideout-layer__scrim"></div>
+     <div class="pds-slideout pds-ai-slideout-chat-drawer"><aside class="pds-ai-slideout-chat">…</aside></div></div> */
+.pds-ai-slideout-chat-drawer > .pds-ai-slideout-chat { height: 100%; max-height: var(--ai-slideout-chat-h); }
+.pds-slideout-layer > .pds-ai-slideout-chat-drawer { height: 100%; }
+.pds-ai-slideout-chat-drawer .pds-ai-slideout-chat { max-height: none; }

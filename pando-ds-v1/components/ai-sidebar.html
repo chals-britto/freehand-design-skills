@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AI Side Bar · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="tooltip.css">
+<link rel="stylesheet" href="ai-sidebar.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+
+/* page-only */
+.stage{display:flex;min-height:520px;border-radius:0 10px 10px 0}
+.stage .pds-ai-sidebar{--ai-sidebar-height:520px}
+.chat-area{flex:1;display:flex;flex-direction:column;gap:6px;padding:16px;font-size:12.5px;color:var(--pg-muted);background:var(--white)}
+.chat-area b{color:#313131}
+.log{font:400 11.5px/1.5 var(--pg-mono);color:#5b6672;white-space:pre-wrap;margin:0}
+.vrow{display:flex;gap:24px;flex-wrap:wrap;padding:20px;align-items:flex-start}
+.vbar{position:relative}
+.vbar .pds-ai-sidebar{--ai-sidebar-height:460px}
+.vbar .pds-tooltip{position:absolute}
+.mrow{display:flex;flex-direction:column;gap:14px;padding:20px}
+.mcell{width:240px}
+.mcell .pds-ai-sidebar__list{background:var(--white)}
+h3.vh{font-size:13px;font-weight:600;margin:20px 20px 0}
+table.cmp{width:100%;border-collapse:collapse;font-size:12.5px}
+table.cmp th,table.cmp td{border-top:1px solid var(--pg-line);padding:8px 12px;text-align:left;vertical-align:top}
+table.cmp th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted)}
+.open ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>AI Side Bar</h1>
+    <p class="lede">The chat-history side bar of the AI assistant: New Chat, Search, and the Starred and Recent chats. It collapses to a 50px rail. Figma has no written description; this is drawn from the component.</p>
+    <div class="meta"><span>Status: Built 2026-10-28, not reviewed</span><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4514-11173" target="_blank" rel="noopener">Figma Side Bar 4514:11173 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=4514-11048" target="_blank" rel="noopener">.Menu-Item 4514:11048 ↗</a><span>Files: ai-sidebar.css · ai-sidebar.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Click the Grid View icon to close or open the bar (hover it for the tooltip). Click a chat to select it. On this page the ⋯ button pins or unpins the chat, moving it between Starred and Recent; Figma draws no menu for ⋯. Keyboard: Tab to the chats, ↑ ↓ Home End move between them, → goes to ⋯, ← comes back.</p>
+<div class="panel play">
+  <div class="ctrls">
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="c-toggle">Toggle open / closed</button><button class="btn ghost" type="button" id="c-reset">Reset</button></div>
+    <p class="log" id="log" aria-live="polite"></p>
+  </div>
+  <div class="stage" id="stage"><div class="chat-area"><b>Chat area</b><span>Example only — not part of the component.</span></div></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Every published variant, rendered with the real classes. Hover is forced with <code>.is-hover</code> and a static tooltip; in product it comes from <code>:hover</code> / focus. Bars shown 460px tall (Figma: 706).</p>
+<div class="panel">
+  <h3 class="vh">Side Bar — Type × State (4)</h3>
+  <div class="vrow" id="v-bars"></div>
+  <h3 class="vh">.Menu-Item (AI) — Property 1 (3)</h3>
+  <div class="mrow" id="v-items"></div>
+</div>
+<p class="sub" style="margin-top:14px">This file has three different <code>.Menu-Item</code> components. This one is the AI section’s.</p>
+<div class="panel" style="overflow-x:auto"><table class="cmp">
+  <tr><th></th><th>AI Side Bar (this page) · 4514:11048</th><th>Left Menu Panel · 2592:18253</th><th>Main Menu · 803:709</th></tr>
+  <tr><td>Size</td><td>36 tall · 240 (250 in the bar) · padding 10 · radius 4</td><td>46 tall · padding 9 / 15 · no radius</td><td rowspan="5">Not built yet (<code>main-menu.md</code> does not exist). The inventory lists it as a 3-variant item of the 3-level main navigation with fly-out. Not compared here.</td></tr>
+  <tr><td>Default</td><td>no fill · 12 Regular #545454 <code>--text-medium</code></td><td>no fill · 12 SemiBold #376F99 <code>--action-blue</code></td></tr>
+  <tr><td>Hover</td><td>#E7E7E7 @ 30% · ⋯ More Actions appears</td><td><code>--pando-dark</code> @ 10%</td></tr>
+  <tr><td>Active</td><td>#FFF4E5 <code>--status-orange-light</code> · 12 SemiBold #422500 <code>--status-brown-dark</code> · ⋯ shown</td><td>white fill · <code>--pando-dark</code> text</td></tr>
+  <tr><td>Extra parts</td><td>⋯ More Actions (10px); hidden Code / ID / Sub text layers with no property to show them</td><td>Code 01, Sub text, Code 02 booleans</td></tr>
+</table></div>
+</section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="panel"><div class="spec-table">
+  <div><b>Width</b><code>270px</code> open · <code>50px</code> closed</div>
+  <div><b>Height</b><code>706px</code> in Figma; fills its column</div>
+  <div><b>Fill</b>white + <code>#FFEFE5</code> at 22% (open) / 32% (closed)</div>
+  <div><b>Right edge</b>1px <code>--border-grey</code> #EFEFEF, inside</div>
+  <div><b>Header</b><code>48px</code> · padding <code>15</code> · gap 27 · bottom 1px <code>--status-orange-light</code></div>
+  <div><b>Brand</b>200 wide · logo <code>18</code> #FE6505 · gap 10 · title BL Pylon Serif Medium 14 #1E1815</div>
+  <div><b>Toggle</b>Navigation/Grid View <code>14</code> · <code>--grey-medium</code></div>
+  <div><b>Body</b>padding <code>10</code> · gap <code>20</code></div>
+  <div><b>Action Buttons</b>36 tall · padding 10 · gap 8 · 13 SemiBold <code>--text-dark</code> · Add #313131 · Search #8A8A9E</div>
+  <div><b>Group heading</b>16 tall · padding 0 8 · 10 SemiBold, no tracking · <code>--dark-input-text</code></div>
+  <div><b>Heading ↔ list</b><code>5px</code></div>
+  <div><b>.Menu-Item</b>36 tall · padding 10 · radius 4 · gap 8 · ⋯ 10px <code>--text-medium</code></div>
+  <div><b>Item text</b>12/16 Regular (Default, Hover) · 12 SemiBold (Active) · one line, ellipsis</div>
+  <div><b>Tooltip</b>kit Tooltip Text, no title · “Close Sidebar” beak 1 · “Open Sidebar” beak 11 · hugs (104)</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2><p class="sub">Figma has no usage text for this component. The cards below describe what is drawn.</p>
+<div class="cols">
+  <div class="panel card"><h3>What is drawn</h3><ul><li>Header: Freehand AI mark, assistant name, Grid View toggle.</li><li>New Chat and Search as Action Buttons.</li><li>“Starred” and “Recent” chat groups.</li><li>One chat is Active.</li></ul></div>
+  <div class="panel card"><h3>Open and closed</h3><ul><li>Open (270): everything shown. Hovering the toggle shows “Close Sidebar”.</li><li>Closed (50): the AI mark plus icon-only New Chat and Search. Hovering the header swaps the mark for the toggle and shows “Open Sidebar”.</li><li>No animation is drawn.</li></ul></div>
+  <div class="panel card"><h3>Chats</h3><ul><li>One line; long titles end in an ellipsis. The full title is the link’s <code>title</code> (added for the kit).</li><li>⋯ More Actions shows on hover and on the Active chat. What it opens is not drawn.</li></ul></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Structure</h3><p>A <code>&lt;nav aria-label="Chat history"&gt;</code>. Each group is a heading plus a list. Chats are links; the current one has <code>aria-current="page"</code>.</p></div>
+  <div class="panel card"><h3>Keyboard (added for the kit)</h3><p>The toggle, New Chat and Search are buttons. The chats are one Tab stop: ↑ ↓ Home End move, → reaches ⋯, ← returns, Enter opens. Focus ring 2px <code>--pando-blue</code> — not in Figma.</p></div>
+  <div class="panel card"><h3>Toggle</h3><p>Icon-only button with <code>aria-label</code> “Close Sidebar” / “Open Sidebar” and <code>aria-expanded</code>; the kit tooltip repeats the label on hover and focus. Closed, New Chat and Search keep their text for screen readers.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul>
+  <li>Off-token colours: tint #FFEFE5 (22% open, 32% closed — two different values), title #1E1815.</li>
+  <li>Title font BL Pylon Serif Medium 14 is not in tokens and not loaded; falls back to Georgia. Line height is auto in Figma (19 used).</li>
+  <li>AI mark is an inline vector (#FE6505 = <code>--freehand-orange</code>), not a kit icon. Indicator Icon/AI, an “ai-wand” frame, a “Freight Pay Specialist” title and a Dropdown-Arrow sit hidden in the header — an unbuilt agent switcher?</li>
+  <li>Indicator Icon/Pin is hidden in the Starred heading; nothing shows how a chat gets pinned. <code>pin()</code> and the ⋯ wiring on this page are kit additions.</li>
+  <li>⋯ More Actions opens nothing in Figma (no menu drawn).</li>
+  <li>Search is an Action Button only; no search field or filtered state is drawn, so none is built (kit <code>search-input</code> not used).</li>
+  <li>Action Buttons are kit Action Buttons with instance overrides: 36 tall, padding 10, gap 8, 13 SemiBold #313131, title case (the kit atom is 22 tall, 12 SemiBold #376F99). Their hover is the kit’s (#E9F1F5) — not drawn here.</li>
+  <li>The kit Tooltip Text is 164 wide; here it hugs its text (104), set by <code>.pds-ai-sidebar__tip</code>.</li>
+  <li>Item text 12/16 vs <code>.type-12-regular</code> 12/17; heading 10 SemiBold with 0 tracking vs <code>.type-10-semibold</code> +0.5.</li>
+  <li>.Menu-Item master is 240 wide; used at 250 in the bar. Hidden Code 01 / ID 01 / Sub text layers have no component property.</li>
+  <li>No focus, pressed or empty states in Figma. Empty groups are hidden (kit rule).</li>
+  <li>Contrast under 4.5:1: headings #8A8A9E on the tinted bar ≈ 3.3:1; Grid View #A3A3A3 ≈ 2.5:1 (non-text, under 3:1); Search icon #8A8A9E ≈ 3.3:1.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="open"><ul>
+  <li>Keep ⋯ in the DOM and reachable for screen readers, plus a context menu for alternative input — <a href="https://fluent2.microsoft.design/components/web/react/core/nav/usage" target="_blank" rel="noopener">Fluent 2 Nav</a> (⋯ is in the DOM here; no context menu).</li>
+  <li>Tooltips to the right of items when collapsed, so they don’t cover other items — <a href="https://fluent2.microsoft.design/components/web/react/core/nav/usage" target="_blank" rel="noopener">Fluent 2 Nav</a>.</li>
+  <li>Overlay drawer at 640px and narrower — <a href="https://fluent2.microsoft.design/components/web/react/core/nav/usage" target="_blank" rel="noopener">Fluent 2 Nav</a>.</li>
+  <li>Tooltip with the full title on truncated items (only the native <code>title</code> here) — <a href="https://fluent2.microsoft.design/components/web/react/core/nav/usage" target="_blank" rel="noopener">Fluent 2 Nav</a>.</li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the kit files, then the bar’s own.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Markup that <code>pdsAiSidebar.create()</code> produces (shortened):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="tooltip.js"></script>
+<script src="ai-sidebar.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const DATA=()=>({title:"Freight invoice assistant",groups:[
+ {id:"starred",label:"Starred",items:[{id:"c1",label:"Priority Invoices"},{id:"c2",label:"Overdue Invoices"}]},
+ {id:"recent",label:"Recent",items:[{id:"c3",label:"Ceva logistics Invoice",active:true},{id:"c4",label:"Get me shipments and its details ..."},{id:"c5",label:"Number of uncosted shipments by carrier for last month"},{id:"c6",label:"List shipments where Source Details are blank."}]}]});
+
+// Try it
+let bar;
+const log=m=>{const l=$("#log");l.textContent=(m+"\n"+l.textContent).split("\n").slice(0,6).join("\n")};
+function mount(){if(bar){bar.remove()}document.querySelectorAll(".pds-ai-sidebar__tip").forEach(t=>{if(!t.closest(".vbar"))t.remove()});
+ bar=pdsAiSidebar.create(DATA());$("#stage").prepend(bar);
+ ["toggle","select","new","search","pin"].forEach(n=>bar.addEventListener("pds-ai-sidebar-"+n,e=>log(n+" "+JSON.stringify(e.detail))));
+ bar.addEventListener("pds-ai-sidebar-more",e=>{log("more "+e.detail.id+" → page toggles pin");pdsAiSidebar.pin(bar,e.detail.id)});}
+mount();
+$("#c-toggle").addEventListener("click",()=>pdsAiSidebar.toggle(bar));
+$("#c-reset").addEventListener("click",()=>{mount();$("#log").textContent=""});
+
+// Variants: Side Bar
+const tipAt=(host,text,beak,left,top)=>{const t=pdsTooltip.build({text,showTitle:false,beak});t.classList.add("pds-ai-sidebar__tip");t.style.left=left+"px";t.style.top=top+"px";host.appendChild(t)};
+[["Open","Default"],["Open","Hover"],["Closed","Default"],["Closed","Hover"]].forEach(([ty,st])=>{
+ const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">Type=${ty}, State=${st}</span>`;
+ const w=document.createElement("div");w.className="vbar";
+ const b=pdsAiSidebar.create(Object.assign(DATA(),{open:ty==="Open"}));
+ b.querySelectorAll("a,button").forEach(n=>n.tabIndex=-1);
+ const t=b.querySelector(".pds-ai-sidebar__toggle");if(t._tip)t._tip.remove();t.removeAttribute("aria-describedby");
+ w.appendChild(b);
+ if(st==="Hover"){if(ty==="Open")tipAt(w,"Close Sidebar","1",170,40);else{b.querySelector(".pds-ai-sidebar__header").classList.add("is-hover");tipAt(w,"Open Sidebar","11",3,44)}}
+ c.appendChild(w);$("#v-bars").appendChild(c)});
+
+// Variants: .Menu-Item
+["Default","Hover","Active"].forEach(s=>{const c=document.createElement("div");c.className="vcell mcell";c.innerHTML=`<span class="lbl">Property 1=${s}</span><ul class="pds-ai-sidebar__list"><li class="pds-ai-sidebar__item${s==="Hover"?" is-hover":s==="Active"?" is-active":""}"><a class="pds-ai-sidebar__link" href="#" tabindex="-1">Priority Invoices</a><button type="button" class="pds-ai-sidebar__more" tabindex="-1" aria-label="More actions for Priority Invoices"><span class="pds-icon pds-icon--10" aria-hidden="true">${(PDS_ICONS.find(i=>i.n==="action-more-actions")||{}).svg||""}</span></button></li></ul>`;$("#v-items").appendChild(c)});
+document.querySelectorAll("#v-items a").forEach(a=>a.addEventListener("click",e=>e.preventDefault()));
+
+// Code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/tooltip.css">
+<link rel="stylesheet" href="components/ai-sidebar.css">
+<script src="components/icons/icons-data.js"><\/script>
+<script src="components/tooltip.js"><\/script>
+<script src="components/ai-sidebar.js"><\/script>
+
+<script>
+  const bar = pdsAiSidebar.create({
+    title: 'Freight invoice assistant',
+    open: true,                       // false = Type=Closed (50px rail)
+    groups: [
+      { id: 'starred', label: 'Starred', items: [{ id: 'c1', label: 'Priority Invoices' }] },
+      { id: 'recent',  label: 'Recent',  items: [{ id: 'c3', label: 'Ceva logistics Invoice', active: true }] }
+    ]
+  });
+  document.querySelector('#app').prepend(bar);
+  bar.addEventListener('pds-ai-sidebar-select', e => openChat(e.detail.id));
+  bar.addEventListener('pds-ai-sidebar-new',    () => startChat());
+  bar.addEventListener('pds-ai-sidebar-more',   e => openMenu(e.detail.button, e.detail.id)); // menu not in Figma
+  // pdsAiSidebar.toggle(bar, false) · pdsAiSidebar.select(bar, 'c1') · pdsAiSidebar.pin(bar, 'c3', true)
+<\/script>`;
+{const b=pdsAiSidebar.create({groups:[{id:"recent",label:"Recent",items:[{id:"c3",label:"Ceva logistics Invoice",active:true}]}]});
+ const t=b.querySelector(".pds-ai-sidebar__toggle");if(t._tip)t._tip.remove();t.removeAttribute("aria-describedby");
+ b.querySelectorAll("svg").forEach(s=>s.replaceWith(document.createComment(" svg ")));b.removeAttribute("data-pds-ready");
+ $("#code2").textContent=b.outerHTML.replace(/></g,">\n<");}
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

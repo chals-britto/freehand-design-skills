@@ -1,0 +1,82 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Side Nav (icon rail, organism)
+   Figma: DS V2 – Organisms (fYULgtmiblAXtbHsoVL1Yf) › 🟢 Menu (32:0)
+     › component "Side Nav" (2985:5095) — 40 × 658 rail, 7 items
+     › component set "Side Nav Single" (2985:4858), 2 variants:
+         State=Active  (2985:4857)
+         State=Default (2985:4856)
+   Figma description: "Used as Navigation for within a page/section."
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css and icons.css. Icons are kit icons
+   (components/icons/, Indicator Icon/*) — not redrawn here.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colours ── */
+  --side-nav-bg:          var(--status-blue-light); /* #D9E6FF — rail fill */
+  --side-nav-item-bg:     transparent;              /* State=Default: no fill, rail shows through */
+  --side-nav-item-bg-active: var(--white);          /* State=Active: #FFFFFF */
+  --side-nav-icon:        var(--pando-dark);        /* #234357 — same in both states */
+  --side-nav-focus:       var(--pando-blue);        /* added in review — not in Figma */
+
+  /* ── Measured from the components ── */
+  --side-nav-width:  40px;               /* rail + item width */
+  --side-nav-item:   40px;               /* item height */
+  --side-nav-gap:    0px;                /* items stack with no gap */
+  --side-nav-icon-size: var(--icon-size-20); /* 20px, centred → 10px all round */
+  --side-nav-height: 658px;              /* Figma sample height; in a shell the rail fills the height */
+}
+
+/* ── Rail ──────────────────────────────────────────────────────── */
+.pds-side-nav {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  width: var(--side-nav-width);
+  height: 100%;
+  min-height: 0;
+  background: var(--side-nav-bg);
+}
+.pds-side-nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--side-nav-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pds-side-nav__list > li { display: block; }
+
+/* ── Side Nav Single (item) ───────────────────────────────────── */
+.pds-side-nav__item {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--side-nav-width);
+  height: var(--side-nav-item);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--side-nav-item-bg);
+  color: var(--side-nav-icon);
+  cursor: pointer;
+  text-decoration: none;
+}
+.pds-side-nav__item .pds-icon { --_icon: var(--side-nav-icon-size); color: inherit; }
+
+/* State=Active */
+.pds-side-nav__item--active,
+.pds-side-nav__item[aria-current]:not([aria-current="false"]) {
+  background: var(--side-nav-item-bg-active);
+}
+
+/* Focus — added in review, not in Figma */
+.pds-side-nav__item:focus-visible {
+  outline: 2px solid var(--side-nav-focus);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 1;
+}

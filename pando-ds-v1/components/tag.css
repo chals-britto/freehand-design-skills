@@ -1,0 +1,372 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Tag
+   Figma: DS V2 – Atoms › 🟢 Tags (206:0)
+     · "Tag"             component set 3182:1690 (76 variants)
+     · "Multiselect Tag" component set 212:37   (4)
+     · "Input Tag"       component set 390:2    (7)
+     · "Filter Tag"      component set 390:3    (2)
+     · "Pointed Tag"     component set 3182:1828 (2)
+     · "Tag/AI"          component set 7837:7506 (2)
+   No review file — every published variant kept as in Figma. Requires ../tokens.css.
+   Colour rule (Status palette): Light = background, Medium = border, Dark = text,
+   except where Figma does otherwise (noted per rule).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Tag · measured ── */
+  --tag-radius:            2px;   /* square tags */
+  --tag-sm-h:             15px;   /* Small · Filled · Rounded=No */
+  --tag-sm-pad:           .5px 2px;
+  --tag-sm-gap:           5px;
+  --tag-rounded-h:        16.4px; /* Small · Filled · Rounded=Yes · Light */
+  --tag-rounded-pad:      1px 5px 1.4px;
+  --tag-rounded-gap:      4px;
+  --tag-rounded-radius:   22px;
+  --tag-rounded-dark-h:   16px;
+  --tag-rounded-dark-pad: 2.16px 4.32px 1.62px; /* fractional in Figma — kept */
+  --tag-rounded-dark-gap: 5.4px;
+  --tag-outline-h:        16px;
+  --tag-outline-pad:      1px 4px;
+  --tag-outline-gap:      2px;
+  --tag-outline-radius:   20px;
+  --tag-outline-stroke:   .5px;   /* outside */
+  --tag-outline-bg:       color-mix(in srgb, var(--white) 70%, transparent); /* #FFFFFF @ 70% */
+  --tag-lg-h:             24px;
+  --tag-lg-pad:           4px 8px;
+  --tag-nimbus-h:         21px;
+  --tag-nimbus-pad:       4px 8px 3px;
+  --tag-nimbus-radius:    14px;
+  --tag-md-h:             20px;
+  --tag-md-pad:           2px;
+  --tag-md-gap:           4px;    /* label · ":" · value */
+  --tag-att-h:            22px;
+  --tag-att-pad:          4px;
+  --tag-att-gap:          10px;   /* file ↔ × */
+  --tag-att-file-gap:     4px;    /* icon ↔ name */
+  --tag-file-pad:         4px 8px;
+  --tag-file-gap:         5px;
+  --tag-file-radius:      12px;
+  --tag-file-fg:          #000000; /* off-token in Figma (pure black) */
+  --tag-x-sm:             8px;    /* close × in Outline / Attachment */
+  --tag-x-md:             10px;   /* close × in Rounded · Dark */
+  --tag-x-lg:             12px;   /* close × in Input / Search Tag */
+
+  /* Medium · Dark — 10% fills, not in tokens.css */
+  --tag-medium-dark-maroon-bg: rgb(54 47 48 / .1);  /* #362F30 @ 10% · off-token in Figma */
+  --tag-medium-dark-purple-bg: rgb(55 51 58 / .1);  /* #37333A @ 10% · off-token in Figma */
+  --tag-medium-dark-brown-bg:  rgb(67 63 58 / .1);  /* #433F3A @ 10% · off-token in Figma */
+  --tag-medium-dark-cyan-bg:   rgb(59 69 69 / .1);  /* #3B4545 @ 10% · off-token in Figma */
+  --tag-medium-dark-green-bg:  rgb(47 54 47 / .1);  /* #2F362F @ 10% · off-token in Figma */
+  --tag-medium-dark-red-bg:    rgb(47 54 47 / .1);  /* #2F362F @ 10% · same as Green in Figma; off-token */
+
+  /* ── Multiselect Tag ── */
+  --tag-count-h:          22px;
+  --tag-count-pad:        4px 10px;
+  --tag-count-radius:     12px;
+  --tag-count-border:          var(--border-input-light);  /* 2px centre stroke */
+  --tag-count-fg:              var(--color-text-primary);
+  --tag-count-dark-border:     color-mix(in srgb, var(--dark-label-text) 50%, transparent); /* #D5DAF4 @ 50% */
+  --tag-count-dark-fg:         var(--dark-label-text);
+  --tag-count-unit-h:     24px;
+  --tag-count-unit-radius:20px;
+  --tag-count-unit-gap:   2px;
+  --tag-count-unit-bg:         var(--accent-off-white);    /* #F8F8F8 */
+  --tag-count-unit-dark-bg:    color-mix(in srgb, var(--dark-input-text) 50%, transparent); /* #8A8A9E @ 50% */
+  --tag-count-unit-dark-fg:    var(--white);
+
+  /* ── Input Tag ── */
+  --tag-input-h:          24px;
+  --tag-input-radius:     12px;
+  --tag-input-pad:        4px 10px;
+  --tag-input-pad-x:      4px 8px;  /* with × (Remove=Yes) and Light drop-down */
+  --tag-input-gap:        4px;
+  --tag-input-bg:              var(--pando-light);         /* #EEF2F4 */
+  --tag-input-fg:              var(--color-text-primary);
+  --tag-input-x:               var(--grey-dark);           /* #515151 */
+  --tag-input-hash:            var(--color-text-primary);  /* "# " */
+  --tag-input-add:             var(--pando-dark);          /* "Add Tag" + caret */
+  --tag-input-dark-bg:         var(--dark-input-text);     /* #8A8A9E */
+  --tag-input-dark-fg:         var(--accent-alternate-white);
+  --tag-input-dark-x:          var(--border-blue);         /* #E9F1F5 */
+  --tag-input-dark-hash:       var(--dark-label-text);
+  --tag-input-dark-add:        var(--accent-alternate-white);
+  --tag-search-radius:    25px;
+  --tag-search-pad:       8px 10px;
+  --tag-search-gap:       15px;
+  --tag-search-border:         var(--border-input-light);
+  --tag-search-label:          var(--pando-blue);
+  --tag-search-label-inset:    10px;  /* label from the left edge */
+  --tag-search-label-overlap:  8px;   /* label overlaps the field */
+  --tag-search-label-pad:      0 2px;
+
+  /* ── Filter Tag ── */
+  --tag-filter-h:         24px;
+  --tag-filter-pad:       4px 10px;
+  --tag-filter-radius:    12px;
+  --tag-filter-border:         var(--border-grey);         /* 1px inside */
+  --tag-filter-fg:             var(--color-text-primary);
+  --tag-filter-dark-border:    color-mix(in srgb, var(--dark-label-text) 50%, transparent);
+  --tag-filter-dark-fg:        var(--dark-label-text);
+
+  /* ── Pointed Tag ── */
+  --tag-pointed-h:        14px;
+  --tag-pointed-tip:      10px;
+  --tag-pointed-pad-r:    2px;
+
+  /* ── Tag/AI ── */
+  --tag-ai-h:             15px;
+  --tag-ai-pad:           .5px 2px;
+  --tag-ai-dark-pad:      .5px 4px .5px 2px;
+  --tag-ai-gap:           5px;
+  --tag-ai-bg:                 var(--color-status-green-bg);
+  --tag-ai-fg:                 var(--color-status-green-text);
+  --tag-ai-spark-from:         var(--status-cyan-dark);    /* #006265 — Gradient/Linear/Forest Green */
+  --tag-ai-spark-to:           #19A476;                     /* off-token in Figma (gradient stop only) */
+  --tag-ai-dark-bg:            var(--status-green-medium);
+  --tag-ai-dark-spark:         var(--status-green-dark);
+  --tag-beta-h:           11px;
+  --tag-beta-pad:         .5px 2px;
+  --tag-beta-font:        600 8px/10px Inter, var(--font-family); /* Inter Semi Bold 8 — off-family in Figma */
+  --tag-beta-bg:               var(--highlight-yellow);    /* #FFCF00 */
+  --tag-beta-fg:               var(--status-green-dark);
+  --tag-beta-dark-bg:          #FFE01B;                     /* off-token in Figma */
+  --tag-beta-dark-fg:          #003D31;                     /* off-token in Figma */
+}
+
+/* ── Base: Size=Small · Type=Filled · Rounded=No ────────────────── */
+.pds-tag {
+  --_bg: var(--pando-light); --_fg: var(--color-text-primary); --_bd: transparent; --_x: var(--_fg);
+  box-sizing: border-box;
+  display: inline-flex; align-items: center; flex: none;
+  height: var(--tag-sm-h);
+  padding: var(--tag-sm-pad);
+  gap: var(--tag-sm-gap);
+  border-radius: var(--tag-radius);
+  background: var(--_bg);
+  color: var(--_fg);
+  font: var(--type-10-semibold);   /* 10px/Semibold/Normal — no tracking */
+  letter-spacing: 0;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.pds-tag__text { overflow: hidden; text-overflow: ellipsis; }
+
+/* close × — a real button */
+.pds-tag__remove {
+  flex: none; display: inline-flex; padding: 0; margin: 0; border: 0; background: none; cursor: pointer;
+  width: var(--tag-x-sm); height: var(--tag-x-sm); color: var(--_x);
+}
+.pds-tag__remove svg { display: block; width: 100%; height: 100%; }
+.pds-tag__remove path { fill: currentColor; }
+.pds-tag__remove:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; border-radius: 2px; } /* added in review — not in Figma */
+
+/* ── Rounded=Yes ── */
+.pds-tag--rounded {
+  height: var(--tag-rounded-h); padding: var(--tag-rounded-pad); gap: var(--tag-rounded-gap);
+  border-radius: var(--tag-rounded-radius);
+}
+.pds-tag--rounded.pds-tag--dark { height: var(--tag-rounded-dark-h); padding: var(--tag-rounded-dark-pad); gap: var(--tag-rounded-dark-gap); }
+.pds-tag--rounded .pds-tag__remove { width: var(--tag-x-md); height: var(--tag-x-md); }
+
+/* ── Type=Outline (Rounded=Yes) ── */
+.pds-tag--outline {
+  height: var(--tag-outline-h); padding: var(--tag-outline-pad); gap: var(--tag-outline-gap);
+  border-radius: var(--tag-outline-radius);
+  box-shadow: 0 0 0 var(--tag-outline-stroke) var(--_bd);
+  font: var(--type-10-regular);
+}
+.pds-tag--outline.pds-tag--neutral { font: var(--type-10-semibold); }
+
+/* ── Size=Large ── */
+.pds-tag--large { height: var(--tag-lg-h); padding: var(--tag-lg-pad); font: var(--type-12-bold); text-transform: capitalize; }
+.pds-tag--nimbus {
+  height: var(--tag-nimbus-h); padding: var(--tag-nimbus-pad); border-radius: var(--tag-nimbus-radius);
+  font: var(--type-10-bold); text-transform: uppercase;
+}
+
+/* ── Size=Medium (Label Readonly Text inside) ── */
+.pds-tag--medium { height: var(--tag-md-h); padding: var(--tag-md-pad); gap: var(--tag-md-gap); }
+.pds-tag__label { font: var(--type-10-regular); letter-spacing: .5px; }
+.pds-tag__value { font: var(--type-12-semibold); }
+
+/* ── Attachment (Small · Filled · Default · Left + Right Icon) ── */
+.pds-tag--attachment {
+  --_bg: var(--accent-light-highlight); --_fg: var(--action-blue); --_x: var(--grey-dark);
+  height: var(--tag-att-h); padding: var(--tag-att-pad); gap: var(--tag-att-gap);
+}
+.pds-tag--attachment.pds-tag--dark { --_bg: var(--dark-bg); --_fg: var(--dark-label-text); --_x: var(--dark-input-text); }
+.pds-tag__file { display: inline-flex; align-items: center; gap: var(--tag-att-file-gap); font: var(--type-10-bold); text-transform: uppercase; }
+.pds-tag__file-icon { display: block; width: 10px; height: 12px; flex: none; }
+
+/* ── File tag (Small · Outline · Default · Left Icon) ── */
+.pds-tag--file {
+  --_bg: var(--accent-off-white); --_fg: var(--tag-file-fg); --_bd: var(--accent-light-highlight); --_x: var(--grey-dark);
+  height: var(--tag-att-h); padding: var(--tag-file-pad); gap: var(--tag-file-gap); border-radius: var(--tag-file-radius);
+  box-shadow: inset 0 0 0 var(--tag-outline-stroke) var(--_bd);
+  font: var(--type-10-regular); letter-spacing: 0;
+}
+
+/* ── Multiselect Tag ── */
+.pds-tag--count {
+  --_bg: transparent; --_fg: var(--tag-count-fg); --_bd: var(--tag-count-border);
+  height: var(--tag-count-h); padding: var(--tag-count-pad); border-radius: var(--tag-count-radius);
+  box-shadow: inset 0 0 0 1px var(--_bd), 0 0 0 1px var(--_bd); /* 2px centre stroke */
+}
+.pds-tag--count.pds-tag--dark { --_fg: var(--tag-count-dark-fg); --_bd: var(--tag-count-dark-border); }
+.pds-tag--count-unit {
+  --_bg: var(--tag-count-unit-bg); --_fg: var(--color-text-primary);
+  height: var(--tag-count-unit-h); padding: var(--tag-count-pad); gap: var(--tag-count-unit-gap); border-radius: var(--tag-count-unit-radius);
+  font: var(--type-11-regular);
+}
+.pds-tag--count-unit.pds-tag--dark { --_bg: var(--tag-count-unit-dark-bg); --_fg: var(--tag-count-unit-dark-fg); }
+
+/* ── Input Tag ── */
+.pds-tag--input {
+  --_bg: var(--tag-input-bg); --_fg: var(--tag-input-fg); --_x: var(--tag-input-x);
+  height: var(--tag-input-h); padding: var(--tag-input-pad); gap: var(--tag-input-gap); border-radius: var(--tag-input-radius);
+  font: var(--type-12-regular);
+}
+.pds-tag--input:has(.pds-tag__remove) { padding: var(--tag-input-pad-x); }
+.pds-tag--input .pds-tag__remove { width: var(--tag-x-lg); height: var(--tag-x-lg); }
+.pds-tag--input.pds-tag--dark { --_bg: var(--tag-input-dark-bg); --_fg: var(--tag-input-dark-fg); --_x: var(--tag-input-dark-x); }
+.pds-tag--input-dropdown { padding: var(--tag-input-pad-x); }
+.pds-tag--input-dropdown.pds-tag--dark { padding: var(--tag-input-pad); }
+.pds-tag__hash { font: var(--type-12-regular); color: var(--tag-input-hash); }
+.pds-tag__add  { font: var(--type-10-semibold); letter-spacing: 0; color: var(--tag-input-add); }
+.pds-tag__caret { display: block; width: 8px; height: 5px; flex: none; }
+.pds-tag__caret path { fill: var(--tag-input-add); }
+.pds-tag--dark .pds-tag__hash { color: var(--tag-input-dark-hash); }
+.pds-tag--dark .pds-tag__add  { color: var(--tag-input-dark-add); }
+.pds-tag--dark .pds-tag__caret path { fill: var(--tag-input-dark-add); }
+
+/* Search Tag: a labelled pill field holding one value */
+.pds-tag--search {
+  --_bg: transparent; --_x: var(--tag-input-x);
+  height: auto; padding: 0; gap: 0; border-radius: 0;
+  flex-direction: column; align-items: flex-start;
+}
+.pds-tag__search-label {
+  position: relative; z-index: 1;
+  margin: 0 0 calc(-1 * var(--tag-search-label-overlap)) var(--tag-search-label-inset);
+  padding: var(--tag-search-label-pad);
+  background: var(--white); color: var(--tag-search-label);
+  font: var(--type-10-semibold); text-transform: uppercase; letter-spacing: .5px;
+}
+.pds-tag__search-field {
+  box-sizing: border-box; display: inline-flex; align-items: center; gap: var(--tag-search-gap);
+  padding: var(--tag-search-pad); border: 1px solid var(--tag-search-border); border-radius: var(--tag-search-radius);
+  background: var(--white); color: var(--color-text-primary);
+  font: var(--type-12-regular); letter-spacing: .5px;
+}
+.pds-tag--search .pds-tag__remove { width: var(--tag-x-lg); height: var(--tag-x-lg); }
+
+/* ── Filter Tag ── */
+.pds-tag--filter {
+  --_bg: transparent; --_fg: var(--tag-filter-fg); --_bd: var(--tag-filter-border);
+  height: var(--tag-filter-h); padding: var(--tag-filter-pad); border-radius: var(--tag-filter-radius);
+  box-shadow: inset 0 0 0 1px var(--_bd);
+  font: var(--type-11-regular);
+}
+.pds-tag--filter.pds-tag--dark { --_fg: var(--tag-filter-dark-fg); --_bd: var(--tag-filter-dark-border); }
+
+/* ── Pointed Tag ── */
+.pds-tag--pointed { --_bg: transparent; height: var(--tag-pointed-h); padding: 0; gap: 0; border-radius: 0; }
+.pds-tag__tip { display: block; width: var(--tag-pointed-tip); height: var(--tag-pointed-h); flex: none; }
+.pds-tag__tip path { fill: var(--_body); }
+.pds-tag__body {
+  display: inline-flex; align-items: center; height: 100%; padding-right: var(--tag-pointed-pad-r);
+  border-radius: 0 var(--tag-radius) var(--tag-radius) 0; background: var(--_body);
+}
+.pds-tag--pointed.pds-tag--red   { --_body: var(--color-status-red-bg);   --_fg: var(--color-status-red-text); }
+.pds-tag--pointed.pds-tag--green { --_body: var(--color-status-green-bg); --_fg: var(--color-status-green-text); }
+
+/* ── Tag/AI ── */
+.pds-tag--ai { --_bg: var(--tag-ai-bg); --_fg: var(--tag-ai-fg); height: var(--tag-ai-h); padding: var(--tag-ai-pad); gap: var(--tag-ai-gap); }
+.pds-tag--ai.pds-tag--dark { --_bg: var(--tag-ai-dark-bg); padding: var(--tag-ai-dark-pad); }
+.pds-tag__spark { display: block; width: 10px; height: 12.5px; flex: none; }
+.pds-tag__spark .s0 { stop-color: var(--tag-ai-spark-from); }
+.pds-tag__spark .s1 { stop-color: var(--tag-ai-spark-to); }
+.pds-tag--ai.pds-tag--dark .pds-tag__spark path { fill: var(--tag-ai-dark-spark); }
+.pds-tag__beta {
+  display: inline-flex; align-items: center; height: var(--tag-beta-h); padding: var(--tag-beta-pad);
+  border-radius: var(--tag-radius); background: var(--tag-beta-bg); color: var(--tag-beta-fg); font: var(--tag-beta-font);
+}
+.pds-tag--ai.pds-tag--dark .pds-tag__beta { background: var(--tag-beta-dark-bg); color: var(--tag-beta-dark-fg); }
+
+/* ════ Colour × Type × Mode (exact Figma fills) ════ */
+/* Small · Filled · Rounded=No · Light — text is Text/Dark except Red */
+.pds-tag--purple { --_bg: var(--color-status-purple-bg); --_fg: var(--color-text-primary); }
+.pds-tag--maroon { --_bg: var(--color-status-maroon-bg); --_fg: var(--color-text-primary); }
+.pds-tag--brown { --_bg: var(--color-status-brown-bg); --_fg: var(--color-text-primary); }
+.pds-tag--orange { --_bg: var(--color-status-orange-bg); --_fg: var(--color-text-primary); }
+.pds-tag--cyan { --_bg: var(--color-status-cyan-bg); --_fg: var(--color-text-primary); }
+.pds-tag--blue { --_bg: var(--color-status-blue-bg); --_fg: var(--color-text-primary); }
+.pds-tag--green { --_bg: var(--color-status-green-bg); --_fg: var(--color-text-primary); }
+.pds-tag--red { --_bg: var(--color-status-red-bg); --_fg: var(--color-status-red-text); }
+.pds-tag--grey { --_bg: var(--grey-light); --_fg: var(--color-text-primary); }
+.pds-tag--yellow { --_bg: color-mix(in srgb, var(--status-yellow-light) 80%, transparent); --_fg: var(--status-brown-dark); } /* #FFFC99 @ 80% · text Brown/Dark */
+.pds-tag--default { --_bg: var(--pando-light); --_fg: var(--color-text-primary); }
+/* Small · Filled · Rounded=No · Dark */
+.pds-tag--dark.pds-tag--purple { --_bg: var(--status-purple-medium); --_fg: var(--white); }
+.pds-tag--dark.pds-tag--default { --_bg: var(--dark-input-text); --_fg: var(--accent-alternate-white); }
+.pds-tag--dark.pds-tag--red { --_bg: var(--status-red-medium); --_fg: var(--dark-darker); }
+.pds-tag--dark.pds-tag--maroon { --_bg: var(--status-maroon-medium); --_fg: var(--status-maroon-dark); }
+.pds-tag--dark.pds-tag--brown { --_bg: var(--status-brown-light); --_fg: var(--status-brown-dark); }
+/* Small · Filled · Rounded=Yes · Light — Status Light @ 50%, text Status Dark */
+.pds-tag--rounded.pds-tag--purple { --_bg: color-mix(in srgb, var(--status-purple-light) 50%, transparent); --_fg: var(--color-status-purple-text); }
+.pds-tag--rounded.pds-tag--maroon { --_bg: color-mix(in srgb, var(--status-maroon-light) 50%, transparent); --_fg: var(--color-status-maroon-text); }
+.pds-tag--rounded.pds-tag--brown { --_bg: color-mix(in srgb, var(--status-brown-light) 50%, transparent); --_fg: var(--color-status-brown-text); }
+.pds-tag--rounded.pds-tag--cyan { --_bg: color-mix(in srgb, var(--status-cyan-light) 50%, transparent); --_fg: var(--color-status-cyan-text); }
+.pds-tag--rounded.pds-tag--green { --_bg: color-mix(in srgb, var(--status-green-light) 50%, transparent); --_fg: var(--color-status-green-text); }
+.pds-tag--rounded.pds-tag--blue { --_bg: color-mix(in srgb, var(--status-skyblue-light) 50%, transparent); --_fg: var(--status-skyblue-dark); } /* Figma uses Sky Blue here, not Blue */
+.pds-tag--rounded.pds-tag--yellow { --_bg: color-mix(in srgb, var(--status-yellow-light) 80%, transparent); --_fg: var(--status-brown-dark); }
+.pds-tag--rounded.pds-tag--orange { --_bg: color-mix(in srgb, var(--status-orange-light) 80%, transparent); --_fg: var(--color-status-orange-text); }
+.pds-tag--rounded.pds-tag--red { --_bg: var(--color-status-red-bg); --_fg: var(--color-status-red-text); } /* solid, not 50% */
+.pds-tag--rounded.pds-tag--default { --_bg: var(--accent-light-highlight); --_fg: var(--pando-dark); }
+/* Small · Filled · Rounded=Yes · Dark — close × shown, × follows text unless noted */
+.pds-tag--rounded.pds-tag--dark.pds-tag--default { --_bg: var(--dark-input-text); --_fg: var(--accent-alternate-white); }
+.pds-tag--rounded.pds-tag--dark.pds-tag--purple { --_bg: var(--status-purple-medium); --_fg: var(--status-purple-light); --_x: var(--white); } /* × is white, text Purple/Light */
+.pds-tag--rounded.pds-tag--dark.pds-tag--red { --_bg: var(--status-red-medium); --_fg: var(--dark-darker); --_x: var(--dark-darker); }
+.pds-tag--rounded.pds-tag--dark.pds-tag--maroon { --_bg: var(--status-maroon-medium); --_fg: var(--status-maroon-dark); --_x: var(--status-maroon-dark); }
+.pds-tag--rounded.pds-tag--dark.pds-tag--brown { --_bg: var(--status-brown-light); --_fg: var(--status-brown-dark); --_x: var(--status-brown-dark); }
+/* Small · Outline · Rounded=Yes — Light: white @ 70%, border Status Medium, text Status Dark */
+.pds-tag--outline.pds-tag--purple { --_bg: var(--tag-outline-bg); --_fg: var(--color-status-purple-text); --_bd: var(--color-status-purple-border); --_x: var(--grey-dark); }
+.pds-tag--outline.pds-tag--maroon { --_bg: var(--tag-outline-bg); --_fg: var(--color-status-maroon-text); --_bd: var(--color-status-maroon-border); --_x: var(--grey-dark); }
+.pds-tag--outline.pds-tag--brown { --_bg: var(--tag-outline-bg); --_fg: var(--color-status-brown-text); --_bd: var(--color-status-brown-border); --_x: var(--grey-dark); }
+.pds-tag--outline.pds-tag--cyan { --_bg: var(--tag-outline-bg); --_fg: var(--color-status-cyan-text); --_bd: var(--color-status-cyan-border); --_x: var(--grey-dark); }
+.pds-tag--outline.pds-tag--blue { --_bg: var(--tag-outline-bg); --_fg: var(--color-status-blue-text); --_bd: var(--color-status-blue-border); --_x: var(--grey-dark); }
+.pds-tag--outline.pds-tag--green { --_bg: var(--tag-outline-bg); --_fg: var(--color-status-green-text); --_bd: var(--color-status-green-border); --_x: var(--grey-dark); }
+.pds-tag--outline.pds-tag--red { --_bg: var(--tag-outline-bg); --_fg: var(--color-status-red-text); --_bd: var(--color-status-red-border); --_x: var(--grey-dark); }
+.pds-tag--outline.pds-tag--neutral { --_bg: transparent; --_fg: var(--pando-dark); --_bd: var(--accent-blue-grey); }
+/* Small · Outline · Dark — sidebar bg, text = border = Status Medium */
+.pds-tag--outline.pds-tag--dark.pds-tag--maroon { --_bg: var(--dark-bg); --_fg: var(--color-status-maroon-border); --_bd: var(--color-status-maroon-border); --_x: var(--dark-input-text); }
+.pds-tag--outline.pds-tag--dark.pds-tag--red { --_bg: var(--dark-bg); --_fg: var(--color-status-red-border); --_bd: var(--color-status-red-border); --_x: var(--dark-input-text); }
+.pds-tag--outline.pds-tag--dark.pds-tag--brown { --_bg: var(--dark-bg); --_fg: var(--color-status-brown-border); --_bd: var(--color-status-brown-border); --_x: var(--dark-input-text); }
+/* Large · Filled · Rounded=No — text Text/Dark except Red and Blue */
+.pds-tag--large.pds-tag--purple { --_bg: var(--color-status-purple-bg); --_fg: var(--color-text-primary); }
+.pds-tag--large.pds-tag--maroon { --_bg: var(--color-status-maroon-bg); --_fg: var(--color-text-primary); }
+.pds-tag--large.pds-tag--brown { --_bg: var(--color-status-brown-bg); --_fg: var(--color-text-primary); }
+.pds-tag--large.pds-tag--cyan { --_bg: var(--color-status-cyan-bg); --_fg: var(--color-text-primary); }
+.pds-tag--large.pds-tag--green { --_bg: var(--color-status-green-bg); --_fg: var(--color-text-primary); }
+.pds-tag--large.pds-tag--red { --_bg: var(--color-status-red-bg); --_fg: var(--color-status-red-text); }
+.pds-tag--large.pds-tag--blue { --_bg: var(--color-status-blue-bg); --_fg: var(--color-text-active); } /* #005399 Text/Blue Active */
+/* Large · Filled · Rounded=Yes (Nimbus) */
+.pds-tag--nimbus.pds-tag--orange { --_bg: var(--nimbus-orange); --_fg: var(--white); }
+.pds-tag--nimbus.pds-tag--blue { --_bg: var(--nimbus-blue); --_fg: var(--white); }
+.pds-tag--nimbus.pds-tag--default { --_bg: var(--white); --_fg: var(--text-medium); }
+/* Medium (read-only label) · Light — text Status Dark */
+.pds-tag--medium.pds-tag--purple { --_bg: var(--color-status-purple-bg); --_fg: var(--color-status-purple-text); }
+.pds-tag--medium.pds-tag--maroon { --_bg: var(--color-status-maroon-bg); --_fg: var(--color-status-maroon-text); }
+.pds-tag--medium.pds-tag--brown { --_bg: var(--color-status-brown-bg); --_fg: var(--color-status-brown-text); }
+.pds-tag--medium.pds-tag--cyan { --_bg: var(--color-status-cyan-bg); --_fg: var(--color-status-cyan-text); }
+.pds-tag--medium.pds-tag--green { --_bg: var(--color-status-green-bg); --_fg: var(--color-status-green-text); }
+.pds-tag--medium.pds-tag--blue { --_bg: var(--color-status-blue-bg); --_fg: var(--color-status-blue-text); }
+.pds-tag--medium.pds-tag--grey { --_bg: var(--grey-light); --_fg: var(--status-blue-dark); }
+.pds-tag--medium.pds-tag--neutral { --_bg: var(--pando-light); --_fg: var(--status-blue-dark); }
+/* Medium · Dark — 10% fills are off-token in Figma; text Status Light (Red: Status Medium) */
+.pds-tag--medium.pds-tag--dark.pds-tag--purple { --_bg: var(--tag-medium-dark-purple-bg); --_fg: var(--status-purple-light); }
+.pds-tag--medium.pds-tag--dark.pds-tag--maroon { --_bg: var(--tag-medium-dark-maroon-bg); --_fg: var(--status-maroon-light); }
+.pds-tag--medium.pds-tag--dark.pds-tag--brown { --_bg: var(--tag-medium-dark-brown-bg); --_fg: var(--status-brown-light); }
+.pds-tag--medium.pds-tag--dark.pds-tag--cyan { --_bg: var(--tag-medium-dark-cyan-bg); --_fg: var(--status-cyan-light); }
+.pds-tag--medium.pds-tag--dark.pds-tag--green { --_bg: var(--tag-medium-dark-green-bg); --_fg: var(--status-green-light); }
+.pds-tag--medium.pds-tag--dark.pds-tag--red { --_bg: var(--tag-medium-dark-red-bg); --_fg: var(--status-red-medium); }

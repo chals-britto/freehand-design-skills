@@ -1,0 +1,99 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Avatar
+   Figma: DS V2 – Atoms › 🟢 Avatars (2971:1070)
+     · "Icon Avatar"    component set 3036:1308 (11 variants)
+     · "Text Avatar"    component     3037:1328
+     · "Comment Avatar" component set 3037:1333 (4 variants)
+   No review file — every published variant kept as in Figma. Requires ../tokens.css.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Icon Avatar ── */
+  --avatar-icon-size:  30px;   /* hug: 14 glyph + 8 + 8 */
+  --avatar-icon-pad:    8px;
+  --avatar-icon-glyph: 14px;
+  --avatar-icon-glyph-color: var(--pando-dark);          /* #234357 — every Default / Active Card variant */
+
+  /* Default state: fill = Status palette Light step */
+  --avatar-purple-bg: var(--color-status-purple-bg);     /* #F2E7FE */
+  --avatar-cyan-bg:   var(--color-status-cyan-bg);       /* #BDF0F4 */
+  --avatar-maroon-bg: var(--color-status-maroon-bg);     /* #FFE3EA */
+  --avatar-blue-bg:   var(--color-status-blue-bg);       /* #D9E6FF */
+  --avatar-green-bg:  var(--color-status-green-bg);      /* #D5F9D1 */
+  --avatar-brown-bg:  var(--color-status-brown-bg);      /* #FFEEC4 */
+
+  --avatar-active-bg:        var(--white);               /* State=Active Card · State=Checkbox */
+  --avatar-selected-bg:      var(--pando-blue);          /* State=Selected #0076DD */
+  --avatar-selected-glyph:   var(--white);
+  --avatar-dark-active-bg:   var(--dark-light);          /* Active Card · Dark  #343440 */
+  --avatar-dark-active-glyph:var(--status-blue-light);   /* #D9E6FF */
+
+  /* ── Text Avatar ── */
+  --avatar-text-size:  40px;
+  --avatar-text-bg:    var(--white);
+  --avatar-text-fg:    var(--pando-blue);                /* #0076DD */
+  --avatar-text-shadow:var(--shadow-2);                  /* 0 2px 4px 6% */
+
+  /* ── Comment Avatar ── */
+  --avatar-comment-h:      12px;
+  --avatar-comment-pad:    3px 4px;
+  --avatar-comment-radius: 2px;
+  --avatar-comment-glyph-h: 6px;
+  --avatar-comment-transporter-bg: color-mix(in srgb, var(--status-brown-light) 50%, transparent); /* #FFEEC4 @ 50% — unnamed fill in Figma */
+  --avatar-comment-shipper-bg:     color-mix(in srgb, var(--status-blue-light) 50%, transparent);  /* #D9E6FF @ 50% — unnamed fill in Figma */
+  --avatar-comment-fg:             var(--pando-dark);    /* #234357 */
+  --avatar-comment-dark-bg:        rgb(72 72 88 / .5);   /* #484858 @ 50% — style "Opacity/484858-Dark-50"; off-token in Figma */
+  --avatar-comment-dark-transporter-fg: var(--dark-input-text);      /* #8A8A9E */
+  --avatar-comment-dark-shipper-fg:     var(--dark-highlight-green); /* #1FCD93 */
+}
+
+/* ── Icon Avatar ───────────────────────────────────────────────── */
+.pds-avatar {
+  --_bg: var(--avatar-purple-bg); --_fg: var(--avatar-icon-glyph-color);
+  box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: var(--avatar-icon-size); height: var(--avatar-icon-size);
+  padding: var(--avatar-icon-pad);
+  border-radius: 50%;
+  background: var(--_bg);
+  color: var(--_fg);
+}
+.pds-avatar__icon { display: block; width: var(--avatar-icon-glyph); height: var(--avatar-icon-glyph); flex: none; }
+.pds-avatar__icon path { fill: currentColor; }
+
+.pds-avatar--purple { --_bg: var(--avatar-purple-bg); }
+.pds-avatar--cyan   { --_bg: var(--avatar-cyan-bg); }
+.pds-avatar--maroon { --_bg: var(--avatar-maroon-bg); }
+.pds-avatar--blue   { --_bg: var(--avatar-blue-bg); }
+.pds-avatar--green  { --_bg: var(--avatar-green-bg); }
+.pds-avatar--brown  { --_bg: var(--avatar-brown-bg); }
+
+.pds-avatar--active-card,
+.pds-avatar--checkbox { --_bg: var(--avatar-active-bg); }
+.pds-avatar--selected { --_bg: var(--avatar-selected-bg); --_fg: var(--avatar-selected-glyph); }
+.pds-avatar--dark.pds-avatar--active-card { --_bg: var(--avatar-dark-active-bg); --_fg: var(--avatar-dark-active-glyph); }
+/* Theme=Dark + Default is identical to Light in Figma — no override. */
+
+/* ── Text Avatar ───────────────────────────────────────────────── */
+.pds-avatar--text {
+  width: var(--avatar-text-size); height: var(--avatar-text-size);
+  padding: 0;
+  --_bg: var(--avatar-text-bg); --_fg: var(--avatar-text-fg);
+  box-shadow: var(--avatar-text-shadow);
+}
+.pds-avatar__initials { font: var(--type-16-regular); color: inherit; }
+
+/* ── Comment Avatar ────────────────────────────────────────────── */
+.pds-avatar--comment {
+  width: auto; height: var(--avatar-comment-h);
+  padding: var(--avatar-comment-pad);
+  border-radius: var(--avatar-comment-radius);
+  --_bg: var(--avatar-comment-transporter-bg); --_fg: var(--avatar-comment-fg);
+}
+.pds-avatar--comment .pds-avatar__letter { display: block; height: var(--avatar-comment-glyph-h); } /* width from the glyph: T 5px · S 4.7px */
+.pds-avatar--comment .pds-avatar__letter path { fill: currentColor; }
+.pds-avatar--transporter { --_bg: var(--avatar-comment-transporter-bg); }
+.pds-avatar--shipper     { --_bg: var(--avatar-comment-shipper-bg); }
+.pds-avatar--comment.pds-avatar--dark { --_bg: var(--avatar-comment-dark-bg); }
+.pds-avatar--comment.pds-avatar--dark.pds-avatar--transporter { --_fg: var(--avatar-comment-dark-transporter-fg); }
+.pds-avatar--comment.pds-avatar--dark.pds-avatar--shipper     { --_fg: var(--avatar-comment-dark-shipper-fg); }

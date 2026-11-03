@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dropdown Menus · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="scrollbar.css">
+<link rel="stylesheet" href="checkbox.css">
+<link rel="stylesheet" href="tag.css">
+<link rel="stylesheet" href="input.css">
+<link rel="stylesheet" href="menu.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+
+/* menu page */
+.stage2{padding:24px 28px 120px;min-height:560px;background:var(--white);border-radius:0 10px 10px 0;display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;overflow:auto}
+.stage2.dark{background:var(--dark-bg)}
+.readout{font:500 11.5px var(--pg-mono);color:var(--pg-muted);margin-top:4px}
+.added{display:inline-block;font:500 10.5px var(--pg-ui);letter-spacing:.04em;text-transform:uppercase;color:var(--pg-accent);border:1px solid var(--pg-accent);border-radius:999px;padding:0 6px;margin-left:6px;vertical-align:middle}
+.vgroup{margin-top:18px}
+.vgroup h3{font:600 13.5px var(--pg-ui);margin:0 0 8px}
+.vgroup .gsub{font-size:12.5px;color:var(--pg-muted);margin:-4px 0 8px}
+.vbody{border:1px solid var(--pg-line);border-radius:10px;background:var(--white);padding:20px;display:flex;flex-wrap:wrap;gap:22px 28px;align-items:flex-start;overflow-x:auto}
+.vbody.dark{background:var(--dark-bg)}
+.vbody .vcell{display:flex;flex-direction:column;gap:6px;min-width:0;align-items:flex-start}
+.vbody .lbl{font:500 11px var(--pg-mono);color:var(--text-light);max-width:420px}
+.vbody.dark .lbl{color:var(--dark-input-text)}
+.vbody .lbl b{font-weight:500;color:var(--text-medium)}
+.vbody.dark .lbl b{color:var(--dark-label-text)}
+.part.pds-menu{box-shadow:none;padding:0;max-height:none}
+.part.pds-menu--dark{padding:0}
+.part-bare{width:400px}
+table.vals{width:100%;border-collapse:collapse;font-size:12.5px}
+table.vals th,table.vals td{text-align:left;padding:8px 12px;border-top:1px solid var(--pg-line);vertical-align:top}
+table.vals th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);background:var(--pg-soft)}
+table.vals code{font:400 11.5px var(--pg-mono)}
+.tablewrap{overflow-x:auto}
+.gaps{padding:12px 16px;font-size:13.5px}
+.gaps ul,.open ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.gaps a{color:var(--pg-accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>Dropdown Menus</h1>
+    <p class="lede">The open list that appears under a dropdown field: plain, checkbox, two-line, custom-add and table lists, light and dark. Figma has no written description; this is drawn from the components.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · no review yet</span><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3154-2534" target="_blank" rel="noopener">Dropdown Light 3154:2534 ↗</a><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=4096-7204" target="_blank" rel="noopener">Dropdown list 4096:7204 ↗</a><a href="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=3380-4191" target="_blank" rel="noopener">.Dropdown Dark 3380:4191 ↗</a><span>Files: menu.css · menu.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#parts">Parts</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">The field is the kit's <b>Inputs › Dropdown Select</b> (<code>input.css</code> / <code>input.js</code>); the list is this component, attached with <code>pdsMenu.attach()</code>. Click the field or focus it and press ↓. ↑ ↓ Home End move, Enter or Space picks, Esc closes.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls" onsubmit="return false">
+    <label>Menu<select id="c-type">
+      <option value="single">Single-Info · Single</option>
+      <option value="check">Single-Info · Multiple (checkbox)</option>
+      <option value="info">Multi-Info · Single</option>
+      <option value="info-m">Multi-Info · Multiple</option>
+      <option value="add">Custom Add</option>
+      <option value="table-m">Table · Search · Multiple</option>
+      <option value="table-s">Table · Search · Single</option>
+      <option value="table-r">Table · Recent · Multiple</option>
+      <option value="dark-sl">Dark · Single · Left</option>
+      <option value="dark-sr">Dark · Single · Right</option>
+      <option value="dark-ml">Dark · Multi · Left (checkbox)</option>
+      <option value="dark-mr">Dark · Multi · Right (✓)</option>
+    </select></label>
+    <label>Options<select id="c-count"><option value="5">5</option><option value="10" selected>10</option><option value="20">20 (scrolls)</option></select></label>
+    <p class="readout" id="readout">Selected: —</p>
+  </form>
+  <div class="stage2" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Every published variant of the three sets, rendered with the real classes. Sample text is Figma's.</p>
+<div id="vmenus"></div></section>
+
+<section id="parts" data-flag-area><h2>Parts</h2><p class="sub">The internal option, header, table-cell, toggle, custom-add and cursor sets the menus are built from.</p>
+<div id="vparts"></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from Figma. Tokens are in <code>menu.css</code>.</p>
+<div class="panel tablewrap"><table class="vals">
+<thead><tr><th>Part</th><th>Values</th><th>Tokens</th></tr></thead><tbody>
+<tr><td>Light list</td><td>200 wide · white · bottom padding 5 (checkbox list 5 / 5) · shadow 0 2 14 10%</td><td><code>--menu-bg</code> · <code>--shadow-3</code></td></tr>
+<tr><td>Option</td><td>36 high · padding 10 · gap 10 · 12 SemiBold #313131 · Hover #E9F1F5 · Selected #F9FAFA + #0076DD text</td><td><code>.type-12-semibold</code> · <code>--accent-light-highlight</code> · <code>--accent-alternate-white</code> · <code>--pando-blue</code></td></tr>
+<tr><td>Multi-info option</td><td>52 high · title 12 SemiBold + 10 Regular +0.5 line, gap 4 · Input Tag 24 high r12 #EEF2F4 · Selected = blue title on white · Multi-Select adds 12px ✓ #0076DD top-right, tag hidden</td><td><code>.type-10-regular</code> · <code>.pds-tag--input</code></td></tr>
+<tr><td>Section heading</td><td>24 high · padding 5 / 10 · #EEF2F4 · 10 SemiBold caps +0.5 #313131 (dark: #343440 / #D5DAF4)</td><td><code>--pando-light</code> · <code>--dark-light</code></td></tr>
+<tr><td>Custom Add</td><td>“+ ADD NEW” 10 SemiBold caps #376F99, icon 10 · Active: New Option row with 1px #0076DD inside, 12 SemiBold #376F99 + blinking “|” (gap 2) · ENTER hint 14 icon + 10 Regular +0.5 #737373, gap 3</td><td><code>--action-blue</code> · <code>--menu-hint-fg</code> (off-token)</td></tr>
+<tr><td>Table menu</td><td>400 wide · white · shadow 0 14 28 6% · columns 200 / 100 / 100 · body 360 (Search) or 180 (Recent, Selected), then scrolls</td><td><code>--shadow-4</code></td></tr>
+<tr><td>Table header row</td><td>34 high · cell padding 10 / 5 · 1px top + 0.5 bottom #EFEFEF · 10 SemiBold caps +0.5 #005399 · first cell keeps a 14px blank where the checkbox sits</td><td><code>--border-grey</code> · <code>--pando-blue-active</code></td></tr>
+<tr><td>Table row</td><td>36 high · padding 10 / 5 · gap 8 · 0.5 bottom #EFEFEF · 12 Regular #313131 · Alternative #F9FAFA · Selected #E9F4FE + #0076DD text, white divider · Disabled #E7E7E7 30% / #E2EAEC / #545454 · Tag #EFEFEF 15 high</td><td><code>--menu-cell-selected-bg</code> (off-token) · <code>.pds-tag</code></td></tr>
+<tr><td>Selection header</td><td>34 high · padding 5 / 10 · label 12 SemiBold #2A4255 · gap 15 · pills gap 10 · Top white, Bottom #E9F1F5 + 1px #E2EAEC top · Dark #343440</td><td><code>--menu-bar-label</code> (off-token)</td></tr>
+<tr><td>Toggle pill</td><td>24 high · 10 Bold caps · Active #0078DD r14 padding 5 / 10 white text · Inactive white r20 padding 5 #234357 + shadow 0 2 3 10% · Dark inactive #484858 50% / #D5DAF4</td><td><code>--menu-pill-active-bg</code> (off-token) · <code>--shadow-1</code></td></tr>
+<tr><td>Dark menu</td><td>#24242F · radius 4 · padding 10 / 5 / 10 / 15 · rows gap 12 · plain rows 12 Regular white, selected #9CD2FF (+ ✓ 10×8, gap 5 in Multi-Select Right) · checkbox rows Theme=Dark · Single Left: .Dropdown Option Dark rows (36, #D5DAF4, hover #343440), padding 0 / 5 / 5 / 0 · scrollbar Dark 6</td><td><code>--dark-darker</code> · <code>--highlight-blue-light</code> · <code>.pds-scroll--dark</code></td></tr>
+<tr><td>Max heights</td><td>Single 365 · Multi-Info 525 · Checkbox 298 · Custom Add 293 · Dark 268 (Single Left 364) — each is the Figma variant height; longer lists scroll</td><td><code>--menu-max-h*</code></td></tr>
+</tbody></table></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Which list</h3><ul><li><b>Single-Info</b>: one line per option.</li><li><b>Multi-Info</b>: a second line and a tag per option.</li><li><b>Checkbox</b> (Single-Info · Multiple): pick several.</li><li><b>Custom Add</b>: the person can add an option that is missing.</li><li><b>Table</b>: options with several columns, with Recent / Search / Selected layouts.</li><li><b>Dark</b>: on the dark sidebar.</li></ul><p class="src">From the Figma variant names. Figma has no written usage guidance.</p></div>
+  <div class="panel card"><h3>Behaviour</h3><ul><li>Single select: picking closes the list and fills the field.</li><li>Multi select: picking toggles the option; the list stays open.</li><li>Esc, Tab or a click outside closes.</li><li>Longer lists scroll inside the max height.</li><li>Custom Add: “Add new” opens a New Option row; Enter adds it, Esc cancels.</li></ul></div>
+  <div class="panel card"><h3>Placement</h3><p>Directly under the field, left edges aligned (Dark Right variants: right edges aligned). Width follows Figma: 200 for lists, 400 for tables.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Listbox pattern</h3><p>The list is <code>role="listbox"</code> (<code>aria-multiselectable</code> for multi); options are <code>role="option"</code> with <code>aria-selected</code>. Focus stays on the trigger, which points to the highlighted option with <code>aria-activedescendant</code>.</p><p class="src">Source: <a href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/" target="_blank" rel="noopener">WAI-ARIA APG Listbox</a></p></div>
+  <div class="panel card"><h3>Keyboard</h3><p>↓ / ↑ open and move, Home / End jump, Enter or Space pick, Esc closes and keeps focus on the field, Tab closes. The highlighted option uses the Figma Hover look. Table rows and dark plain rows have no hover in Figma, so they get a 2px blue outline <span class="added">added — not in Figma</span>.</p></div>
+  <div class="panel card"><h3>Checkboxes</h3><p>Checkbox rows reuse <code>checkbox.css</code>. The native checkbox is hidden from assistive tech (<code>aria-hidden</code>, <code>tabindex="-1"</code>): the option's <code>aria-selected</code> carries the state.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul id="openlist">
+  <li><b>Two general menus exist.</b> <code>dropdown.html</code> “Filter Dropdown Options” (4466:5808, Dropdown page) and these menus differ: Filter is 150 wide with a blurred search header, grouped options, 12 <i>Regular</i> #404040 text 8px apart with no row fill, selected = blue SemiBold text only, white 80% + blur and three off-token shadows. These menus are 200 / 400 wide (the field widths), 36px rows with padding 10, 12 <i>SemiBold</i> #313131, a hover fill #E9F1F5, a selected fill #F9FAFA, and tokenised shadows (<code>--shadow-3</code> / <code>--shadow-4</code>). <b>Dropdown Light · Single-Info is the general-purpose one</b>: it is the list the Input – Dropdown Select Open variants instance, it matches the field width and it has hover and selected states. Filter Dropdown Options reads as a specialised filter menu (search + groups). Decide whether Filter becomes a “search + groups” variant of this component.</li>
+  <li><b>Duplicate code.</b> <code>input.css</code> / <code>input.js</code> render their own copy of these lists (<code>.pds-input__menu</code>, <code>.pds-input__dlist</code>) for the Open variants, and the Table type shows a placeholder. Once this page is accepted, the Input Open variants could use <code>menu.css</code>. Not changed here.</li>
+  <li><b>Dropdown list · Theme=Dark</b> (5992:8230) is identical to the light Search variant (white, light header). There is no dark table menu.</li>
+  <li><b>Table · State=Hover</b> (6593:7502) is identical to Default. No visible hover for table rows.</li>
+  <li><b>Table · Selected rows show an unchecked checkbox</b> in Figma, and Selection=Single rows also show a checkbox. Here the checkbox follows the selection (checked when selected) in both. Confirm whether Single tables should drop the checkbox.</li>
+  <li><b>Dark menus are four different builds.</b> Single Left uses .Dropdown Option Dark rows (36 high, SemiBold, #D5DAF4); Single Right and Multi-Select Right use plain 12 Regular white text, right-aligned, 12 apart; Multi-Select Left uses dark checkboxes. Selected colour #9CD2FF in all. Four of the Single Left rows are 37 high (built 36).</li>
+  <li><b>No hover / disabled for light list options or dark rows</b> (only the table cell has Disabled=Yes). Dark plain rows get an underline on hover/keyboard plus a focus outline <span class="added">added — not in Figma</span>.</li>
+  <li><b>Off-token colours:</b> #E9F4FE (selected row), #2A4255 (toggle label), #0078DD (active pill, 1 step from #0076DD), #737373 (ENTER hint), #484858 50% (dark pill).</li>
+  <li><b>Atom variant missing in kit:</b> the “. Toggle” pills (.Active / .Inactive Toggle Tab) are not in <code>toggle.css</code> (its Toggle Tab is a segmented control), so they are built inside this component. The table Tag uses <code>.pds-tag</code> with a #EFEFEF fill override (Figma: Color=Purple with the fill overridden).</li>
+  <li><b>Line heights:</b> Figma uses Auto (≈16 for 12px) and 16 for table text; built with <code>.type-12-semibold</code> / <code>.type-12-regular</code> (17) inside fixed 36px rows. Section / header 10px text is Auto (≈14) vs 12 in <code>.type-10-semibold</code>. Toggle text 10 Bold is 14 high in Figma (set to 14).</li>
+  <li><b>Multi-select field value</b>: Figma has no Multiple field state for these lists. In Try it the field shows the picked labels joined with commas <span class="added">build choice — confirm</span>; the Inputs Tag Input type is the alternative.</li>
+  <li><b>Scrollbar placement:</b> Figma draws the 6px scrollbar over the table rows (x 389) and with a 30px top inset; the native scrollbar here sits beside the rows. Light Single / Multi-Info / Custom Add lists show no scrollbar in Figma; here they scroll past the max height with the Light scrollbar.</li>
+  <li><b>Contrast (deferred):</b> hover fill #E9F1F5 vs white 1.14 : 1 and selected fill #F9FAFA 1.05 : 1 (the blue text carries Selected) · selected text #0076DD on #F9FAFA 4.33 : 1 and on the table #E9F4FE 4.06 : 1 (both below 4.5) · active pill white on #0078DD 4.44 : 1 · cell divider #EFEFEF 1.15 : 1 · passes: “ADD NEW” #376F99 5.39, ENTER #737373 4.74, header #005399 7.79, dark selected #9CD2FF on #24242F 9.56.</li>
+  <li><b>Hidden layers not built:</b> the Sort Arrow in .Dropdown Option, the Text Button in .Header Section, the hidden “Section” text in .Dropdown Dark, the 4th / 5th table columns.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel gaps"><ul>
+  <li>Type-ahead (jump to the option starting with the typed letters) — <a href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/" target="_blank" rel="noopener">WAI-ARIA APG Listbox</a></li>
+  <li>Shift + arrows / Ctrl + A range and select-all keys for multi-select — <a href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/" target="_blank" rel="noopener">WAI-ARIA APG Listbox</a></li>
+  <li>“All” parent checkbox and clear-all for multi-select — <a href="https://carbondesignsystem.com/components/dropdown/usage/" target="_blank" rel="noopener">Carbon Dropdown</a></li>
+  <li>Selected options moved to the top when the multi-select list reopens — <a href="https://carbondesignsystem.com/components/dropdown/usage/" target="_blank" rel="noopener">Carbon Dropdown</a></li>
+  <li>Show part of the last visible option so it is clear the list scrolls — <a href="https://carbondesignsystem.com/components/dropdown/usage/" target="_blank" rel="noopener">Carbon Dropdown</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the files, build a menu, and attach it to a Dropdown Select field.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup (Single-Info · Single, first two options):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="input.js"></script>
+<script src="menu.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const NAMES=['Rivigo Pvt Ltd','Varuna Transporters Pvt Ltd','WHEELSEYE TECHNOLOGY IND…','CTI LOGISTICS PRIVATE LIMITED','ATC SUPPLY CHAIN SOLUTIONS','ATC SUPPLY CHAIN SOLUTIONS','RK LOGISTICS','KAPOOR DIESELS GARAGE PVT…','ARION LOGISTICS PRIVATE LIM…','ARION LOGISTICS PRIVATE LIM…'];
+const rep=(n,f)=>Array.from({length:n},(_,i)=>f(i));
+const ROW=(i,o={})=>({cells:['Longer or major value','Default value','Default value'],...o});
+
+/* ── Try it ───────────────────────────────────────────── */
+function menuFor(t,n){
+  const names=rep(n,i=>NAMES[i%10]+(i>=10?' '+(i+1):''));
+  const opt=names.map((l,i)=>({label:l,value:'v'+i}));
+  switch(t){
+    case 'single': return pdsMenu.build({type:'single',options:opt,label:'Input Label'});
+    case 'check':  return pdsMenu.build({type:'check',options:opt,label:'Input Label'});
+    case 'info':   return pdsMenu.build({type:'info',options:opt.map(o=>({...o,sub:'Default Option'})),label:'Input Label'});
+    case 'info-m': return pdsMenu.build({type:'info',multiple:true,options:opt.map(o=>({...o,sub:'Default Option'})),label:'Input Label'});
+    case 'add':    return pdsMenu.build({type:'add',options:rep(Math.min(n,7),i=>({label:String(i+1)})),label:'Input Label'});
+    case 'table-m':return pdsMenu.build({type:'table',usage:'search',multiple:true,rows:rep(n,i=>({cells:[names[i],'Default value','Default value'],value:'v'+i})),label:'Input Label'});
+    case 'table-s':return pdsMenu.build({type:'table',usage:'search',rows:rep(n,i=>({cells:[names[i],'Default value','Default value'],value:'v'+i})),label:'Input Label'});
+    case 'table-r':return pdsMenu.build({type:'table',usage:'recent',multiple:true,rows:rep(n,i=>({cells:[names[i],'Default value','Default value'],tag:'Type',value:'v'+i})),label:'Input Label'});
+    case 'dark-sl':return pdsMenu.build({type:'dark',align:'left',options:opt,label:'Label'});
+    case 'dark-sr':return pdsMenu.build({type:'dark',align:'right',options:opt,label:'Label'});
+    case 'dark-ml':return pdsMenu.build({type:'dark',align:'left',multiple:true,options:opt,label:'Label'});
+    case 'dark-mr':return pdsMenu.build({type:'dark',align:'right',multiple:true,options:opt,label:'Label'});
+  }
+}
+function renderTry(){
+  const t=$("#c-type").value,n=+$("#c-count").value,dark=t.startsWith('dark'),table=t.startsWith('table');
+  const stage=$("#stage");stage.replaceChildren();stage.classList.toggle('dark',dark);
+  const field=pdsInput.build(dark?{theme:'dark',type:'select',placeholder:'Select'}:{type:'select',size:table?400:200,placeholder:'Select',label:'Input Label'});
+  const anchor=document.createElement('div');anchor.className='pds-menu-anchor'+(t==='dark-sr'||t==='dark-mr'?' pds-menu-anchor--right':'');
+  anchor.appendChild(field);
+  const m=menuFor(t,n);anchor.appendChild(m);stage.appendChild(anchor);
+  const trig=field.querySelector('button.pds-input__control');
+  pdsMenu.attach(trig,m,{field,valueEl:field.querySelector('.pds-input__value'),placeholder:'Select',onChange:(v,l)=>{$("#readout").textContent='Selected: '+(l.length?l.join(' · '):'—')}});
+  $("#readout").textContent='Selected: —';
+}
+$("#c-type").addEventListener('change',renderTry);$("#c-count").addEventListener('change',renderTry);
+renderTry();
+
+/* ── Variants ─────────────────────────────────────────── */
+function group(host,title,sub,items,dark){
+  const g=document.createElement('div');g.className='vgroup';
+  g.innerHTML=`<h3>${title}</h3>${sub?`<p class="gsub">${sub}</p>`:''}<div class="vbody${dark?' dark':''}"></div>`;
+  const b=g.querySelector('.vbody');
+  items.forEach(([id,name,node])=>{const c=document.createElement('div');c.className='vcell';c.innerHTML=`<span class="lbl"><b>${id}</b> · ${name}</span>`;c.appendChild(node);b.appendChild(c)});
+  host.appendChild(g);
+}
+const S={static:true};
+const DO=rep(10,()=>({label:'Default Option'}));
+const tbl=(o)=>pdsMenu.build({type:'table',...S,...o});
+const recentRows=rep(5,i=>ROW(i,{tag:'Type'}));
+const searchRows=rep(10,i=>ROW(i));
+const VM=$("#vmenus");
+group(VM,'Dropdown Light <span style="font-weight:400;color:var(--pg-muted)">3154:2534 · 6</span>','Type × Selection. Shadow 0 2 14 10%.',[
+ ['3154:2496','Type=Single-Info, Selection=Single',pdsMenu.build({type:'single',...S,options:DO})],
+ ['3154:2533','Type=Single-Info, Selection=Multiple',pdsMenu.build({type:'check',...S,options:rep(8,()=>({label:'Input Label'}))})],
+ ['3485:3238','Type=Multi-Info, Selection=Single',pdsMenu.build({type:'info',...S,options:rep(10,()=>({label:'Default Option',sub:'Default Option',tag:'Text'}))})],
+ ['4117:6130','Type=Multi-Info, Selection=Multiple',pdsMenu.build({type:'info',multiple:true,...S,options:rep(10,()=>({label:'Default Option',sub:'Default Option'}))})],
+ ['3246:3589','Type=Custom Add, Selection=Single',pdsMenu.build({type:'add',...S,options:rep(7,i=>({label:String(i+1)}))})],
+ ['4417:13474','Type=Table, Selection=Multiple (body only)',tbl({flat:true,multiple:true,rows:searchRows})],
+]);
+group(VM,'Dropdown list <span style="font-weight:400;color:var(--pg-muted)">4096:7204 · 6</span>','Theme × Usage × Selection, all Type=Table. Shadow 0 14 28 6%.',[
+ ['4096:6861','Theme=Light, Usage=Recent, Selection=Multiple',tbl({usage:'recent',multiple:true,rows:recentRows})],
+ ['4096:8023','Theme=Light, Usage=Recent, Selection=Single',tbl({usage:'recent',rows:recentRows})],
+ ['4096:7205','Theme=Light, Usage=Search, Selection=Multiple',tbl({usage:'search',multiple:true,rows:searchRows})],
+ ['4096:8503','Theme=Light, Usage=Search, Selection=Single',tbl({usage:'search',rows:searchRows})],
+ ['4096:17350','Theme=Light, Usage=Selected, Selection=Multiple',tbl({usage:'selected',multiple:true,rows:rep(5,i=>ROW(i,{selected:true,alt:false}))})],
+ ['5992:8230','Theme=Dark, Usage=Search, Selection=Multiple — same as light in Figma',tbl({usage:'search',multiple:true,rows:searchRows})],
+]);
+const darkNames=(sel)=>NAMES.map((l,i)=>({label:l,selected:sel.includes(i)}));
+group(VM,'.Dropdown Dark <span style="font-weight:400;color:var(--pg-muted)">3380:4191 · 4</span>','Type × align. #24242F, radius 4.',[
+ ['3380:4189','Type=Multi-Select, align=Right',pdsMenu.build({type:'dark',align:'right',multiple:true,...S,options:darkNames([1,3])})],
+ ['5119:5492','Type=Multi-Select, align=Left',pdsMenu.build({type:'dark',align:'left',multiple:true,...S,options:rep(10,()=>({label:'Input Label'}))})],
+ ['5137:5544','Type=Single Select, align=Left',pdsMenu.build({type:'dark',align:'left',...S,options:DO})],
+ ['3380:4190','Type=Single Select, align=Right',pdsMenu.build({type:'dark',align:'right',...S,options:darkNames([1])})],
+],true);
+
+/* ── Parts ────────────────────────────────────────────── */
+const P=pdsMenu.parts,VP=$("#vparts");
+const one=(type,o,extra={})=>{const m=pdsMenu.build({type,...S,...extra,options:[o]});m.classList.add('part');return m};
+const darkOne=o=>{const m=pdsMenu.build({type:'dark',align:'left',...S,options:[o]});m.classList.add('part');return m};
+const secMenu=(text,dark)=>{const u=document.createElement('ul');u.className='pds-menu part';u.appendChild(P.section(text,dark));if(dark)u.style.background='none';return u};
+group(VP,'.Dropdown Option <span style="font-weight:400;color:var(--pg-muted)">3418:3343 · 11 (light)</span>','',[
+ ['3418:3342','Theme=Light, Type=Dropdown, State=Default',one('single',{label:'Default Option'})],
+ ['3418:3339','Theme=Light, Type=Dropdown, State=Hover',one('single',{label:'Default Option',state:'hover'})],
+ ['3418:3332','Theme=Light, Type=Dropdown, State=Selected',one('single',{label:'Default Option',selected:true})],
+ ['3485:3201','Theme=Light, Type=Multi-info, State=Default',one('info',{label:'Default Option',sub:'Default Option',tag:'Text'})],
+ ['3491:3224','Theme=Light, Type=Multi-info, State=Hover',one('info',{label:'Default Option',sub:'Default Option',tag:'Text',state:'hover'})],
+ ['3491:3238','Theme=Light, Type=Multi-info, State=Selected',one('info',{label:'Default Option',sub:'Default Option',tag:'Text',selected:true})],
+ ['4117:6411','Theme=Light, Type=Multi-info, State=Multi-Select',one('info',{label:'Default Option',sub:'Default Option',selected:true},{multiple:true})],
+ ['3419:3348','Theme=Light, Type=Section Heading, State=Default',secMenu('Section')],
+]);
+group(VP,'.Dropdown Option — dark <span style="font-weight:400;color:var(--pg-muted)">3418:3343 (dark)</span>','',[
+ ['5137:5590','Theme=Dark, Type=Dropdown, State=Default',darkOne({label:'Default Option'})],
+ ['5137:5594','Theme=Dark, Type=Dropdown, State=Hover',darkOne({label:'Default Option',state:'hover'})],
+ ['5137:5592','Theme=Dark, Type=Dropdown, State=Selected',darkOne({label:'Default Option',selected:true})],
+],true);
+const trow=o=>{const m=tbl({flat:true,multiple:true,rows:[ROW(0,{alt:false,...o})]});m.classList.add('part');return m};
+group(VP,'.Dropdown Option — table row <span style="font-weight:400;color:var(--pg-muted)">4096:4146 · 7</span>','Selection=Multiple and Single are drawn the same (both show the checkbox).',[
+ ['4096:4158','State=Default, Selection=Multiple',trow({})],
+ ['6593:7502','State=Hover, Selection=Multiple — same as Default',trow({state:'hover'})],
+ ['4096:4182','State=Alternative, Selection=Multiple',trow({alt:true})],
+ ['4096:4170','State=Selected, Selection=Multiple',trow({selected:true})],
+ ['4096:4164','State=Default, Selection=Single',trow({})],
+ ['4096:4188','State=Alternative, Selection=Single',trow({alt:true})],
+ ['4096:4176','State=Selected, Selection=Single',trow({selected:true})],
+]);
+const wrapPart=(node,dark)=>{const d=document.createElement('div');d.className='part-bare';d.appendChild(node);return d};
+group(VP,'.Header <span style="font-weight:400;color:var(--pg-muted)">4096:3673 · 6</span>','',[
+ ['4096:3672','Type=Table, Place=Top, Theme=Default',wrapPart(P.head(['Header','Header','Header']))],
+ ['4096:3670','Type=Selection, Place=Top, Theme=Light',wrapPart(P.bar({label:'Type',options:['Option 1','Option 2','Option 3'],active:0},'top'))],
+ ['4096:3671','Type=Selection, Place=Bottom, Theme=Default',wrapPart(P.bar({label:'Type',options:['Option 1','Option 2','Option 3'],active:-1},'bottom'))],
+ ['4096:3669','Type=Section, Place=Top, Theme=Light',wrapPart(P.section('Section Name'))],
+ ['5986:8094','Type=Selection Dark, Place=Top, Theme=Dark',wrapPart(P.bar({label:'Type',options:['Option','Option 2','Option 3'],active:-1},'top',true))],
+ ['5986:7616','Type=Section, Place=Top, Theme=Dark',wrapPart(P.section('Section Name',true))],
+]);
+const cell=(cls,text='Value')=>{const r=document.createElement('div');r.className='pds-menu__row';r.innerHTML=`<span class="pds-menu__cell ${cls}" style="width:100px"><span class="pds-menu__cell-text">${text}</span></span>`;return r};
+group(VP,'.Table Cell <span style="font-weight:400;color:var(--pg-muted)">4096:4133 · 3</span>','Booleans Selection (checkbox) and Tag default off.',[
+ ['4096:4134','Background=Default, Disabled=No',cell('')],
+ ['4096:4138','Background=Alternative, Disabled=No',(()=>{const r=cell('');r.classList.add('pds-menu__row--alt');return r})()],
+ ['4096:4142','Background=Default, Disabled=Yes',cell('pds-menu__cell--disabled')],
+]);
+const pill=(on,t='Option',dark)=>{const d=document.createElement('div');d.className='pds-menu__bar'+(dark?' pds-menu__bar--dark':'');d.style.padding='5px';d.innerHTML=`<span class="pds-menu__pills"><button type="button" class="pds-menu__pill" aria-pressed="${on}">${t}</button></span>`;return d};
+group(VP,'. Toggle <span style="font-weight:400;color:var(--pg-muted)">4232:6750 · 2</span>','',[
+ ['4232:6749','Property 1=Active',pill(true)],
+ ['4232:6748','Property 1=Inactive',pill(false)],
+]);
+const addPart=(active)=>{const m=pdsMenu.build({type:'add',...S,options:[],addActive:active});m.classList.add('part');return m};
+group(VP,'.Custom Add <span style="font-weight:400;color:var(--pg-muted)">4644:6619 · 2</span>','',[
+ ['4644:6618','State=Default',addPart(false)],
+ ['4644:6620','State=Active',addPart(true)],
+]);
+const cur=on=>{const s=document.createElement('span');s.className='pds-menu__cursor'+(on?'':' pds-menu__cursor--off');s.textContent='|';s.style.cssText='display:inline-block;width:8px;height:24px;line-height:24px';const w=document.createElement('div');w.style.cssText='border:1px dashed var(--border-input-light);padding:0 4px';w.appendChild(s);return w};
+group(VP,'.Blinking cursor <span style="font-weight:400;color:var(--pg-muted)">3196:1721 · 2</span>','Used in Custom Add · Active. Live inputs use the native caret in the same colour.',[
+ ['3196:1722','Property 1=on',cur(true)],
+ ['3196:1724','Property 1=off',cur(false)],
+]);
+
+/* ── Code ─────────────────────────────────────────────── */
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/scrollbar.css">
+<link rel="stylesheet" href="components/checkbox.css">
+<link rel="stylesheet" href="components/tag.css">
+<link rel="stylesheet" href="components/input.css">
+<link rel="stylesheet" href="components/menu.css">
+<script src="components/input.js"><\/script>
+<script src="components/menu.js"><\/script>
+
+<script>
+  const field = pdsInput.build({ type: 'select', label: 'Input Label', placeholder: 'Select' });
+  const menu  = pdsMenu.build({
+    type: 'single',               // single | check | info | add | table | dark
+    multiple: false,              // info, table, dark
+    options: [{ label: 'Default Option', value: '1' }, …]
+  });
+  const anchor = document.createElement('div');
+  anchor.className = 'pds-menu-anchor';
+  anchor.append(field, menu);
+  pdsMenu.attach(field.querySelector('.pds-input__control'), menu, {
+    field, valueEl: field.querySelector('.pds-input__value'),
+    onChange: (values, labels) => { /* … */ }
+  });
+<\/script>`;
+{const m=pdsMenu.build({type:'single',static:true,options:[{label:'Default Option'},{label:'Default Option',selected:true}]});$("#code2").textContent=m.outerHTML.replace(/></g,">\n<");}
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

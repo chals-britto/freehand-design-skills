@@ -1,0 +1,49 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Loaders (animated illustrations)
+   Figma: DS V2 – Molecules › 🟢 Empty States & Loaders (77:4762)
+     Loaders-Gif 3133:1029 · Loader-Box-Animation 4626:2687
+     Upload-Data-Animation 5095:331 · Loader-Document-Processing 4629:2697
+   All four are a single rectangle with an animated GIF image fill.
+   The GIFs are the original files from Figma, in components/loader/.
+   Built 2026-10-28. Requires ../tokens.css. No JS.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Measured from the components (no colours: the artwork is raster) */
+  --loader-size: 200px;            /* frame width, all four */
+  --loader-height: 200px;          /* Loaders-Gif, Box, Upload */
+  --loader-doc-height: 160px;      /* Loader-Document-Processing */
+  --loader-box-art-height: 151px;  /* Box: GIF rectangle 200 × 151.2, centred in the 200 frame */
+  --loader-upload-art-height: 198px; /* Upload: GIF rectangle 200 × 198, bottom-aligned */
+}
+
+/* Frame */
+.pds-loader {
+  position: relative;
+  display: inline-block;
+  width: var(--loader-size);
+  height: var(--loader-height);
+  flex: none;
+}
+.pds-loader--document { height: var(--loader-doc-height); }
+
+/* Artwork: the GIF (or the still under reduced motion) via <picture> */
+.pds-loader__art,
+.pds-loader__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.pds-loader__art img { object-fit: cover; }
+.pds-loader__art { position: absolute; left: 0; top: 0; }
+
+.pds-loader--box .pds-loader__art {
+  top: 50%;
+  height: var(--loader-box-art-height);
+  transform: translateY(-50%);
+}
+.pds-loader--upload .pds-loader__art {
+  top: auto;
+  bottom: 0;
+  height: var(--loader-upload-art-height);
+}

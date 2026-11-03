@@ -1,0 +1,91 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Dropdown Option (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ Dropdown (2312:4660)
+          › component set "Dropdown Option" (3303:2663) — Type × State (5)
+          + boolean props Prefix Icon / Secondary Text / Selected
+   Built 2026-10-28 · no review — every published variant kept as in Figma.
+   Requires ../tokens.css, avatar.css (Icon Avatar) and icons.css (.pds-icon).
+   Not a duplicate of menu.css: no menu.css option matches these values
+   (see dropdown-option.md › Open issues).
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colours */
+  --dropdown-option-bg:         transparent;               /* Default / Selected: no fill */
+  --dropdown-option-hover-bg:   var(--pando-light);        /* #EEF2F4 */
+  --dropdown-option-title-fg:   #404040;                   /* off-token in Figma (same as --dropdown-option-fg) */
+  --dropdown-option-sub-fg:     #737373;                   /* off-token in Figma (same as --menu-hint-fg) */
+  --dropdown-option-check-fg:   var(--pando-blue);         /* Navigation/Selected #0076DD (Selected prop) */
+  --dropdown-option-delete-fg:  var(--status-blue-dark);   /* #0D204A — Indicator Icon/Delete in Viewable · Hover */
+
+  /* Measured */
+  --dropdown-option-w:          300px;
+  --dropdown-option-h:          56px;
+  --dropdown-option-pad:        var(--space-10);
+  --dropdown-option-gap:        var(--space-10);           /* avatar ↔ text ↔ trailing icon */
+  --dropdown-option-text-gap:   4px;                       /* title ↔ secondary line */
+  --dropdown-option-line-h:     16px;                      /* Figma: title Auto (≈16), secondary 16 */
+  --dropdown-option-icon:       12px;                      /* check + delete */
+
+  --dropdown-option-focus: 2px solid var(--pando-blue);    /* added — not in Figma (keyboard focus) */
+}
+
+.pds-dropdown-option {
+  box-sizing: border-box;
+  display: flex; align-items: center;
+  gap: var(--dropdown-option-gap);
+  width: var(--dropdown-option-w);
+  height: var(--dropdown-option-h);
+  padding: var(--dropdown-option-pad);
+  background: var(--dropdown-option-bg);
+  font-family: var(--font-family);
+  cursor: pointer;
+  list-style: none;
+}
+.pds-dropdown-option *, .pds-dropdown-option *::before, .pds-dropdown-option *::after { box-sizing: border-box; }
+.pds-dropdown-option:hover,
+.pds-dropdown-option.is-hover,
+.pds-dropdown-option.is-active { background: var(--dropdown-option-hover-bg); }
+.pds-dropdown-option:focus-visible { outline: var(--dropdown-option-focus); outline-offset: -2px; }
+
+/* Prefix: kit Icon Avatar (avatar.css). Selection · Selected swaps it for .pds-avatar--selected */
+.pds-dropdown-option > .pds-avatar { flex: none; }
+
+/* Text */
+.pds-dropdown-option__text {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column;
+  gap: var(--dropdown-option-text-gap);
+}
+.pds-dropdown-option__title,
+.pds-dropdown-option__sub {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pds-dropdown-option__title {
+  font: var(--type-12-semibold);
+  line-height: var(--dropdown-option-line-h);
+  color: var(--dropdown-option-title-fg);
+}
+.pds-dropdown-option__sub {
+  font: var(--type-12-regular);
+  line-height: var(--dropdown-option-line-h);
+  color: var(--dropdown-option-sub-fg);
+}
+
+/* Trailing: Selected check (boolean "Selected") — kit .pds-icon--12 */
+.pds-dropdown-option__check { color: var(--dropdown-option-check-fg); }
+
+/* Trailing: Delete (Type=Viewable, State=Hover) — shown on hover only */
+.pds-dropdown-option__delete {
+  flex: none;
+  display: none;
+  margin: 0; padding: 0; border: 0; background: none;
+  color: var(--dropdown-option-delete-fg);
+  cursor: pointer;
+}
+.pds-dropdown-option__delete .pds-icon { --_icon: var(--dropdown-option-icon); }
+.pds-dropdown-option--viewable:hover .pds-dropdown-option__delete,
+.pds-dropdown-option--viewable.is-hover .pds-dropdown-option__delete,
+.pds-dropdown-option--viewable.is-active .pds-dropdown-option__delete,
+.pds-dropdown-option--viewable:focus-within .pds-dropdown-option__delete { display: inline-flex; }
+.pds-dropdown-option__delete:focus-visible { outline: var(--dropdown-option-focus); outline-offset: 2px; } /* added — not in Figma (keyboard focus) */

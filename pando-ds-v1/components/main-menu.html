@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>New Main Menu · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="scrollbar.css">
+<link rel="stylesheet" href="avatar.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="tooltip.css">
+<link rel="stylesheet" href="main-menu.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* main-menu page */
+.stage-mm{position:relative;height:620px;border-radius:10px;overflow:hidden;background:var(--white);display:flex;flex-direction:column}
+.stage-mm .fake-hd{flex:none}
+.stage-body{position:relative;flex:1;min-height:0}
+.stage-body .pds-main-menu{position:absolute;left:0;top:0;height:100%}
+.stage-content{padding:20px 24px 20px 84px;font-family:var(--font-family);color:var(--text-dark)}
+.stage-content h3{font:var(--type-14-semibold);margin:0 0 6px}
+.stage-content p{font:var(--type-12-regular);margin:0 0 12px;color:var(--grey-dark)}
+.mm-log{font:400 11.5px var(--pg-mono);color:var(--pg-muted);margin-top:10px}
+.vscroll{overflow-x:auto}
+.vmenus{display:grid;grid-template-columns:repeat(3,310px);gap:20px 14px;padding:16px;width:max-content}
+.vmenu{display:flex;flex-direction:column;gap:6px}
+.vmenu .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.vbox{position:relative;width:310px;height:var(--main-menu-height);background:var(--pg-soft);border-radius:4px;overflow:hidden}
+.vbox .pds-main-menu{height:100%}
+.vtip{position:absolute}
+.vtip .pds-tooltip{width:max-content}
+.parts{display:flex;flex-wrap:wrap;gap:22px 32px;padding:20px;align-items:flex-start}
+.part{display:flex;flex-direction:column;gap:6px}
+.part .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.on-fly{background:var(--main-menu-fly-bg);font-family:var(--font-family);align-self:flex-start}
+.on-fly ul{margin:0;padding:0;list-style:none}
+.w204{width:204px}.w200{width:200px}.w184{width:184px}.w250{width:250px}.w168{width:168px}
+.bare{all:unset}
+.flybox{position:relative;width:250px;height:var(--main-menu-height);border-radius:4px;overflow:hidden}
+.flybox .pds-main-menu__fly{position:static;height:100%}
+.openlist{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.spec-table code{white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Components</div>
+    <h1>New Main Menu</h1>
+    <p class="lede">The app’s main navigation: a 60px icon rail with a 250px fly-out that holds the second and third level.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · no review yet</span><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=2280-1704" target="_blank" rel="noopener">Figma New Main Menu 2280:1704 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=803-709" target="_blank" rel="noopener">.Menu-Item 803:709 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=2459-5585" target="_blank" rel="noopener">.Fly Out 2459:5585 ↗</a><span>Files: main-menu.css · main-menu.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#parts">Parts</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Hover a rail icon to show its fly-out; click to pin it. Settings and the avatar show a tooltip. Expand Setup / Shipments in TMS. Keyboard: Tab into the rail, ↑ / ↓, Enter or → to go into the fly-out, ← / Esc to come back, Esc on the rail closes the menu.</p>
+<div class="panel" style="padding:12px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-radius:10px 10px 0 0;border-bottom:0">
+  <button type="button" class="pds-button pds-button--secondary pds-button--small" id="mm-toggle" aria-expanded="true">Close menu</button>
+  <span class="ex-note">The opener is the product’s own (e.g. a Side Nav or header button) — Figma has no opener in this set.</span>
+</div>
+<div class="panel stage-mm" style="border-radius:0 0 10px 10px">
+  <div class="fake-hd">Global Industries <span>· Module Name</span></div>
+  <div class="stage-body" id="stage">
+    <div class="stage-content"><h3 id="mm-title">TMS · Order Hub</h3><p>Page content. The menu overlays it.</p><div class="mm-log" id="mm-log">current: TMS › Order Hub</div></div>
+  </div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">New Main Menu · Type — all 9, exactly as in Figma (310 × 718). The fly-out holds Figma’s own sample rows; TMS is the only one that overflows (it scrolls).</p>
+<div class="panel vscroll"><div class="vmenus" id="vmenus"></div></div></section>
+
+<section id="parts" data-flag-area><h2>Parts</h2><p class="sub">The building blocks, each in every Figma state. Hover states are forced with the <code>--hover</code> modifier.</p>
+<div class="panel parts" id="parts-grid"></div>
+<div class="panel" style="margin-top:14px"><div class="parts"><div class="part"><span class="lbl">.Fly Out (2459:5585) — Figma sample</span><div class="flybox" id="fly-generic"></div></div></div></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from Figma.</p>
+<div class="panel"><div class="spec-table">
+  <div><b>Rail</b><code>60px</code> wide · <code>--white</code> · fills height (Figma 718)</div>
+  <div><b>.Menu-Item</b><code>60 × 50</code> · padding <code>15 / 20</code> · icon <code>20</code></div>
+  <div><b>Item fills</b>Default <code>--white</code> · Hover #E7E7E7 @ 30% · Active <code>--accent-light-blue-bg</code> #F3F6FC</div>
+  <div><b>Profile</b>padding <code>10 / 0 / 20</code> · avatar <code>40</code> · fill <code>--pando-light</code> · “FL” <code>--pando-blue</code> 16 regular · <code>--shadow-2</code></div>
+  <div><b>Fly-out</b><code>250px</code> · <code>--accent-light-blue-bg</code> · no shadow, border or radius</div>
+  <div><b>.Menu-Heading</b>padding <code>15</code> · 46 tall · 12 semibold caps +0.3px · <code>--pando-blue</code></div>
+  <div><b>.Secondary menu</b>36 tall · padding <code>10 / 15</code> · 12 semibold · <code>--pando-dark</code> · Hover <code>--white</code></div>
+  <div><b>Type=Arrow</b>Right-Caret <code>5 × 8</code> at the right edge</div>
+  <div><b>Type=Multiple</b>line column <code>16</code> (line at 15, 1px <code>--border-blue-grey</code>) + third-level rows</div>
+  <div><b>.Third level menu</b>36 tall · padding <code>10</code> · Hover <code>--pando-light</code></div>
+  <div><b>Arrow Expand rows</b>184 wide · padding <code>10 / 15</code> · caret · Hover <code>--pando-light</code></div>
+  <div><b>.Name</b>padding <code>10 / 10 / 20 / 10</code> · 70 tall · gap <code>4</code> · name 12 / 16 · role 10 regular +0.5px</div>
+  <div><b>.Logout</b><code>24</code> circle · padding <code>5</code> · icon 14 · Hover <code>--accent-light-highlight</code></div>
+  <div><b>Tooltips</b>kit Tooltip, Style=Text, no title, hug width · rail beak 9:00 · Logout beak 6:00</div>
+  <div><b>Focus</b><code>2px --pando-blue</code>, inset 2px in scroll areas · added in review — not in Figma</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Three levels</h3><p>Rail icon = module (Analytics, Master Data, Procure, Planning, TMS, FAP, Integrations, Settings). Fly-out = its pages (.Secondary menu). A group (Arrow / Multiple) opens a third level.</p></div>
+  <div class="panel card"><h3>Modules without a fly-out</h3><p>Settings (and Profile) have no fly-out in Figma; they show a tooltip with the name instead.</p></div>
+  <div class="panel card"><h3>Section labels</h3><p>In the TMS examples, “Planning” and “Execution” are rows whose text is blue — labels that split a long fly-out. They are an instance override in Figma, not a variant.</p></div>
+  <div class="panel card"><h3>User and logout</h3><p>The avatar sits at the bottom of the rail; the name, role and Logout sit at the bottom of every fly-out.</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Structure</h3><p><code>&lt;nav aria-label="Main menu"&gt;</code>. Rail icons are buttons with <code>aria-label</code>; modules with a fly-out carry <code>aria-expanded</code> + <code>aria-controls</code>. Groups are disclosure buttons; pages are links. Not an ARIA <code>menu</code> — it is site navigation.</p></div>
+  <div class="panel card"><h3>Current page</h3><p>The current page link gets <code>aria-current="page"</code>; its rail item gets <code>aria-current="true"</code> and the Active fill. Figma has no visible “current” state for rows.</p></div>
+  <div class="panel card"><h3>Keyboard</h3><p>Rail and fly-out are one Tab stop each (Logout is its own). ↑ / ↓ wrap, Home / End. Enter / → open, ← / Esc go back, Esc on the rail closes the menu and returns focus to the opener. Added in review — not in Figma.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="panel card"><ul class="openlist">
+  <li>No visible “current page” state for fly-out rows: <code>.Secondary menu</code> State=Active looks the same as Default (only the name differs). Current page is marked for screen readers only.</li>
+  <li><code>.Menu-Heading</code> Hover is identical to Default.</li>
+  <li>Type=Multiple (expanded) has no caret and no collapse affordance; the kit collapses on click / ← (added in review — not in Figma).</li>
+  <li>The rail has a Planning item but the set has no Type=Planning; built as a direct link with tooltip “Planning” (icon name).</li>
+  <li>Section labels (blue “Planning”, “Execution”) exist only as text overrides in the TMS variant and the 2 loose examples.</li>
+  <li>TMS variant is inconsistent: mixed indents (75 / 80 / 86), some sub-menu lines dashed [2, 2], the fly-out overflows 718 and its <code>.Name</code> row is missing. The kit uses the clean structure from the loose examples.</li>
+  <li>Figma fly-out rows are mixed width (Single stretched to 250, Multiple 200, third level 184); the kit stretches every row to the fly-out width.</li>
+  <li>Type=Default Profile frame has 15px top padding (75 tall); every other Type has 10px (70) — kit uses 70.</li>
+  <li>Text Avatar fill here is #EEF2F4; the kit Text Avatar is #FFFFFF — atom variant missing in kit, overridden in main-menu.css.</li>
+  <li>Kit Text tooltip is a fixed 164px; Figma rail tooltips hug (57–65px) — hug width added via <code>.pds-main-menu-tip</code> (atom variant missing in kit).</li>
+  <li><code>.Logout</code> Hover fill is #E9F1F5 but the linked style is named “Accent/Light-Highlight-#EFF3F5”.</li>
+  <li>Line heights: Figma rows use 12px “auto” (16px); <code>.type-12-semibold</code> is 17px — rows keep 16px so they stay 36 tall. Name uses 12/16 vs <code>.type-12-regular</code> 17.</li>
+  <li>The two “Arrow Expand Hover” rows (184 wide, with caret) are not used in any Type; there is no fourth level, so they are built as static rows.</li>
+  <li>No elevation or scrim between the open menu and page content in Figma.</li>
+  <li>No hover/active state for the Close item or the avatar beyond the shared .Menu-Item fills; no focus states anywhere (focus ring added in review).</li>
+  <li>Contrast: Hover fill #E7E7E7 @ 30% on white is ≈1.1 : 1 and Active #F3F6FC on white ≈1.1 : 1 — below 3 : 1 for state changes. Kept as Figma.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul class="openlist">
+  <li>Labels with the icons — Fluent 2 Nav does not support an icon-only layout — and a hamburger to expand / collapse. <a href="https://fluent2.microsoft.design/components/web/react/core/nav/usage" target="_blank" rel="noopener">Fluent 2 Nav</a></li>
+  <li>Every sub-menu group marked with a chevron, open or closed (Figma drops the caret when a group is expanded). <a href="https://carbondesignsystem.com/components/UI-shell-left-panel/usage/" target="_blank" rel="noopener">Carbon UI shell left panel</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include tokens.css, icons.css, scrollbar.css, avatar.css, tooltip.css, main-menu.css, then icons/icons-data.js, tooltip.js and main-menu.js. The menu fills its container’s height.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="tooltip.js"></script>
+<script src="main-menu.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const SVG=n=>{const i=(window.PDS_ICONS||[]).find(x=>x.n===n);return i?i.svg:""};
+const L=a=>a.map(x=>typeof x==="string"?{label:x,href:"#"}:x);
+/* Figma sample rows, per Type (2280:1704) */
+const ITEMS={
+  analytics:L(["Dashboard","Reports"]),
+  "master-data":[{label:"Rate Manager",expanded:true,items:L(["Control Tower","Contracts","Setup"])},{label:"Rules",expanded:true,items:L(["Approvals","General Setup"])},...L(["Data Manager"])],
+  procure:[...L(["Sourcing Events","Sourcing Request"]),{label:"Setup",expanded:true,items:L(["Templates","Lane Configuration","Rules","Notifications","Approvals","LTL Event Setup","AI Copilot Setup"])}],
+  /* TMS: clean structure of the loose examples 2912:6604 / 2912:7826 */
+  tms:[...L(["Control Tower"]),{section:"Planning"},...L(["Order Hub","Plans"]),{label:"Setup",items:L(["Planning Group","Order Rules","Plan Rules","Workflow"])},...L(["Planning Rejections"]),{section:"Execution"},{label:"Shipments",items:L(["Master Shipments","Non Transportation Shipments","Road Shipments","Ocean Shipments","Air Shipments","Rail Shipments"])},{label:"Execution Setup",items:L(["Service","Rules","Execution Group","Document Setup","General Setup"])},...L(["Execution Rejections"])],
+  fap:[{label:"Costed Shipments",expanded:true,items:L(["Costed Shipments","Shipment Rejections"])},{label:"Invoices",expanded:true,items:L(["Invoices","Claims","Wallets","Invoice Rejections"])},{label:"Setup",expanded:true,items:L(["Conversion","Tolerance","Approval Setup","General Setup"])}],
+  integrations:L(["Shipment Tracking","Vessel Schedule","Rate Benchmark","Rejections","Settings"])
+};
+const MODULES=()=>[
+  {id:"analytics",label:"Analytics",icon:"menu-analytics",items:ITEMS.analytics},
+  {id:"master-data",label:"Master Data",icon:"menu-data-manager",items:ITEMS["master-data"]},
+  {id:"procure",label:"Procure",icon:"menu-procure",items:ITEMS.procure},
+  {id:"planning",label:"Planning",icon:"menu-planning-alt"},
+  {id:"tms",label:"TMS",icon:"menu-tms",items:ITEMS.tms},
+  {id:"fap",label:"FAP",heading:"Freight Audit & Payment",icon:"menu-fap",items:ITEMS.fap},
+  {id:"integrations",label:"Integrations",icon:"menu-integrations",items:ITEMS.integrations},
+  {id:"settings",label:"Settings",icon:"menu-settings"}
+];
+const USER={initials:"FL",name:"First Name Last Name",role:"USER ROLE"};
+
+/* Try it */
+const live=pdsMainMenu.create({modules:MODULES(),user:USER,current:{module:"tms",item:"Order Hub"}});
+$("#stage").appendChild(live);
+const tg=$("#mm-toggle");
+tg.addEventListener("click",()=>pdsMainMenu.toggle(live,tg));
+live.addEventListener("pds-main-menu:open",()=>{tg.textContent="Close menu";tg.setAttribute("aria-expanded","true")});
+live.addEventListener("pds-main-menu:close",()=>{tg.textContent="Open menu";tg.setAttribute("aria-expanded","false")});
+live.addEventListener("click",e=>{if(e.target.closest("a"))e.preventDefault()});
+live.addEventListener("pds-main-menu:navigate",e=>{const m=MODULES().find(x=>x.id===e.detail.module);const t=m.label+(e.detail.item?" › "+e.detail.item:"");$("#mm-title").textContent=t.replace(" › "," · ");$("#mm-log").textContent="current: "+t});
+live.addEventListener("pds-main-menu:logout",()=>{$("#mm-log").textContent="logout event fired"});
+
+/* Variants — every Type */
+const TYPES=[["Default",null,null],["Analytics","analytics","analytics"],["Master Data","master-data","master-data"],["Procure","procure","procure"],["TMS","tms","tms"],["FAP","fap","fap"],["Integrations","integrations","integrations"],["Settings",null,"settings"],["Profile",null,null]];
+const vm=$("#vmenus");
+const staticTip=(text,beak,x,y)=>{const w=document.createElement("div");w.className="vtip";w.style.left=x+"px";w.style.top=y+"px";w.appendChild(pdsTooltip.build({text,showTitle:false,beak}));return w};
+TYPES.forEach(([name,open,cur])=>{
+  const cell=document.createElement("div");cell.className="vmenu";
+  cell.innerHTML=`<span class="lbl">Type=${name}</span><div class="vbox"></div>`;
+  const m=pdsMainMenu.create({modules:MODULES(),user:USER,current:cur?{module:cur,item:null}:null,open,interactive:false,label:"Main menu, Type="+name});
+  cell.querySelector(".vbox").appendChild(m);
+  if(name==="Settings")cell.querySelector(".vbox").appendChild(staticTip("Settings",9,92,407));
+  if(name==="Profile")cell.querySelector(".vbox").appendChild(staticTip("Profile",9,91,660));
+  vm.appendChild(cell);
+});
+
+/* Parts */
+const P=$("#parts-grid");
+const part=(lbl,html,cls)=>{const d=document.createElement("div");d.className="part";d.innerHTML=`<span class="lbl">${lbl}</span><div class="${cls||""}">${html}</div>`;P.appendChild(d)};
+const ic=n=>`<span class="pds-icon pds-icon--20" aria-hidden="true">${SVG(n)}</span>`;
+const car=`<span class="pds-main-menu__caret" aria-hidden="true">${SVG("nav-right-caret")}</span>`;
+const lab=t=>`<span class="pds-main-menu__label">${t}</span>`;
+["Default","Hover","Active"].forEach(s=>part(`.Menu-Item · ${s}`,`<div class="pds-menu-item${s==="Hover"?" pds-menu-item--hover":s==="Active"?" pds-menu-item--active":""}">${ic("menu-dashboard")}</div>`));
+part(".Secondary menu · Single, Default",`<div class="pds-main-menu__row">${lab("Setup")}</div>`,"on-fly w204");
+part(".Secondary menu · Single, Hover",`<div class="pds-main-menu__row pds-main-menu__row--hover">${lab("Setup")}</div>`,"on-fly w204");
+part(".Secondary menu · Arrow, Default",`<div class="pds-main-menu__row">${lab("Setup")}${car}</div>`,"on-fly w204");
+part(".Secondary menu · Arrow, Hover",`<div class="pds-main-menu__row pds-main-menu__row--hover">${lab("Setup")}${car}</div>`,"on-fly w204");
+part(".Secondary menu · Multiple, Active",`<div class="pds-main-menu__row" aria-expanded="true">${lab("Setup")}${car}</div><div class="pds-main-menu__children"><span class="pds-main-menu__line"></span><ul><li><div class="pds-main-menu__third">${lab("Setup")}</div></li></ul></div>`,"on-fly w200");
+part(".Secondary menu/Arrow/Default",`<div class="pds-main-menu__third pds-main-menu__third--arrow">${lab("Setup")}${car}</div>`,"on-fly w184");
+part(".Secondary menu/Arrow/Hover",`<div class="pds-main-menu__third pds-main-menu__third--arrow pds-main-menu__third--hover">${lab("Setup")}${car}</div>`,"on-fly w184");
+part(".Menu-Heading · Default",`<p class="pds-main-menu__heading">Freight audit &amp; Payment</p>`,"on-fly w204");
+part(".Menu-Heading · Hover (same as Default)",`<p class="pds-main-menu__heading">Freight audit &amp; Payment</p>`,"on-fly w204");
+part(".Third level menu · Default",`<div class="pds-main-menu__third">${lab("Setup")}</div>`,"on-fly w184");
+part(".Third level menu · hover",`<div class="pds-main-menu__third pds-main-menu__third--hover">${lab("Setup")}</div>`,"on-fly w184");
+const lo=h=>`<span class="pds-main-menu__logout${h?" pds-main-menu__logout--hover":""}"><span class="pds-icon pds-icon--14" aria-hidden="true">${SVG("indicator-logout-14")}</span></span>`;
+part(".Name",`<div class="pds-main-menu__name"><div class="pds-main-menu__who"><p class="pds-main-menu__user">First Name Last Name</p><p class="pds-main-menu__role">USER ROLE</p></div>${lo(false)}</div>`,"on-fly w168");
+part(".Logout · Default",lo(false),"on-fly");
+part(".Logout · Hover",lo(true),"on-fly");
+part("Section label (TMS override)",`<p class="pds-main-menu__section">Planning</p>`,"on-fly w204");
+
+/* .Fly Out generic sample (2459:5585) */
+(function(){const m=pdsMainMenu.create({modules:[{id:"fly",label:"Freight audit & Payment",icon:"menu-fap",items:[...L(["Setup","Setup"]),{label:"Setup",expanded:true,items:L(["Setup"])},{label:"Setup",expanded:true,items:L(["Setup"])},{label:"Setup",expanded:true,items:L(["Setup"])}]}],user:USER,open:"fly",interactive:false});
+$("#fly-generic").appendChild(m.querySelector(".pds-main-menu__fly"));})();
+
+/* Code */
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/scrollbar.css">
+<link rel="stylesheet" href="components/avatar.css">
+<link rel="stylesheet" href="components/tooltip.css">
+<link rel="stylesheet" href="components/main-menu.css">
+<script src="components/icons/icons-data.js"><\/script>
+<script src="components/tooltip.js"><\/script>
+<script src="components/main-menu.js"><\/script>
+<script>
+  const menu = pdsMainMenu.create({
+    modules: [
+      { id: 'analytics', label: 'Analytics', icon: 'menu-analytics',
+        items: [{ label: 'Dashboard', href: '/dashboard' }, { label: 'Reports', href: '/reports' }] },
+      { id: 'tms', label: 'TMS', icon: 'menu-tms', items: [
+        { label: 'Control Tower', href: '/ct' },
+        { section: 'Planning' },
+        { label: 'Setup', items: [{ label: 'Order Rules', href: '/order-rules' }] }   // Arrow → Multiple
+      ] },
+      { id: 'settings', label: 'Settings', icon: 'menu-settings' }                    // no fly-out → tooltip
+    ],
+    user: { initials: 'FL', name: 'First Name Last Name', role: 'USER ROLE' },
+    current: { module: 'tms', item: 'Control Tower' }
+  });
+  shell.appendChild(menu);                       // fills the shell's height, overlays content
+  menu.addEventListener('pds-main-menu:navigate', e => { /* e.detail.module, .item, .href */ });
+  menu.addEventListener('pds-main-menu:logout', () => { /* sign out */ });
+  openerButton.onclick = () => pdsMainMenu.toggle(menu, openerButton);
+<\/script>
+
+<!-- .Menu-Item on its own (also used by the Old Menu) -->
+<button type="button" class="pds-menu-item pds-menu-item--active" aria-label="TMS">
+  <span class="pds-icon pds-icon--20" aria-hidden="true"><!-- icons/menu-tms.svg --></span>
+</button>`;
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

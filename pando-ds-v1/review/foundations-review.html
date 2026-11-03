@@ -1,0 +1,451 @@
+<title>V1 Foundations Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: sticky progress bar → section tabs → dense review cards (swatch | facts | decision). Tool, not a doc. */
+:root{
+  --bg:#f6f7f9; --panel:#ffffff; --ink:#16202a; --muted:#5b6672; --line:#dfe3e8; --soft:#eef1f4;
+  --accent:#0060b8; --accent-soft:#e6f0fa;
+  --keep:#0f7a4d; --keep-soft:#e3f4ec; --change:#9a5b00; --change-soft:#fdf1dc;
+  --old:#b3261e; --old-soft:#fbe7e5; --skip:#56606b; --skip-soft:#eceff2;
+  --flag:#b3261e; --warn:#8a5a00;
+  --f-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --f-v1:"Open Sans",-apple-system,"Segoe UI",sans-serif;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161b; --panel:#1a2027; --ink:#e7ecf1; --muted:#9aa6b2; --line:#2c343d; --soft:#222a32;
+  --accent:#6cb2ff; --accent-soft:#1c2c3d;
+  --keep:#5fd19b; --keep-soft:#163327; --change:#f2b45a; --change-soft:#3a2c14;
+  --old:#ff8a80; --old-soft:#3b1c1a; --skip:#aab4be; --skip-soft:#262d35; --flag:#ff8a80; --warn:#f2b45a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161b; --panel:#1a2027; --ink:#e7ecf1; --muted:#9aa6b2; --line:#2c343d; --soft:#222a32;
+  --accent:#6cb2ff; --accent-soft:#1c2c3d;
+  --keep:#5fd19b; --keep-soft:#163327; --change:#f2b45a; --change-soft:#3a2c14;
+  --old:#ff8a80; --old-soft:#3b1c1a; --skip:#aab4be; --skip-soft:#262d35; --flag:#ff8a80; --warn:#f2b45a;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 14px/1.5 var(--f-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1180px;margin:0 auto}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:16px 10px;border-bottom:1px solid var(--line)}
+.title-row{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;justify-content:space-between}
+h1{font-size:20px;font-weight:600;margin:0;text-wrap:balance}
+.eyebrow{font:500 11px/1 var(--f-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.prog{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.prog b{color:var(--ink);font-weight:600}
+.bar{height:4px;background:var(--soft);border-radius:4px;margin-top:10px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+nav.tabs button,.filter button{font:500 12.5px var(--f-ui);border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:6px 11px;border-radius:999px;cursor:pointer}
+nav.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filter{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.filter button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+button:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.how{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 24px;font-size:13px}
+.how p{margin:0;color:var(--muted)} .how strong{color:var(--ink)}
+.conn{font-size:12px;margin-top:6px;color:var(--muted)} .conn.bad{color:var(--flag)}
+section.grp{margin-top:26px}
+section.grp>h2{font-size:15px;font-weight:600;margin:0 0 2px}
+section.grp>.sub{font-size:12.5px;color:var(--muted);margin:0 0 10px;max-width:80ch}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);display:grid;grid-template-columns:150px minmax(0,1fr) 300px;gap:0;margin-bottom:8px;overflow:hidden}
+.card[data-d="keep"]{border-color:color-mix(in srgb,var(--keep) 45%,var(--line))}
+.card[data-d="change"]{border-color:color-mix(in srgb,var(--change) 45%,var(--line))}
+.card[data-d="outdated"]{border-color:color-mix(in srgb,var(--old) 45%,var(--line))}
+.viz{padding:12px;border-right:1px solid var(--line);display:flex;align-items:center;justify-content:center;background:var(--soft);min-height:96px}
+.sw{width:100%;height:72px;border-radius:6px;border:1px solid rgba(0,0,0,.08)}
+.sw3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%}
+.sw3 div{height:60px;border-radius:5px;border:1px solid rgba(0,0,0,.08);display:flex;align-items:flex-end;justify-content:center;font:500 9.5px var(--f-mono);padding-bottom:3px}
+.spec{font-family:var(--f-v1);width:100%;padding:8px;border-radius:5px;background:#fff;color:#313131;overflow-wrap:anywhere}
+.facts{padding:12px 16px;min-width:0}
+.facts h3{margin:0;font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted);margin-top:3px}
+.mono{font-family:var(--f-mono);font-size:12px}
+.meta a{color:var(--accent);text-decoration:none} .meta a:hover{text-decoration:underline}
+.note{font-size:12.5px;margin-top:6px;color:var(--ink)}
+.flags{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+.flag{font-size:12px;color:var(--flag)} .flag::before{content:"▲ ";font-size:9px}
+.flag.w{color:var(--warn)}
+.rec{font-size:12px;margin-top:6px;color:var(--muted)} .rec b{color:var(--ink);font-weight:600}
+.src{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:6px;font-size:12px}
+.src a{color:var(--accent)}
+.dec{padding:12px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.choices button{font:500 12px var(--f-ui);padding:7px 6px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.choices button[aria-pressed="true"][data-v="keep"],.choices button[aria-pressed="true"][data-v="add"]{background:var(--keep-soft);border-color:var(--keep);color:var(--keep)}
+.choices button[aria-pressed="true"][data-v="change"],.choices button[aria-pressed="true"][data-v="later"]{background:var(--change-soft);border-color:var(--change);color:var(--change)}
+.choices button[aria-pressed="true"][data-v="outdated"]{background:var(--old-soft);border-color:var(--old);color:var(--old)}
+.choices button[aria-pressed="true"][data-v="skip"],.choices button[aria-pressed="true"][data-v="notneeded"]{background:var(--skip-soft);border-color:var(--skip);color:var(--skip)}
+.choices button:disabled{opacity:.5;cursor:not-allowed}
+textarea{width:100%;min-height:52px;resize:vertical;font:400 12.5px/1.4 var(--f-ui);border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--bg);color:var(--ink)}
+.saved{font-size:11px;color:var(--muted);min-height:14px}
+.blocked{background:var(--change-soft);border:1px solid var(--change);border-radius:var(--r);padding:12px 14px;font-size:13px}
+.card.gapc{grid-template-columns:260px minmax(0,1fr) 260px}
+.theme{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.theme button{font:500 12px var(--f-ui);border:0;background:none;color:var(--muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.gv{display:flex;flex-direction:column;gap:5px;width:100%;font-size:11.5px;color:var(--ink)}
+.gv-cap{font-size:10.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.gv-chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:3px 6px;font-size:11px;white-space:nowrap}
+.gv-chip i{width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.1);flex:none}
+.gv-sem{flex-direction:row;align-items:center;gap:6px}.gv-col{display:flex;flex-direction:column;gap:4px;min-width:0}
+.gv-arrow{color:var(--muted)}
+.gv-btn{display:inline-block;background:#0076DD;color:#fff;font:600 12px var(--f-v1);padding:6px 12px;border-radius:4px}
+.gv-bad{color:var(--flag);font-size:11px}.gv-ok{color:var(--keep);font-size:11px}
+.gv-row{display:flex;align-items:center;gap:8px}.gv-n{width:18px;text-align:right;font:500 11px var(--f-mono);color:var(--muted)}
+.gv-bar{height:10px;background:var(--accent);border-radius:2px;opacity:.75}
+.gv-rad{flex-direction:row;gap:10px;justify-content:center}.gv-rad>div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.gv-box{width:40px;height:40px;background:var(--accent-soft);border:2px solid var(--accent)}
+.gv-elev{flex-direction:row;gap:10px;padding:10px 0;justify-content:center}
+.gv-card{background:#fff;color:#313131;border-radius:6px;padding:12px 8px;font:600 11px var(--f-v1);flex:1;text-align:center}
+.gv-states{flex-direction:row;flex-wrap:wrap;gap:8px}.gv-states>div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.gv-input{display:block;background:#fff;color:#6C6C6C;border:1px solid #B5C3CB;border-radius:4px;padding:6px 8px;font:400 12px var(--f-v1)}
+.gv-con{flex-direction:row;gap:10px}.gv-con>div{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.gv-pair{font:600 12px var(--f-v1);padding:6px 10px;border-radius:4px}
+.gv-track{height:28px;background:var(--panel);border:1px solid var(--line);border-radius:999px;position:relative;overflow:hidden}
+.gv-dot{position:absolute;top:5px;left:6px;width:16px;height:16px;border-radius:50%;background:var(--accent);animation:gvslide 1.8s ease-out infinite alternate}
+@keyframes gvslide{to{left:calc(100% - 22px)}}
+@media (prefers-reduced-motion:reduce){.gv-dot{animation:none}}
+.gv-dark{flex-direction:row;gap:0;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.gv-dark>div{flex:1;padding:16px 8px;text-align:center;font:600 12px var(--f-v1)}
+.gv-bars{flex-direction:row;align-items:flex-end;gap:6px;height:66px;justify-content:center}.gv-bars span{width:18px;border-radius:2px 2px 0 0}
+@media (max-width:1000px){.card.gapc{grid-template-columns:200px minmax(0,1fr)}.card.gapc .dec{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}}
+@media (max-width:860px){.card{grid-template-columns:110px minmax(0,1fr)}.dec{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}}
+@media (max-width:480px){.card{grid-template-columns:1fr}.viz{border-right:0;border-bottom:1px solid var(--line)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="title-row">
+    <div><div class="eyebrow">Pando DS V1 · Step 1 · Foundations</div><h1>V1 Foundations Review</h1></div>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div class="prog" id="prog"></div>
+      <div class="theme" role="group" aria-label="Theme"><button type="button" id="th-light" aria-pressed="false">Light</button><button type="button" id="th-dark" aria-pressed="false">Dark</button></div></div>
+  </div>
+  <div class="bar" id="bar" aria-hidden="true"></div>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <div class="filter"><span>Show</span>
+    <button type="button" id="f-all" aria-pressed="true">All</button>
+    <button type="button" id="f-open" aria-pressed="false">Undecided only</button>
+    <button type="button" id="f-flag" aria-pressed="false">Flagged only</button>
+  </div>
+</header>
+
+<div class="how">
+  <p><strong>Source.</strong> Figma file “DS V2 – Atoms” (V1 content): pages Foundation – Colors, Foundation – Text &amp; Text Styles. Values are the real style values read through Figma, not the labels on the canvas.</p>
+  <p><strong>Decide each card.</strong> Keep · Keep with changes · Outdated · Skip. Add a note when you choose “with changes”. Clicks save as you go, so you can stop and come back.</p>
+  <p><strong>Flags.</strong> ▲ red = a problem in Figma (name and value disagree, contrast fails). Recommendations are Claude’s; every outside claim links its source.</p>
+  <p><strong>When done.</strong> Tell Claude “reviewed foundations”. Only Keep items go into <span class="mono">tokens.css</span>.</p>
+</div>
+<div class="conn" id="conn">Connecting to the decision store…</div>
+
+<main id="main"></main>
+</div>
+
+<script>
+const FIG="https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=";
+const S={
+ m3roles:["Material 3 · Color roles","https://m3.material.io/styles/color/roles"],
+ m3type:["Material 3 · Type scale tokens","https://m3.material.io/styles/typography/type-scale-tokens"],
+ m3space:["Material 3 · Spacing","https://m3.material.io/foundations/layout/understanding-layout/spacing"],
+ m3elev:["Material 3 · Elevation","https://m3.material.io/styles/elevation/overview"],
+ m3states:["Material 3 · States","https://m3.material.io/foundations/interaction/states/overview"],
+ m3motion:["Material 3 · Motion","https://m3.material.io/styles/motion/overview"],
+ cbTokens:["Carbon · Color tokens","https://carbondesignsystem.com/elements/color/tokens/"],
+ cbSpace:["Carbon · Spacing","https://carbondesignsystem.com/elements/spacing/overview/"],
+ cbType:["Carbon · Type sets","https://carbondesignsystem.com/elements/typography/type-sets/"],
+ cbMotion:["Carbon · Motion","https://carbondesignsystem.com/elements/motion/overview/"],
+ cbData:["Carbon · Data viz palettes","https://carbondesignsystem.com/data-visualization/color-palettes/"],
+ flColor:["Fluent 2 · Color","https://fluent2.microsoft.design/color"],
+ flType:["Fluent 2 · Typography","https://fluent2.microsoft.design/typography"],
+ flLayout:["Fluent 2 · Layout","https://fluent2.microsoft.design/layout"],
+ flElev:["Fluent 2 · Elevation","https://fluent2.microsoft.design/elevation"],
+ flTokens:["Fluent 2 · Design tokens","https://fluent2.microsoft.design/design-tokens"],
+ flMotion:["Fluent 2 · Motion","https://fluent2.microsoft.design/motion"],
+ slds:["Salesforce Lightning · Design tokens","https://www.lightningdesignsystem.com/design-tokens/"],
+ sldsColor:["Salesforce Lightning · Color","https://www.lightningdesignsystem.com/guidelines/color/overview/"],
+ antColor:["Ant Design · Colors","https://ant.design/docs/spec/colors"],
+ antTheme:["Ant Design · Theme tokens","https://ant.design/docs/react/customize-theme"],
+ antLayout:["Ant Design · Layout","https://ant.design/docs/spec/layout"],
+ appleColor:["Apple HIG · Color","https://developer.apple.com/design/human-interface-guidelines/color"],
+ appleType:["Apple HIG · Typography","https://developer.apple.com/design/human-interface-guidelines/typography"],
+ wcagText:["WCAG 2.2 · 1.4.3 Contrast (min)","https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html"],
+ wcagUI:["WCAG 2.2 · 1.4.11 Non-text contrast","https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"],
+ wcagFocus:["WCAG 2.2 · 2.4.7 Focus visible","https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"],
+ wcagFocusApp:["WCAG 2.2 · 2.4.13 Focus appearance","https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html"],
+};
+// kind: c = single colour, c3 = light/medium/dark trio, g = gradient, t = text style, x = other, gap = industry gap
+const GROUPS=[
+{id:"primary",tab:"Primary",title:"Main / Primary colours",sub:"Frame “Main Colors” (162:49): Pando Blues, Pando Greys, Pando Actions and Freehand colour.",items:[
+ {id:"pando-blue",k:"c",name:"Primary / Pando Blue",hex:"#0076DD",node:"162:54",use:"Primary Buttons, Primary CTAs",flags:["Layer name still says #008AFF; the style value and label are #0076DD."],rec:"<b>Keep</b> as the brand primary. White text on it passes AA at 4.53 : 1, with almost no margin.",src:["wcagText"]},
+ {id:"pando-light",k:"c",name:"Primary / Pando Light",hex:"#EEF2F4",node:"162:65",use:"Secondary Buttons, Light Borders"},
+ {id:"pando-dark",k:"c",name:"Primary / Pando Dark",hex:"#234357",node:"162:68",use:"No usage written in Figma. Seen as the top-header background on the Typography page.",warn:["Usage note is empty."]},
+ {id:"fh-dark",k:"c",name:"Freehand / Freehand Dark",hex:"#153F69",node:"10609:36",use:"For header",flags:["Not a colour style: the swatch is a raw fill, so it can’t be reused from the library.","Swatch layer is still named “Color/Action/Blue-#376F99”."],rec:"<b>Keep</b> and register it as a style. White text on it is 10.8 : 1."},
+ {id:"fh-orange",k:"c",name:"Freehand / Freehand Orange",hex:"#FE6505",node:"10609:42",use:"No usage written in Figma.",flags:["Not a colour style: the swatch is a raw fill.","Swatch layer is still named “Color/Action/Red-#E25757”.","White text on it is 2.97 : 1, below AA for normal text."],warn:["Close to the Studio (V2) orange #FE6301. Same brand colour, two values?"]},
+ {id:"action-blue",k:"c",name:"Action / Blue",hex:"#376F99",node:"162:63",use:"Pando Actions"},
+ {id:"action-red",k:"c",name:"Action / Red (Error Red)",hex:"#E25757",node:"162:91",use:"Pando Actions · error",flags:["White text on it is 3.66 : 1, below AA (4.5 : 1) for normal-size text."],rec:"Keep, but only for text ≥ 18.66px bold, or darken for small text.",src:["wcagText"]},
+ {id:"action-green",k:"c",name:"Action / Green (Confirmation Green)",hex:"#91C38A",node:"162:92",use:"Pando Actions · confirmation",flags:["White text on it is 2.02 : 1, which fails AA at every size."],rec:"Use as a fill or icon colour only, never behind white text.",src:["wcagText","wcagUI"]},
+ {id:"grey-light",k:"c",name:"Grey / Light",hex:"#E7E7E7",node:"162:78",use:"Use as border also (instead of E6E6E6)"},
+ {id:"grey-medium",k:"c",name:"Grey / Medium",hex:"#A3A3A3",node:"162:83",use:"Not written",warn:["Layer name typo: “Mendium”."]},
+ {id:"grey-dark",k:"c",name:"Grey / Dark",hex:"#515151",node:"162:93",use:"Not written"},
+]},
+{id:"text",tab:"Text & Border",title:"Text & border colours",sub:"Frame “Text & Border Colors” (162:187). Labels now match the style values.",items:[
+ {id:"text-dark",k:"c",name:"Text / Dark",hex:"#313131",node:"162:192",use:"Primary text",warn:["Typography samples use #404040 and #1A1A1A, neither of which is a style."],rec:"Keep #313131 (13.0 : 1 on white). Map #404040 and #1A1A1A to it in components.",src:["wcagText"]},
+ {id:"text-medium",k:"c",name:"Text / Medium",hex:"#545454",node:"162:193",use:"Secondary text",flags:["A second style “Text/Medium-#737373” exists whose value is #616161 (used on the Typography page), so two values compete for one role."],rec:"Keep #545454 and retire the second style."},
+ {id:"text-light",k:"c",name:"Text / Light",hex:"#6C6C6C",node:"162:194",use:"Tertiary text",rec:"Keep. It passes AA on white (5.25 : 1) and on #F8F8F8 (4.94 : 1).",src:["wcagText"]},
+ {id:"text-disabled",k:"c",name:"Text / Disabled",hex:"#A3A2A2",node:"10287:18544",use:"Disabled text",rec:"Keep. 2.55 : 1 is acceptable because WCAG exempts disabled controls from the contrast rule.",src:["wcagText"]},
+ {id:"blue-active",k:"c",name:"Text / Blue Active",hex:"#005399",node:"162:70",use:"Active Headings & Borders"},
+ {id:"border-blue",k:"c",name:"Border / Blue",hex:"#E9F1F5",node:"162:195",use:"Border",warn:["Same value as Accent / Light Highlight (162:149)."]},
+ {id:"border-input",k:"c",name:"Border / Input Light",hex:"#E2EAEC",node:"162:196",use:"Input border",flags:["Only 1.22 : 1 against white. WCAG asks 3 : 1 for the visible edge of an input when that edge is the only thing that identifies it."],rec:"Keep for decorative dividers; consider a darker input border (e.g. Blue-Grey or darker).",src:["wcagUI"]},
+ {id:"border-grey",k:"c",name:"Border / Grey",hex:"#EFEFEF",node:"162:197",use:"Border"},
+ {id:"border-bluegrey",k:"c",name:"Border / Blue-Grey",hex:"#B5C3CB",node:"162:198",use:"Border",warn:["1.81 : 1 on white. Fine for dividers, too light for input outlines."],src:["wcagUI"]},
+]},
+{id:"accent",tab:"Accent",title:"Accent & highlight colours",sub:"Frame “Accent Colors” (162:133) plus one swatch left outside any frame.",items:[
+ {id:"green-highlight",k:"c",name:"Accent / Green Highlight",hex:"#008D5E",node:"162:148",use:"Main Highlight Accent Color (also the success toast)",flags:["White 14px text on it is 4.22 : 1, just under AA."],src:["wcagText"]},
+ {id:"light-highlight",k:"c",name:"Accent / Light Highlight",hex:"#E9F1F5",node:"162:149",use:"Light Highlight Accent Color, Active cards",flags:["Style name still says #EFF3F5 (and the label says #EFF3F5); the value is #E9F1F5, same as Border / Blue."]},
+ {id:"accent-bluegrey",k:"c",name:"Accent / Blue-Grey",hex:"#CBD4D8",node:"162:154",use:"Deactive Toggle"},
+ {id:"green-medium",k:"c",name:"Accent / Green Medium",hex:"#67AC5D",node:"162:139",use:"Toggle Selection, Confirmation Status Icons",warn:["White text on it is 2.75 : 1. Fine for a toggle track or icon, not for text."]},
+ {id:"red-medium",k:"c",name:"Accent / Red Medium",hex:"#D26568",node:"162:140",use:"Indent Error Warning Border",warn:["Very close to Action / Red #E25757."]},
+ {id:"error-red-light",k:"c",name:"Accent / Error Red Light",hex:"#FFF8F9",node:"3272:3749",use:"Error background (no usage note in Figma)"},
+ {id:"light-blue-bg",k:"c",name:"Accent / Light Blue BG",hex:"#F3F6FC",node:"6181:6786",use:"Background"},
+ {id:"dark-blue-bg",k:"c",name:"Accent / Dark Blue BG",hex:"#E0EBF6",node:"8716:3275",use:"Not written",warn:["A loose “SHIPMENTS” swatch (8716:3271) uses #EBF1FA, close to this."]},
+ {id:"offwhite",k:"c",name:"Accent / Off White",hex:"#F8F8F8",node:"162:150",use:"Background"},
+ {id:"lightbg",k:"c",name:"Accent / Light BG",hex:"#FAFAFA",node:"162:152",use:"Table header BG; disabled table row"},
+ {id:"alt-white",k:"c",name:"Accent / Alternate White",hex:"#F9FAFA",node:"162:153",use:"Alternate table row",warn:["#F8F8F8, #F9FAFA and #FAFAFA are visually identical. Three tokens for one look."]},
+ {id:"overlay",k:"c",name:"Accent / Overlay",hex:"#234357",alpha:.2,node:"162:185",use:"Modal overlay (Pando Dark at 20%)"},
+ {id:"tertiary-action",k:"c",name:"Accent / Tertiary Action",hex:"#6D8EB4",node:"6051:1168",use:"No label on canvas",warn:["No hex label or usage note."]},
+ {id:"hl-blue-light",k:"c",name:"Highlight / Blue Light",hex:"#9CD2FF",node:"162:178",use:"Not written"},
+ {id:"hl-yellow",k:"c",name:"Highlight / Yellow Warning",hex:"#FFCF00",node:"162:180",use:"Warning",rec:"Keep, with dark text only (8.8 : 1 with #313131)."},
+ {id:"hl-blue-dark",k:"c",name:"Highlight / Blue Dark",hex:"#0078DD",node:"162:181",use:"Not written",flags:["Differs from Pando Blue #0076DD by 2 points of green: a near-duplicate."],rec:"Likely <b>Outdated</b>: merge into Pando Blue."},
+ {id:"hl-orange",k:"c",name:"Highlight / Orange Warning",hex:"#FF8C54",node:"162:183",use:"Warning",warn:["White text is 2.30 : 1."]},
+ {id:"green-email",k:"c",name:"Accent / Green Info Email",hex:"#19A476",node:"162:138",use:"Email notification accent",warn:["Sits outside every frame on the page."]},
+]},
+{id:"status",tab:"Status",title:"Status / highlight palette",sub:"Frame “🟢 Status/Highlight Colors” (162:96). 11 hues × light / medium / dark. Figma usage: Status, Tags, Dashboard Filters, Indicator Icons. Light = backgrounds, Dark = text, Medium = borders.",items:[
+ {id:"st-purple",k:"c3",name:"Status / Purple",trio:["#F2E7FE","#AB63F8","#2D0645"],node:"162:101"},
+ {id:"st-red",k:"c3",name:"Status / Red",trio:["#FFEAEE","#F8637E","#FF0000"],node:"162:102",flags:["Light: label says #FFF0F0; the style is #FFEAEE.","Dark (#FF0000) on light is only 3.48 : 1, below AA for tag text."],src:["wcagText"]},
+ {id:"st-maroon",k:"c3",name:"Status / Maroon",trio:["#FFE3EA","#FFA9BD","#54021A"],node:"162:103"},
+ {id:"st-brown",k:"c3",name:"Status / Brown",trio:["#FFEEC4","#FAAE3C","#422500"],node:"162:104"},
+ {id:"st-orange",k:"c3",name:"Status / Orange",trio:["#FFF4E5",null,"#F94200"],node:"162:105",flags:["No medium step. Every other hue has one."]},
+ {id:"st-cyan",k:"c3",name:"Status / Cyan",trio:["#BDF0F4","#63EBF8","#006265"],node:"162:106"},
+ {id:"st-blue",k:"c3",name:"Status / Blue",trio:["#D9E6FF","#6397F8","#0D204A"],node:"162:107"},
+ {id:"st-green",k:"c3",name:"Status / Green",trio:["#D5F9D1","#80E774","#041F04"],node:"162:108"},
+ {id:"st-skyblue",k:"c3",name:"Status / Sky Blue",trio:["#B5E4FF","#63C1F8","#09375D"],node:"2942:1180"},
+ {id:"st-violet",k:"c3",name:"Status / Violet",trio:["#CEC6FF","#7963F8","#16095F"],node:"2942:1179"},
+ {id:"st-yellow",k:"c3",name:"Status / Yellow",trio:["#FFFC99","#F2E22A","#46440A"],node:"2942:1181"},
+ {id:"st-stray-gray",k:"c3",name:"Stray: gray/900 #212121, gray/200 #EEEEEE",trio:["#EEEEEE",null,"#212121"],node:"3000:1154",use:"Found inside the “.documentation” instance on this frame, not part of the palette.",rec:"Likely <b>Skip</b>."},
+]},
+{id:"dark",tab:"Dark & other",title:"Dark backgrounds, Nimbus, shadow, banners",sub:"Frames “Dark BG Colors” (162:206), “Nimbus Colors” (833:448), the shadow sample (316:479) and “Banners” (4885:221).",items:[
+ {id:"dk-bg",k:"c",name:"Dark / Dark BG",hex:"#393945",node:"162:211",use:"Dark sidebar background",flags:["Name says #393944; value is #393945."]},
+ {id:"dk-darker",k:"c",name:"Dark / Darker",hex:"#24242F",node:"162:217",use:"Dark sidebar"},
+ {id:"dk-light",k:"c",name:"Dark / Light",hex:"#343440",node:"162:216",use:"Dark sidebar"},
+ {id:"dk-input",k:"c",name:"Dark / Input Text",hex:"#8A8A9E",node:"162:213",use:"Input text on dark",flags:["3.37 : 1 on Dark BG, below AA for input text."],src:["wcagText"]},
+ {id:"dk-label",k:"c",name:"Dark / Label Text",hex:"#D5DAF4",node:"162:215",use:"Labels on dark (8.2 : 1)"},
+ {id:"dk-green",k:"c",name:"Dark / Highlight Green",hex:"#1FCD93",node:"162:218",use:"Highlight on dark"},
+ {id:"white",k:"c",name:"White",hex:"#FFFFFF",node:"162:223",use:"Base"},
+ {id:"nimbus-orange",k:"c",name:"Nimbus / Orange",hex:"#E48352",node:"3181:2530",use:"Not written"},
+ {id:"nimbus-blue",k:"c",name:"Nimbus / Blue",hex:"#7AB4CF",node:"3181:2531",use:"Not written"},
+ {id:"shadow-1",k:"x",name:"Shadow / White BG / 0-2-4-6%",css:"box-shadow:0 2px 4px rgba(0,0,0,.06)",node:"316:479",use:"The only shadow style in the file.",rec:"Keep. See the elevation gap in Industry gaps."},
+ {id:"banners",k:"x",name:"Banner colour pairs",css:"",node:"4885:221",banners:[["#184870","9.6"],["#134842","10.3"],["#EDDA79","1.4"],["#96617E","4.9"]],use:"Four banner backgrounds, each with white text. Ratios shown are white-text contrast.",flags:["#EDDA79 with white text is 1.41 : 1, which is unreadable."],src:["wcagText"]},
+]},
+{id:"gradients",tab:"Gradients",title:"Gradients",sub:"Frame “Linear Colors” (2912:1200). The file has 12 gradient styles, but only 6 swatches are linked to a named style. The other 6 names are Claude’s best match by colour. Please confirm.",items:[
+ {id:"gr-steel",k:"g",name:"Gradient / Steel Grey",css:"linear-gradient(0deg,#A3A3A3 62%,#DCDCDC 104%)",node:"2913:1227"},
+ {id:"gr-reject",k:"g",name:"Gradient / Rejection Red",css:"linear-gradient(0deg,#873232 62%,#E96262 104%)",node:"3717:3606"},
+ {id:"gr-forest",k:"g",name:"Gradient / Forest Green",css:"linear-gradient(0deg,#006265 62%,#19A476 104%)",node:"2914:1233",warn:["Layer name typo: “Forerst”."]},
+ {id:"gr-primary",k:"g",name:"Gradient / Primary Blue",css:"linear-gradient(180deg,#0076DC,#005399)",node:"2913:1229"},
+ {id:"gr-deep",k:"g",name:"Gradient / Deep Blue",css:"linear-gradient(180deg,#00648D,#002338)",node:"2913:1230"},
+ {id:"gr-ink",k:"g",name:"Gradient / Ink Blue",css:"linear-gradient(0deg,#18283B 62%,#3F6ABF 104%)",node:"2914:1232"},
+ {id:"gr-lightblue",k:"g",name:"Gradient / Light Blue (inferred)",css:"linear-gradient(180deg,#FFFFFF 45%,#EBF1FA)",node:"10069:1017",warn:["Swatch is unnamed; name inferred."]},
+ {id:"gr-glass",k:"g",name:"Glass panel (unnamed)",css:"linear-gradient(180deg,rgba(204,225,222,.08),rgba(204,225,222,.4)),linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,0))",node:"3029:1307",use:"Uses a 21px background blur.",warn:["No style name at all."]},
+ {id:"gr-purple",k:"g",name:"Gradient / Dark Purple (inferred)",css:"linear-gradient(90deg,#343440,#371A37)",node:"7177:1609",warn:["Swatch is unnamed; name inferred."]},
+ {id:"gr-pigreen",k:"g",name:"Gradient / Pi-Green (inferred)",css:"linear-gradient(90deg,#041F04,#343440)",node:"7950:208",warn:["Swatch is unnamed; name inferred."]},
+ {id:"gr-pandogreen",k:"g",name:"Gradient / Pando-Green (inferred)",css:"linear-gradient(180deg,#003D31,#006265)",node:"7954:1164",warn:["Swatch is unnamed; name inferred."]},
+ {id:"gr-ai-dark",k:"g",name:"Gradient / AI-Dark (inferred)",css:"linear-gradient(-87deg,#FF8C54 2%,#8D00DF 98%)",node:"10609:91",use:"Border for the AI section",warn:["Swatch is unnamed; name inferred."]},
+ {id:"gr-ai-light",k:"g",name:"Gradient / AI-Light (inferred)",css:"linear-gradient(92deg,rgba(234,75,255,.06) 2%,rgba(255,140,84,.06) 99%)",node:"10609:92",use:"Background for the AI section",warn:["Swatch is unnamed; name inferred."]},
+]},
+{id:"type",tab:"Typography",title:"Typography",sub:"Page “Foundation – Text & Text Styles”, frame “Typography” (148:40). Font: Open Sans. Only 4 text styles are actually registered in Figma; the other roles below exist as written specs on the canvas. Sample colours shown are the ones used on the canvas.",items:[
+ {id:"ts-16-top",k:"t",name:"16px / Regular / Top-Header",reg:true,f:[400,16,22,0,false],col:"#F7F7F7",bg:"#234357",sample:"Global Industries",node:"148:63",use:"H1 / Header / Top-Header",flags:["Registered style has line-height 100% (16px); the canvas spec says 22px."]},
+ {id:"ts-14-caps",k:"t",name:"14px / Semi-Bold / All Caps",reg:true,f:[600,14,19,1,true],col:"#007FEA",sample:"Sub Header Active",node:"148:68",use:"H2 / Header / Sub-Header (active)",flags:["Sample colour #007FEA is not a colour style."]},
+ {id:"ts-10-reg",k:"t",name:"10px / Regular / Sp0.5px",reg:true,f:[400,10,12,.5,false],col:"#404040",sample:"90909090",node:"148:137",use:"Text / Body / Table-Subtext"},
+ {id:"ts-10-semi",k:"t",name:"10px / Semibold / Sp0.5px",reg:true,f:[600,10,12,.5,false],col:"#313131",sample:"90909090",node:"2125:791",use:"Text / Heading / Table-Subtext"},
+ {id:"t-placeholder",k:"t",name:"H2 / Header / Placeholder",f:[400,14,19,0,false],col:"#D6D6D6",sample:"Search",node:"148:69",flags:["#D6D6D6 placeholder on white is about 1.5 : 1. WCAG has no exemption for placeholder text."],src:["wcagText"]},
+ {id:"t-popup-head",k:"t",name:"H1 / Body / Heading (Slider, Popups)",f:[600,14,19,0,false],col:"#234357",sample:"Select Drop-off(s) for Gate 1 Ranchi",node:"148:70"},
+ {id:"t-h2-caps",k:"t",name:"H2 / Body / Heading (All Caps)",f:[600,14,19,0,true],col:"#005399",sample:"Details",node:"148:71"},
+ {id:"t-btn-normal",k:"t",name:"Button / Normal / Label",f:[700,12,14,0,false],col:"#313131",sample:"Button label",node:"148:73",use:"Spec only; no sample on canvas."},
+ {id:"t-btn-small",k:"t",name:"Button / Small / Label",f:[700,10,14,0,false],col:"#313131",sample:"Button label",node:"148:74",use:"Spec only; no sample on canvas."},
+ {id:"t-breadcrumb",k:"t",name:"H3 / Header / Breadcrumb (previous · current)",f:[600,13,16,0,false],col:"#737373",sample:"Breadcrumb › Breadcrumb",node:"148:107",use:"Previous #737373, current #34495E",flags:["#34495E and #737373 are not colour styles."]},
+ {id:"t-h3-caps",k:"t",name:"H3 / Body / Heading (All Caps)",f:[600,12,17,0,true],col:"#404040",sample:"Ranchi Depot 1",node:"148:81"},
+ {id:"t-h3",k:"t",name:"H3 / Body / Heading",f:[600,12,17,0,false],col:"#404040",sample:"Mumbai - Delhi",node:"148:83"},
+ {id:"t-body-light",k:"t",name:"Text / Body / Light",f:[400,12,17,0,false],col:"#616161",sample:"17 Sep 2020",node:"148:110"},
+ {id:"t-action",k:"t",name:"Button / Action / Label",f:[600,12,12,0,true],col:"#234357",sample:"Action",node:"148:111"},
+ {id:"t-body-head-caps",k:"t",name:"Text / Body / Heading (All Caps)",f:[600,12,17,.5,true],col:"#005399",sample:"Document Materials",node:"148:113"},
+ {id:"t-table-head",k:"t",name:"H4 / Body / Table-Header",f:[600,10,14,.8,true],col:"#005399",sample:"Shipped to",node:"148:112"},
+ {id:"t-input-label",k:"t",name:"Input / Body / Label",f:[400,10,14,0,true],col:"#6E6E6E",sample:"Label",node:"148:115"},
+ {id:"t-input-filled",k:"t",name:"Input / Body / Filled-Input",f:[600,12,17,0,false],col:"#404040",sample:"Input Data",node:"148:114"},
+ {id:"t-sd-label",k:"t",name:"Input / Sidebar-Dark / Label",f:[400,12,17,.5,true],col:"#EEF2F4",bg:"#393945",sample:"Label",node:"148:116"},
+ {id:"t-sd-dropdown",k:"t",name:"Input / Sidebar-Dark / Dropdown-Input",f:[600,12,17,.3,false],col:"#FFFFFF",bg:"#393945",sample:"Input Selection",node:"148:117"},
+ {id:"t-sd-placeholder",k:"t",name:"Input / Sidebar-Dark / Placeholder-Input",f:[400,12,17,.5,false],col:"#C5D2D9",bg:"#393945",sample:"Placeholder Input",node:"148:118"},
+ {id:"t-sd-filled",k:"t",name:"Input / Sidebar-Dark / Filled-Input",f:[600,12,17,.5,false],col:"#FFFFFF",bg:"#393945",sample:"Input Filled",node:"148:119"},
+ {id:"t-med-semi",k:"t",name:"Text / Body / Medium-Semibold",f:[600,11,15,0,false],col:"#FFFFFF",bg:"#E25757",sample:"Indent could not be mapped in ERP",node:"148:99"},
+ {id:"t-med-reg",k:"t",name:"Text / Body / Medium-Regular",f:[400,11,15,0,false],col:"#404040",sample:"Penvik Electricals Pvt Ltd",node:"148:133"},
+ {id:"t-med-caps",k:"t",name:"Text / Body / Medium-Regular-Caps",f:[400,11,15,0,true],col:"#5A6277",sample:"1200 KG",node:"148:100",flags:["#5A6277 is not a colour style."]},
+ {id:"t-small",k:"t",name:"Text / Body / Small",f:[400,8,10,0,false],col:"#404040",sample:"Sum (Volume * Distance)",node:"148:132",flags:["8px is below the smallest size in every reference system (Fluent’s smallest ramp size is 10px, Material’s label-small is 11sp, Carbon’s smallest is 12px)."],src:["flType","m3type","cbType"]},
+ {id:"t-label-12",k:"x",name:"Label / 12px set (6 loose text layers)",css:"",node:"440:0",use:"Label/12px/ALL CAPS/Regular·Semibold·Bold and Label/12px/Regular·Semibold·Bold sit outside the Typography frame. They are not registered styles.",warn:["Possibly an older label set."]},
+ {id:"t-em-calc",k:"x",name:"Em calculator (helper note)",css:"",node:"5498:17096",use:"px → em lookup (10 → 0.625 … 20 → 1.25). Designer helper, not a token.",rec:"Likely <b>Skip</b>."},
+ {id:"t-grid",k:"x",name:"Grid Styles (2 frames)",css:"",node:"3736:3653",use:"Two 1280 × 900 “Grid Styles” frames (3736:3653, 5596:6555). No grid values were readable through Figma; please check them in Figma.",warn:["Couldn’t read the values."]},
+]},
+{id:"typescale",tab:"Type scale proposal",title:"Type scale proposal: 26 roles → 13 styles + 1 caps modifier",sub:"The 26 type roles you kept differ mostly by colour and capitals, not by size or weight. Proposal: a style is only size + weight + line-height. Colour comes from the colour tokens, and ALL CAPS is one modifier (uppercase + 0.5px tracking; 1px at 14px). Each card lists the roles it replaces and anything that would visibly shift.",ts:true,items:[
+ {id:"tp-16-r",k:"tp",name:"type-16-regular",f:[400,16,22,0,false],sample:"Global Industries",bg:"#234357",col:"#F7F7F7",replaces:["16px / Regular / Top-Header (H1 Header)"],changes:["Registered style line-height goes from 100% to 22px, matching the canvas spec."]},
+ {id:"tp-14-sb",k:"tp",name:"type-14-semibold",f:[600,14,19,0,false],sample:"Select Drop-off(s) for Gate 1 Ranchi",col:"#234357",replaces:["H1 / Body / Heading (Slider, Popups)","14px / Semi-Bold / All Caps (with caps)","H2 / Body / Heading (All Caps) (with caps)"],changes:["H2 Body Heading caps gains 1px tracking to match the registered 14px caps style."]},
+ {id:"tp-14-r",k:"tp",name:"type-14-regular",f:[400,14,19,0,false],sample:"Search",col:"#6C6C6C",replaces:["H2 / Header / Placeholder"],changes:["Placeholder colour moves to a colour token (fix of #D6D6D6 happens in the accessibility pass)."]},
+ {id:"tp-13-sb",k:"tp",name:"type-13-semibold",f:[600,13,16,0,false],sample:"Breadcrumb › Breadcrumb",col:"#545454",replaces:["H3 / Header / Breadcrumb"],changes:["The only 13px role. Alternative: fold into type-12-semibold and drop 13px entirely."]},
+ {id:"tp-12-sb",k:"tp",name:"type-12-semibold",f:[600,12,17,0,false],sample:"Mumbai - Delhi",col:"#313131",replaces:["H3 / Body / Heading","Input / Body / Filled-Input","Input / Sidebar-Dark / Dropdown-Input","Input / Sidebar-Dark / Filled-Input","H3 / Body / Heading (All Caps) (with caps)","Text / Body / Heading (All Caps) (with caps)","Button / Action / Label (with caps)","Label / 12px / Semibold (loose set)"],changes:["Sidebar inputs lose their 0.3–0.5px tracking.","Action label line-height 12 → 17px (single line, no visible change)."]},
+ {id:"tp-12-r",k:"tp",name:"type-12-regular",f:[400,12,17,0,false],sample:"17 Sep 2020",col:"#545454",replaces:["Text / Body / Light","Input / Sidebar-Dark / Placeholder-Input","Input / Sidebar-Dark / Label (with caps)","Label / 12px / Regular (loose set)"],changes:["Sidebar placeholder loses 0.5px tracking."]},
+ {id:"tp-12-b",k:"tp",name:"type-12-bold",f:[700,12,14,0,false],sample:"Save changes",col:"#313131",replaces:["Button / Normal / Label","Label / 12px / Bold (loose set)"],changes:[]},
+ {id:"tp-11-sb",k:"tp",name:"type-11-semibold",f:[600,11,15,0,false],sample:"Indent could not be mapped in ERP",bg:"#E25757",col:"#FFFFFF",replaces:["Text / Body / Medium-Semibold"],changes:[]},
+ {id:"tp-11-r",k:"tp",name:"type-11-regular",f:[400,11,15,0,false],sample:"Penvik Electricals Pvt Ltd",col:"#313131",replaces:["Text / Body / Medium-Regular","Text / Body / Medium-Regular-Caps (with caps)"],changes:[]},
+ {id:"tp-10-sb",k:"tp",name:"type-10-semibold",f:[600,10,12,.5,false],sample:"90909090",col:"#313131",replaces:["10px / Semibold / Sp0.5px (Table-Subtext heading)","H4 / Body / Table-Header (with caps)"],changes:["Table header tracking 0.8 → 0.5px and line-height 14 → 12px."]},
+ {id:"tp-10-r",k:"tp",name:"type-10-regular",f:[400,10,12,.5,false],sample:"90909090",col:"#313131",replaces:["10px / Regular / Sp0.5px (Table-Subtext)","Input / Body / Label (with caps)"],changes:["Input label gains 0.5px tracking; line-height 14 → 12px."]},
+ {id:"tp-10-b",k:"tp",name:"type-10-bold",f:[700,10,14,0,false],sample:"Small button",col:"#313131",replaces:["Button / Small / Label"],changes:[]},
+ {id:"tp-8-r",k:"tp",name:"type-8-regular",f:[400,8,10,0,false],sample:"Sum (Volume * Distance)",col:"#313131",replaces:["Text / Body / Small"],changes:["Kept as-is for now; 8px is flagged for the accessibility pass."]},
+ {id:"tp-caps",k:"tp",name:"Modifier: caps",f:[600,12,17,.5,true],sample:"Document Materials",col:"#005399",replaces:["Every “(All Caps)” / “-Caps” role above"],changes:["One rule instead of separate caps styles: uppercase + 0.5px tracking (1px on 14px)."]},
+]},
+{id:"gaps",tab:"Industry gaps",title:"Industry gaps",sub:"Things all or most of the six reference systems define at the foundation level that V1 doesn’t. Each card shows a small picture of what the gap means. Nothing here gets added unless you choose Add.",gap:true,items:[
+ {id:"gap-semantic",k:"gap",vis:"semantic",name:"Semantic (role) tokens on top of raw colours",use:"In plain words: give each colour a job name. Today a component says “use #0076DD”. With roles it says “use action-primary”, and action-primary points at #0076DD. If the brand blue ever changes, you edit one line and every button, link and focus ring follows. All six systems work this way.",rec:"<b>Add.</b> Biggest win for prototyping speed: Claude builds every component against ~25 job names instead of 100 raw colours.",src:["cbTokens","m3roles","flTokens","antTheme","slds"]},
+ {id:"gap-hexnames",k:"gap",vis:"hexnames",name:"Token names without hex values",use:"In plain words: a name that contains its value goes stale the day the value changes. “Pando-Blue-#008AFF” is already wrong, because the colour is #0076DD. No reference system puts the value in the name.",rec:"<b>Add.</b> Repo token names drop the hex; renaming in Figma is optional, for you to decide.",src:["cbTokens","flTokens"]},
+ {id:"gap-spacing",k:"gap",vis:"spacing",name:"Spacing scale",use:"In plain words: a short fixed list of allowed gaps (4, 8, 12, 16, 24, 32…) so every padding and margin comes from the same ruler. V1 has none written down, so each screen picks its own numbers.",rec:"<b>Add</b>, measured from your real V1 components as Claude reads them, then proposed for review.",src:["m3space","cbSpace","flLayout","antLayout","slds"]},
+ {id:"gap-radius",k:"gap",vis:"radius",name:"Corner radius scale",use:"In plain words: a few named corner roundings (small for inputs, medium for cards, full for pills) instead of a different radius per component.",rec:"<b>Add</b>, measured from components the same way as spacing.",src:["flTokens","antTheme"]},
+ {id:"gap-elevation",k:"gap",vis:"elevation",name:"Elevation / shadow scale",use:"In plain words: how “high” something floats. A card sits low, a dropdown higher, a modal highest, and each level has one shadow. You mentioned 3 more shadows exist; they become levels of this scale.",rec:"<b>Add</b>, with your 3 extra shadows plus the one in Figma.",src:["m3elev","flElev","antTheme"]},
+ {id:"gap-states",k:"gap",vis:"states",name:"Interaction state colours (hover, pressed, focus, disabled)",use:"In plain words: what a button or row looks like when you hover it, press it, tab to it, or can’t use it. Defined once as tokens instead of re-picked in every component. The picture is an illustration, not V1 values.",rec:"<b>Add</b>, collected from Buttons and Inputs when we reach them.",src:["m3states","cbTokens","flColor"]},
+ {id:"gap-focus",k:"gap",vis:"focus",name:"Focus ring",use:"In plain words: the outline that shows where the keyboard is. Without it, a keyboard user can’t tell which field is active. WCAG requires it to be visible.",rec:"<b>Add</b> one focus ring token in Pando Blue.",src:["wcagFocus","wcagFocusApp","cbTokens"]},
+ {id:"gap-contrast",k:"gap",vis:"contrast",name:"Contrast pairing rules",use:"In plain words: a small table of which text colour may sit on which background. It’s the rulebook the accessibility pass will use; no new colours.",rec:"<b>Add</b> as a short “allowed pairs” table in the docs.",src:["wcagText","wcagUI","sldsColor","appleColor"]},
+ {id:"gap-typescale",k:"gap",vis:"typescale",name:"Registered type scale",use:"In plain words: a short ladder of text sizes everyone picks from. See the “Type scale proposal” tab: 26 roles become 13 styles.",rec:"<b>Add</b>, via the Type scale proposal tab.",src:["m3type","cbType","flType","appleType"]},
+ {id:"gap-motion",k:"gap",vis:"motion",name:"Motion tokens (duration, easing)",use:"In plain words: named speeds and curves for things that move (toast slides in, drawer opens) so every animation feels the same.",rec:"<b>Later.</b> Only matters once toasts, drawers and dropdowns animate in prototypes.",src:["cbMotion","m3motion","flMotion"]},
+ {id:"gap-dark",k:"gap",vis:"dark",name:"Full dark theme",use:"In plain words: a dark version of every colour role, so the whole product can switch to dark mode. V1 has dark colours only for the sidebar.",rec:"<b>Not needed</b> unless V1 products ship a dark mode.",src:["m3roles","flColor","appleColor"]},
+ {id:"gap-dataviz",k:"gap",vis:"dataviz",name:"Data visualisation palette",use:"In plain words: a fixed order of colours for chart series (series 1 always this colour, series 2 that one). Your Status palette’s medium shades could be it; the picture uses them.",rec:"<b>Later</b>, when V1 dashboards are prototyped.",src:["cbData","antColor"]},
+]},
+];
+
+const ALL=GROUPS.flatMap(g=>g.items.map(it=>({...it,gid:g.id,gap:!!g.gap})));
+const state={dec:{},filter:"all",tab:"primary",db:null,canWrite:true};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const lum=h=>{h=h.replace("#","");const [r,g,b]=[0,2,4].map(i=>parseInt(h.slice(i,i+2),16)/255).map(c=>c<=.03928?c/12.92:((c+.055)/1.055)**2.4);return .2126*r+.7152*g+.0722*b};
+const onColor=h=>lum(h)>.35?"#1b1b1b":"#ffffff";
+
+function viz(it){
+  if(it.k==="c"){const bg=it.alpha?`rgba(${[1,3,5].map(i=>parseInt(it.hex.slice(i,i+2),16)).join(",")},${it.alpha})`:it.hex;return `<div class="sw" style="background:${bg}"></div>`}
+  if(it.k==="c3")return `<div class="sw3">${it.trio.map(h=>h?`<div style="background:${h};color:${onColor(h)}">${h.slice(1)}</div>`:`<div style="background:transparent;border-style:dashed;color:var(--muted)">none</div>`).join("")}</div>`;
+  if(it.k==="g")return `<div class="sw" style="background:${it.css}"></div>`;
+  if(it.k==="t"){const [w,s,lh,ls,caps]=it.f;return `<div class="spec" style="background:${it.bg||"#fff"};color:${it.col};font-weight:${w};font-size:${s}px;line-height:${lh}px;letter-spacing:${ls}px;${caps?"text-transform:uppercase":""}">${esc(it.sample)}</div>`}
+  if(it.banners)return `<div class="sw3" style="grid-template-columns:1fr 1fr">${it.banners.map(([h,r])=>`<div style="background:${h};color:#fff;font-family:var(--f-v1);font-size:10px">${r}:1</div>`).join("")}</div>`;
+  if(it.css)return `<div class="sw" style="background:#fff;${it.css}"></div>`;
+  if(it.k==="tp"){const [w,s,lh,ls,caps]=it.f;return `<div class="spec" style="background:${it.bg||"#fff"};color:${it.col};font-weight:${w};font-size:${s}px;line-height:${lh}px;letter-spacing:${ls}px;${caps?"text-transform:uppercase":""}">${esc(it.sample)}</div>`}
+  if(it.k==="gap")return VIS[it.vis]?VIS[it.vis]():`<div class="eyebrow">Industry gap</div>`;
+  return `<div class="eyebrow" style="text-align:center">Note</div>`;
+}
+const VIS={
+ semantic:()=>`<div class="gv gv-sem"><div class="gv-col"><span class="gv-cap">Raw colour</span><span class="gv-chip"><i style="background:#0076DD"></i>#0076DD</span><span class="gv-chip"><i style="background:#313131"></i>#313131</span><span class="gv-chip"><i style="background:#E9F1F5"></i>#E9F1F5</span></div><div class="gv-arrow">→</div><div class="gv-col"><span class="gv-cap">Job name</span><span class="gv-chip mono">action-primary</span><span class="gv-chip mono">text-primary</span><span class="gv-chip mono">border-subtle</span></div><div class="gv-arrow">→</div><div class="gv-col"><span class="gv-cap">Component</span><span class="gv-btn">Save</span></div></div>`,
+ hexnames:()=>`<div class="gv"><span class="gv-cap">Today</span><span class="gv-chip"><i style="background:#0076DD"></i><s>Pando-Blue-#008AFF</s></span><span class="gv-bad">name says #008AFF, colour is #0076DD</span><span class="gv-cap" style="margin-top:8px">Proposed</span><span class="gv-chip"><i style="background:#0076DD"></i><span class="mono">brand-primary</span></span></div>`,
+ spacing:()=>`<div class="gv">${[4,8,12,16,24,32].map(n=>`<div class="gv-row"><span class="gv-n">${n}</span><span class="gv-bar" style="width:${n*3}px"></span></div>`).join("")}</div>`,
+ radius:()=>`<div class="gv gv-rad">${[["sm",2],["md",4],["lg",8],["pill",999]].map(([l,r])=>`<div><span class="gv-box" style="border-radius:${r}px"></span><span class="gv-cap">${l}</span></div>`).join("")}</div>`,
+ elevation:()=>`<div class="gv gv-elev">${[["Card","0 1px 2px rgba(0,0,0,.08)"],["Dropdown","0 4px 10px rgba(0,0,0,.12)"],["Modal","0 12px 28px rgba(0,0,0,.18)"]].map(([l,s])=>`<div class="gv-card" style="box-shadow:${s}">${l}</div>`).join("")}</div>`,
+ states:()=>`<div class="gv gv-states">${[["Default","#0076DD",""],["Hover","#0068c4",""],["Pressed","#005399",""],["Focus","#0076DD","outline:2px solid #0076DD;outline-offset:2px"],["Disabled","#cfd6dc","color:#7d8790"]].map(([l,b,x])=>`<div><span class="gv-btn" style="background:${b};${x}">Save</span><span class="gv-cap">${l}</span></div>`).join("")}</div>`,
+ focus:()=>`<div class="gv"><span class="gv-cap">No ring</span><span class="gv-input">Invoice number</span><span class="gv-cap" style="margin-top:6px">With ring</span><span class="gv-input" style="outline:2px solid #0076DD;outline-offset:1px">Invoice number</span></div>`,
+ contrast:()=>`<div class="gv gv-con"><div><span class="gv-pair" style="background:#91C38A;color:#fff">Approved</span><span class="gv-bad">2.0 : 1 fail</span></div><div><span class="gv-pair" style="background:#91C38A;color:#313131">Approved</span><span class="gv-ok">6.4 : 1 pass</span></div></div>`,
+ typescale:()=>`<div class="gv" style="font-family:var(--f-v1)">${[16,14,13,12,11,10].map(n=>`<div style="font-size:${n}px;line-height:1.3">${n}px Shipment</div>`).join("")}</div>`,
+ motion:()=>`<div class="gv"><div class="gv-track"><span class="gv-dot"></span></div><span class="gv-cap">e.g. fast · medium · slow, ease-out</span></div>`,
+ dark:()=>`<div class="gv gv-dark"><div style="background:#fff;color:#313131">Invoice</div><div style="background:#24242F;color:#D5DAF4">Invoice</div></div>`,
+ dataviz:()=>`<div class="gv gv-bars">${["#6397F8","#80E774","#FAAE3C","#AB63F8","#63EBF8","#F8637E"].map((c,i)=>`<span style="background:${c};height:${[60,42,50,30,38,24][i]}px"></span>`).join("")}</div>`,
+};
+function facts(it){
+  const m=[];
+  if(it.k==="tp"){const [w,s,lh,ls,caps]=it.f;m.push(`<span class="mono">Open Sans ${w} · ${s}/${lh}px${ls?` · ls ${ls}px`:""}${caps?" · CAPS":""}</span>`);
+    const rep=`<div class="note"><span style="color:var(--muted)">Replaces: </span>${it.replaces.map(esc).join(" · ")}</div>`;
+    const ch=it.changes.length?`<div class="flags">${it.changes.map(c=>`<div class="flag w">${esc(c)}</div>`).join("")}</div>`:`<div class="rec">No visible change.</div>`;
+    return `<h3>${esc(it.name)}</h3><div class="meta">${m.join("")}</div>${rep}${ch}`;}
+  if(it.hex)m.push(`<span class="mono">${it.hex}${it.alpha?` @ ${it.alpha*100}%`:""}</span>`);
+  if(it.k==="t"){const [w,s,lh,ls,caps]=it.f;m.push(`<span class="mono">Open Sans ${w} · ${s}/${lh}px${ls?` · ls ${ls}px`:""}${caps?" · CAPS":""}</span>`);m.push(it.reg?"Registered style":"Canvas spec only")}
+  if(it.k==="g")m.push(`<span class="mono" style="overflow-wrap:anywhere">${esc(it.css)}</span>`);
+  if(it.node)m.push(`<a href="${FIG}${it.node.replace(":","-")}" target="_blank" rel="noopener">Figma ${it.node} ↗</a>`);
+  const fl=[...(it.flags||[]).map(f=>`<div class="flag">${esc(f)}</div>`),...(it.warn||[]).map(f=>`<div class="flag w">${esc(f)}</div>`)].join("");
+  const src=(it.src||[]).map(k=>`<a href="${S[k][1]}" target="_blank" rel="noopener">${S[k][0]} ↗</a>`).join("");
+  return `<h3>${esc(it.name)}</h3><div class="meta">${m.join("")}</div>
+   ${it.use?`<div class="note">${it.k==="gap"?"":"<span style='color:var(--muted)'>Used: </span>"}${esc(it.use)}</div>`:""}
+   ${fl?`<div class="flags">${fl}</div>`:""}
+   ${it.rec?`<div class="rec">Recommendation: ${it.rec}</div>`:""}
+   ${src?`<div class="src"><span style="color:var(--muted)">Sources:</span>${src}</div>`:""}`;
+}
+const OPTS={item:[["keep","Keep"],["change","Keep with changes"],["outdated","Outdated"],["skip","Skip"]],gap:[["add","Add"],["later","Later"],["notneeded","Not needed"]],tp:[["keep","Approve"],["change","Approve with changes"],["skip","Keep roles separate"]]};
+function card(it){
+  const d=state.dec[it.id]||{};const opts=it.k==="gap"?OPTS.gap:it.k==="tp"?OPTS.tp:OPTS.item;
+  return `<article class="card${it.k==="gap"?" gapc":""}" id="c-${it.id}" data-d="${d.choice||""}">
+   <div class="viz">${viz(it)}</div>
+   <div class="facts">${facts(it)}</div>
+   <div class="dec">
+    <div class="choices" role="group" aria-label="Decision for ${esc(it.name)}">${opts.map(([v,l])=>`<button type="button" data-id="${it.id}" data-v="${v}" aria-pressed="${d.choice===v}" ${state.canWrite?"":"disabled"}>${l}</button>`).join("")}</div>
+    <textarea id="n-${it.id}" data-id="${it.id}" placeholder="Note (what to change, why outdated…)" ${state.canWrite?"":"disabled"}>${esc(d.note||"")}</textarea>
+    <div class="saved" id="s-${it.id}">${d.at?"Saved "+new Date(d.at).toLocaleString():""}</div>
+   </div></article>`;
+}
+function visible(it){
+  const d=state.dec[it.id];
+  if(state.filter==="open")return !d||!d.choice;
+  if(state.filter==="flag")return (it.flags||[]).length>0;
+  return true;
+}
+function render(){
+  $("#tabs").innerHTML=GROUPS.map(g=>{const n=g.items.length,done=g.items.filter(i=>state.dec[i.id]?.choice).length;return `<button type="button" data-tab="${g.id}" aria-pressed="${state.tab===g.id}">${g.tab} · ${done}/${n}</button>`}).join("");
+  const g=GROUPS.find(x=>x.id===state.tab);
+  const items=g.items.filter(visible);
+  $("#main").innerHTML=`<section class="grp"><h2>${g.title}</h2><p class="sub">${esc(g.sub)}</p>${items.map(card).join("")||`<p class="sub">Nothing matches this filter.</p>`}</section>`;
+  renderProg();
+}
+function renderProg(){
+  const c={keep:0,change:0,outdated:0,skip:0,add:0,later:0,notneeded:0};let done=0;
+  ALL.forEach(i=>{const v=state.dec[i.id]?.choice;if(v){c[v]++;done++}});
+  const n=ALL.length;
+  $("#prog").innerHTML=`<span><b>${done}</b> / ${n} decided</span><span>Keep <b>${c.keep+c.change}</b></span><span>Outdated <b>${c.outdated}</b></span><span>Skip <b>${c.skip}</b></span><span>Gaps added <b>${c.add}</b></span>`;
+  const seg=(v,col)=>`<i style="width:${v/n*100}%;background:${col}"></i>`;
+  $("#bar").innerHTML=seg(c.keep+c.add,"var(--keep)")+seg(c.change+c.later,"var(--change)")+seg(c.outdated,"var(--old)")+seg(c.skip+c.notneeded,"var(--skip)");
+}
+async function save(id,patch){
+  const cur={...(state.dec[id]||{}),...patch,at:Date.now()};
+  state.dec[id]=cur;
+  const s=$("#s-"+id);
+  if(!state.db){if(s)s.textContent="Not saved: decision store unavailable";return}
+  try{await state.db.collection("decisions").doc(id).set(cur);if(s)s.textContent="Saved "+new Date(cur.at).toLocaleString()}
+  catch(e){if(s)s.textContent=e&&e.code==="invalid_argument"?"You can view but not edit decisions":"Not saved, try again ("+(e&&e.code||"error")+")"; if(e&&e.code==="invalid_argument"){state.canWrite=false;render()}}
+}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.tab){state.tab=t.dataset.tab;try{localStorage.setItem("v1-tab",state.tab)}catch{}render();window.scrollTo({top:0});return}
+  if(t.id==="th-light"||t.id==="th-dark"){setTheme(t.id.slice(3));return}
+  if(t.id==="f-all"||t.id==="f-open"||t.id==="f-flag"){state.filter=t.id.slice(2);["all","open","flag"].forEach(k=>$("#f-"+k).setAttribute("aria-pressed",k===state.filter));render();return}
+  if(t.dataset.v&&t.dataset.id){const id=t.dataset.id;const v=state.dec[id]?.choice===t.dataset.v?null:t.dataset.v;
+    save(id,{choice:v});const c=$("#c-"+id);c.dataset.d=v||"";c.querySelectorAll(".choices button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));renderProg();
+    $("#tabs").innerHTML=GROUPS.map(g=>{const n=g.items.length,done=g.items.filter(i=>state.dec[i.id]?.choice).length;return `<button type="button" data-tab="${g.id}" aria-pressed="${state.tab===g.id}">${g.tab} · ${done}/${n}</button>`}).join("");}
+});
+const timers={};
+document.addEventListener("input",e=>{const t=e.target;if(t.tagName!=="TEXTAREA")return;const id=t.dataset.id;clearTimeout(timers[id]);timers[id]=setTimeout(()=>save(id,{note:t.value}),700)});
+
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("v1-theme",th)}catch{}}
+{let th=null;try{th=localStorage.getItem("v1-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+try{const t=localStorage.getItem("v1-tab");if(t&&GROUPS.some(g=>g.id===t))state.tab=t}catch{}
+render();
+
+(async()=>{
+  const conn=$("#conn");
+  const db=window.claude?await window.claude.use("db"):null;
+  if(!db){conn.textContent="Decision store unavailable in this view. Open the page on claude.ai while signed in to save decisions.";conn.classList.add("bad");return}
+  state.db=db;
+  try{const user=await window.claude.use("user");const w=user&&await user.can("data.write");if(w===false){state.canWrite=false}}catch{}
+  db.collection("decisions").onSnapshot(snap=>{
+    snap.docs.forEach(d=>{const v=d.data();if(v)state.dec[d.id]=v});
+    conn.textContent=state.canWrite?"Connected. Decisions save automatically.":"Connected (read-only for you).";conn.classList.remove("bad");
+    const active=document.activeElement;const keep=active&&active.tagName==="TEXTAREA"?active.id:null;
+    if(!keep)render();else{renderProg()}
+  },err=>{conn.textContent="Lost connection to the decision store ("+err.code+"). Reload to reconnect.";conn.classList.add("bad")});
+})();
+</script>

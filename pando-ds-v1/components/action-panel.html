@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Actions · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="button-group.css">
+<link rel="stylesheet" href="input.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="tag.css">
+<link rel="stylesheet" href="card.css">
+<link rel="stylesheet" href="badge.css">
+<link rel="stylesheet" href="checkbox.css">
+<link rel="stylesheet" href="tooltip.css">
+<link rel="stylesheet" href="timepicker.css">
+<link rel="stylesheet" href="calendar.css">
+<link rel="stylesheet" href="attachments.css">
+<link rel="stylesheet" href="action-panel.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+/* action-panel page */
+.stack{display:flex;flex-direction:column;gap:12px;padding:20px;background:var(--pg-soft);border-radius:10px;overflow-x:auto}
+.stack.on-white{background:#fff}
+.vlist{display:flex;flex-direction:column;gap:18px;padding:20px;overflow-x:auto}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+.vcell .canvas{background:#fff;padding:12px;border-radius:6px;overflow-x:auto}
+.log{font:400 12px var(--pg-mono);color:var(--pg-muted);padding:10px 20px 16px;min-height:20px}
+.diff{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.diff th,.diff td{border:1px solid #e3c88f;padding:6px 8px;text-align:left;vertical-align:top}
+:root[data-theme="dark"] .diff th,:root[data-theme="dark"] .diff td{border-color:#8a6420}
+.open ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.open h3{margin:0;font-size:14px}
+.open+.open{margin-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Organisms</div>
+    <h1>Actions</h1>
+    <p class="lede">It enables users to take actions on the page. It appears as a Form (inputs), Recommendations, Highlighted information.</p>
+    <div class="meta"><span>Status: Built 2026-10-28, not reviewed</span><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=3544-1036" target="_blank" rel="noopener">Figma Actions 3544:1036 ↗</a><a href="https://www.figma.com/design/fYULgtmiblAXtbHsoVL1Yf/DS-V2---Organisms?node-id=2384-5702" target="_blank" rel="noopener">Figma Actions 2384:5702 ↗</a><span>Files: action-panel.css · action-panel.js</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#open">Open issues</a><a href="#try">Try it</a><a href="#newer">Actions — newer</a><a href="#older">Actions — older</a><a href="#slot">Swappable panel</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open">
+  <h3>1 · Two published “Actions” sets — pick which is current</h3>
+  <p>Both sit on the 🟡 Action page under the same name. Both are built below; nothing is merged.</p>
+  <table class="diff">
+    <tr><th></th><th>Newer · 3544:1036 (<code>.pds-actions</code>)</th><th>Older · 2384:5702 (<code>.pds-actions--legacy</code>)</th></tr>
+    <tr><td>Properties</td><td>Type (Default, Swappable) × State (Default, Hover, Active) — 5 variants</td><td>Type (Pro Number, Booking Confirmed, Package Dispatched, Mark as Delivered) × State (Empty, Filled) + boolean Alert — 8 variants</td></tr>
+    <tr><td>Resting look</td><td>White, #EFEFEF border, 2px #E7E7E7 @30% bottom rule; buttons hidden</td><td>Always the tinted look (#E9F1F5 @24%, #9CD2FF border, 3px bottom rule); buttons always shown</td></tr>
+    <tr><td>Buttons</td><td>kit Button Group (Type=Buttons), Small, “Button Text” ×2, 20px apart; only on Hover/Active</td><td>Secondary “Clear” + Primary “Save”, Small, 10px apart; Save disabled while Empty; hidden “Edit” button</td></tr>
+    <tr><td>Body</td><td>Generic: up to 6 Input - Text (4 shown), wrapping 2 per row; or a swappable slot</td><td>Domain-specific: 1–2 fields (Input - Text or remote Text Input Field with date icons), Alert row, hidden Document row</td></tr>
+    <tr><td>Height</td><td>176 / 184 (fields) · 136 / 144 (swappable)</td><td>124</td></tr>
+    <tr><td>Docs</td><td>The page’s <code>.documentation</code> (Hover/Active, one active per stack) describes this set</td><td>No documentation of its own</td></tr>
+  </table>
+</div>
+<div class="open">
+  <h3>Other open issues</h3>
+  <ul>
+    <li><b>Layout shift (newer):</b> the Button Group is hidden at rest (Default 176 high) and shown on Hover/Active (184 high), so the card grows 8px on hover. The hidden instance in Default is also a Normal-size Button Group (226×30), not the Small one (198×24).</li>
+    <li><b>Button Group size (newer):</b> Figma places Small (24px) buttons in the Button Group, whose kit default is Normal (30px). Kit buttons used with <code>.pds-button--small</code>; the group’s 30px min-height is reset inside the card.</li>
+    <li><b>Fields overflow (newer):</b> 4–6 inputs of 200px wrap inside a 570px row, so only 2 fit per row and 170px is left empty. Adjacent borders are doubled (gap 0, inside strokes); the older set overlaps them by 1px instead.</li>
+    <li><b>Atom variant missing in kit — Text Input Field (older):</b> the remote Text Input Field uses label #616161, placeholder #737373, value #404040 (all off-token) and a 5px icon gap. Built as the kit Input - Text with scoped overrides (<code>.pds-actions__tif</code>).</li>
+    <li><b>Atom variant missing in kit — refresh-line icon</b> (20px) in the swappable slot. Inlined, same path as <code>tooltip.js</code>.</li>
+    <li><b>Label room:</b> the kit input reserves 16px after the label for an info icon; removed inside Actions fields so “Booking Confirmation Number” fits as in Figma.</li>
+    <li><b>Date format:</b> Figma samples read “19 Jan 2023 - 10:00 AM”; the kit Calendar writes DD-MM-YYYY. Not reconciled.</li>
+    <li><b>Save enable rule (older):</b> Figma shows only Empty (Save disabled) and Filled (Save enabled). Built as “enabled when every field has a value”; confirm for two-field cards.</li>
+    <li><b>Secondary button meaning (newer):</b> both buttons read “Button Text”. Built as Cancel (leaves Active, fires <code>cancel</code>) + Submit; confirm.</li>
+    <li><b>Hidden layers (older):</b> a “Document” row (EPOD Copy + Misc/Add-Attachment) in Mark as Delivered and an “Edit” button in every variant are hidden and not exposed as properties. Document row built as an opt-in part; Edit not built.</li>
+    <li><b>Label typo:</b> “PRO NUmber” in Figma (renders “PRO NUMBER” because labels are upper-cased). Kept. “pickeup” typo in the Alert text kept.</li>
+    <li><b>Line heights:</b> title 12 SemiBold is AUTO (16) in Figma vs <code>.type-12-semibold</code> 17px; Alert and slot text are 12/16 vs <code>.type-12-regular</code> 17px (set to 16px in the component).</li>
+    <li><b>Off-token colours:</b> slot body text #000000; GeoFence-Input icon #9C9C9C; Text Input Field greys above.</li>
+    <li><b>Contrast (deferred):</b> Primary disabled “Save” #616161 on #E7E7E7 ≈ 4.6:1 passes barely; placeholder #737373 on white 4.7:1; GeoFence icon #9C9C9C on white 2.7:1 and Calendar icon #A3A3A3 2.5:1 (non-text, below 3:1); #9CD2FF card border on white 1.6:1.</li>
+    <li><b>Missing states:</b> no error/validation state on any Actions variant, no loading/submitting state, no focus ring. Focus ring added in review on the card only (not in Figma).</li>
+  </ul>
+</div></section>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Newer set: hover a card to see its buttons; click or tab into one to make it Active — only one card in a stack is Active. Esc or the secondary button leaves Active. Older set: type into the fields — Save turns on when every field is filled; Clear empties them. Date fields open the kit Calendar. The Document row’s Add tile opens your file picker (names only, nothing is uploaded).</p>
+<div class="panel"><div class="stack" id="try-new" data-pds-actions-stack></div><div class="stack" id="try-old" style="margin-top:1px"></div><div class="log" id="log" aria-live="polite">Events appear here.</div></div></section>
+
+<section id="newer" data-flag-area><h2>Actions — newer (3544:1036)</h2><p class="sub">Type × State, 5 variants. Rendered with <code>.pds-actions</code> and the static state classes <code>.is-hover</code> / <code>.is-active</code>. Header Text, Input Label, Placeholder Ghost Text and Button Text are Figma’s own sample text.</p>
+<div class="panel vlist" id="v-new"></div></section>
+
+<section id="older" data-flag-area><h2>Actions — older (2384:5702)</h2><p class="sub">Type × State, 8 variants, plus the Alert boolean (default false; only Package Dispatched carries the Alert layer). Rendered with <code>.pds-actions.pds-actions--legacy</code>.</p>
+<div class="panel vlist" id="v-old"></div></section>
+
+<section id="slot" data-flag-area><h2>.Panel - Swappable with Local (2528:1187)</h2><p class="sub">The slot used by Type = Swappable. Replace it with any content. <code>slideout.css</code> (which may define a shared <code>.pds-panel-slot</code>) did not exist at build time, so it is built here as <code>.pds-actions__slot</code>.</p>
+<div class="panel vlist"><div class="vcell"><span class="lbl">.Panel - Swappable with Local · 334 × 80</span><div class="canvas" id="v-slot"></div></div></div></section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from the Figma components.</p>
+<div class="panel"><div class="spec-table">
+  <div><b>Width</b><code>600px</code> · content row <code>570px</code></div>
+  <div><b>Padding</b><code>15px</code> all sides · gap <code>10px</code></div>
+  <div><b>Radius</b><code>2px</code></div>
+  <div><b>Default</b>bg white · border <code>1px --border-grey</code> · bottom <code>2px --grey-light @30%</code></div>
+  <div><b>Hover / Active / older</b>tint <code>--accent-light-highlight @24%</code> · border <code>1px --highlight-blue-light</code> · bottom <code>3px --highlight-blue-light @24%</code></div>
+  <div><b>Title</b><code>.type-12-semibold</code> <code>--dark-darker</code> #24242F</div>
+  <div><b>Buttons</b>Small (24) · gap <code>20px</code> newer · <code>10px</code> older</div>
+  <div><b>Fields</b>kit Input - Text 200 × 60 · wrap, gap 0 (newer) · overlap −1 (older)</div>
+  <div><b>Alert</b>12/16 Regular <code>--action-red</code> · icon 12 · gap 5</div>
+  <div><b>Document</b>label 10 Regular caps #545454 · gap 4 · Add-Attachment 40</div>
+  <div><b>Slot</b>334 wide · pad <code>10 8 10 15</code> · body pad 10, gap 4, <code>--accent-alternate-white</code></div>
+  <div><b>Slot title</b>icon 20 · gap 8 · 12 SemiBold <code>--pando-dark</code></div>
+  <div><b>Shadow</b>none</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Overview</h3><p>It enables users to take actions on the page.</p><p class="src">Figma .documentation</p></div>
+  <div class="panel card"><h3>Usage</h3><ul><li>As a Form (inputs)</li><li>Recommendations</li><li>Highlighted information</li></ul><p class="src">Figma .documentation</p></div>
+  <div class="panel card"><h3>Interaction</h3><ul><li>Supports hover and active states.</li><li>Active state style will be same as Hover state.</li><li>When multiple action cards are stacked, only one can be active at a time.</li></ul><p class="src">Figma .documentation · Placement &amp; Convention: NA · Animation: NA</p></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Structure</h3><p>Each card is a <code>role="group"</code> named by its header (<code>aria-labelledby</code>). Fields are the kit inputs with real <code>&lt;label&gt;</code>s; buttons are kit <code>&lt;button&gt;</code>s.</p></div>
+  <div class="panel card"><h3>Keyboard</h3><p>Tab into a newer card to make it Active and reveal its buttons (<code>:focus-within</code>), so keyboard users reach them. Esc leaves Active. Date fields open the Calendar with ArrowDown or click.</p></div>
+  <div class="panel card"><h3>Status</h3><p>The Alert row uses <code>role="alert"</code>. Disabled Save uses the native <code>disabled</code> attribute. Contrast failures are listed under Open issues.</p></div>
+</div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul>
+  <li>Inline field errors on blur, cleared once met — no error state in either set. <a href="https://carbondesignsystem.com/patterns/forms-pattern/" target="_blank" rel="noopener">Carbon Forms</a></li>
+  <li>Disable the primary button during submission to prevent double submits (loading state). <a href="https://carbondesignsystem.com/patterns/forms-pattern/" target="_blank" rel="noopener">Carbon Forms</a></li>
+  <li>Buttons at the bottom of the form, not top-aligned — both sets put them in the header. <a href="https://carbondesignsystem.com/patterns/forms-pattern/" target="_blank" rel="noopener">Carbon Forms</a></li>
+  <li>Task-specific button labels instead of generic ones (“Button Text”). <a href="https://carbondesignsystem.com/patterns/forms-pattern/" target="_blank" rel="noopener">Carbon Forms</a></li>
+  <li>Mark required or optional fields consistently — no marking in either set. <a href="https://carbondesignsystem.com/patterns/forms-pattern/" target="_blank" rel="noopener">Carbon Forms</a></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Include the kit atoms, then build or write the markup and call <code>pdsActions.init()</code>.</p>
+<pre id="code1"></pre>
+<p class="sub" style="margin-top:14px">Static markup (newer, Hover):</p>
+<pre id="code2"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="input.js"></script>
+<script src="button.js"></script>
+<script src="tooltip.js"></script>
+<script src="timepicker.js"></script>
+<script src="calendar.js"></script>
+<script src="attachments.js"></script>
+<script src="action-panel.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const cell=(lbl,el)=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${lbl}</span><div class="canvas"></div>`;c.lastChild.appendChild(el);return c};
+const FOUR=()=>Array.from({length:4},()=>({label:"Input Label",placeholder:"Placeholder Ghost Text"}));
+const ACTIVE=()=>[{label:"Input Label",value:"Some text here",state:"active"},...Array.from({length:3},()=>({label:"Input Label",placeholder:"Placeholder Ghost Text"}))];
+
+// newer variants
+[["Type=Default, State=Default",{}],["Type=Default, State=Hover",{state:"hover"}],["Type=Default, State=Active",{state:"active",fields:ACTIVE()}],
+ ["Type=Swappable, State=Default",{type:"swappable"}],["Type=Swappable, State=Hover",{type:"swappable",state:"hover"}]]
+ .forEach(([l,o])=>$("#v-new").appendChild(cell(l,pdsActions.build(Object.assign({static:true},o)))));
+
+// older variants
+const OLD={
+ "Pro Number":{title:"PRO Number",e:[{label:"PRO NUmber",placeholder:"Enter PRO Number"}],f:[{label:"PRO NUmber",value:"946-12345C"}]},
+ "Booking Confirmed":{title:"Booking Confirmed",e:[{label:"Booking Confirmation Number",placeholder:"Enter Confirmation Number"}],f:[{label:"Booking Confirmation Number",value:"FED001"}]},
+ "Package Dispatched":{title:"Shipment Pick Up",e:[{label:"Reported At",placeholder:"Select Date & Time",icon:"geofence"},{label:"Dispatched at",placeholder:"Select Date & Time",icon:"calendar"}],f:[{label:"Reported At",value:"19 Jan 2023 - 10:00 AM",icon:"geofence"},{label:"Dispatched at",value:"19 Jan 2023 - 11:00 AM",icon:"calendar"}]},
+ "Mark as Delivered":{title:"Delivered at Destination",e:[{label:"Reported At",placeholder:"Select Date & Time",icon:"geofence"},{label:"POD",placeholder:"Select Date & Time",icon:"calendar"}],f:[{label:"Reported At",value:"20 Jan 2023 - 10:30 AM",icon:"geofence"},{label:"POD",value:"20 Jan 2023 - 10:30 AM",icon:"calendar"}]}
+};
+const ALERT="Materials & Documents should be uploaded before shipment pickeup";
+Object.entries(OLD).forEach(([t,d])=>{["Empty","Filled"].forEach(s=>{$("#v-old").appendChild(cell(`Type=${t}, State=${s}`,pdsActions.build({legacy:true,static:true,title:d.title,fields:s==="Empty"?d.e:d.f})))})});
+$("#v-old").appendChild(cell("Type=Package Dispatched, State=Empty, Alert=true",pdsActions.build({legacy:true,static:true,title:OLD["Package Dispatched"].title,fields:OLD["Package Dispatched"].e,alert:ALERT})));
+$("#v-old").appendChild(cell("Type=Mark as Delivered, State=Empty + hidden “Document” layer shown",pdsActions.build({legacy:true,static:true,title:OLD["Mark as Delivered"].title,fields:OLD["Mark as Delivered"].e,document:{label:"EPOD Copy"}})));
+
+// slot alone
+{const a=pdsActions.build({type:"swappable",static:true});$("#v-slot").appendChild(a.querySelector(".pds-actions__slot-local"))}
+
+// try it
+$("#try-new").appendChild(pdsActions.build({title:"Header Text",fields:FOUR()}));
+$("#try-new").appendChild(pdsActions.build({title:"Header Text",fields:FOUR()}));
+$("#try-new").appendChild(pdsActions.build({type:"swappable"}));
+$("#try-old").appendChild(pdsActions.build({legacy:true,title:"PRO Number",fields:OLD["Pro Number"].e}));
+$("#try-old").appendChild(pdsActions.build({legacy:true,title:"Delivered at Destination",fields:OLD["Mark as Delivered"].e,document:{label:"EPOD Copy"}}));
+$("#try-old").appendChild(pdsActions.build({legacy:true,title:"Shipment Pick Up",fields:OLD["Package Dispatched"].e,alert:ALERT}));
+const log=m=>{$("#log").textContent=m};
+document.addEventListener("pds-actions:submit",e=>log(`submit · ${e.target.querySelector(".pds-actions__title").textContent} · `+JSON.stringify(e.detail.values.map(v=>v.value))));
+["cancel","clear","activate"].forEach(t=>document.addEventListener("pds-actions:"+t,e=>log(`${t} · ${e.target.querySelector(".pds-actions__title").textContent}`)));
+document.addEventListener("pds-actions:attach",e=>log("attach · "+e.detail.files.join(", ")));
+
+// code
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/button-group.css">
+<link rel="stylesheet" href="components/input.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/action-panel.css">
+<!-- optional: calendar.css (+ timepicker.css) for date fields; attachments.css + tag, card, badge, checkbox, tooltip for the Document row -->
+<script src="components/icons/icons-data.js"><\/script>
+<script src="components/input.js"><\/script>
+<script src="components/action-panel.js"><\/script>
+
+<div data-pds-actions-stack>
+  <script>
+    const card = pdsActions.build({ title: 'Header Text' });          // newer set
+    const old  = pdsActions.build({ legacy: true, title: 'PRO Number',
+      fields: [{ label: 'PRO NUmber', placeholder: 'Enter PRO Number' }] });
+    card.addEventListener('pds-actions:submit', e => console.log(e.detail.values));
+  <\/script>
+</div>`;
+$("#code2").textContent=pdsActions.build({state:"hover",static:true,fields:[{label:"Input Label",placeholder:"Placeholder Ghost Text"}]}).outerHTML.replace(/></g,">\n<");
+
+// theme
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

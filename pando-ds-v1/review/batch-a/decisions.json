@@ -1,0 +1,334 @@
+{
+ "radio": {
+  "dark-theme": {
+   "choice": "keep"
+  },
+  "doc-do-dont-empty": {
+   "choice": "keep"
+  },
+  "doc-behaviour": {
+   "choice": "keep"
+  },
+  "doc-example-empty": {
+   "choice": "keep"
+  },
+  "gap-error-group": {
+   "choice": "add"
+  },
+  "light-disabled": {
+   "choice": "keep"
+  },
+  "loose-alt-text": {
+   "choice": "keep"
+  },
+  "gap-target-contrast": {
+   "choice": "later"
+  },
+  "spectral-anatomy": {
+   "choice": "keep"
+  },
+  "doc-when-to-use": {
+   "choice": "keep"
+  },
+  "props": {
+   "choice": "keep"
+  },
+  "gap-focus": {
+   "choice": "add"
+  },
+  "gap-keyboard": {
+   "choice": "add"
+  },
+  "doc-variation-empty": {
+   "choice": "outdated"
+  },
+  "light-disabled-selected": {
+   "choice": "keep"
+  },
+  "gap-layout": {
+   "choice": "later"
+  },
+  "loose-bg-rect": {
+   "choice": "skip"
+  },
+  "doc-when-not": {
+   "choice": "keep"
+  },
+  "light-unselected": {
+   "choice": "keep"
+  },
+  "doc-placement": {
+   "choice": "keep"
+  }
+ },
+ "dropdown": {
+  "published-filter-dropdown": {
+   "choice": "keep"
+  },
+  "gap-multiselect": {
+   "choice": "add"
+  },
+  "loose-movement-chips": {
+   "choice": "skip"
+  },
+  "gap-sizes": {
+   "choice": "later"
+  },
+  "scrollbar": {
+   "choice": "keep"
+  },
+  "state-selected": {
+   "choice": "keep"
+  },
+  "trigger-missing": {
+   "choice": "keep"
+  },
+  "menu-container": {
+   "choice": "keep"
+  },
+  "gap-height-scroll": {
+   "choice": "add"
+  },
+  "gap-disabled-error": {
+   "choice": "add"
+  },
+  "loose-multiselect-regions": {
+   "choice": "keep"
+  },
+  "gap-search-empty": {
+   "choice": "add"
+  },
+  "no-docs": {
+   "choice": "keep"
+  },
+  "option-row": {
+   "choice": "keep"
+  },
+  "states-missing": {
+   "choice": "keep"
+  },
+  "loose-regions-unselected": {
+   "choice": "outdated"
+  },
+  "search-field": {
+   "choice": "keep"
+  },
+  "tokens-offlist": {
+   "choice": "keep"
+  },
+  "gap-keyboard-a11y": {
+   "choice": "later"
+  },
+  "loose-depot-list": {
+   "choice": "keep"
+  }
+ },
+ "inputs": {
+  "anatomy-type": {
+   "choice": "skip"
+  },
+  "gap-readonly": {
+   "choice": "add"
+  },
+  "anatomy-base": {
+   "choice": "keep"
+  },
+  "text-area": {
+   "choice": "keep"
+  },
+  "text-inline": {
+   "choice": "keep"
+  },
+  "gap-helper-error": {
+   "choice": "add"
+  },
+  "open-dropdown": {
+   "choice": "keep"
+  },
+  "docs-dropdown": {
+   "choice": "keep"
+  },
+  "docs-text-input": {
+   "choice": "keep"
+  },
+  "gap-count-clear": {
+   "choice": "later"
+  },
+  "loose-instances": {
+   "choice": "skip"
+  },
+  "text-condition": {
+   "choice": "keep"
+  },
+  "text-default-states": {
+   "choice": "keep"
+  },
+  "text-dark": {
+   "choice": "keep"
+  },
+  "loose-shapes": {
+   "choice": "skip"
+  },
+  "contrast-note": {
+   "choice": "change"
+  },
+  "dropdown-light": {
+   "choice": "keep"
+  },
+  "docs-note-pending": {
+   "choice": "change",
+   "note": "https://www.figma.com/design/S21sFFHjfc3XvGDAAYvA49/DS-V2---Atoms?node-id=11396-3213&t=8eoyoTrow41T4a5a-11\n\nrefer this on hover the info icon we may have the tooltip"
+  },
+  "dropdown-dark": {
+   "choice": "keep"
+  },
+  "text-tags": {
+   "choice": "keep"
+  },
+  "gap-focus": {
+   "choice": "add"
+  },
+  "gap-required": {
+   "choice": "add"
+  },
+  "text-sizes": {
+   "choice": "keep"
+  },
+  "text-formula": {
+   "choice": "keep"
+  }
+ },
+ "buttons": {
+  "dual-icon": {
+   "choice": "keep"
+  },
+  "secondary-light": {
+   "choice": "keep"
+  },
+  "gap-disabled-reason": {
+   "choice": "later"
+  },
+  "text-only": {
+   "choice": "keep"
+  },
+  "gap-icon-name": {
+   "choice": "add"
+  },
+  "template-docs": {
+   "choice": "outdated"
+  },
+  "gap-loading": {
+   "choice": "add"
+  },
+  "icon-button": {
+   "choice": "keep"
+  },
+  "primary-light": {
+   "choice": "keep"
+  },
+  "draft-workspace": {
+   "choice": "skip"
+  },
+  "studio-theme": {
+   "choice": "outdated"
+  },
+  "states-model": {
+   "choice": "skip"
+  },
+  "gap-sizes": {
+   "choice": "later"
+  },
+  "gap-danger": {
+   "choice": "add"
+  },
+  "doc-frame": {
+   "choice": "keep"
+  },
+  "type-styles": {
+   "choice": "keep"
+  },
+  "stray-nodes": {
+   "choice": "skip"
+  },
+  "dropdown-button": {
+   "choice": "keep"
+  },
+  "action-button": {
+   "choice": "keep"
+  },
+  "doc-block": {
+   "choice": "keep"
+  },
+  "pill-button": {
+   "choice": "keep"
+  },
+  "gap-target": {
+   "choice": "later"
+  },
+  "dark-theme": {
+   "choice": "keep"
+  },
+  "ai-copilot": {
+   "choice": "keep"
+  },
+  "show-more": {
+   "choice": "keep"
+  },
+  "gap-focus": {
+   "choice": "add"
+  }
+ },
+ "checkbox": {
+  "doc-placement": {
+   "choice": "keep"
+  },
+  "loose-backdrop": {
+   "choice": "keep"
+  },
+  "with-label": {
+   "choice": "keep"
+  },
+  "loose-instance": {
+   "choice": "skip"
+  },
+  "gap-error-message": {
+   "choice": "add"
+  },
+  "gap-group-label": {
+   "choice": "add"
+  },
+  "indet-build": {
+   "choice": "keep"
+  },
+  "stray-check": {
+   "choice": "keep"
+  },
+  "doc-variation-examples": {
+   "choice": "keep"
+  },
+  "size": {
+   "choice": "keep"
+  },
+  "loose-button": {
+   "choice": "skip"
+  },
+  "loose-desktop1": {
+   "choice": "outdated"
+  },
+  "dark-states": {
+   "choice": "keep"
+  },
+  "gap-focus-ring": {
+   "choice": "add"
+  },
+  "light-states": {
+   "choice": "keep"
+  },
+  "doc-uses": {
+   "choice": "keep"
+  },
+  "props": {
+   "choice": "keep"
+  }
+ }
+}

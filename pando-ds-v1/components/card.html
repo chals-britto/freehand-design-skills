@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Card · Pando DS V1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="avatar.css">
+<link rel="stylesheet" href="tag.css">
+<link rel="stylesheet" href="badge.css">
+<link rel="stylesheet" href="input.css">
+<link rel="stylesheet" href="button.css">
+<link rel="stylesheet" href="card.css">
+<style>
+:root{--pg-bg:#f5f7f9;--pg-panel:#fff;--pg-ink:#16202a;--pg-muted:#5b6672;--pg-line:#dfe3e8;--pg-soft:#eef1f4;--pg-accent:#0060b8;--pg-ok:#0f7a4d;--pg-bad:#b3261e;--pg-red:#e5484d;
+  --pg-ui:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;--pg-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--header-height:0px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}}
+:root[data-theme="dark"]{--pg-bg:#12161b;--pg-panel:#1a2027;--pg-ink:#e7ecf1;--pg-muted:#9aa6b2;--pg-line:#2c343d;--pg-soft:#222a32;--pg-accent:#6cb2ff;--pg-ok:#5fd19b;--pg-bad:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--pg-bg);color:var(--pg-ink);font:400 14px/1.5 var(--pg-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+.wrap{max-width:1040px;margin:0 auto}
+header.hd{padding-block:24px 4px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.crumbs{font-size:12.5px;color:var(--pg-muted)} .crumbs a{color:var(--pg-accent);text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:4px 0}
+.lede{color:var(--pg-muted);max-width:66ch;margin:0}
+.meta{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--pg-muted);margin-top:8px}
+.meta a{color:var(--pg-accent)}
+.theme{display:inline-flex;border:1px solid var(--pg-line);border-radius:999px;overflow:hidden;background:var(--pg-panel)}
+.theme button{font:500 12px var(--pg-ui);border:0;background:none;color:var(--pg-muted);padding:5px 12px;cursor:pointer}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+nav.toc{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+nav.toc a{font-size:12.5px;color:var(--pg-ink);text-decoration:none;border:1px solid var(--pg-line);background:var(--pg-panel);padding:4px 10px;border-radius:999px}
+section{padding-top:32px}
+h2{font-size:18px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--pg-muted);font-size:13px;margin:0 0 14px;max-width:72ch}
+.panel{background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+/* playground */
+.play{display:grid;grid-template-columns:260px minmax(0,1fr)}
+.ctrls{padding:16px;border-right:1px solid var(--pg-line);display:flex;flex-direction:column;gap:12px}
+.ctrls label{font-size:12px;color:var(--pg-muted);display:flex;flex-direction:column;gap:4px}
+.ctrls select,.ctrls input[type=text]{font:400 13px var(--pg-ui);padding:6px 8px;border:1px solid var(--pg-line);border-radius:6px;background:var(--pg-bg);color:var(--pg-ink)}
+.ctrls .chk{flex-direction:row;align-items:center;gap:8px;color:var(--pg-ink);font-size:13px}
+.btn{font:600 13px var(--pg-ui);padding:8px 12px;border-radius:6px;border:1px solid var(--pg-accent);background:var(--pg-accent);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--pg-accent)}
+.stage{position:relative;min-height:300px;background:var(--pg-soft);border-radius:0 10px 10px 0;overflow:hidden}
+.fake-hd{height:48px;background:var(--freehand-dark);display:flex;align-items:center;padding:0 16px;color:#fff;font:600 13px "Open Sans",sans-serif;gap:16px}
+.fake-hd span{opacity:.7;font-weight:400}
+.stage .pds-toaster{position:absolute;top:48px}
+.stage-note{position:absolute;bottom:10px;left:12px;font-size:11.5px;color:var(--pg-muted)}
+/* variants */
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:20px}
+.vcell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.vcell .lbl{font:500 11.5px var(--pg-mono);color:var(--pg-muted)}
+/* spec */
+.spec{padding:28px 20px 20px;overflow-x:auto}
+.redline{position:relative;width:808px;margin:40px auto 56px;transform-origin:top left}
+.redline .pds-toast{width:808px;padding:24px 30px;gap:20px;border-radius:0 0 24px 24px}
+.redline .pds-toast__icon{width:48px;height:48px}
+.redline .pds-toast__title{font-size:28px;line-height:38px}
+.redline .pds-toast__body{font-size:22px;line-height:30px}
+.redline .pds-toast__text{gap:4px}
+.redline .pds-toast__close{width:24px;height:24px;margin-top:4px}
+.rl{position:absolute;font:600 11px var(--pg-mono);color:var(--pg-red);white-space:nowrap}
+.rl.h{height:0;border-top:1px solid var(--pg-red)}
+.rl.v{width:0;border-left:1px solid var(--pg-red)}
+.rl.box{border:1px dashed var(--pg-red)}
+.rl span{position:absolute;background:var(--pg-panel);padding:0 3px}
+.spec-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--pg-line);border-top:1px solid var(--pg-line)}
+.spec-table div{background:var(--pg-panel);padding:10px 14px;font-size:12.5px}
+.spec-table b{display:block;font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);margin-bottom:2px}
+.spec-table code{font:400 12px var(--pg-mono)}
+/* usage */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:14px}
+.card p,.card li{font-size:13.5px;margin:0}
+.card ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.src{font-size:11.5px;color:var(--pg-muted);margin-top:8px} .src a{color:var(--pg-accent)}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ddc{overflow:hidden}
+.ddc .ex{background:var(--pg-soft);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:120px;justify-content:center}
+.ddc .cap{padding:12px 16px;border-top:4px solid var(--pg-ok);font-size:13.5px}
+.ddc.dont .cap{border-top-color:var(--pg-bad)}
+.ddc .cap b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pg-ok)}
+.ddc.dont .cap b{color:var(--pg-bad)}
+.inline-err{background:#fff;border:1px solid var(--accent-red-medium);border-left:4px solid var(--action-red);color:var(--text-dark);font:400 12px/17px "Open Sans",sans-serif;padding:10px 12px;width:100%;max-width:404px;border-radius:4px}
+.ex-note{font-size:11px;color:var(--pg-muted)}
+/* code */
+pre{margin:0;padding:14px 16px;overflow-x:auto;font:400 12.5px/1.6 var(--pg-mono);background:var(--pg-panel);border:1px solid var(--pg-line);border-radius:10px}
+.copy{float:right;font:500 12px var(--pg-ui);border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-ink);border-radius:6px;padding:4px 10px;cursor:pointer;margin:8px}
+.open{background:var(--change-soft,#fdf1dc);border:1px solid #c98a1b;border-radius:10px;padding:12px 16px;font-size:13.5px;color:#5c3d00}
+:root[data-theme="dark"] .open{background:#3a2c14;color:#f2d7a8;border-color:#8a6420}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--pg-accent);outline-offset:2px}
+@media (max-width:760px){.play{grid-template-columns:1fr}.ctrls{border-right:0;border-bottom:1px solid var(--pg-line)}.stage{border-radius:0 0 10px 10px}.vgrid,.dd{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.flagbar{margin:10px 0 0;display:flex;align-items:center;flex-wrap:wrap}
+.vgrid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));align-items:start}
+.vgrid.wide{grid-template-columns:repeat(auto-fill,minmax(400px,1fr))}
+.vcell .stagebox{background:var(--pg-soft);padding:16px;border-radius:8px;display:flex;justify-content:center;overflow-x:auto}
+.stage{border-radius:0 10px 10px 0;display:flex;align-items:center;justify-content:center;padding:32px 16px}
+ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+table.vt{width:100%;border-collapse:collapse;font-size:12.5px}
+table.vt th,table.vt td{text-align:left;padding:8px 12px;border-top:1px solid var(--pg-line);vertical-align:top}
+table.vt th{font:500 11px var(--pg-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--pg-muted);border-top:0}
+table.vt code{font:400 12px var(--pg-mono)}
+.tw{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hd">
+  <div>
+    <div class="crumbs"><a href="../index.html">Pando DS V1</a> › Molecules</div>
+    <h1>Card</h1>
+    <p class="lede">Cards used in Documents, Procure, Settings, Dashboard Widgets.</p>
+    <div class="meta"><span>Status: Built 2026-10-28 · no review yet</span><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=2339-6863" target="_blank" rel="noopener">Figma Card 2339:6863 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=419-3564" target="_blank" rel="noopener">Card/Consignment 419:3564 ↗</a><a href="https://www.figma.com/design/rd3gmPnjhPo1d2GAlNSJOn/DS-V2---Molecules?node-id=2339-5833" target="_blank" rel="noopener">Card/Settings 2339:5833 ↗</a><span>Files: card.css · uses avatar, tag, badge, input, button, icons</span></div>
+  </div>
+  <div class="theme" role="group" aria-label="Page theme"><button type="button" id="th-light">Light</button><button type="button" id="th-dark">Dark</button></div>
+</header>
+<div class="flagbar"><button type="button" class="btn ghost" data-flag="page">Flag an issue on this page</button></div>
+<nav class="toc" aria-label="On this page"><a href="#try">Try it</a><a href="#variants">Variants</a><a href="#spec">Spec</a><a href="#usage">Usage</a><a href="#a11y">Accessibility</a><a href="#open">Open issues</a><a href="#gaps">Industry gaps</a><a href="#code">Code</a></nav>
+
+<section id="try" data-flag-area><h2>Try it</h2><p class="sub">Card set properties: Theme × Type × State, plus the two stat-layer booleans (off by default in Figma). Only combinations that exist in Figma are offered.</p>
+<div class="panel play">
+  <form class="ctrls" id="ctrls" onsubmit="return false">
+    <label>Variant<select id="c-variant"></select></label>
+    <label class="chk"><input type="checkbox" id="c-s1"> Show Stat Layer 1</label>
+    <label class="chk"><input type="checkbox" id="c-s2"> Show Stat Layer 2</label>
+    <p class="ex-note" id="c-note"></p>
+  </form>
+  <div class="stage" id="stage"></div>
+</div></section>
+
+<section id="variants" data-flag-area><h2>Variants</h2><p class="sub">Every published variant, rendered with the real classes and Figma’s sample data. Hover the Consignment card to see its Hover state live.</p>
+<h3 style="font-size:14px;margin:14px 0 8px">Card · 7 variants</h3>
+<div class="panel vgrid" id="v-card"></div>
+<h3 style="font-size:14px;margin:18px 0 8px">Card · stat layers on (booleans)</h3>
+<div class="panel vgrid" id="v-stats"></div>
+<h3 style="font-size:14px;margin:18px 0 8px">Card/Consignment · 2 variants</h3>
+<div class="panel vgrid wide" id="v-cons"></div>
+<h3 style="font-size:14px;margin:18px 0 8px">Card/Settings · 1 component</h3>
+<div class="panel vgrid wide" id="v-set"></div>
+</section>
+
+<section id="spec" data-flag-area><h2>Spec</h2><p class="sub">Measured from Figma. Colours mapped to tokens.css; off-token values are component tokens.</p>
+<div class="panel tw"><table class="vt">
+<tr><th>Variant</th><th>Card fill</th><th>Header / section</th><th>Heading</th><th>Sub / description</th><th>Icon</th></tr>
+<tr><td>Light · Single · Default</td><td><code>--white</code></td><td>none</td><td><code>--text-dark</code> #313131</td><td><code>--text-dark</code></td><td>Icon Avatar Active Card, Purple · Road 14</td></tr>
+<tr><td>Light · Single · Active</td><td><code>--white</code></td><td><code>--accent-light-highlight</code> #E9F1F5</td><td><code>--pando-blue-active</code> #005399</td><td><code>--text-dark</code></td><td>same</td></tr>
+<tr><td>Light · Single · Empty</td><td><code>--white</code></td><td>white, 1px inside <code>--border-blue-grey</code> #B5C3CB</td><td><code>--dark-highlight-green</code> #1FCD93</td><td><code>--grey-medium</code> #A3A3A3</td><td>none (hidden)</td></tr>
+<tr><td>Dark · Single · Empty</td><td>white (covered)</td><td><code>--dark-darker</code> #24242F, 1px inside <code>--dark-input-text</code> #8A8A9E</td><td>#1FCD93</td><td><code>--dark-input-text</code> #8A8A9E</td><td>none (hidden)</td></tr>
+<tr><td>Dark · Single · Default</td><td><code>--dark-light</code> #343440</td><td>none</td><td><code>--dark-label-text</code> #D5DAF4</td><td>#D5DAF4</td><td>Icon Avatar Active Card, Dark (#343440 / #D9E6FF)</td></tr>
+<tr><td>Dark · Single · Active</td><td><code>--dark-darker</code> #24242F</td><td>none</td><td>#1FCD93</td><td>#D5DAF4</td><td>ellipse #343440 + Road 14 #D9E6FF</td></tr>
+<tr><td>Light · Documents · Active</td><td><code>--white</code></td><td>#E9F1F5 section</td><td>#313131</td><td>#313131</td><td>Avatar + Warning-Circle 12 + 2 attachment tiles</td></tr>
+</table>
+<div class="spec-table">
+  <div><b>Card</b><code>250px</code> wide · radius <code>2px</code> · <code>--shadow-2</code></div>
+  <div><b>Header</b>padding <code>10px</code> · gap <code>8px</code> · top-aligned</div>
+  <div><b>Text column</b><code>170px</code> fixed</div>
+  <div><b>Heading</b><code>.type-12-semibold</code> (Figma line-height auto)</div>
+  <div><b>Sub</b><code>.type-10-regular</code> · 0.5px tracking</div>
+  <div><b>Empty</b>section padding <code>10px</code> · heading↔desc <code>4px</code></div>
+  <div><b>Stat layer</b>padding <code>10px</code> · gap <code>9px</code> · tag↔value <code>6px</code></div>
+  <div><b>Documents</b>blocks <code>9px</code> apart · inputs <code>4px</code> · tag rows <code>10px</code> · tag↔value <code>4px</code></div>
+  <div><b>Attachment tile</b><code>40px</code> · image <code>36px</code> at 2,1 · badge at 30,−6</div>
+  <div><b>Consignment</b><code>330×50</code> · 0.5px <code>--border-blue-grey</code> · hover <code>--pando-blue</code> · columns <code>110</code> / <code>130</code> · padding <code>0 10px</code></div>
+  <div><b>Settings</b><code>397px</code> · radius <code>4px</code> · padding <code>10px 0</code> · gap <code>5px</code> · no shadow</div>
+  <div><b>Rule row</b>padding <code>8px 10px</code> · gap <code>10px</code> · rows <code>2px</code> apart · #F9FAFA / white</div>
+</div></div></section>
+
+<section id="usage" data-flag-area><h2>Usage</h2>
+<div class="cols">
+  <div class="panel card"><h3>Where it is used (Figma)</h3><p>Cards used in Documents, Procure, Settings, Dashboard Widgets.</p></div>
+  <div class="panel card"><h3>Heading style note (Figma)</h3><ul><li>12px heading with subheader — icon</li><li>14px heading / no subheader — no icon</li></ul><p class="src">Loose text on the Card page (1335:4363). No 14px-heading variant exists in the set, so none is built.</p></div>
+  <div class="panel card"><h3>Atoms inside</h3><ul><li>Icon Avatar → <code>avatar.css</code></li><li>Tag (Small, Filled, Purple) → <code>tag.css</code></li><li>Badge Count → <code>badge.css</code></li><li>Input - Text → <code>input.css</code> / <code>input.js</code></li><li>Icon+Action (Fetch, Edit) → <code>button.css</code> Action button</li><li>Multiselect Number Only → <code>tag.css</code> <code>.pds-tag--count</code></li><li>Icons → <code>icons/</code></li></ul></div>
+</div></section>
+
+<section id="a11y" data-flag-area><h2>Accessibility</h2>
+<div class="cols">
+  <div class="panel card"><h3>Structure</h3><p>Use an <code>&lt;article&gt;</code> for each card with the heading as its name (<code>aria-labelledby</code>). Settings rules are a list (<code>&lt;ul&gt;</code>).</p></div>
+  <div class="panel card"><h3>Actions are buttons</h3><p>Fetch and Edit are real <code>&lt;button&gt;</code>s (kit Action button), so they are reachable with Tab.</p></div>
+  <div class="panel card"><h3>Contrast (for the accessibility pass)</h3><p>#1FCD93 heading on white 1.9 : 1 (Light Empty) · #A3A3A3 description on white 2.5 : 1 · #8A8A9E on #24242F 5.0 : 1 · #6C6C6C carrier on white 5.3 : 1. Kept as Figma.</p></div>
+</div></section>
+
+<section id="open" data-flag-area><h2>Open issues</h2>
+<div class="open"><ul class="plain">
+  <li>Atom missing in kit (remote library): <b>Unit/Small</b> — built inside card.css as <code>.pds-card__unit</code>.</li>
+  <li>Atom missing in kit (remote library): <b>Rule</b> — built inside card.css as <code>.pds-card__rule</code>; its hidden “Property 1=Default” variant is not built.</li>
+  <li>Atom missing in kit (remote library): <b>Circular Indicator</b> (Color=Cyan, Type=Depot Manager) — built as <code>.pds-card__indicator</code>; fill #D9E6FF @ 70% differs from the kit Icon Avatar cyan (#BDF0F4).</li>
+  <li>Remote <b>Multiselect</b> (Type=Number Only) matches the kit Multiselect Tag exactly (22px, padding 4/10, radius 12, 2px #E2EAEC) — reused <code>.pds-tag--count</code>, nothing rebuilt. Confirm they are the same component.</li>
+  <li>Atom variant missing in kit: <b>Misc/Add-Attachment · State=Filled · Type=Image</b> (with Badge +3) — built as <code>.pds-card__thumb</code>. The photo was not exported; the #C4C4C4 mask fill stands in.</li>
+  <li>Dark · Single · Empty keeps a white outer card fill under the dark section (visible only at the 2px corners). Kept as Figma.</li>
+  <li>Dark · Single · Active draws its icon as a plain ellipse group, not the Icon Avatar instance used everywhere else.</li>
+  <li>Stat-layer tags carry no label text in Figma (empty purple tags 18px and 45px wide) and the value is “-”. Rendered as-is.</li>
+  <li>Card/Settings header: Figma’s 64px gap overflows the 375px row (Edit lands outside). Built with Edit pushed to the right edge instead.</li>
+  <li>Card Documents inputs: label #616161 and placeholder #737373 in the instance; kit Input uses its own tokens. Kit values win.</li>
+  <li>Off-token colours: Tag Info value #5A6277, Consignment text #404040, image mask #C4C4C4.</li>
+  <li>Line-heights: Figma uses “auto” on 12px semibold headings (≈16px); <code>.type-12-semibold</code> is 17px. Body Text and rule values are 12/16 (no type class — set inline in card.css).</li>
+  <li>No focus, selected or disabled state in Figma for any card; Consignment has Hover only.</li>
+</ul></div></section>
+
+<section id="gaps" data-flag-area><h2>Industry gaps — not added</h2>
+<div class="panel card"><ul class="plain">
+  <li>Selectable card (checkbox/radio-like selection, selected state). <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/card/usage" target="_blank" rel="noopener">Fluent 2 Card</a> · <a href="https://carbondesignsystem.com/components/tile/usage/" target="_blank" rel="noopener">Carbon Tile</a></span></li>
+  <li>Clickable card with focus and disabled states. <span class="src"><a href="https://carbondesignsystem.com/components/tile/usage/" target="_blank" rel="noopener">Carbon Tile</a></span></li>
+  <li>Expandable card. <span class="src"><a href="https://carbondesignsystem.com/components/tile/usage/" target="_blank" rel="noopener">Carbon Tile</a></span></li>
+  <li>Keyboard focus modes for cards holding several actions. <span class="src"><a href="https://fluent2.microsoft.design/components/web/react/core/card/usage" target="_blank" rel="noopener">Fluent 2 Card</a></span></li>
+</ul></div></section>
+
+<section id="code" data-flag-area><h2>Code</h2><p class="sub">Link tokens, the atoms and card.css. Icons are the SVGs in <code>components/icons/</code>, pasted inline.</p>
+<pre id="code1"></pre></section>
+</div>
+
+<script src="icons/icons-data.js"></script>
+<script src="input.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const ICON={};(window.PDS_ICONS||[]).forEach(i=>ICON[i.n]=i.svg);
+const ic=(n,size)=>`<span class="pds-icon pds-icon--${size}" aria-hidden="true">${ICON[n]||""}</span>`;
+const avatar=dark=>`<span class="pds-avatar pds-avatar--purple pds-avatar--active-card${dark?" pds-avatar--dark":""}">${ic("indicator-road-14",14)}</span>`;
+const warn=`<span class="pds-card__warning" role="img" aria-label="Warning">${ICON["system-status-warning-circle"]||""}</span>`;
+const tag=(t,w)=>`<span class="pds-tag pds-tag--purple"${w?` style="width:${w}px"`:""}>${t?`<span class="pds-tag__text">${t}</span>`:""}</span>`;
+const stats=`<div class="pds-card__stats"><span class="pds-card__stat">${tag("",18)}<span class="pds-card__stat-value">-</span></span><span class="pds-card__stat">${tag("",45)}<span class="pds-card__stat-value">-</span></span></div>`;
+let uid=0;
+function single(o){
+  const id="cardh"+(++uid);
+  const cls=["pds-card"];if(o.dark)cls.push("pds-card--dark");if(o.state==="Active")cls.push("pds-card--active");if(o.state==="Empty")cls.push("pds-card--empty");
+  if(o.state==="Empty"){
+    return `<article class="${cls.join(" ")}" aria-labelledby="${id}"><div class="pds-card__section"><div class="pds-card__text"><p class="pds-card__heading" id="${id}">Heading</p><p class="pds-card__sub">Description Text</p></div></div></article>`;
+  }
+  const icon=o.dark&&o.state==="Active"?`<span class="pds-card__indicator-dot">${ic("indicator-road-14",14)}</span>`:avatar(o.dark);
+  return `<article class="${cls.join(" ")}" aria-labelledby="${id}"><div class="pds-card__header">${icon}<div class="pds-card__text"><p class="pds-card__heading" id="${id}">Heading</p><p class="pds-card__sub">Heading</p></div></div>${o.s1?stats:""}${o.s2?stats:""}</article>`;
+}
+function inputHTML(){try{const el=pdsInput.build({type:"text",size:250,label:"Input Label",placeholder:"Placeholder Ghost Text"});return el.outerHTML}catch(e){return ""}}
+function documents(){
+  const id="cardh"+(++uid);
+  const pair=(t,v)=>`<span class="pds-card__tagpair">${tag(t)}<span class="pds-card__tagpair-value">${v}</span></span>`;
+  return `<article class="pds-card pds-card--documents pds-card--active" aria-labelledby="${id}">
+<div class="pds-card__section"><div class="pds-card__header">${avatar(false)}<div class="pds-card__text"><p class="pds-card__heading" id="${id}" style="color:var(--card-heading)">Heading</p><p class="pds-card__sub">Heading</p></div>${warn}</div>
+<div class="pds-card__attachments">${ic("misc-add-attachment-light-40-default",40)}<span class="pds-card__thumb">${ic("misc-add-attachment-light-40-default",40)}<span class="pds-card__thumb-img" role="img" aria-label="Attached image"></span><span class="pds-badge pds-badge--count">+3</span></span></div></div>
+<div class="pds-card__body"><p class="pds-card__body-title">Heading or Text</p><p class="pds-card__body-text">Body Text</p></div>
+<div class="pds-card__inputs">${inputHTML()}${inputHTML()}</div>
+<div class="pds-card__taginfo"><div class="pds-card__tagrow">${pair("Wt","559.74 Kgs")}${pair("Vl","245.5 CFT")}</div><div class="pds-card__tagrow">${pair("Qty","491")}</div></div>
+</article>`;
+}
+const fetchBtn=`<button type="button" class="pds-button pds-button--action">${ICON["action-fetch"].replace("<svg",'<svg class="pds-button__icon" aria-hidden="true"')}<span>Fetch</span></button>`;
+const editBtn=`<button type="button" class="pds-button pds-button--action">${ICON["action-edit"].replace("<svg",'<svg class="pds-button__icon" aria-hidden="true"')}<span>Edit</span></button>`;
+const consignment=hover=>`<article class="pds-card pds-card--consignment${hover?" is-hover":""}" aria-label="Consignment CN6100006076"><div class="pds-card__col pds-card__col--id"><p class="pds-card__strong">CN6100006076</p><p class="pds-card__meta pds-card__meta--carrier">DHL</p></div><div class="pds-card__col pds-card__col--event"><p class="pds-card__strong">Received at Hub</p><p class="pds-card__meta pds-card__meta--time">23 Apr ’21 | 4:30 PM</p></div>${fetchBtn}</article>`;
+const RULES=[["Source","Source"],["Destination","Destination"],["Carrier Reference ID","Source"],["Service Level","Service Level"],["Carrier Reference ID","Source"],["Service Level","Service Level"],["Service Type","Service Type"],["Freight Rate","Freight Rate"],["Freight Unit","Freight Unit"],["Valid From","Valid From (MM/DD/YY)"],["Valid To","Valid To (MM/DD/YY)"]];
+const settings=()=>`<article class="pds-card pds-card--settings" aria-labelledby="set-h"><div class="pds-card__set-head"><div class="pds-card__set-title"><span class="pds-card__indicator">${ic("indicator-details-14",14)}</span><h3 class="pds-card__set-heading" id="set-h">contract field mapping</h3></div>${editBtn}</div>
+<div class="pds-card__set-cols" aria-hidden="true"><span class="pds-card__unit">Pando Field</span><span class="pds-card__set-col">import column</span></div>
+<ul class="pds-card__rules">${RULES.map(([a,b])=>`<li class="pds-card__rule"><span class="pds-card__unit">${a}</span><span class="pds-card__rule-value">${b}</span><span class="pds-tag pds-tag--count">+ 2</span></li>`).join("")}</ul></article>`;
+
+const VARIANTS=[
+ {n:"Theme=Light, Type=Single Card, State=Default",f:o=>single({...o,state:"Default"})},
+ {n:"Theme=Light, Type=Single Card, State=Active",f:o=>single({...o,state:"Active"})},
+ {n:"Theme=Light, Type=Single Card, State=Empty",f:o=>single({...o,state:"Empty"}),nostat:1},
+ {n:"Theme=Dark, Type=Single Card, State=Empty",f:o=>single({...o,dark:1,state:"Empty"}),nostat:1},
+ {n:"Theme=Light, Type=Documents, State=Active",f:()=>documents(),nostat:1},
+ {n:"Theme=Dark, Type=Single Card, State=Default",f:o=>single({...o,dark:1,state:"Default"})},
+ {n:"Theme=Dark, Type=Single Card, State=Active",f:o=>single({...o,dark:1,state:"Active"})},
+];
+const cell=(host,lbl,html)=>{const c=document.createElement("div");c.className="vcell";c.innerHTML=`<span class="lbl">${lbl}</span><div class="stagebox">${html}</div>`;host.appendChild(c)};
+VARIANTS.forEach(v=>cell($("#v-card"),v.n,v.f({})));
+VARIANTS.filter(v=>!v.nostat).forEach(v=>cell($("#v-stats"),v.n+" · Show Stat Layer 1 + 2",v.f({s1:1,s2:1})));
+cell($("#v-cons"),"Theme=Light, State=Default",consignment(false));
+cell($("#v-cons"),"Theme=Light, State=Hover",consignment(true));
+cell($("#v-set"),"Card/Settings",settings());
+
+// try it
+const sel=$("#c-variant");VARIANTS.forEach((v,i)=>{const o=document.createElement("option");o.value=i;o.textContent=v.n.replace(/Theme=|Type=|State=/g,"");sel.appendChild(o)});
+function renderTry(){const v=VARIANTS[sel.value];$("#c-s1").disabled=$("#c-s2").disabled=!!v.nostat;$("#c-note").textContent=v.nostat?"This variant has no stat layers in Figma.":"";$("#stage").innerHTML=v.f({s1:$("#c-s1").checked,s2:$("#c-s2").checked})}
+["change","input"].forEach(ev=>$("#ctrls").addEventListener(ev,renderTry));renderTry();
+
+$("#code1").textContent=`<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components/icons.css">
+<link rel="stylesheet" href="components/avatar.css">
+<link rel="stylesheet" href="components/tag.css">
+<link rel="stylesheet" href="components/badge.css">
+<link rel="stylesheet" href="components/input.css">
+<link rel="stylesheet" href="components/button.css">
+<link rel="stylesheet" href="components/card.css">
+
+<!-- Single Card · Light · Active -->
+`+single({state:"Active"}).replace(/<svg[\s\S]*?<\/svg>/g,"<svg …/>")+`
+
+<!-- Card/Consignment -->
+`+consignment(false).replace(/<svg[\s\S]*?<\/svg>/g,"<svg …/>").replace(/></g,">\n<")+`
+
+<!-- Card/Settings rule row -->
+<li class="pds-card__rule"><span class="pds-card__unit">Source</span><span class="pds-card__rule-value">Source</span><span class="pds-tag pds-tag--count">+ 2</span></li>`;
+
+function setTheme(th){document.documentElement.dataset.theme=th;$("#th-light").setAttribute("aria-pressed",th==="light");$("#th-dark").setAttribute("aria-pressed",th==="dark");try{localStorage.setItem("pds-theme",th)}catch{}}
+document.addEventListener("click",e=>{if(e.target.id==="th-light"||e.target.id==="th-dark")setTheme(e.target.id.slice(3))});
+{let th=null;try{th=localStorage.getItem("pds-theme")}catch{}if(th!=="light"&&th!=="dark")th=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";setTheme(th)}
+</script>
+<script src="nav.js"></script>
+<script src="flag.js"></script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Filter By (molecule)
+   Figma: Molecules (rd3gmPnjhPo1d2GAlNSJOn) › Filter w/Metrics (3027:387)
+     Filter By 3127:5307            (Type × State × Theme, 14 variants)
+     Dropdown Filters 3129:5578     (bar of Filter By pills)
+     More Filters 3047:11637        (State Closed | Open, boolean Reset Button)
+     Data Selection Dropdown Filter 4481:3721 (Default | With Label)
+     .Date and Time 3048:12081      (Date Selection | Time | Date Range | Metrics)
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css + toggle.css (switch), tag.css (metric tags),
+   button.css (Reset), dropdown.css (option list), calendar.css +
+   timepicker.css (date pickers), icons (icons/icons-data.js).
+   Atoms are NOT re-implemented here. Every class is .pds-filter-*, so the
+   Top Filter organism can compose this file as-is.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Filter By pill · Light ────────────────────────────────── */
+  --filter-by-bg:                var(--white);
+  --filter-by-border:            var(--border-grey);          /* #EFEFEF · 1px inside */
+  --filter-by-label:             var(--text-medium);          /* #545454 · label + colon */
+  --filter-by-value:             var(--pando-blue);           /* #0076DD · Filled value */
+  --filter-by-placeholder:       var(--text-medium);          /* #545454 · "Select" / "Search", italic */
+  --filter-by-caret:             var(--dark-bg);              /* #393945 */
+  --filter-by-search-icon:       var(--grey-medium);          /* #A3A3A3 */
+  --filter-by-hover-bg:          var(--border-input-light);   /* #E2EAEC */
+  --filter-by-hover-border:      var(--border-blue);          /* #E9F1F5 */
+
+  /* ── Filter By pill · Dark ─────────────────────────────────── */
+  --filter-by-dark-bg:           var(--dark-bg);              /* #393945 */
+  --filter-by-dark-border:       #484858;                     /* off-token in Figma */
+  --filter-by-dark-label:        var(--dark-label-text);      /* #D5DAF4 */
+  --filter-by-dark-value:        #FFE01B;                     /* off-token in Figma (same as Tag Beta dark) */
+  --filter-by-dark-placeholder:  var(--dark-input-text);      /* #8A8A9E */
+  --filter-by-dark-caret:        var(--dark-bg);              /* #393945 — same as the fill, see Open issues */
+  --filter-by-dark-search-icon:  var(--border-blue);          /* #E9F1F5 */
+  --filter-by-dark-hover-bg:     var(--dark-input-text);      /* #8A8A9E */
+  --filter-by-dark-hover-border: var(--border-blue-grey);     /* #B5C3CB */
+  --filter-by-dark-hover-text:   var(--text-dark);            /* #313131 */
+
+  /* ── Filter By pill · measured ─────────────────────────────── */
+  --filter-by-h:          24px;
+  --filter-by-pad:        4px var(--space-10);
+  --filter-by-gap:        5px;
+  --filter-by-radius:     var(--radius-12);
+  --filter-by-caret-box:  12px;   /* 12×12 frame, 3px top/bottom padding */
+  --filter-by-caret-w:    12px;
+  --filter-by-caret-h:    6px;
+  --filter-by-search:     8px;
+  --filter-by-menu-gap:   4px;    /* pill ↔ open option list — not in Figma, see Open issues */
+
+  /* ── Dropdown Filters bar ──────────────────────────────────── */
+  --filter-bar-bg:        var(--accent-alternate-white);      /* #F9FAFA */
+  --filter-bar-h:         36px;
+  --filter-bar-pad:       6px 20px;
+  --filter-bar-gap:       var(--space-10);
+
+  /* ── More Filters ──────────────────────────────────────────── */
+  --filter-more-btn-bg:   rgb(255 255 255 / .65);             /* white @ 65% */
+  --filter-more-icon:     var(--pando-dark);                  /* #234357 · Navigation/Filter-10px */
+  --filter-more-close:    var(--text-dark);                   /* #313131 */
+  --filter-more-btn:      24px;   /* filter button, 5px padding, 10px icon */
+  --filter-more-btn-pad:  5px;
+  --filter-more-close-sz: 20px;   /* close, 6px padding, 8px glyph */
+  --filter-more-radius:   2px;
+  --filter-more-gap:      var(--space-15);   /* Open: pills ↔ Reset ↔ close */
+  --filter-more-pill-gap: 20px;              /* between pills inside "Filter By" frame */
+
+  /* ── Data Selection Dropdown Filter ────────────────────────── */
+  --filter-select-value:  #18283B;    /* off-token in Figma (= first stop of --gradient-ink-blue) */
+  --filter-select-value-font: 600 14px/10px var(--font-family);  /* Open Sans SemiBold 14 · line-height 10 */
+  --filter-select-arrow:  var(--dark-bg);                     /* #393945 */
+  --filter-select-gap:    var(--space-10);
+  --filter-select-label-gap: 5px;
+  --filter-select-arrow-w: 10px;
+  --filter-select-arrow-h: 5px;
+
+  /* ── .Date and Time ────────────────────────────────────────── */
+  --filter-date-label:    #20354E;    /* off-token in Figma */
+  --filter-date-label-font: 600 10px/10px var(--font-family);   /* SemiBold 10 · line-height 100% */
+  --filter-date-icon:     #36577E;    /* off-token in Figma · Navigation/Calendar-Input */
+  --filter-date-value:    #18283B;    /* off-token in Figma */
+  --filter-date-value-font: 700 14px/10px var(--font-family);   /* Bold 14 · line-height 10 */
+  --filter-date-time-font:  400 14px/10px var(--font-family);   /* Time "10:00 AM" Regular 14 */
+  --filter-date-gap:      var(--space-10);
+  --filter-date-inner-gap: 5px;
+  --filter-date-icon-sz:  10px;
+  --filter-date-divider:  var(--border-blue-grey);            /* #B5C3CB */
+  --filter-date-divider-h: 14px;
+  --filter-date-shift-w:  29px;
+  --filter-date-shift-h:  24px;
+  --filter-date-shift-pad: var(--space-10);
+  --filter-date-shift-caret: var(--pando-dark);               /* #234357 — Navigation/Right-Caret default */
+  --filter-date-countdown: var(--accent-red-medium);          /* #D26568 · Time value */
+  --filter-date-countdown-font: 700 14px/19px var(--font-family); /* Bold 14 · auto line-height */
+  --filter-date-time-label: var(--filter-date-value);         /* "Bid Ends" #18283B */
+  /* Metrics */
+  --filter-metrics-label: #36577E;    /* off-token in Figma · "SELECTED :" */
+  --filter-metrics-gap:   20px;       /* between metrics */
+  --filter-metric-gap:    var(--space-10);   /* tag ↔ value */
+  --filter-metric-value-gap: 5px;     /* qty ↔ unit (Metric 2 uses 6px) */
+  --filter-metric-qty:    var(--status-purple-dark);          /* #2D0645 */
+  --filter-metric-unit:   var(--text-light);                  /* #6C6C6C */
+  --filter-metric-tag-h:  17px;       /* Figma tag here: 17px, text 12 SemiBold — kit Small is 15px / 10px */
+  --filter-metric-tag-font: var(--type-12-semibold);
+  --filter-metric-tag-fg: var(--text-dark);                   /* #313131 */
+}
+
+/* ════════ Filter By pill ════════════════════════════════════════ */
+.pds-filter-by-item { position: relative; display: inline-flex; flex: none; vertical-align: middle; }
+
+.pds-filter-by {
+  --_bg: var(--filter-by-bg); --_bd: var(--filter-by-border);
+  --_label: var(--filter-by-label); --_value: var(--filter-by-value);
+  --_ph: var(--filter-by-placeholder); --_caret: var(--filter-by-caret); --_search: var(--filter-by-search-icon);
+  box-sizing: border-box;
+  display: inline-flex; align-items: center; flex: none;
+  gap: var(--filter-by-gap);
+  height: var(--filter-by-h);
+  margin: 0;
+  padding: var(--filter-by-pad);
+  border: 0;
+  border-radius: var(--filter-by-radius);
+  background: var(--_bg);
+  box-shadow: inset 0 0 0 1px var(--_bd);
+  color: var(--_label);
+  font: var(--type-11-regular);   /* Figma 11/16 — see Open issues */
+  line-height: 16px;
+  white-space: nowrap;
+  text-align: left;
+  cursor: pointer;
+}
+.pds-filter-by:hover, .pds-filter-by.is-hover {
+  --_bg: var(--filter-by-hover-bg); --_bd: var(--filter-by-hover-border);
+}
+.pds-filter-by:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+
+.pds-filter-by__label,
+.pds-filter-by__colon { color: var(--_label); }
+.pds-filter-by__value { color: var(--_value); font-weight: 600; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
+.pds-filter-by--empty .pds-filter-by__value { color: var(--_ph); font-weight: 400; font-style: italic; }
+
+.pds-filter-by__caret {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: var(--filter-by-caret-box); height: var(--filter-by-caret-box);
+  color: var(--_caret);
+}
+.pds-filter-by__caret svg { display: block; width: var(--filter-by-caret-w); height: var(--filter-by-caret-h); }
+.pds-filter-by__search { display: inline-flex; flex: none; width: var(--filter-by-search); height: var(--filter-by-search); color: var(--_search); }
+.pds-filter-by__search svg { display: block; width: 100%; height: 100%; }
+
+/* Type=Toggle: the pill is a group, the kit switch inside is the control */
+.pds-filter-by--toggle { cursor: default; }
+.pds-filter-by--toggle .pds-toggle { flex: none; }
+
+/* Theme=Dark */
+.pds-filter-by--dark {
+  --_bg: var(--filter-by-dark-bg); --_bd: var(--filter-by-dark-border);
+  --_label: var(--filter-by-dark-label); --_value: var(--filter-by-dark-value);
+  --_ph: var(--filter-by-dark-placeholder); --_caret: var(--filter-by-dark-caret); --_search: var(--filter-by-dark-search-icon);
+}
+.pds-filter-by--dark:hover, .pds-filter-by--dark.is-hover {
+  --_bg: var(--filter-by-dark-hover-bg); --_bd: var(--filter-by-dark-hover-border);
+  --_label: var(--filter-by-dark-hover-text); --_value: var(--filter-by-dark-hover-text); --_ph: var(--filter-by-dark-hover-text);
+}
+
+/* Option list host (kit .pds-dropdown inside) */
+.pds-filter-by__menu {
+  position: absolute; left: 0; top: calc(100% + var(--filter-by-menu-gap)); z-index: 30;
+}
+.pds-filter-by__menu[hidden] { display: none; }
+.pds-filter-by__menu .pds-calendar--popup { position: static; }
+
+/* ════════ Dropdown Filters bar ══════════════════════════════════ */
+.pds-filter-bar {
+  box-sizing: border-box;
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: var(--filter-bar-gap);
+  min-height: var(--filter-bar-h);
+  padding: var(--filter-bar-pad);
+  background: var(--filter-bar-bg);
+}
+
+/* ════════ More Filters ══════════════════════════════════════════ */
+.pds-filter-more { display: inline-flex; align-items: center; gap: var(--filter-more-gap); }
+.pds-filter-more__toggle,
+.pds-filter-more__close {
+  box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; flex: none;
+  margin: 0; border: 0; cursor: pointer;
+  background: var(--filter-more-btn-bg);
+  border-radius: var(--filter-more-radius);
+}
+.pds-filter-more__toggle { width: var(--filter-more-btn); height: var(--filter-more-btn); padding: var(--filter-more-btn-pad); color: var(--filter-more-icon); }
+.pds-filter-more__toggle svg { display: block; width: 10px; height: 10px; }
+.pds-filter-more__close { width: var(--filter-more-close-sz); height: var(--filter-more-close-sz); padding: 4px; color: var(--filter-more-close); }
+.pds-filter-more__close svg { display: block; width: 12px; height: 12px; } /* 12px Close-Tag glyph draws an 8×8 cross */
+.pds-filter-more__toggle:focus-visible,
+.pds-filter-more__close:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+.pds-filter-more__filters { display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--filter-more-pill-gap); }
+.pds-filter-more__filters[hidden],
+.pds-filter-more__reset[hidden],
+.pds-filter-more__close[hidden],
+.pds-filter-more__toggle[hidden] { display: none; }
+
+/* ════════ Data Selection Dropdown Filter ════════════════════════ */
+.pds-filter-select {
+  display: inline-flex; align-items: center; gap: var(--filter-select-gap);
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font-family: var(--font-family); text-align: left; white-space: nowrap;
+}
+.pds-filter-select--labelled { gap: var(--filter-select-label-gap); }
+.pds-filter-select__label,
+.pds-filter-select__colon { font: var(--type-11-regular); line-height: 16px; color: var(--filter-by-label); }
+.pds-filter-select__value { font: var(--filter-select-value-font); color: var(--filter-select-value); text-transform: capitalize; }
+.pds-filter-select--labelled .pds-filter-select__value { margin-right: calc(var(--filter-select-gap) - var(--filter-select-label-gap)); }
+.pds-filter-select__arrow { display: inline-flex; flex: none; color: var(--filter-select-arrow); }
+.pds-filter-select__arrow svg { display: block; width: var(--filter-select-arrow-w); height: var(--filter-select-arrow-h); }
+.pds-filter-select:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+
+/* ════════ .Date and Time ════════════════════════════════════════ */
+.pds-filter-date { display: inline-flex; align-items: center; gap: var(--filter-date-gap); font-family: var(--font-family); white-space: nowrap; }
+.pds-filter-date__label { font: var(--filter-date-label-font); color: var(--filter-date-label); text-transform: capitalize; }
+.pds-filter-date__trigger {
+  display: inline-flex; align-items: center; gap: var(--filter-date-inner-gap);
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer;
+  font: var(--filter-date-value-font); color: var(--filter-date-value); text-transform: capitalize;
+}
+.pds-filter-date__trigger:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+.pds-filter-date__icon { display: inline-flex; flex: none; width: var(--filter-date-icon-sz); height: var(--filter-date-icon-sz); color: var(--filter-date-icon); }
+.pds-filter-date__icon svg { display: block; width: 100%; height: 100%; }
+.pds-filter-date__time { font: var(--filter-date-time-font); }
+.pds-filter-date__divider { flex: none; width: 1px; height: var(--filter-date-divider-h); background: var(--filter-date-divider); }
+
+/* Date Range · Right & Left Navigation */
+.pds-filter-date__shift {
+  box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: var(--filter-date-shift-w); height: var(--filter-date-shift-h);
+  margin: 0; padding: 0 var(--filter-date-shift-pad); border: 0; background: none; cursor: pointer;
+  color: var(--filter-date-shift-caret);
+}
+.pds-filter-date__shift--prev { box-shadow: 1px 0 0 var(--filter-date-divider); }   /* right edge, outside */
+.pds-filter-date__shift--next { box-shadow: -1px 0 0 var(--filter-date-divider); }  /* left edge, outside */
+.pds-filter-date__shift svg { display: block; width: 9px; height: 14px; }
+.pds-filter-date__shift--prev svg { transform: rotate(180deg); }
+.pds-filter-date__shift:focus-visible { outline: 2px solid var(--pando-blue); outline-offset: 2px; } /* added in review — not in Figma */
+
+/* Type=Time */
+.pds-filter-date--time { flex-direction: column; justify-content: center; gap: var(--filter-date-inner-gap); }
+.pds-filter-date__time-label { font: var(--type-10-bold); color: var(--filter-date-time-label); }
+.pds-filter-date__countdown { font: var(--filter-date-countdown-font); color: var(--filter-date-countdown); text-transform: uppercase; }
+
+/* Type=Metrics */
+.pds-filter-date__metrics-label { font: var(--type-10-semibold); letter-spacing: 0; color: var(--filter-metrics-label); text-transform: uppercase; }
+.pds-filter-date__metrics { display: inline-flex; align-items: center; gap: var(--filter-metrics-gap); }
+.pds-filter-date__metric { display: inline-flex; align-items: center; gap: var(--filter-metric-gap); }
+.pds-filter-date__metric .pds-tag { height: var(--filter-metric-tag-h); font: var(--filter-metric-tag-font); --_fg: var(--filter-metric-tag-fg); }
+.pds-filter-date__metric-value { display: inline-flex; align-items: center; gap: var(--filter-metric-value-gap); }
+.pds-filter-date__qty { font: var(--type-13-semibold); color: var(--filter-metric-qty); }
+.pds-filter-date__unit { font: var(--type-10-semibold); letter-spacing: 0; color: var(--filter-metric-unit); }

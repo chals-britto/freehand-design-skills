@@ -1,0 +1,148 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Search Input (molecule)
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟡 Search (60:273)
+          › component set "Search Input" (2419:10052) — Theme × State (5)
+            + text props Placeholder Text / Search Input, boolean Show Close Icon
+          › component ".Search Dropdown" (2464:8997) — the results panel
+   Built 2026-10-28 · no review — every published variant kept as in Figma.
+   Requires ../tokens.css, icons.css (.pds-icon), avatar.css (Icon Avatar),
+   dropdown-option.css (.pds-dropdown-option rows) and menu.css
+   (.pds-menu__section for the Categories "Option Heading" rows).
+   The field itself is not an Input atom variant (input.css has no 36px
+   search field) — built here; see search-input.md › Open issues.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Colours */
+  --search-input-bg:              var(--accent-off-white);    /* #F8F8F8 field fill (Light) */
+  --search-input-icon-fg:         var(--grey-medium);         /* #A3A3A3 Navigation/Search-10px */
+  --search-input-placeholder-fg:  var(--text-light);          /* #6C6C6C Empty */
+  --search-input-value-fg:        var(--text-dark);           /* #313131 Filled / Active */
+  --search-input-open-border:     var(--border-input-light);  /* #E2EAEC State=Active */
+  --search-input-cat-border:      var(--pando-blue);          /* #0076DD State=Categories */
+  --search-input-clear-fg:        var(--grey-dark);           /* #515151 Navigation/Close-Tag */
+  --search-input-panel-bg:        var(--white);               /* .Search Dropdown fill */
+  --search-input-panel-shadow:    var(--shadow-4);            /* 0 14 28 6% — .Search Dropdown */
+  --search-input-cat-shadow:      var(--shadow-3);            /* 0 2 14 10% — State=Categories */
+  --search-input-heading-fg:      var(--text-light);          /* #6C6C6C Option Heading (menu section uses #313131) */
+
+  --search-input-dark-bg:         var(--input-dark-field-bg, #484858);  /* off-token in Figma — Dark/Input BG (same as input.css) */
+  --search-input-dark-placeholder: rgb(255 255 255 / .6);     /* off-token in Figma — white @ 60% */
+  --search-input-dark-value-fg:   var(--white);               /* added — not in Figma (Dark has Empty only) */
+
+  /* Measured */
+  --search-input-w:          300px;
+  --search-input-h:          36px;
+  --search-input-pad:        var(--space-10);
+  --search-input-gap:        var(--space-10);
+  --search-input-radius:     4px;
+  --search-input-line-h:     16px;                /* Figma 16 (Active: Auto) vs 17 in .type-12-* */
+  --search-input-icon:       10px;                /* Navigation/Search-10px */
+  --search-input-clear:      12px;                /* Navigation/Close-Tag */
+  --search-input-dark-w:     279px;               /* Figma 279.3, fixed */
+  --search-input-dark-h:     32px;
+  --search-input-dark-pad:   8px var(--space-10);
+  --search-input-dark-track: .5px;
+  --search-input-panel-max-h: 392px;              /* .Search Dropdown = 7 rows × 56; scroll beyond is added — not in Figma */
+
+  --search-input-focus: 2px solid var(--pando-blue);  /* added — not in Figma (keyboard focus) */
+}
+
+.pds-search-input {
+  position: relative;
+  display: inline-flex; flex-direction: column;
+  width: var(--search-input-w);
+  font-family: var(--font-family);
+}
+.pds-search-input *, .pds-search-input *::before, .pds-search-input *::after { box-sizing: border-box; }
+
+/* ── Field ─────────────────────────────────────────────────────── */
+.pds-search-input__field {
+  display: flex; align-items: center;
+  gap: var(--search-input-gap);
+  height: var(--search-input-h);
+  padding: 0 var(--search-input-pad);
+  background: var(--search-input-bg);
+  border: 1px solid transparent;            /* Figma stroke is inside → border keeps 36px */
+  border-radius: var(--search-input-radius);
+}
+.pds-search-input__icon { --_icon: var(--search-input-icon); color: var(--search-input-icon-fg); }
+
+.pds-search-input__input {
+  flex: 1; min-width: 0;
+  height: var(--search-input-line-h);
+  margin: 0; padding: 0; border: 0; outline: 0; background: none;
+  font: var(--type-12-regular);
+  line-height: var(--search-input-line-h);
+  color: var(--search-input-value-fg);
+}
+.pds-search-input__input::placeholder { color: var(--search-input-placeholder-fg); opacity: 1; }
+.pds-search-input__input::-webkit-search-cancel-button { display: none; }
+
+/* Clear — boolean "Show Close Icon" */
+.pds-search-input__clear {
+  flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin: 0; padding: 0; border: 0; background: none;
+  color: var(--search-input-clear-fg);
+  cursor: pointer;
+}
+.pds-search-input__clear .pds-icon { --_icon: var(--search-input-clear); }
+.pds-search-input__clear[hidden] { display: none; }
+
+/* Keyboard focus — added, not in Figma */
+.pds-search-input__field:has(.pds-search-input__input:focus-visible) { outline: var(--search-input-focus); outline-offset: 2px; }
+.pds-search-input__clear:focus-visible { outline: var(--search-input-focus); outline-offset: 2px; }
+
+/* ── State=Active (open, list of results) ──────────────────────── */
+.pds-search-input.is-open .pds-search-input__field {
+  border-color: var(--search-input-open-border);
+  border-radius: var(--search-input-radius) var(--search-input-radius) 0 0;
+}
+.pds-search-input.is-open .pds-search-input__input { font: var(--type-12-semibold); line-height: var(--search-input-line-h); }
+
+/* ── State=Categories (open, grouped, checks) ──────────────────── */
+.pds-search-input--categories.is-open .pds-search-input__field { border-color: var(--search-input-cat-border); }
+.pds-search-input--categories.is-open .pds-search-input__input { font: var(--type-12-regular); line-height: var(--search-input-line-h); }
+
+/* ── Results panel (.Search Dropdown 2464:8997) ────────────────── */
+.pds-search-input__panel {
+  position: absolute; top: 100%; left: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  width: var(--search-input-w);
+  max-height: var(--search-input-panel-max-h);
+  margin: 0; padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--search-input-panel-bg);
+  box-shadow: var(--search-input-panel-shadow);
+  --menu-section-fg: var(--search-input-heading-fg);
+}
+.pds-search-input__panel[hidden] { display: none; }
+.pds-search-input__panel > .pds-dropdown-option { flex: none; }
+.pds-search-input__panel > .pds-dropdown-option[hidden],
+.pds-search-input__panel > .pds-menu__section[hidden] { display: none; }
+/* Static doc rendering: panel in normal flow so the variant shows its full height */
+.pds-search-input--static .pds-search-input__panel { position: static; }
+
+/* Categories: Figma puts the shadow on the whole frame (field + panel); built on the panel */
+.pds-search-input--categories .pds-search-input__panel { box-shadow: var(--search-input-cat-shadow); max-height: none; }
+.pds-search-input--categories .pds-search-input__panel > .pds-dropdown-option { background: var(--search-input-panel-bg); }
+.pds-search-input--categories .pds-search-input__panel > .pds-dropdown-option:hover,
+.pds-search-input--categories .pds-search-input__panel > .pds-dropdown-option.is-active { background: var(--dropdown-option-hover-bg); }
+/* Selected check (boolean "Selected"): shown only when aria-selected="true" */
+.pds-search-input__panel .pds-dropdown-option__check { display: none; }
+.pds-search-input__panel .pds-dropdown-option[aria-selected="true"] .pds-dropdown-option__check { display: inline-flex; }
+
+/* ── Theme=Dark (Empty only in Figma) ──────────────────────────── */
+.pds-search-input--dark { width: var(--search-input-dark-w); }
+.pds-search-input--dark .pds-search-input__field {
+  height: var(--search-input-dark-h);
+  padding: var(--search-input-dark-pad);
+  background: var(--search-input-dark-bg);
+}
+.pds-search-input--dark .pds-search-input__input {
+  letter-spacing: var(--search-input-dark-track);
+  color: var(--search-input-dark-value-fg);
+}
+.pds-search-input--dark .pds-search-input__input::placeholder { color: var(--search-input-dark-placeholder); }

@@ -1,0 +1,22 @@
+# Pando DS V1
+
+Source of truth for the V1 design system (aliases: V1, Pando, Old DS, FAP DS, Procure DS).
+Built from Figma "DS V2 – Atoms" (S21sFFHjfc3XvGDAAYvA49), Molecules and Organisms files.
+
+- `review/` — review boards; nothing enters the kit without a Keep decision
+- `tokens.css` — foundations (after review)
+- `components/` — one HTML demo + one .md doc per approved component
+- `skill/` — the Claude skill that points at this repo
+
+Review board (Foundations): https://claude.ai/artifact/7MccwSYjhh1fStmRnoFSG5
+Toast review board: https://claude.ai/artifact/NuFbZ1B1U5z3wu1kHeG3HW
+Batch A review board (form controls): https://claude.ai/artifact/9mUiRHDLFVsQzPvm1jmZvB
+Library (living reference): https://claude.ai/artifact/GwQoWeEqK3NnC5tpVEMjMB
+
+## Status
+- [x] Step 1 Foundations — tokens.css (colours, roles, gradients, type, 1 shadow)
+- [ ] Spacing / radius / elevation 2–4 / state colours — measured from components
+- [x] Step 2 Atoms — Toast (components/toast.*)
+- [x] Step 2 Atoms — all 17 built as spec pages (Alerts page empty in Figma); Tooltip partial
+- [x] Step 3 Skill — skill/SKILL.md, linked at ~/.claude/skills/pando-ds-v1
+- [ ] Accessibility pass (after the system is complete)

@@ -1,0 +1,232 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Column Picker (molecule)
+   Figma: Molecules (rd3gmPnjhPo1d2GAlNSJOn) › ✏️ Dropdown (2312:4660)
+     Column Picker 3098:3179 (Type = Toggle | Pin, boolean Show Button)
+     Column Picker Advanced 6358:1771
+     .Column Toggle 3067:2277 · .Column Pin 3094:669
+     .Column Toggle View Advanced 6356:2357 · View Header 6356:2480
+   Built 2026-10-28 · no review yet, everything published = Keep.
+   Requires ../tokens.css + toggle.css (switch), button.css (header icon
+   button), icons.css. Atoms are NOT re-implemented here.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Panel ─────────────────────────────────────────────────── */
+  --column-picker-bg:            var(--white);
+  --column-picker-shadow:        var(--shadow-4);              /* 0 14 28 #000 @ 6% */
+  --column-picker-top-bg:        var(--grey-light);            /* #E7E7E7 (Toggle / Pin) */
+  --column-picker-top-bg-adv:    color-mix(in srgb, var(--grey-light) 70%, transparent); /* #E7E7E7 @ 70% (Advanced) */
+  --column-picker-title:         var(--pando-blue-active);     /* #005399 */
+  --column-picker-subtitle:      var(--text-dark);             /* #313131 */
+  --column-picker-width:         220px;
+  --column-picker-width-adv:     330px;
+  --column-picker-top-pad:       var(--space-10);
+  --column-picker-top-gap:       var(--space-15);              /* text ↔ header button */
+  --column-picker-title-gap:     var(--space-2);               /* title ↔ subtitle */
+  --column-picker-gap:           8px;                          /* header ↔ row ↔ row (Toggle / Pin) */
+  --column-picker-gap-adv:       6px;                          /* header ↔ row, row ↔ separator (Advanced) */
+  --column-picker-pad-bottom:    var(--space-10);
+
+  /* ── Row (.Column Toggle / .Column Pin / Advanced) ─────────── */
+  --column-picker-row-w:         200px;                        /* Toggle / Pin row, centred in 220 */
+  --column-picker-row-h:         16px;
+  --column-picker-row-h-adv:     24px;
+  --column-picker-row-pad-adv:   0 var(--space-10);
+  --column-picker-left-gap:      6px;                          /* handle ↔ name */
+  --column-picker-handle:        var(--accent-blue-grey);      /* #CBD4D8 drag dots */
+  --column-picker-on:            var(--accent-green-medium);   /* #67AC5D name, pin, separator bar */
+  --column-picker-off:           var(--text-medium);           /* #545454 name when hidden */
+  --column-picker-unpin:         var(--pando-dark);            /* #234357, icon at 50% opacity */
+  --column-picker-unpin-opacity: .5;
+  --column-picker-pin-size:      var(--icon-size-14);
+  --column-picker-sep:           var(--border-blue);           /* #E9F1F5 1px line, 306 wide */
+  --column-picker-sep-inset:     var(--space-12);              /* (330 − 306) / 2 */
+  --column-picker-bar-off:       var(--text-light);            /* #6C6C6C "|" in a hidden row */
+
+  /* ── View Header chip ──────────────────────────────────────── */
+  --column-picker-chip-pad:      4px;
+  --column-picker-chip-gap:      4px;
+  --column-picker-chip-radius:   4px;
+  --column-picker-chip-h:        24px;
+  --column-picker-headers-gap:   var(--space-2);               /* chip ↔ "|" ↔ chip */
+  --column-picker-view-bg:       color-mix(in srgb, var(--status-green-light) 20%, transparent); /* #D5F9D1 @ 20% */
+  --column-picker-view-fg:       var(--accent-green-medium);   /* #67AC5D */
+  --column-picker-hide-bg:       var(--accent-alternate-white);/* #F9FAFA */
+  --column-picker-hide-fg:       var(--text-medium);           /* #545454 */
+  --column-picker-disabled-bg:   var(--white);
+  --column-picker-disabled-fg:   var(--text-disabled);         /* #A3A2A2 */
+
+  /* Focus — added in review, not in Figma */
+  --column-picker-focus:         var(--pando-blue);
+}
+
+/* ════════ Panel ═════════════════════════════════════════════════ */
+.pds-column-picker {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--column-picker-gap);
+  width: var(--column-picker-width);
+  padding: 0 0 var(--column-picker-pad-bottom);
+  background: var(--column-picker-bg);
+  box-shadow: var(--column-picker-shadow);
+  font-family: var(--font-family);
+  color: var(--text-dark);
+}
+.pds-column-picker--advanced { width: var(--column-picker-width-adv); gap: var(--column-picker-gap-adv); }
+
+.pds-column-picker__top {
+  box-sizing: border-box;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: var(--column-picker-top-gap);
+  padding: var(--column-picker-top-pad);
+  background: var(--column-picker-top-bg);
+}
+.pds-column-picker--advanced .pds-column-picker__top { background: var(--column-picker-top-bg-adv); }
+.pds-column-picker__heading { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--column-picker-title-gap); }
+.pds-column-picker__title {
+  margin: 0;
+  color: var(--column-picker-title);
+  font: var(--type-12-semibold);   /* Figma: Open Sans 12 SemiBold, auto line-height (16), UPPER */
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+.pds-column-picker__subtitle {
+  margin: 0;
+  color: var(--column-picker-subtitle);
+  font: var(--type-8-regular);     /* Figma: Open Sans 8 Regular, auto line-height (11) */
+}
+.pds-column-picker__top .pds-button { flex: none; }
+
+/* ════════ List + rows ═══════════════════════════════════════════ */
+.pds-column-picker__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--column-picker-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  align-self: stretch;
+}
+.pds-column-picker--advanced .pds-column-picker__list { gap: 0; }
+
+.pds-column-picker__row {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: var(--column-picker-row-w);
+  min-height: var(--column-picker-row-h);
+}
+.pds-column-picker--advanced .pds-column-picker__row {
+  width: 100%;
+  min-height: var(--column-picker-row-h-adv);
+  padding: var(--column-picker-row-pad-adv);
+}
+/* Advanced separator: 6 gap · 1px line · 6 gap between rows */
+.pds-column-picker--advanced .pds-column-picker__row + .pds-column-picker__row {
+  margin-top: calc(var(--column-picker-gap-adv) * 2 + 1px);
+}
+.pds-column-picker--advanced .pds-column-picker__row + .pds-column-picker__row::before {
+  content: "";
+  position: absolute;
+  top: calc(-1 * var(--column-picker-gap-adv) - 1px);
+  left: var(--column-picker-sep-inset);
+  right: var(--column-picker-sep-inset);
+  height: 1px;
+  background: var(--column-picker-sep);
+}
+
+.pds-column-picker__left { display: flex; align-items: center; gap: var(--column-picker-left-gap); min-width: 0; }
+
+/* Drag handle (Misc/Drag Indicator · Small) — a button so it can take focus */
+.pds-column-picker__handle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--column-picker-handle);
+  cursor: grab;
+  touch-action: none;
+  line-height: 0;
+}
+.pds-column-picker__handle svg { display: block; width: 7px; height: 11px; }
+.pds-column-picker__row.is-dragging { opacity: .6; }
+.pds-column-picker__row.is-dragging .pds-column-picker__handle { cursor: grabbing; }
+
+.pds-column-picker__name {
+  overflow: hidden;
+  color: var(--column-picker-on);
+  font: var(--type-12-semibold);   /* Figma: Open Sans 12 SemiBold, auto line-height (16) */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pds-column-picker__row.is-off .pds-column-picker__name { color: var(--column-picker-off); }
+
+/* Pin button (Indicator Icon/Pin | Unpin · 14) */
+.pds-column-picker__pin {
+  display: inline-flex;
+  flex: none;
+  width: var(--column-picker-pin-size);
+  height: var(--column-picker-pin-size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--column-picker-on);
+  cursor: pointer;
+  line-height: 0;
+}
+.pds-column-picker__pin svg { display: block; width: 100%; height: 100%; }
+.pds-column-picker__pin[aria-pressed="false"] { color: var(--column-picker-unpin); }
+.pds-column-picker__pin[aria-pressed="false"] svg { opacity: var(--column-picker-unpin-opacity); }
+
+/* ════════ Advanced: View Header chips ═══════════════════════════ */
+.pds-column-picker__headers { display: flex; align-items: center; gap: var(--column-picker-headers-gap); min-width: 0; }
+.pds-column-picker__bar { color: var(--column-picker-on); font: var(--type-12-semibold); }
+.pds-column-picker__row.is-off .pds-column-picker__bar { color: var(--column-picker-bar-off); }
+
+.pds-view-header {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--column-picker-chip-gap);
+  min-width: 0;
+  height: var(--column-picker-chip-h);
+  margin: 0;
+  padding: var(--column-picker-chip-pad);
+  border: 0;
+  border-radius: var(--column-picker-chip-radius);
+  background: var(--column-picker-view-bg);
+  color: var(--column-picker-view-fg);
+  font: var(--type-12-semibold);   /* Figma: Open Sans 12 SemiBold, auto line-height (16) */
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pds-view-header svg { display: block; flex: none; width: var(--icon-size-14); height: var(--icon-size-14); }
+.pds-view-header__label { overflow: hidden; text-overflow: ellipsis; }
+.pds-view-header--hide, .pds-view-header[aria-pressed="false"] { background: var(--column-picker-hide-bg); color: var(--column-picker-hide-fg); }
+.pds-view-header--disabled, .pds-view-header:disabled { background: var(--column-picker-disabled-bg); color: var(--column-picker-disabled-fg); cursor: default; }
+.pds-view-header .pds-view-header__ico-hide { display: none; }
+.pds-view-header:is(.pds-view-header--hide, [aria-pressed="false"], .pds-view-header--disabled, :disabled) .pds-view-header__ico-view { display: none; }
+.pds-view-header:is(.pds-view-header--hide, [aria-pressed="false"], .pds-view-header--disabled, :disabled) .pds-view-header__ico-hide { display: block; }
+
+/* Focus — added in review, not in Figma */
+.pds-column-picker__handle:focus-visible,
+.pds-column-picker__pin:focus-visible,
+.pds-view-header:focus-visible { outline: 2px solid var(--column-picker-focus); outline-offset: 2px; }
+.pds-column-picker :is(.pds-column-picker__handle, .pds-column-picker__pin, .pds-view-header):focus:not(:focus-visible) { outline: none; }
+
+.pds-column-picker__sr {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

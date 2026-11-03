@@ -1,0 +1,175 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Table Cell
+   Figma: DS V2 – Molecules (rd3gmPnjhPo1d2GAlNSJOn) › 🟢 Table (76:339) ›
+   component set "Table Cell" (2361:5601, 33 variants) + ".Text Content" (2361:5594).
+   Built 2026-10-28. Requires ../tokens.css; checkbox.css, tag.css and
+   (for Dropdown cells) menu.css + scrollbar.css + table-dropdown.css.
+
+   Put the classes on <td>/<th>. Every cell draws its own 1px top line as an
+   inset shadow (Figma: 1px top stroke, inside), so the cell keeps its Figma
+   height whatever the table's border model is.
+
+   Type     .pds-table-cell--text | --input | --header | --input-header | --tag | --dropdown
+   Theme    .pds-table-cell--dark
+   Bg       .pds-table-cell--alt (Alternate) | --child (Child, Text only)
+   Disabled .pds-table-cell--disabled (Text) · Input: the <input disabled> sets it
+   State    Input: Active = :focus-within (or --active), Empty = :placeholder-shown (or --empty)
+            Dropdown: --active while the list is open (table-cell.js sets it)
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Fills */
+  --table-cell-bg:              var(--white);                  /* #FFFFFF Default */
+  --table-cell-alt-bg:          var(--accent-alternate-white); /* #F9FAFA Alternate (= --color-table-row-alt-bg) */
+  --table-cell-child-bg:        var(--pando-light);            /* #EEF2F4 Child */
+  --table-cell-disabled-bg:     color-mix(in srgb, var(--grey-light) 30%, transparent); /* #E7E7E7 @ 30% Text · Disabled */
+  --table-cell-input-disabled-bg: var(--border-grey);          /* #EFEFEF Input Text · Disabled */
+  --table-cell-dark-bg:         var(--dark-light);             /* #343440 Dark Default */
+  --table-cell-dark-alt-bg:     var(--dark-bg);                /* #393945 Dark Alternate + Dark Disabled */
+
+  /* Top line (1px, inside) */
+  --table-cell-line:            var(--border-grey);            /* #EFEFEF */
+  --table-cell-disabled-line:   var(--border-input-light);     /* #E2EAEC Text · Disabled */
+  --table-cell-dark-line:       color-mix(in srgb, var(--dark-input-text) 50%, transparent); /* #8A8A9E @ 50% */
+
+  /* Active input (1px all round, inside) */
+  --table-cell-active:          var(--pando-blue);             /* #0076DD */
+  --table-cell-dark-active:     var(--highlight-blue-light);   /* #9CD2FF */
+
+  /* Text */
+  --table-cell-fg:              var(--text-dark);              /* #313131 */
+  --table-cell-disabled-fg:     var(--text-light);             /* #6C6C6C Text · Disabled */
+  --table-cell-placeholder:     var(--text-medium);            /* #545454 "Enter Text" */
+  --table-cell-dark-fg:         var(--dark-label-text);        /* #D5DAF4 */
+  --table-cell-dark-muted:      var(--dark-input-text);        /* #8A8A9E Dark disabled / placeholder / header */
+  --table-cell-header-fg:       var(--pando-blue-active);      /* #005399 */
+  --table-cell-filter:          var(--accent-tertiary-action); /* #6D8EB4 header Filter arrow */
+  --table-cell-dark-filter:     color-mix(in srgb, var(--dark-label-text) 50%, transparent); /* #D5DAF4 @ 50% */
+  --table-cell-icon:            var(--dark-light);             /* #343440 Navigation/Calendar-Input (kit default) */
+
+  /* Measured from the component */
+  --table-cell-h:               50px;              /* Text, Input Text, Tag, Dropdown */
+  --table-cell-header-h:        34px;              /* Header */
+  --table-cell-input-header-h:  32px;              /* Input Header */
+  --table-cell-pad-x:           8px;               /* cell padding 0 / 8 */
+  --table-cell-pad-y:           var(--space-10);   /* .Text Content, Header, Tag and Dropdown frames 10 top/bottom */
+  --table-cell-gap:             var(--space-10);   /* checkbox ↔ icon ↔ text ↔ filter ↔ sort */
+  --table-cell-line-gap:        var(--space-2);    /* .Text Content: line 1 ↔ line 2 */
+  --table-cell-lh-12:           16px;              /* Figma 12px line height (type scale: 17) */
+  --table-cell-lh-header:       14px;              /* Header 10 SemiBold, line height Auto (type scale: 12) */
+  --table-cell-dropdown-pad-r:  var(--space-10);   /* Light Dropdown frame padding 10 / 10 / 10 / 8 */
+  --table-cell-icon-size:       10px;
+  --table-cell-filter-w:        8px;
+  --table-cell-filter-h:        7px;
+  --table-cell-sort-w:          8px;
+  --table-cell-sort-h:          12px;
+  --table-cell-active-w:        1px;
+
+  --table-cell-focus: 2px solid var(--pando-blue); /* added in review — not in Figma */
+}
+
+/* ── Base ─────────────────────────────────────────────────────── */
+.pds-table-cell {
+  --_bg: var(--table-cell-bg); --_line: var(--table-cell-line); --_fg: var(--table-cell-fg);
+  --_muted: var(--table-cell-placeholder); --_ring: transparent;
+  box-sizing: border-box;
+  height: var(--table-cell-h);
+  padding: 0 var(--table-cell-pad-x);
+  border: 0;
+  background: var(--_bg);
+  box-shadow: inset 0 var(--table-cell-active-w) 0 var(--_line), inset 0 0 0 var(--table-cell-active-w) var(--_ring);
+  color: var(--_fg);
+  font: var(--type-12-regular);
+  line-height: var(--table-cell-lh-12);
+  text-align: left;
+  vertical-align: middle;
+  font-family: var(--font-family);
+}
+.pds-table-cell *, .pds-table-cell *::before, .pds-table-cell *::after { box-sizing: border-box; }
+
+/* Inner row (Figma: horizontal auto layout, gap 10, centred) */
+.pds-table-cell__content { display: flex; align-items: center; gap: var(--table-cell-gap); min-width: 0; }
+
+/* .Text Content — two lines, 12 Regular + 10 Regular (0.5 tracking), gap 2 */
+.pds-table-cell__text {
+  display: flex; flex-direction: column; justify-content: center; gap: var(--table-cell-line-gap);
+  flex: 1 1 auto; min-width: 0;
+  padding: var(--table-cell-pad-y) 0;
+}
+.pds-table-cell__primary { font: var(--type-12-regular); line-height: var(--table-cell-lh-12); color: inherit; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pds-table-cell__secondary { font: var(--type-10-regular); letter-spacing: .5px; color: inherit; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pds-table-cell--right .pds-table-cell__text { text-align: right; }   /* .Text Content Alignment=Right */
+
+/* Optional parts (component properties: Show Checkbox, Icon, Filter, Sort) */
+.pds-table-cell .pds-checkbox { flex: none; }
+.pds-table-cell__icon { flex: none; width: var(--table-cell-icon-size); height: var(--table-cell-icon-size); color: var(--table-cell-icon); display: block; }
+.pds-table-cell__filter { flex: none; width: var(--table-cell-filter-w); height: var(--table-cell-filter-h); color: var(--table-cell-filter); display: block; }
+.pds-table-cell__sort { flex: none; width: var(--table-cell-sort-w); height: var(--table-cell-sort-h); display: block; }
+
+/* ── Background ───────────────────────────────────────────────── */
+.pds-table-cell--alt   { --_bg: var(--table-cell-alt-bg); }
+.pds-table-cell--child { --_bg: var(--table-cell-child-bg); --_line: transparent; }  /* Child has no top line */
+
+/* ── Dark theme ───────────────────────────────────────────────── */
+.pds-table-cell--dark { --_bg: var(--table-cell-dark-bg); --_line: var(--table-cell-dark-line); --_fg: var(--table-cell-dark-fg); --_muted: var(--table-cell-dark-muted); }
+.pds-table-cell--dark.pds-table-cell--alt { --_bg: var(--table-cell-dark-alt-bg); }
+
+/* ── Text · Disabled ──────────────────────────────────────────── */
+.pds-table-cell--text.pds-table-cell--disabled { --_bg: var(--table-cell-disabled-bg); --_line: var(--table-cell-disabled-line); --_fg: var(--table-cell-disabled-fg); }
+.pds-table-cell--text.pds-table-cell--dark.pds-table-cell--disabled { --_bg: var(--table-cell-dark-alt-bg); --_line: var(--table-cell-dark-line); --_fg: var(--table-cell-dark-muted); }
+
+/* ── Input Text (inline edit) ─────────────────────────────────── */
+.pds-table-cell--input .pds-table-cell__text { padding: var(--table-cell-pad-y) 0; }
+.pds-table-cell__input {
+  display: block; width: 100%; min-width: 0; height: var(--table-cell-lh-12);
+  margin: 0; padding: 0; border: 0; outline: 0; background: none;
+  color: inherit; font: var(--type-12-regular); line-height: var(--table-cell-lh-12);
+}
+.pds-table-cell__input::placeholder { font-style: italic; color: var(--_muted); opacity: 1; }
+.pds-table-cell--input.pds-table-cell--empty .pds-table-cell__primary { font-style: italic; color: var(--_muted); }  /* static specimen */
+/* Active: 1px ring all round, inside */
+.pds-table-cell--input:focus-within,
+.pds-table-cell--input.pds-table-cell--active { --_ring: var(--table-cell-active); }
+.pds-table-cell--input.pds-table-cell--dark:focus-within,
+.pds-table-cell--input.pds-table-cell--dark.pds-table-cell--active { --_ring: var(--table-cell-dark-active); }
+/* Disabled: Light #EFEFEF fill, text unchanged · Dark #393945 fill, text #8A8A9E */
+.pds-table-cell--input:has(.pds-table-cell__input:disabled),
+.pds-table-cell--input.pds-table-cell--disabled { --_bg: var(--table-cell-input-disabled-bg); --_ring: transparent; cursor: not-allowed; }
+.pds-table-cell--input.pds-table-cell--dark:has(.pds-table-cell__input:disabled),
+.pds-table-cell--input.pds-table-cell--dark.pds-table-cell--disabled { --_bg: var(--table-cell-dark-alt-bg); --_fg: var(--table-cell-dark-muted); }
+.pds-table-cell__input:disabled { cursor: not-allowed; color: inherit; -webkit-text-fill-color: currentColor; }
+
+/* ── Header / Input Header ────────────────────────────────────── */
+.pds-table-cell--header, .pds-table-cell--input-header {
+  height: var(--table-cell-header-h);
+  padding: var(--table-cell-pad-y) var(--table-cell-pad-x);
+  --_fg: var(--table-cell-header-fg);
+  font: var(--type-10-semibold); line-height: var(--table-cell-lh-header);
+  letter-spacing: .5px; text-transform: uppercase;
+  white-space: nowrap;
+}
+.pds-table-cell__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.pds-table-cell--input-header {
+  height: var(--table-cell-input-header-h);
+  --_bg: transparent; --_line: transparent;           /* Figma: no fill, stroke weight 0 */
+  font: var(--type-10-regular); letter-spacing: .5px;   /* 10 Regular, line height 12 */
+}
+.pds-table-cell--header.pds-table-cell--dark { --_fg: var(--table-cell-dark-muted); }
+.pds-table-cell--dark .pds-table-cell__filter { color: var(--table-cell-dark-filter); }
+.pds-table-cell__sort-btn, .pds-table-cell__filter-btn { display: inline-flex; margin: 0; padding: 0; border: 0; background: none; cursor: pointer; }
+.pds-table-cell__sort-btn:focus-visible, .pds-table-cell__filter-btn:focus-visible { outline: var(--table-cell-focus); outline-offset: 2px; }
+
+/* ── Tag ──────────────────────────────────────────────────────── */
+.pds-table-cell__tags { display: flex; align-items: center; gap: var(--table-cell-gap); padding: var(--table-cell-pad-y) 0; min-width: 0; }
+.pds-table-cell--dark .pds-table-cell__tags { flex-direction: column; align-items: flex-start; gap: var(--table-cell-line-gap); } /* Dark frame is vertical, gap 2 */
+
+/* ── Dropdown ─────────────────────────────────────────────────── */
+.pds-table-cell--dropdown { position: relative; padding-right: var(--table-cell-dropdown-pad-r); }
+.pds-table-cell--dropdown.pds-table-cell--dark { padding-right: var(--table-cell-pad-x); }
+.pds-table-cell__dropdown { display: flex; align-items: center; padding: var(--table-cell-pad-y) 0; min-width: 0; }
+/* Light: the field fills the cell, arrow on the right (SPACE_BETWEEN). Dark: hugs. */
+.pds-table-cell--dropdown:not(.pds-table-cell--dark) .pds-table-dropdown { display: flex; width: 100%; }
+.pds-table-cell--dropdown:not(.pds-table-cell--dark) .pds-table-dropdown__trigger { width: 100%; }
+/* Active (list open): the frame aligns top, so the field sits 10 from the top line */
+.pds-table-cell--dropdown.pds-table-cell--active { vertical-align: top; }
+.pds-table-cell--dropdown.pds-table-cell--active .pds-table-cell__dropdown { align-items: flex-start; }

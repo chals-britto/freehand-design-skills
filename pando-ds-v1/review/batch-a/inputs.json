@@ -1,0 +1,519 @@
+{
+ "component": "Inputs",
+ "pageId": "0:1",
+ "summary": "The page holds Input - Text (46 variants across Default, Inline, Condition, Tag Input, Multi-Tag, Search Tag, Table and Formula types, light and dark), Input - Dropdown Select (28 variants) and a single dark Text Area. Dropdown building blocks (option, header, table cell, lists) also live here, plus two template documentation blocks and many loose instances.",
+ "items": [
+  {
+   "id": "text-default-states",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Text · Default (light) states",
+   "node": "6:2",
+   "use": "200×60, white fill, 1px inside border #E2EAEC (border-input-light), radius 0, padding 10, gap 10. Label 10px Open Sans Regular uppercase #545454 (text-medium), style Label/Regular/AllCaps. Value 12px: placeholder Regular #6C6C6C (text-light), filled SemiBold #313131 (text-dark). Active = border #0076DD (pando-blue). Error = fill #FFF8F9 (accent-error-red-light) + border and label #E25757 (action-red). Disabled = fill #E7E7E7 at 30% (style Opacity/E7E7E7-Light-30), border kept #E2EAEC.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;font-size:12px;display:flex;flex-wrap:wrap;gap:8px\"><div><i>Empty</i><div style=\"width:178px;height:38px;background:#fff;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"color:#6C6C6C\">Placeholder Ghost Text</div></div></div><div><i>Active</i><div style=\"width:178px;height:38px;background:#fff;border:1px solid #0076DD;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-weight:600;color:#313131\">Some text here</div></div></div><div><i>Error</i><div style=\"width:178px;height:38px;background:#FFF8F9;border:1px solid #E25757;padding:10px\"><div style=\"font-size:10px;color:#E25757;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-weight:600;color:#313131\">Some text here</div></div></div><div><i>Disabled</i><div style=\"width:178px;height:38px;background:#F8F8F8;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-weight:600;color:#545454\">Disabled Filled</div></div></div></div>",
+   "flags": [
+    "No error message text in the light Error state: only red border, red label and pink fill.",
+    "Disabled placeholder uses the same #6C6C6C as the enabled placeholder; disabled filled text #545454 is darker than enabled placeholder, so disabled reads almost like enabled."
+   ],
+   "warn": [
+    "Error fill on the outer component (157:24) has no fill style; the inner .Base Input uses Accent/Error Red-Light-#FFF8F9.",
+    "Active and Open both use the same blue border; there is no separate keyboard focus treatment."
+   ],
+   "rec": "<b>Keep</b> the structure and values; decide error-message and disabled treatment before the a11y pass.",
+   "src": []
+  },
+  {
+   "id": "text-sizes",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Text · Sizes (widths)",
+   "node": "3380:4324",
+   "use": "Size is a width only: Small 100, Standard 200, Medium 250, Standard 310, Large 400, Standard 600, Auto. Height is 60 for all except Small, which is 100×52 with padding 8/10 and gap 6.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;font-size:12px;display:flex;flex-wrap:wrap;gap:8px\"><div><i>Small 100×52</i><div style=\"width:78px;height:34px;background:#fff;border:1px solid #E2EAEC;padding:8px 10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:6px\">INPUT LABEL</div><div style=\"color:#6C6C6C\">Placeholder</div></div></div><div><i>Standard 200</i><div style=\"width:178px;height:38px;background:#fff;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"color:#6C6C6C\">Placeholder Ghost Text</div></div></div><div><i>Large 400</i><div style=\"width:378px;height:38px;background:#fff;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"color:#6C6C6C\">Placeholder Ghost Text</div></div></div></div>",
+   "flags": [
+    "Small (100) variant: the LABEL row is still 180 wide inside a 100-wide field (overflows).",
+    "Large Open + Icon variant (3497:3381): input row is 180 wide, not 380, so long text truncates at half width.",
+    "Size names mix widths and words: 'Standard' is used for 200, 310 and 600."
+   ],
+   "warn": [
+    "Industry systems size by height (e.g. 24/32/40/48); V1 has one height (60) plus a 52 small."
+   ],
+   "rec": "<b>Keep</b> widths as layout presets; fix the two overflowing rows; consider renaming sizes by width.",
+   "src": [
+    {
+     "label": "Carbon · Text input usage",
+     "url": "https://carbondesignsystem.com/components/text-input/usage/"
+    },
+    {
+     "label": "Ant Design · Input",
+     "url": "https://ant.design/components/input"
+    }
+   ]
+  },
+  {
+   "id": "text-icon",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Text · With leading icon",
+   "node": "4117:7023",
+   "use": "Icon=True adds a 10×10 Navigation/Search-10px icon before the text, gap 10, text width 160. Dark theme uses Navigation/Calendar-Input instead.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;font-size:12px;display:flex;flex-wrap:wrap;gap:8px\"><div><i>Empty + icon</i><div style=\"width:178px;height:38px;background:#fff;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"color:#6C6C6C\">⌕ Placeholder Ghost Text</div></div></div><div><i>Filled + icon</i><div style=\"width:178px;height:38px;background:#fff;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-weight:600;color:#313131\">⌕ Filled Text</div></div></div></div>",
+   "flags": [],
+   "warn": [
+    "Icon is a variant (Icon=True/False) rather than an instance-swap property, so only the search icon is offered in light."
+   ],
+   "rec": "<b>Keep</b>",
+   "src": [],
+   "def": "keep"
+  },
+  {
+   "id": "text-inline",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Text · Inline (250)",
+   "node": "284:0",
+   "use": "250×60, padding 10. Empty/Filled have no border (white). Hover border #B5C3CB (border-blue-grey). Active border #0076DD. Error fill #FFF8F9, red label, no border. Disabled fill #E7E7E7 at 30%, value #6C6C6C SemiBold.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;font-size:12px;display:flex;flex-wrap:wrap;gap:8px\"><div><i>Empty</i><div style=\"width:228px;height:38px;background:#fff;border:1px solid #fff;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"color:#6C6C6C\">Placeholder Text</div></div></div><div><i>Hover</i><div style=\"width:228px;height:38px;background:#fff;border:1px solid #B5C3CB;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-weight:600;color:#313131\">Input Text</div></div></div><div><i>Active</i><div style=\"width:228px;height:38px;background:#fff;border:1px solid #0076DD;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"color:#6C6C6C\">Placeholder Text</div></div></div><div><i>Error</i><div style=\"width:228px;height:38px;background:#FFF8F9;border:1px solid #FFF8F9;padding:10px\"><div style=\"font-size:10px;color:#E25757;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-weight:600;color:#313131\">Input Text</div></div></div></div>",
+   "flags": [
+    "Error fill #FFF8F9 is hard-coded (no fill style) on both the variant and the inner frame (284:12).",
+    "Inline error has no border and no message: only colour signals the error."
+   ],
+   "warn": [
+    "Hover border #B5C3CB is only 1.81:1 on white.",
+    "The inner .Base Input here is a detached FRAME inside the instance, unlike the Default type."
+   ],
+   "rec": "<b>Keep</b> the type; register the error fill as a style.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · 3.3.1 Error Identification",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html"
+    }
+   ]
+  },
+  {
+   "id": "text-condition",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Text · Condition (auto width)",
+   "node": "3377:3721",
+   "use": "Label sits outside the box: 10px Open Sans Regular #6C6C6C, gap 2. Box 36 high, white, border #E2EAEC, padding 10, gap 8. Prefix '$' 12px SemiBold #9C9C9C. Empty value 'Value' Italic #6C6C6C; filled SemiBold #313131.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;font-size:12px;display:flex;flex-wrap:wrap;gap:8px\"><div><i>Empty</i><div style=\"font-family:'Open Sans',sans-serif;\"><div style=\"font-size:10px;color:#6C6C6C;margin-bottom:2px\">Label</div><div style=\"box-sizing:border-box;height:36px;display:inline-flex;gap:8px;padding:10px;border:1px solid #E2EAEC;background:#FFF;font-size:12px\"><span style=\"font-weight:600;color:#9C9C9C\">$</span><span style=\"font-style:italic;color:#6C6C6C\">Value</span></div></div></div><div><i>Filled</i><div style=\"font-family:'Open Sans',sans-serif;\"><div style=\"font-size:10px;color:#6C6C6C;margin-bottom:2px\">Label</div><div style=\"box-sizing:border-box;height:36px;display:inline-flex;gap:8px;padding:10px;border:1px solid #E2EAEC;background:#FFF;font-size:12px\"><span style=\"font-weight:600;color:#9C9C9C\">$</span><span style=\"font-weight:600;color:#313131\">Value</span></div></div></div></div>",
+   "flags": [
+    "Prefix colour #9C9C9C is hard-coded and not a V1 token.",
+    "Label text has no text style (raw Open Sans Regular 10) and is not uppercase, unlike the other types."
+   ],
+   "warn": [
+    "Prefix #9C9C9C on white is 2.75:1."
+   ],
+   "rec": "<b>Keep</b> as a compact type; map the prefix colour to a token.",
+   "src": []
+  },
+  {
+   "id": "text-tags",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Text · Tag Input, Multi-Tag, Search Tag",
+   "node": "3168:3165",
+   "use": "Tag Input (400): base field plus a Tags row of Input Tag instances (#EEF2F4 pando-light, radius 12, padding 4/8, gap 10). Disabled tags use #E2EAEC and a '+N' Multiselect Tag with 2px #E2EAEC border. Search Tag: placeholder field with a 50×20 Input Tag (padding 4/10) and, when filled, a 14px green selected icon.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;font-size:12px;display:flex;flex-wrap:wrap;gap:8px\"><div><i>Tag Input</i><div style=\"width:378px;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"display:flex;gap:10px\"><b style=\"font-weight:400;background:#EEF2F4;border-radius:12px;padding:4px 8px\">Option 1 ×</b><b style=\"font-weight:400;background:#EEF2F4;border-radius:12px;padding:4px 8px\">Option 2 ×</b><b style=\"font-weight:400;background:#EEF2F4;border-radius:12px;padding:4px 8px\">Option 3 ×</b></div></div></div><div><i>Disabled</i><div style=\"width:378px;border:1px solid #E2EAEC;background:#F8F8F8;padding:10px;display:flex;gap:10px\"><b style=\"font-weight:400;background:#E2EAEC;border-radius:12px;padding:4px 8px\">Option 1 ×</b><b style=\"font-weight:400;background:#E2EAEC;border-radius:12px;padding:4px 8px\">Option 2 ×</b><span style=\"border:2px solid #E2EAEC;border-radius:12px;padding:2px 8px\">+1</span></div></div></div>",
+   "flags": [
+    "Multi-Tag Input (3416:3305): Tags frame has 215 right padding inside a 190-wide frame.",
+    "Search Tag selected icon contains a vector filled #2D8EFF and an oval #67AC5D with no styles (1 off-palette hex).",
+    "Tag Input variants show tags under an empty Input row, so the field is taller than its 60 frame."
+   ],
+   "warn": [
+    "Filled Tag Input shows no typing area or placeholder next to tags."
+   ],
+   "rec": "<b>Keep</b> the pattern; clean the frame padding and icon colours.",
+   "src": []
+  },
+  {
+   "id": "text-formula",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Text · Formula (600)",
+   "node": "4642:5834",
+   "use": "Header row: label 12px SemiBold #234357 (pando-dark, style 12px/Heading) + red '*' 10px #E25757, and a 'Result:' tag (Label/Semibold/AllCaps #234357 + green Small tag #D5F9D1). Field 600×36, border #E2EAEC, padding 10. Empty placeholder 'Enter here'.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;width:600px\"><div style=\"display:flex;justify-content:space-between;margin-bottom:5px\"><span style=\"font-size:12px;font-weight:600;color:#234357\">Formula Label<span style=\"color:#E25757;font-size:10px\">*</span></span><span style=\"font-size:10px;font-weight:600;color:#234357;text-transform:uppercase\">Result: <span style=\"background:#D5F9D1;border-radius:2px;padding:0 2px\">True</span></span></div><div style=\"box-sizing:border-box;height:36px;border:1px solid #E2EAEC;padding:10px;font-size:12px;font-weight:600;color:#313131\">CALCULATESLAB(shipment_package_weight,”graduate”,Wt_Slab)</div></div>",
+   "flags": [
+    "Empty placeholder fill is #737373 but its fill style is named 'Text/Light-#B4B4B4' (stale style: name and value disagree).",
+    "Filled formula text uses mixed hard-coded colours (syntax colouring) with no styles."
+   ],
+   "warn": [
+    "Only type with label above the box in a heading style; it reads as a different component."
+   ],
+   "rec": "<b>Keep</b>; fix the stale style link.",
+   "src": []
+  },
+  {
+   "id": "text-dark",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Text · Dark theme (310)",
+   "node": "175:131",
+   "use": "Horizontal: label 140 wide (12px Regular uppercase +0.5 #D5DAF4 dark-label-text) gap 20, field 150×20, radius 2, padding 2/5, fill #484858 (style Dark/Input BG). Placeholder #E2EAEC, filled #FFFFFF SemiBold, both 12px +0.5. Disabled fill #484858 at 50%, text #F9FAFA. Error: fill #FFEAEE, 0.5px #E25757 border, red text, message 10px #FFEAEE below.",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;font-size:12px;letter-spacing:.5px;background:#393944;padding:12px;display:grid;gap:10px\"><div><span style=\"display:inline-block;width:160px;color:#D5DAF4\">LABEL</span><span style=\"display:inline-block;width:140px;border-radius:2px;padding:2px 5px;background:#484858;color:#E2EAEC\">Placeholder Input</span></div><div><span style=\"display:inline-block;width:160px;color:#D5DAF4\">LABEL</span><span style=\"display:inline-block;width:140px;border-radius:2px;padding:2px 5px;background:#484858;font-weight:600;color:#FFFFFF\">Input Filled</span></div><div><span style=\"display:inline-block;width:160px;color:#D5DAF4\">LABEL</span><span style=\"display:inline-block;width:140px;border-radius:2px;padding:2px 5px;background:#FFEAEE;border:.5px solid #E25757;color:#E25757\">Input Filled</span></div><div style=\"margin-left:160px;font-size:10px;color:#FFEAEE\">Error Message Here</div></div>",
+   "flags": [
+    "#484858 (Dark/Input BG) is not in V1 tokens.css; nearest is dark-light #343440.",
+    "Error fill and message colour #FFEAEE have no style and are not tokens.",
+    "Placeholder uses the border style Border/Input-Light-#E2EAEC as a text colour.",
+    "Disabled text #F9FAFA is brighter than enabled placeholder #E2EAEC (disabled looks more prominent)."
+   ],
+   "warn": [
+    "Disabled variants (175:180, 177:5) are detached: no .Base Input instance.",
+    "Field fill #484858 vs page #393944 is only 1.27:1 and there is no border."
+   ],
+   "rec": "<b>Keep</b> layout; add #484858 and #FFEAEE as tokens or map them.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "dropdown-light",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Dropdown Select · Light states",
+   "node": "288:475",
+   "use": "Same 200×60 base as text input, with an 8×5 solid dropdown arrow. Empty 'Select' is Italic Regular #545454; Filled SemiBold #313131; Active border #0076DD; Error fill #FFF8F9 + border/label #E25757; Disabled fill #E7E7E7 at 30%, empty text #9C9C9C italic. Open adds Dropdown Light below with shadow 0 14 28 6% (shadow-4) and an inverted arrow. Also types: Tag Input, DropUp, Condition, No Label (200×30), Filter (225).",
+   "html": "<div style=\"font-family:'Open Sans',sans-serif;font-size:12px;display:flex;flex-wrap:wrap;gap:8px\"><div><i>Empty</i><div style=\"width:178px;height:38px;background:#fff;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-style:italic;color:#545454\">Select ▾</div></div></div><div><i>Active</i><div style=\"width:178px;height:38px;background:#fff;border:1px solid #0076DD;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-weight:600;color:#545454\">Select ▾</div></div></div><div><i>Error</i><div style=\"width:178px;height:38px;background:#FFF8F9;border:1px solid #E25757;padding:10px\"><div style=\"font-size:10px;color:#E25757;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-weight:600;color:#545454\">Select ▾</div></div></div><div><i>Disabled</i><div style=\"width:178px;height:38px;background:#F8F8F8;border:1px solid #E2EAEC;padding:10px\"><div style=\"font-size:10px;color:#545454;margin-bottom:10px\">INPUT LABEL</div><div style=\"font-style:italic;color:#9C9C9C\">Select ▾</div></div></div></div>",
+   "flags": [
+    "Error variant (288:492) is detached: no .Base Input instance, label has no text style, fill #FFF8F9 has no style.",
+    "Disabled empty text #9C9C9C has no style and is not a token.",
+    "Required is a boolean here but not on Input - Text."
+   ],
+   "warn": [
+    "Empty uses italic placeholder while Input - Text uses regular; check which is intended.",
+    "No Label type uses a different caret icon (Navigation/Button-Down-Caret)."
+   ],
+   "rec": "<b>Keep</b>; re-link the Error variant to .Base Input.",
+   "src": []
+  },
+  {
+   "id": "dropdown-dark",
+   "group": "variants",
+   "k": "viz",
+   "name": "Input - Dropdown Select · Dark",
+   "node": "764:459",
+   "use": "310×16, label 140 (12px uppercase +0.5 #D5DAF4) gap 20, value 'Select' 12px SemiBold +0.5 #CBD4D8 (accent-blue-grey) with arrow. No field fill or border. Error: value #D26568 (accent-red-medium) and message 10px #FFEAEE below, gap 6.",
+   "html": "<div style=\"background:#393944;padding:12px;font-family:'Open Sans',sans-serif;display:flex;flex-direction:column;gap:10px\"><div style=\"display:flex;gap:20px;font-size:12px;letter-spacing:.5px\"><span style=\"width:140px;text-transform:uppercase;color:#D5DAF4\">Input Label</span><span style=\"font-weight:600;color:#CBD4D8\">Select ▾</span></div><div style=\"display:flex;gap:20px;font-size:12px;letter-spacing:.5px\"><span style=\"width:140px;text-transform:uppercase;color:#D5DAF4\">Input Label</span><span style=\"font-weight:600;color:#D26568\">Error Text ▾</span></div><div style=\"margin-left:160px;font-size:10px;letter-spacing:.5px;color:#FFEAEE\">Error Type here</div></div>",
+   "flags": [
+    "Dark dropdown has no field box while dark text input has a #484858 box; the two dark inputs look different.",
+    "Error message colour #FFEAEE is not a token."
+   ],
+   "warn": [
+    "Error value #D26568 on #393944 is 3.15:1."
+   ],
+   "rec": "<b>Keep</b>; align with dark text input.",
+   "src": []
+  },
+  {
+   "id": "text-area",
+   "group": "variants",
+   "k": "viz",
+   "name": "Text Area (dark only)",
+   "node": "175:169",
+   "use": "One variant: Dark, Empty, 310 wide, fill #484858. Label 10px #D5DAF4. Hidden by default: required '*' #D26568, input text #FFFFFF, count '160/160' 8px #D5DAF4 at 60%. Booleans: Required, Show Input Text, Show Count.",
+   "html": "<div style=\"background:#393944;padding:12px\"><div style=\"font-family:'Open Sans',sans-serif;box-sizing:border-box;width:310px;height:60px;background:#484858;padding:8px;position:relative\"><div style=\"font-size:10px;color:#D5DAF4\">Label<span style=\"color:#D26568\">*</span></div><div style=\"font-size:12px;color:#fff\">Placeholder Ghost Text</div><div style=\"position:absolute;right:8px;bottom:6px;font-size:8px;color:rgba(213,218,244,.6)\">160/160</div></div></div>",
+   "flags": [
+    "No light-theme text area, and no Filled/Error/Disabled states.",
+    "Variant property is named 'Property 2' (stale name) with a single option 'Dark'."
+   ],
+   "warn": [
+    "Only component on the page with a character count.",
+    "Inner padding not read exactly; snippet padding is approximate."
+   ],
+   "rec": "<b>Add</b> light theme and states later.",
+   "src": [
+    {
+     "label": "Carbon · Text input usage",
+     "url": "https://carbondesignsystem.com/components/text-input/usage/"
+    },
+    {
+     "label": "Ant Design · Input",
+     "url": "https://ant.design/components/input"
+    }
+   ]
+  },
+  {
+   "id": "anatomy-base",
+   "group": "anatomy",
+   "k": "spec",
+   "name": ".Base Input anatomy",
+   "node": "3173:1612",
+   "use": "All light types nest a .Base Input instance: vertical auto layout, padding 10, gap 10; LABEL row (horizontal, gap 2, holds label + optional red '*' #E25757); Input row (horizontal, gap 10, optional 10px icon + text). Outer variant repeats fill and border of the inner instance. Five .Base Input main components sit loose on the page (200, 250, 310×20, 310×16 sizes).",
+   "flags": [
+    "Fill and border are set twice (outer variant and inner .Base Input), so overrides can disagree."
+   ],
+   "warn": [
+    "Five separate .Base Input components share one name; hard to tell which is used where."
+   ],
+   "rec": "<b>Keep</b>; consider one base with properties.",
+   "src": []
+  },
+  {
+   "id": "anatomy-type",
+   "group": "anatomy",
+   "k": "spec",
+   "name": "Text styles used",
+   "node": "6:2",
+   "use": "Label/Regular/AllCaps: Open Sans Regular 10, line height auto, 0 tracking, uppercase (closest type-10-regular 10/12 +0.5). Input/Regular/Normal: Regular 12 auto (closest type-12-regular 12/17). Input/Semibold/Normal: SemiBold 12 auto (type-12-semibold). Input/Regular/Italic: Italic 12. Dark: Label/Regular/AllCaps-Spacing0.5 (12 caps +0.5), Input/Regular/Spacing0.5px and Input/Semibold/Spacing0.5px (12 +0.5). Formula: 12px/Heading (SemiBold 12).",
+   "flags": [
+    "Line height is 'auto' on all input styles, so no exact match to the V1 type classes (17px / 12px).",
+    "Label caps style has 0 tracking while .caps / type-10 classes use +0.5px.",
+    "Two copies of Input/Regular/Normal and Label/Semibold/AllCaps exist (one local, one library)."
+   ],
+   "warn": [],
+   "rec": "<b>Later</b>: map to type classes when tokens are finalised.",
+   "src": []
+  },
+  {
+   "id": "open-dropdown",
+   "group": "states",
+   "k": "spec",
+   "name": "Open state with list",
+   "node": "3497:3381",
+   "use": "Open = blue #0076DD border plus a Dropdown Light / Dropdown list instance under the field: white, padding bottom 5, shadow 0 14 28 #000 6% (shadow-4). Options are 52 high, padding 10, gap 10, with a 10px secondary line (10px/Regular/Sp0.5px) and an Input Tag. Table type opens a 400-wide Dropdown list under a 200-wide field.",
+   "flags": [
+    "Table Open (4414:7025): 400-wide list is attached to a 200-wide field and overflows the variant."
+   ],
+   "warn": [
+    "Dropdown parts (.Dropdown Option, .Header, .Table Cell, .Custom Add, . Toggle, .Blinking cursor, Dropdown list, Dropdown Light, .Dropdown Dark) all live on this page; may belong on a Dropdown page."
+   ],
+   "rec": "<b>Keep</b>; review the dropdown parts as their own component.",
+   "src": []
+  },
+  {
+   "id": "docs-text-input",
+   "group": "docs",
+   "k": "note",
+   "name": "Documentation · Text Input",
+   "node": "3193:1918",
+   "use": "Heading 'Text Input'. Overview: 'Text Input and Dropdown Input'. Uses: 'Enter suggestion here'. Placement & Convention: 'Enter suggestion here'. Plus a 'Variation Examples' label. Component description: 'Text Input, Dropdown, Select, Multiselect, Input with Tags, Cell, Inline Input'.",
+   "flags": [
+    "Uses and Placement are template placeholders ('Enter suggestion here'): effectively empty.",
+    "No When to use / When not to use / Behaviour / Do-Don't blocks."
+   ],
+   "warn": [],
+   "rec": "<b>Add</b> real guidance; copy to be supplied by the designer.",
+   "src": []
+  },
+  {
+   "id": "docs-dropdown",
+   "group": "docs",
+   "k": "note",
+   "name": "Documentation · Dropdown Select",
+   "node": "3537:4513",
+   "use": "Heading 'Dropdown Select'. Overview text is 'Text Input and Dropdown Input' (same as the Text Input block). Uses and Placement: 'Enter suggestion here'.",
+   "flags": [
+    "Overview copied from the Text Input block.",
+    "Uses and Placement are empty placeholders."
+   ],
+   "warn": [],
+   "rec": "<b>Add</b> real guidance.",
+   "src": []
+  },
+  {
+   "id": "docs-note-pending",
+   "group": "docs",
+   "k": "note",
+   "name": "Pending note · Info icon",
+   "node": "5910:5664",
+   "use": "Notes instance: type 'Pending', text 'Add Info Icon to input fields'. Not implemented in any variant.",
+   "flags": [],
+   "warn": [
+    "Open to-do left on the page; confirm if still wanted."
+   ],
+   "rec": "<b>Later</b>: decide with helper text gap.",
+   "src": []
+  },
+  {
+   "id": "loose-instances",
+   "group": "loose",
+   "k": "note",
+   "name": "Stray instances on canvas",
+   "node": "4642:6078",
+   "use": "Instances outside any set: Input - Text 4642:6078, 6127:10700, 6209:8080, 7734:8004; Input - Dropdown Select 6138:7115, 11323:4005; Text Area 8620:7928; .Base Input 6209:8158, 4154:4973, 6135:6934; .Dropdown Dark 5137:5761; .Header 6039:6269, 5985:5666, 5985:5663; Checkbox 6613:6492.",
+   "flags": [
+    "15 loose instances scattered around the sets."
+   ],
+   "warn": [],
+   "rec": "<b>Skip</b>: test copies, not part of the system.",
+   "src": []
+  },
+  {
+   "id": "loose-shapes",
+   "group": "loose",
+   "k": "note",
+   "name": "Loose shapes, text and detached frame",
+   "node": "6209:6509",
+   "use": "Detached FRAME '.Base Input' 6209:6509; frame 'Tags' 4122:4592; 7 hidden 'Placeholder Text' text nodes (175:151–175:162) parked on the page; Rectangle 4435 (white 75×75) with a text 'A' 8215:7854; background rectangles 3160:2989 and 3535:3522 (#393944) and 5137:5760 (#24242F) behind dark variants.",
+   "flags": [
+    "Background rects use #393944 without a style (token dark-bg is #393945)."
+   ],
+   "warn": [
+    "Hidden orphan text nodes are leftovers."
+   ],
+   "rec": "<b>Skip</b> / clean up later.",
+   "src": []
+  },
+  {
+   "id": "contrast-note",
+   "group": "states",
+   "k": "note",
+   "name": "Contrast readings (note only)",
+   "node": "7:2",
+   "use": "Text: label #545454/white 7.57, placeholder #6C6C6C/white 5.25, value #313131 13.0, error label #E25757/#FFF8F9 3.5, dark error #E25757/#FFEAEE 3.18, prefix #9C9C9C 2.75, dropdown disabled #9C9C9C/#F8F8F8 2.59. Boundaries: default border #E2EAEC/white 1.22, hover #B5C3CB 1.81, active #0076DD 4.53, dark field #484858/#393944 1.27.",
+   "flags": [],
+   "warn": [
+    "Default border (1.22) and dark field fill (1.27) are below 3:1 for non-text contrast.",
+    "Error label, prefix and disabled dropdown text are below 4.5:1.",
+    "Accessibility pass is deferred; no value changes now."
+   ],
+   "rec": "<b>Later</b>: review in the a11y pass.",
+   "src": [
+    {
+     "label": "WCAG 2.2 · 1.4.11 Non-text Contrast",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-helper-error",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Helper text and error message (light)",
+   "node": "157:24",
+   "use": "Light inputs have no helper text slot and no error message; errors are shown by colour only. Only dark variants carry an error message line.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> a helper/error line below the field.",
+   "src": [
+    {
+     "label": "Carbon · Text input usage",
+     "url": "https://carbondesignsystem.com/components/text-input/usage/"
+    },
+    {
+     "label": "WCAG 2.2 · 3.3.1 Error Identification",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html"
+    },
+    {
+     "label": "Fluent 2 · Input usage",
+     "url": "https://fluent2.microsoft.design/components/web/react/core/input/usage"
+    }
+   ]
+  },
+  {
+   "id": "gap-focus",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Distinct focus state",
+   "node": "157:18",
+   "use": "'Active' (blue 1px border) doubles as focus, hover and open. No separate visible keyboard focus indicator.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> a focus definition (can reuse Active if agreed).",
+   "src": [
+    {
+     "label": "WCAG 2.2 · 2.4.7 Focus Visible",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html"
+    },
+    {
+     "label": "Carbon · Text input usage",
+     "url": "https://carbondesignsystem.com/components/text-input/usage/"
+    }
+   ]
+  },
+  {
+   "id": "gap-readonly",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Read-only state",
+   "node": "7:2",
+   "use": "No read-only state; only Disabled. Carbon keeps read-only fields focusable and readable, unlike disabled.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> later if products show locked values.",
+   "src": [
+    {
+     "label": "Carbon · Text input usage",
+     "url": "https://carbondesignsystem.com/components/text-input/usage/"
+    }
+   ]
+  },
+  {
+   "id": "gap-required",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Required / optional marker",
+   "node": "7:2",
+   "use": "A red '*' exists in some variants (Formula, Large Open, Text Area, Dropdown Select 'Required' boolean) but Input - Text has no Required property.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Add</b> a Required boolean on Input - Text.",
+   "src": [
+    {
+     "label": "Carbon · Text input usage",
+     "url": "https://carbondesignsystem.com/components/text-input/usage/"
+    },
+    {
+     "label": "WCAG 2.2 · 3.3.2 Labels or Instructions",
+     "url": "https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html"
+    }
+   ]
+  },
+  {
+   "id": "gap-count-clear",
+   "group": "gaps",
+   "k": "gap",
+   "name": "Character count, clear button, height sizes",
+   "node": "7:2",
+   "use": "Count only on the dark Text Area; no clear (×) button; sizes are widths only with one 60px height.",
+   "flags": [],
+   "warn": [],
+   "rec": "<b>Later</b>: consider count, clear and height sizes.",
+   "src": [
+    {
+     "label": "Ant Design · Input",
+     "url": "https://ant.design/components/input"
+    },
+    {
+     "label": "Carbon · Text input usage",
+     "url": "https://carbondesignsystem.com/components/text-input/usage/"
+    }
+   ]
+  }
+ ],
+ "spacing": [
+  0,
+  2,
+  3,
+  4,
+  5,
+  6,
+  8,
+  10,
+  20
+ ],
+ "radius": [
+  0,
+  2,
+  12
+ ],
+ "newTextStyles": [
+  "Label/Regular/AllCaps (Open Sans Regular 10/auto, caps, 0 ls)",
+  "Input/Regular/Normal (Regular 12/auto)",
+  "Input/Semibold/Normal (SemiBold 12/auto)",
+  "Input/Regular/Italic (Italic 12/auto)",
+  "Input/Regular/Spacing0.5px (Regular 12/auto +0.5)",
+  "Input/Semibold/Spacing0.5px (SemiBold 12/auto +0.5)",
+  "Label/Regular/AllCaps-Spacing0.5 (Regular 12/auto caps +0.5)",
+  "12px/Heading (SemiBold 12/auto)"
+ ],
+ "notReadable": [
+  "Text Area inner padding (not walked)",
+  "Inline Active variant: screenshot shows small x / check controls not found in the node walk"
+ ]
+}

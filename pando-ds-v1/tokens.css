@@ -1,0 +1,247 @@
+/* ════════════════════════════════════════════════════════════════════
+   Pando DS V1 — Foundations tokens
+   Aliases: V1 · Pando · Old DS · FAP DS · Procure DS
+   Source: Figma "DS V2 – Atoms" (S21sFFHjfc3XvGDAAYvA49), pages
+   Foundation – Colors (146:1) and Foundation – Text & Text Styles (143:0).
+   Every value below was Kept in the Foundations review (2026-10-21).
+
+   Two layers:
+   1. Palette   --pando-*   raw colours, named without hex values.
+   2. Roles     --color-*   the job a colour does. Components use ROLES.
+   Roles exist only where Figma documents a usage. Palette colours with
+   no documented usage have no role yet (marked "no role").
+
+   Not here yet (decided in review):
+   - Spacing, radius: Add — measured from components as they are read.
+   - Elevation: 4 shadow levels in place; which component uses which level
+     is set during component reviews.
+   - Hover / pressed state colours: Add — collected from Buttons / Inputs.
+   - Focus ring, motion, data-viz palette: Later.  Dark theme: not needed.
+   - Accessibility fixes: after the system is complete (contrast flags in
+     the review board stay open).
+   ════════════════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
+
+:root {
+  /* ── 1. Palette ─────────────────────────────────────────────── */
+
+  /* Pando blues */
+  --pando-blue:            #0076DD; /* 162:54 */
+  --pando-light:           #EEF2F4; /* 162:65 */
+  --pando-dark:            #234357; /* 162:68  no role */
+  --pando-blue-active:     #005399; /* 162:70 */
+
+  /* Freehand colour */
+  --freehand-dark:         #153F69; /* 10609:36 — not yet a Figma style */
+  --freehand-orange:       #FE6505; /* 10609:42 — not yet a Figma style; no role */
+
+  /* Greys */
+  --grey-light:            #E7E7E7; /* 162:78 */
+  --grey-medium:           #A3A3A3; /* 162:83  no role */
+  --grey-dark:             #515151; /* 162:93  no role */
+  --white:                 #FFFFFF; /* 162:223 */
+
+  /* Actions */
+  --action-blue:           #376F99; /* 162:63 */
+  --action-red:            #E25757; /* 162:91 */
+  --action-green:          #91C38A; /* 162:92 */
+
+  /* Text */
+  --text-dark:             #313131; /* 162:192 */
+  --text-medium:           #545454; /* 162:193 */
+  --text-light:            #6C6C6C; /* 162:194 */
+  --text-disabled:         #A3A2A2; /* 10287:18544 */
+
+  /* Borders */
+  --border-blue:           #E9F1F5; /* 162:195 */
+  --border-input-light:    #E2EAEC; /* 162:196 */
+  --border-grey:           #EFEFEF; /* 162:197 */
+  --border-blue-grey:      #B5C3CB; /* 162:198 */
+
+  /* Accents */
+  --accent-green-highlight:#008D5E; /* 162:148 */
+  --accent-light-highlight:#E9F1F5; /* 162:149 */
+  --accent-blue-grey:      #CBD4D8; /* 162:154 */
+  --accent-green-medium:   #67AC5D; /* 162:139 */
+  --accent-red-medium:     #D26568; /* 162:140 */
+  --accent-error-red-light:#FFF8F9; /* 3272:3749 */
+  --accent-light-blue-bg:  #F3F6FC; /* 6181:6786 */
+  --accent-dark-blue-bg:   #E0EBF6; /* 8716:3275  no role */
+  --accent-off-white:      #F8F8F8; /* 162:150 */
+  --accent-light-bg:       #FAFAFA; /* 162:152 */
+  --accent-alternate-white:#F9FAFA; /* 162:153 */
+  --accent-tertiary-action:#6D8EB4; /* 6051:1168  no role */
+  --highlight-blue-light:  #9CD2FF; /* 162:178  no role */
+  --highlight-yellow:      #FFCF00; /* 162:180 */
+  --highlight-orange:      #FF8C54; /* 162:183 */
+
+  /* Status palette — light / medium / dark  (162:96) */
+  --status-purple-light:#F2E7FE;  --status-purple-medium:#AB63F8;  --status-purple-dark:#2D0645;
+  --status-red-light:#FFEAEE;     --status-red-medium:#F8637E;     --status-red-dark:#FF0000;
+  --status-maroon-light:#FFE3EA;  --status-maroon-medium:#FFA9BD;  --status-maroon-dark:#54021A;
+  --status-brown-light:#FFEEC4;   --status-brown-medium:#FAAE3C;   --status-brown-dark:#422500;
+  --status-orange-light:#FFF4E5;  /* no medium step in Figma */    --status-orange-dark:#F94200;
+  --status-cyan-light:#BDF0F4;    --status-cyan-medium:#63EBF8;    --status-cyan-dark:#006265;
+  --status-blue-light:#D9E6FF;    --status-blue-medium:#6397F8;    --status-blue-dark:#0D204A;
+  --status-green-light:#D5F9D1;   --status-green-medium:#80E774;   --status-green-dark:#041F04;
+  --status-skyblue-light:#B5E4FF; --status-skyblue-medium:#63C1F8; --status-skyblue-dark:#09375D;
+  --status-violet-light:#CEC6FF;  --status-violet-medium:#7963F8;  --status-violet-dark:#16095F;
+  --status-yellow-light:#FFFC99;  --status-yellow-medium:#F2E22A;  --status-yellow-dark:#46440A;
+
+  /* Dark (sidebar) */
+  --dark-bg:               #393945; /* 162:211 */
+  --dark-darker:           #24242F; /* 162:217 */
+  --dark-light:            #343440; /* 162:216 */
+  --dark-input-text:       #8A8A9E; /* 162:213 */
+  --dark-label-text:       #D5DAF4; /* 162:215 */
+  --dark-highlight-green:  #1FCD93; /* 162:218 */
+
+  /* Nimbus */
+  --nimbus-orange:         #E48352; /* 3181:2530  no role */
+  --nimbus-blue:           #7AB4CF; /* 3181:2531  no role */
+
+  /* Gradients (2912:1200). "inferred" = swatch not linked to a named style in Figma */
+  --gradient-steel-grey:    linear-gradient(0deg, #A3A3A3 62%, #DCDCDC 104%);
+  --gradient-rejection-red: linear-gradient(0deg, #873232 62%, #E96262 104%);
+  --gradient-forest-green:  linear-gradient(0deg, #006265 62%, #19A476 104%);
+  --gradient-primary-blue:  linear-gradient(180deg, #0076DC, #005399);
+  --gradient-deep-blue:     linear-gradient(180deg, #00648D, #002338);
+  --gradient-ink-blue:      linear-gradient(0deg, #18283B 62%, #3F6ABF 104%);
+  --gradient-light-blue:    linear-gradient(180deg, #FFFFFF 45%, #EBF1FA);          /* inferred */
+  --gradient-dark-purple:   linear-gradient(90deg, #343440, #371A37);               /* inferred */
+  --gradient-pi-green:      linear-gradient(90deg, #041F04, #343440);               /* inferred */
+  --gradient-pando-green:   linear-gradient(180deg, #003D31, #006265);              /* inferred */
+  --gradient-ai-dark:       linear-gradient(-87deg, #FF8C54 2%, #8D00DF 98%);       /* inferred · AI section border */
+  --gradient-ai-light:      linear-gradient(92deg, rgba(234,75,255,.06) 2%, rgba(255,140,84,.06) 99%); /* inferred · AI section bg */
+  --gradient-glass:         linear-gradient(180deg, rgba(204,225,222,.08), rgba(204,225,222,.4)),
+                            linear-gradient(180deg, rgba(255,255,255,.4), rgba(255,255,255,0)); /* unnamed · pair with backdrop-filter: blur(21px) */
+
+  /* ── 2. Roles (from Figma "Used:" notes) ────────────────────── */
+
+  /* Actions */
+  --color-action-primary:        var(--pando-blue);         /* Primary Buttons, Primary CTAs */
+  --color-action-secondary-bg:   var(--pando-light);        /* Secondary Buttons */
+  --color-action-blue:           var(--action-blue);        /* Pando Actions */
+
+  /* Text */
+  --color-text-primary:          var(--text-dark);
+  --color-text-secondary:        var(--text-medium);
+  --color-text-tertiary:         var(--text-light);
+  --color-text-disabled:         var(--text-disabled);
+  --color-text-active:           var(--pando-blue-active);  /* Active Headings */
+  --color-text-on-action:        var(--white);              /* inferred: white labels on primary buttons */
+
+  /* Borders */
+  --color-border-light:          var(--pando-light);        /* Light Borders */
+  --color-border-default:        var(--grey-light);         /* "Use as border also (instead of E6E6E6)" */
+  --color-border-blue:           var(--border-blue);
+  --color-border-input:          var(--border-input-light);
+  --color-border-grey:           var(--border-grey);
+  --color-border-strong:         var(--border-blue-grey);
+  --color-border-active:         var(--pando-blue-active);  /* Active Borders */
+
+  /* Surfaces */
+  --color-surface:               var(--white);
+  --color-surface-muted:         var(--accent-off-white);   /* Background */
+  --color-surface-blue:          var(--accent-light-blue-bg); /* Background */
+  --color-header-bg:             var(--freehand-dark);      /* For header */
+  --color-table-header-bg:       var(--accent-light-bg);    /* Table Header BG */
+  --color-table-row-disabled-bg: var(--accent-light-bg);    /* Disabled Table Row/Col */
+  --color-table-row-alt-bg:      var(--accent-alternate-white); /* Alternate Table Row */
+  --color-overlay:               rgb(35 67 87 / .2);        /* Pando Dark @ 20% · Overlay */
+
+  /* Highlight */
+  --color-highlight:             var(--accent-green-highlight); /* Main Highlight Accent Color */
+  --color-highlight-subtle:      var(--accent-light-highlight); /* Light Highlight Accent, Active cards */
+
+  /* Feedback */
+  --color-success:               var(--action-green);       /* Confirmation Green */
+  --color-success-icon:          var(--accent-green-medium); /* Confirmation Status Icons */
+  --color-error:                 var(--action-red);         /* Error Red */
+  --color-error-border:          var(--accent-red-medium);  /* Indent Error Warning Border */
+  --color-error-bg:              var(--accent-error-red-light);
+  --color-warning:               var(--highlight-yellow);   /* Yellow Warning */
+  --color-warning-strong:        var(--highlight-orange);   /* Orange Warning */
+
+  /* Toggle */
+  --color-toggle-on:             var(--accent-green-medium); /* Toggle Selection */
+  --color-toggle-off:            var(--accent-blue-grey);    /* Deactive Toggle */
+
+  /* Status / tags (Figma: Light = background, Medium = border, Dark = text) */
+  --color-status-purple-bg:var(--status-purple-light);  --color-status-purple-border:var(--status-purple-medium);  --color-status-purple-text:var(--status-purple-dark);
+  --color-status-red-bg:var(--status-red-light);        --color-status-red-border:var(--status-red-medium);        --color-status-red-text:var(--status-red-dark);
+  --color-status-maroon-bg:var(--status-maroon-light);  --color-status-maroon-border:var(--status-maroon-medium);  --color-status-maroon-text:var(--status-maroon-dark);
+  --color-status-brown-bg:var(--status-brown-light);    --color-status-brown-border:var(--status-brown-medium);    --color-status-brown-text:var(--status-brown-dark);
+  --color-status-orange-bg:var(--status-orange-light);  /* no border step */                                       --color-status-orange-text:var(--status-orange-dark);
+  --color-status-cyan-bg:var(--status-cyan-light);      --color-status-cyan-border:var(--status-cyan-medium);      --color-status-cyan-text:var(--status-cyan-dark);
+  --color-status-blue-bg:var(--status-blue-light);      --color-status-blue-border:var(--status-blue-medium);      --color-status-blue-text:var(--status-blue-dark);
+  --color-status-green-bg:var(--status-green-light);    --color-status-green-border:var(--status-green-medium);    --color-status-green-text:var(--status-green-dark);
+  --color-status-skyblue-bg:var(--status-skyblue-light);--color-status-skyblue-border:var(--status-skyblue-medium);--color-status-skyblue-text:var(--status-skyblue-dark);
+  --color-status-violet-bg:var(--status-violet-light);  --color-status-violet-border:var(--status-violet-medium);  --color-status-violet-text:var(--status-violet-dark);
+  --color-status-yellow-bg:var(--status-yellow-light);  --color-status-yellow-border:var(--status-yellow-medium);  --color-status-yellow-text:var(--status-yellow-dark);
+
+  /* Sidebar (dark) */
+  --color-sidebar-bg:            var(--dark-bg);
+  --color-sidebar-bg-darker:     var(--dark-darker);
+  --color-sidebar-bg-light:      var(--dark-light);
+  --color-sidebar-label:         var(--dark-label-text);
+  --color-sidebar-input-text:    var(--dark-input-text);
+  --color-sidebar-highlight:     var(--dark-highlight-green);
+
+  /* ── Elevation ──────────────────────────────────────────────── */
+  /* Figma section "Shadow" (11386:30). Ordered low → high by blur. */
+  --shadow-1: 0 2px 3px  rgb(0 0 0 / .10); /* Shadow / White BG / 0-1-3-10% (11353:32) — name says y=1, actual y=2 */
+  --shadow-2: 0 2px 4px  rgb(0 0 0 / .06); /* Shadow / White BG / 0-2-4-6%  (316:479) */
+  --shadow-3: 0 2px 14px rgb(0 0 0 / .10); /* Shadow / White BG / 0-2-14-10% (11353:31) */
+  --shadow-4: 0 14px 28px rgb(0 0 0 / .06); /* Shadow / White BG / 0-14-28-6% (11353:30) */
+
+  /* ── Spacing & radius (measured, not yet a scale) ───────────────
+     Collected component by component; a scale is proposed once
+     enough components are in. Name = pixel value.
+     Seen in: Toast (2, 10, 12, 15 · radius 12). */
+  --space-2:  2px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-15: 15px;
+  --radius-12: 12px;
+
+  /* ── Typography ─────────────────────────────────────────────── */
+  --font-family: "Open Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* name: size-weight → font shorthand (weight size/line-height) */
+  --type-16-regular:  400 16px/22px var(--font-family);
+  --type-14-semibold: 600 14px/19px var(--font-family);
+  --type-14-regular:  400 14px/19px var(--font-family);
+  --type-13-semibold: 600 13px/16px var(--font-family);
+  --type-13-regular:  400 13px/16px var(--font-family); /* added in review; line-height follows 13-semibold */
+  --type-12-bold:     700 12px/14px var(--font-family);
+  --type-12-semibold: 600 12px/17px var(--font-family);
+  --type-12-regular:  400 12px/17px var(--font-family);
+  --type-11-semibold: 600 11px/15px var(--font-family);
+  --type-11-regular:  400 11px/15px var(--font-family);
+  --type-10-bold:     700 10px/14px var(--font-family);
+  --type-10-semibold: 600 10px/12px var(--font-family); /* + 0.5px tracking, see classes */
+  --type-10-regular:  400 10px/12px var(--font-family); /* + 0.5px tracking, see classes */
+  --type-8-regular:   400 8px/10px  var(--font-family);
+}
+
+/* ── Type classes ──────────────────────────────────────────────── */
+.type-16-regular  { font: var(--type-16-regular); }
+.type-14-semibold { font: var(--type-14-semibold); }
+.type-14-regular  { font: var(--type-14-regular); }
+.type-13-semibold { font: var(--type-13-semibold); }
+.type-13-regular  { font: var(--type-13-regular); }
+.type-12-bold     { font: var(--type-12-bold); }
+.type-12-semibold { font: var(--type-12-semibold); }
+.type-12-regular  { font: var(--type-12-regular); }
+.type-11-semibold { font: var(--type-11-semibold); }
+.type-11-regular  { font: var(--type-11-regular); }
+.type-10-bold     { font: var(--type-10-bold); }
+.type-10-semibold { font: var(--type-10-semibold); letter-spacing: .5px; }
+.type-10-regular  { font: var(--type-10-regular);  letter-spacing: .5px; }
+.type-8-regular   { font: var(--type-8-regular); }
+
+/* Caps modifier: uppercase + 0.5px tracking (1px on 14px) */
+.caps { text-transform: uppercase; letter-spacing: .5px; }
+.type-14-semibold.caps, .type-14-regular.caps { letter-spacing: 1px; }
