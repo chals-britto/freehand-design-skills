@@ -11,10 +11,10 @@ The point is that every new page looks and behaves like the pages already approv
 
 ## How to use it
 
-1. **Read `DESIGN.md`** before writing any markup. It has the foundations, the 19 components, the page patterns, the content and behaviour rules, and the decision log.
+1. **Read `DESIGN.md`** before writing any markup. It has the foundations, the 22 components, the page patterns, the content and behaviour rules, and the decision log.
 2. **Build from `snippets/`.** The skill is self-contained; it doesn't depend on any other repo.
    - `tokens.css` for every colour, size and radius
-   - `components.html` for the markup and CSS of all 19 components (open it in a browser to see them)
+   - `components.html` for the markup and CSS of all 22 components (open it in a browser to see them)
    - `behaviours.js` for any list inside a scrolling detail page
 
    Copying beats re-creating: re-created components drift in small ways (a 32px dropdown instead of 36px, a blue link), and those are exactly the things reviewers have already pushed back on.
@@ -36,16 +36,20 @@ These came from review comments. Each has a reason, so apply the reason in cases
   - Dispute dockets (pages, nav, breadcrumb)
   - Disputes (the lines inside a docket)
   - Open · Escalated · Partly resolved · Resolved. "Settled" is not used; Utsav still has to confirm "Resolved".
-- **Status filters on list pages are pills (28px), not tabs.** Tabs only switch views of one record.
+- **Status filters on list pages are tabs, with a count chip in each.** Same tab as the detail page (Details / Activity): 14/500, grey when off, dark with a 2px orange underline when on. Pills are no longer used for status (changed by Charles, Nov 3).
 - **Links to other pages:** dark grey with a grey underline and a new-tab icon, opening a filtered list in a new tab. Never blue, never the icon alone.
 - **Money:** disputed or held amounts in red; resolved amounts in green only when above 0; every other amount neutral. Two decimals, with the currency code in small grey after.
 - **Rows per page:** 20 on list pages, 10 for lists inside a detail page.
-- **Don't stub components.** The sidebar, toolbar and column picker are in the snippets. Anything else is in `reference/enhanced-studio-v103.html`, the full approved prototype (DESIGN.md §10 lists the functions). A columns button that doesn't open the picker counts as broken.
+- **Don't stub components.** The sidebar, toolbar and column picker are in the snippets. Anything else is in `reference/enhanced-studio-v106.html`, the full approved prototype (DESIGN.md §10 lists the functions). A columns button that doesn't open the picker counts as broken.
 - **Same component, same look.** The footer pager, sort menu, dropdown filters and badges are identical on every page. Don't make a "slightly different" pager for one screen.
 - **Ask Freehand:** bottom-right, orange-only rotating ring, and it moves up when a footer pager appears.
 - **No page jumps.** Anything that changes layout (folded totals, pinned bars, minimum heights) must survive a re-render. A filter or page change made while a bar is pinned keeps the bar in place.
 - **Measure, don't hard-code.** Offsets and spaces that depend on screen height are measured from real elements, and re-measured on resize. Check at 1280×720, 1440×900 and 1920×1080.
 - **Tooltips wrap at 320px.** Every truncated value gets a tooltip.
+- **Text links turn brand orange on hover.** Link text and its underline change to `#FE6301` on hover (View, Clear, Generate file, Rejected list…); at rest they stay dark grey with a grey underline.
+- **Rows that open a slide-out look clickable.** Pointer cursor and row hover; the open row keeps a 2px orange left stroke; the sticky identifier column (Job ID, invoice #, lane name) underlines on hover.
+- **Measure, don't eyeball, before calling a page done.** Open the new page and Enhanced Studio at 1440×900 and compare computed styles of the same parts (logo, nav item gap, workspace tile, status tabs, title, filter bar, table header and cell, footer). Any difference is a bug in the page or in these snippets; fix the snippet too.
+- **No font smoothing, and keep line height 1.45 in every `font:` shorthand.** Both silently change how text looks.
 
 ## Where production and Enhanced differ
 

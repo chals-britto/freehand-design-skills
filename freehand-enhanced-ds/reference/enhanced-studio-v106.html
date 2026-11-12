@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Enhanced Studio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2696,6 +2697,41 @@ body.resizing,body.resizing *{cursor:col-resize!important;user-select:none!impor
 
 /* v103: back to two lines; line 1 reads like every other cell (regular weight), line 2 is the grey secondary line */
 .dk-chg2 b{font-weight:400;color:inherit}
+
+/* v105: exception detail side panel (production ExceptionDetailSheet, Enhanced Studio rules) */
+.exs-scrim{position:fixed;inset:0;z-index:70;background:rgba(15,23,42,.28);animation:tin .15s ease-out}
+.exs{position:fixed;top:0;right:0;bottom:0;z-index:71;width:min(600px,calc(100vw - 64px));background:#FAFAFA;border-left:1px solid #E5E7EB;box-shadow:-16px 0 40px rgba(15,23,42,.18);display:flex;flex-direction:column;animation:exsin .22s ease-out}
+@keyframes exsin{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.exs,.exs-scrim{animation:none}}
+.exs-h{flex:none;background:#fff;border-bottom:1px solid #E5E7EB;padding:16px 20px 14px}
+.exs-t{display:flex;align-items:center;gap:8px;min-width:0}
+.exs-t h2{margin:0;font-size:18px;font-weight:600;color:#0F172A;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exs-t .bo-b{flex:none}.exs-t .sp{flex:1}.exs-t .dk-rn{flex:none}
+.exs-x{flex:none;width:32px;height:32px;border:0;border-radius:6px;background:none;color:#64748B;display:grid;place-items:center}
+.exs-x:hover{background:#F1F5F9;color:#0F172A}
+.exs-rule{margin:4px 0 0;font-size:14px;color:#475569}
+.exs-m{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;color:#475569;min-width:0}
+.exs-m .vnd{min-width:0;flex:0 1 auto;overflow:hidden}
+.exs-b{flex:1;min-height:0;overflow:auto;padding:16px 20px 24px;display:flex;flex-direction:column;gap:12px}
+.exs-b>*{flex-shrink:0}
+.exs-c{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:14px 16px}
+.exs-c h3{margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#64748B}
+.exs-c h3 .dx-invl{text-transform:none;letter-spacing:0;font-size:14px}
+.exs-amt{display:grid;grid-template-columns:repeat(3,1fr)}
+.exs-amt>div{display:flex;flex-direction:column;gap:2px;padding:0 16px;min-width:0}
+.exs-amt>div:first-child{padding-left:0}.exs-amt>div+div{border-left:1px solid #E5E7EB}
+.exs-amt small{font-size:12px;color:#475569}
+.exs-amt b{font-size:18px;font-weight:700;color:#0F172A;font-variant-numeric:tabular-nums;white-space:nowrap}
+.exs-amt b.red{color:#B91C1C}.exs-amt b em{font-style:normal;font-size:12px;font-weight:500;color:#64748B;margin-left:4px}
+.exs-amt span{font-size:12px;color:#64748B}
+.exs-det p{margin:0;font-size:14px;line-height:1.55;color:#0F172A}
+.exs-det .rl{margin-top:6px;font-size:12px;color:#64748B}
+.exs-dl{display:grid;grid-template-columns:136px minmax(0,1fr);row-gap:8px;margin:0;font-size:14px;align-items:center}
+.exs-dl dt{color:#64748B}.exs-dl dd{margin:0;color:#0F172A;min-width:0}
+.exs-dl .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px}
+.exs-f{flex:none;display:flex;align-items:center;gap:8px;padding:12px 20px;border-top:1px solid #E5E7EB;background:#fff}
+.exs-f .sp{flex:1}.exs-f .mu{font-size:12px;color:#64748B}
+.bo-tbl tbody tr[data-cur] td{background:#FFF6EF!important}
 </style>
 
 <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
@@ -3330,7 +3366,7 @@ function v1Extras(){
   ${S.skin==='v1'?askFab():`<button class="bo-fab" aria-label="Open Freehand assistant" data-tip="Ask Freehand assistant" data-tip-side="left">${ic('chat')}</button>`}
   ${toastHTML()}`;
 }
-function best(){return `<div class="sk sk-best${S.navCollapsed||S.cop?' nav-c':''}${S.cop?' cop-open':''}">${v1Nav()}${(useCtx(S.route==='contracts'?'ct-'+S.ct.tab:S.route==='exceptions'?'ex':S.route==='disputes'||S.route==='dispute'?'dk':'inv'),S.route==='dispute'?dkDetail():v1Main())}${S.cop?copPanel():''}${profileMenu()}${v1Extras()}${exModals()}${dkModals()}</div>`}
+function best(){return `<div class="sk sk-best${S.navCollapsed||S.cop?' nav-c':''}${S.cop?' cop-open':''}">${v1Nav()}${(useCtx(S.route==='contracts'?'ct-'+S.ct.tab:S.route==='exceptions'?'ex':S.route==='disputes'||S.route==='dispute'?'dk':'inv'),S.route==='dispute'?dkDetail():v1Main())}${S.cop?copPanel():''}${profileMenu()}${v1Extras()}${S.route==='exceptions'?exSheet():''}${exModals()}${dkModals()}</div>`}
 function v2p(){useCtx('inv');return `<div class="sk sk-best sk-v2p${S.panelCollapsed?' pan-c':''}">${v2Nav()}${v1Main()}${v1Extras()}</div>`}
 /* pinned columns stick after the checkbox column; offsets come from rendered widths */
 function layoutPins(){
@@ -3675,9 +3711,9 @@ function curRows(){
   return CFG().data.filter(r=>S.fxt.every(t=>fxMatch(r,t))&&(!q||CFG().search(r,q)));
 }
 function PG(){
-  if(S.ctx==='dk'){const base=dkBase();return {inv:false,dk:true,title:'Dispute dockets',desc:DK_DESC,acts:'',pre:dkStrips(),
+  if(S.ctx==='dk'){const base=dkBase();return {inv:false,dk:true,title:'Dispute dockets',desc:DK_DESC,acts:`<button class="bo-btn" data-a="dkwb" data-v="Download workbook">${ic('download')}Download workbook</button><button class="bo-btn" data-a="dkwb" data-v="Upload workbook">${ic('upload')}Upload workbook</button>`,pre:dkStrips(),
     tabs:DK_TABS.map(([k,l])=>`<button role="tab" aria-selected="${S.dkTab===k}" class="bo-tab${S.dkTab===k?' on':''}" data-a="dktab" data-v="${k}">${l}<span class="c">${base.filter(d=>dkTabF(d,k)).length}</span></button>`).join(''),
-    foot:'',help:'',empty:'No dispute dockets match the current filters.'}}
+    foot:'',help:`<button class="bo-lnk tabs-help" data-a="dkwb" data-v="Status guide" aria-label="Status guide" data-tip="Status guide">${ic('help')}<span class="sgt">Status guide</span></button>`,empty:'No dispute dockets match the current filters.'}}
   if(S.ctx==='ex'){const base=exBase(),c={all:base.length,open:0,resolved:0,disputed:0};base.forEach(r=>c[r.st.toLowerCase()]++);
     return {inv:false,ex:true,title:'Exceptions',desc:EX_DESC,acts:`<button class="bo-lnk hd-lnk" data-a="exroute">${ic('gear')}Configure routing</button><span class="bo-colwrap"><button class="bo-btn${S.menu==='ex-rej'?' on':''}" data-a="menu" data-v="ex-rej" aria-haspopup="dialog" aria-expanded="${S.menu==='ex-rej'}">${ic('ban')}Recent bulk rejects</button>${S.menu==='ex-rej'?exRejPop():''}</span>`,
       tabs:[['all','All'],['open','Open'],['resolved','Resolved'],['disputed','Disputed']].map(([k,l])=>`<button role="tab" aria-selected="${S.ex.tab===k}" class="bo-tab${S.ex.tab===k?' on':''}" data-a="extab" data-v="${k}">${l}<span class="c">${c[k]}</span></button>`).join(''),
@@ -3769,6 +3805,7 @@ CFGS.ex={defW:{inv:180,desc:200,mode:120,vendor:280,act:140,detail:430,variance:
   sortable:new Set(['inv','code','variance','status','vendor']),
   sortVal:(r,k)=>k==='variance'?r.variance:k==='inv'?r.inv:k==='code'?exCode(r.code):k==='status'?r.st:k==='vendor'?r.vendor:'',
   search:(r,q)=>(r.inv+' '+(r.tracking||'')).toLowerCase().includes(q),
+  rowAttr:r=>` data-a="exview" data-v="${r.id}"${S.ex.view===r.id?' data-cur':''}`,
   bulk:[['dispute','Dispute together','chat'],['waive','Waive','xc'],['reaudit','Re-audit','audit'],['reprocess','Reprocess','cycle'],['reject','Reject invoices','ban'],['assign','Assign','user']],
   cell:(r,k)=>k==='mode'?modeCell(r.mode):k==='inv'?`<span class="ex-2"><span class="mono ct-ref">${r.inv}</span><small>${fmtD(r.invDate)}</small></span>`:k==='charge'?`<span class="mono ex-ch">${r.charge}</span>`:k==='desc'?r.desc:k==='code'?`<span class="ex-2">${exTag(r.code)}<small>${ruleTxt(r.rule)}</small></span>`:k==='detail'?`<span class="ex-det" data-tip="${exExplain(r)}" data-trunc>${exExplain(r)}</span>`:k==='variance'?`<span class="ex-2 r"><small>${r.variance>0?'Overcharge':r.variance<0?'Undercharge':'No variance'}</small><span><span class="ex-var">${r.variance>0?'+':''}${r.variance.toFixed(2)}</span><span class="ccy">${r.ccy}</span></span></span>`:k==='status'?`<span class="bo-b t-${r.st==='Open'?'bad':r.st==='Resolved'?'ok':'org'}">${r.st}</span>`:k==='own'?`<span class="ex-2"><b>${EX_TEAMS[r.team]||'No team'}</b><small>${r.assignee==='__none__'?'Unassigned':EX_PEOPLE[r.assignee]}</small></span>`:k==='vendor'?vendorCell(r.scac,r.vendor,r.mode):k==='act'?(r.st==='Open'?`<button class="ex-ta" data-a="exta" data-id="${r.id}"><span>Take action</span>${ic('chevR')}</button>`:'<span class="dash">—</span>'):''};
 const exBase=()=>{const q=S.q.trim().toLowerCase(),sc=(S.ex.drill&&S.ex.scope)||[];return EX_ROWS.filter(r=>sc.every(t=>fxMatch(r,t))&&S.fxt.every(t=>fxMatch(r,t))&&(!q||CFGS.ex.search(r,q)))};
@@ -3804,15 +3841,17 @@ const humanCode=c=>{const t=c.toLowerCase().replace(/_/g,' ');return t[0].toUppe
 const ruleTxt=v=>{const m=/^Rate comparison for (\w+)$/.exec(v);return m?`Rate comparison for ${humanCode(m[1]).toLowerCase()}`:v};
 const ruleLbl=v=>{const m=/^Rate comparison for (\w+)$/.exec(v);return m?humanCode(m[1]):v};
 /* production shows the check's own sentence (backend "explanation"), not a computed one */
-function exExplain(r){const m=n=>`${r.ccy} ${n.toFixed(2)}`;
-  return ({RATE_OVERCHARGE:`Billed ${m(r.billed)} exceeds expected ${m(r.expected)} by ${m(r.variance)}.`,
-    DISCOUNT_VARIANCE:`Discount applied is below the contract rate; expected ${m(r.expected)}.`,
-    EXPIRED_RATE:`Billed on a rate that expired before the ship date; current rate is ${m(r.expected)}.`,
-    NO_CONTRACT_MATCH:`No contract rate matches this lane and service.`,
-    RATE_UNAVAILABLE:`The contract has no rate for this charge.`,
-    UNAUTHORIZED_CHARGE:`${r.desc} isn't an approved charge on the contract.`,
-    DUPLICATE_INVOICE:`Same invoice number and amount were already billed.`,
-    QUANTITY_MISMATCH:`Billed quantity doesn't match the shipment record.`})[r.code]||r.rule}
+function exExplain(r){const m=n=>`${r.ccy} ${n.toFixed(2)}`,md=String(r.mode||'').toLowerCase(),ch=(r.desc||'').toLowerCase(),v=parseInt(String(r.id).replace(/\D/g,''),10)%3;
+  return ({RATE_OVERCHARGE:[`Rate validation failed for ${md} invoice: ${r.desc} billed ${m(r.billed)} is above the contract rate of ${m(r.expected)}`,
+      `Rate validation failed for ${md} invoice: ${r.desc} billed ${m(r.billed)} is above the contract rate of ${m(r.expected)} for lane ${r.lane}, service ${r.service}. Contract rate effective from 1 Jul 2026`,
+      `Rate validation failed: ${r.desc} is above contract by ${m(r.variance)}`][v],
+    DISCOUNT_VARIANCE:`Discount validation failed for ${md} invoice: Discount on ${ch} is below the contract discount. Expected ${m(r.expected)}, billed ${m(r.billed)} for ${r.service}`,
+    EXPIRED_RATE:`Rate validity check failed for ${md} invoice: ${r.desc} was billed on a rate that expired before the ship date`,
+    NO_CONTRACT_MATCH:`Contract match failed for ${md} invoice: No contract rate found for lane ${r.lane}`,
+    RATE_UNAVAILABLE:`Rate lookup failed for ${md} invoice: The contract has no rate for ${ch} on lane ${r.lane}`,
+    UNAUTHORIZED_CHARGE:v===0?`Charge validation failed for ${md} invoice: ${r.desc} is not an approved charge on the contract`:`Charge validation failed for ${md} invoice: ${r.desc} is not an approved charge on the contract. No supporting document found on the shipment record${r.tracking?` for tracking ${r.tracking}`:''}`,
+    DUPLICATE_INVOICE:`Duplicate check failed for ${md} invoice: ${r.inv} with the same amount was already billed`,
+    QUANTITY_MISMATCH:`Quantity validation failed for ${md} invoice: Billed handling units do not match the shipment record. Invoice shows 6 units, bill of lading shows 4`})[r.code]||r.rule}
 const exKeyOf=r=>EX_DIMS.map(d=>d[0]).filter(k=>S.ex.group.includes(k)).map(d=>exVal(r,d)).join('||');
 const MODE_IC={PARCEL:'parcel',ROAD:'truck',LTL:'truck',FTL:'truck',OCEAN:'ship',AIR:'plane'};
 /* Mode column: icon + label, so the shape helps scanning and the word keeps it unambiguous */
@@ -3852,7 +3891,7 @@ function exBody(g,o){
 }
 /* bulk bar buttons; Exceptions checks which selected rows each action can take */
 function bulkBtns(){
-  if(S.ctx!=='ex')return CFG().bulk.map(([k,l,i])=>`<button class="${k==='delete'?'dg':''}" data-a="bulk" data-v="${k}">${ic(i)}${l}</button>`).join('');
+  if(S.ctx!=='ex')return CFG().bulk.map(([k,l,i])=>`<button class="${k==='delete'||k==='moveex'?'dg':''}" data-a="bulk" data-v="${k}">${ic(i)}${l}</button>`).join('');
   const rows=EX_ROWS.filter(r=>S.sel.has(r.id)),op=rows.filter(r=>r.st==='Open'),re=rows.filter(r=>r.st!=='Resolved'),multi=new Set(op.map(r=>r.vendor)).size>1;
   const why={dispute:multi?'Dispute together is one conversation with one vendor. Filter to a single vendor at the top, then dispute this group together.':'',reaudit:'Re-run the audit on invoices tied to the selected exceptions after correcting a rule.',reprocess:'Re-extract and re-audit invoices tied to the selected exceptions after correcting extraction or a charge mapping.',reject:'Reject the invoices behind these exceptions — nothing on them is paid'};
   return CFG().bulk.map(([k,l,i])=>{const rr=k==='reaudit'||k==='reprocess',n=(rr?re:op).length,off=!n||(k==='dispute'&&multi),tip=!n?(rr?'Only open or disputed exceptions can be re-run':`Only open exceptions can be ${{dispute:'disputed',waive:'waived',reject:'rejected',assign:'reassigned'}[k]}`):why[k]||'';
@@ -3878,7 +3917,7 @@ function exActModal(){
     ['dispute','Dispute charge','',`Contest this charge — you're asserting the correct amount is the audited ${m(r.expected)}, not the billed ${m(r.billed)}. Nothing is paid while the dispute is open. It is resolved at the audited amount if upheld, or the billed amount if ${r.vendor}'s charge stands.`],
     ['reject','Reject / return invoice','',`Return the invoice to ${r.vendor} to void & reissue a corrected one. This rejects the entire invoice — nothing is paid, regardless of other flags.`]];
   return `<div class="cf-scrim" data-menu><div class="ta-box" role="dialog" aria-modal="true" aria-labelledby="ta-t">
-    <div class="ta-h"><h3 id="ta-t">Take action on exception</h3><button class="x" data-a="exactx" aria-label="Close">${ic('x')}</button><div class="ta-sub"><span class="mono">${r.inv}</span><span class="ex-dot">·</span>${vendorCell(r.scac,r.vendor)}<span class="ta-code">${r.code}</span></div><p>${r.rule} · ${r.desc}</p></div>
+    <div class="ta-h"><h3 id="ta-t">Take action on exception</h3><button class="x" data-a="exactx" aria-label="Close">${ic('x')}</button><div class="ta-sub"><span class="mono">${r.inv}</span><span class="ex-dot">·</span>${vendorCell(r.scac,r.vendor)}${exTag(r.code)}</div><p>${r.rule} · ${r.desc}</p></div>
     <div class="ta-money"><div><small>Billed</small><b>${m(r.billed)}</b></div><div><small>Audited</small><b>${m(r.expected)}</b></div><div class="pay"><small>You'll pay</small><b>${a.c==='accept'?m(r.billed):a.c==='reject'?m(0):`${m(r.expected)}<em>if upheld</em>`}</b></div></div>
     <div class="ta-opts" role="radiogroup" aria-label="Resolution outcome">${opts.map(([k,l,bd,d])=>`<button class="ta-o${a.c===k?' on':''}" role="radio" aria-checked="${a.c===k}" data-a="exchoice" data-v="${k}"><span class="rd" aria-hidden="true"></span><span class="tx"><b>${l}${bd?`<span class="bdg">${bd}</span>`:''}</b><span>${d}</span></span></button>`).join('')}</div>
     <div class="ta-n"><textarea id="ex-notes" rows="2" placeholder="Resolution notes (optional)…" aria-label="Resolution notes">${a.notes||''}</textarea></div>
@@ -3998,7 +4037,7 @@ CFGS.dk={noun:'dockets',allLabel:'All dockets',searchPh:'Search docket ID or inv
   sortOpts:[['initiated','Initiated','Oldest first','Newest first',-1],['oldest','Invoice date','Oldest invoice','Newest invoice',1],['last','Activity','Stalest activity','Recent activity',-1],['vlast','Vendor reply','Stalest vendor reply','Recent vendor reply',-1],['disputed','Disputed amount','Lowest disputed','Highest disputed',-1],['charged','Charge value','Lowest charge value','Highest charge value',-1],['items','Disputes','Fewest disputes','Most disputes',-1],['status','Status','Status A→Z','Status Z→A',1]],
   sortVal:(d,k)=>k==='vendor'?d.vendor:k==='name'?d.name:k==='status'?DK_ST[dkStatus(d)][0]:k==='disputed'?dkTot(d):k==='charged'?d.items.reduce((s,x)=>s+x.billed,0):k==='open'?dkOpenI(d).length:k==='initiated'?d.opened.getTime():k==='last'?d.last.getTime():k==='vlast'?(d.vlast?d.vlast.getTime():0):k==='oldest'?dkOldest(d).getTime():k==='items'?d.items.length:'',
   search:(d,q)=>(d.id+' '+d.items.map(x=>x.inv).join(' ')).toLowerCase().includes(q),
-  bulk:[['export','Export','download']],
+  bulk:[['export','Export','download'],['moveex','Move open disputes to exceptions','transfer']],
   rowAttr:d=>` data-a="dkopen" data-v="${d.id}"`,
   cell:(d,k)=>{const ch=[...new Set(d.items.map(x=>x.charge))].map(chgTxt),co=[...new Set(d.items.map(x=>x.code))].map(c=>scase(exCode(c)));
     return k==='mode'?modeCell(d.mode):k==='vendor'?vendorCell(d.scac,d.vendor):k==='name'?`<span class="dk-name" data-tip="${d.name}" data-trunc>${d.name}</span>`:k==='invoices'?`<span class="mono dk-invs">${[...new Set(d.items.map(x=>x.inv))].join(', ')}</span>`
@@ -4070,14 +4109,14 @@ function dkConv(d){
 const dkItem=id=>{for(const d of DK){const x=d.items.find(i=>i.id===id);if(x)return [d,x]}return []};
 function dkResModal(){
   const z=S.dkRes;if(!z)return '';const [d,x]=dkItem(z.id),m=n=>mny(n,d.ccy),vt=tc(d.vendor);
-  const opts=[['audited','Go with audited amount',`Pays ${m(x.expected)}`,'Line-item level','teal',`Pay the contract amount. ${vt} credits ${m(x.disputed)}.`],['billed','Accept as billed',`Pays ${m(x.billed)}`,'Line-item level','teal',`Pay what ${vt} billed and close this charge.`],['returned','Reject / return invoice',`Pays ${m(0)}`,'Invoice-level','info',`Return ${x.inv} to ${vt} to void & reissue. Nothing on the invoice is paid.`]];
+  const opts=[['audited','Go with audited amount',`Pays ${m(x.expected)}`,'Line-item level','teal',`Pay the contract amount. The vendor credits ${m(x.disputed)}.`],['billed','Accept as billed',`Pays ${m(x.billed)}`,'Line-item level','teal',`Pay what the vendor billed and close this charge.`],['returned','Reject / return invoice',`Pays ${m(0)}`,'Invoice-level','info',`Return ${x.inv} to the vendor to void and reissue. Nothing on it is paid.`]];
   const pay=z.c==='billed'?x.billed:z.c==='returned'?0:x.expected,lbl=!z.c?'Choose a resolution':z.c==='audited'?'Resolve dispute':z.c==='billed'?'Accept as billed':'Reject invoice';
-  const res=z.c==='audited'?`<p class="dk-out ok">${m(x.disputed)} is recorded as recovered.</p>`:z.c==='billed'?`<p class="dk-out amb">${m(x.disputed)} is paid above the contract amount.</p>`:z.c==='returned'?`<p class="dk-out amb">${x.inv} goes back to ${vt}; its other charges are not paid either.</p>`:'';
+  const res=z.c==='audited'?`<p class="dk-out ok">${m(x.disputed)} is recorded as recovered.</p>`:z.c==='billed'?`<p class="dk-out amb">${m(x.disputed)} is paid above the contract amount.</p>`:z.c==='returned'?`<p class="dk-out amb">${x.inv} goes back to the vendor. Its other charges are not paid either.</p>`:'';
   return `<div class="cf-scrim" data-menu><div class="ta-box dk-rm" role="dialog" aria-modal="true" aria-labelledby="rs-t">
-    <div class="ta-h"><h3 id="rs-t">Resolve dispute</h3><button class="x" data-a="dkresx" aria-label="Close">${ic('x')}</button><div class="ta-sub">Invoice <b class="mono">${x.inv}</b><span class="ex-dot">·</span>${vendorCell(d.scac,d.vendor)}<span class="ta-code">${x.code}</span></div></div>
+    <div class="ta-h"><h3 id="rs-t">Resolve dispute</h3><button class="x" data-a="dkresx" aria-label="Close">${ic('x')}</button><div class="ta-sub">Invoice <b class="mono">${x.inv}</b><span class="ex-dot">·</span>${vendorCell(d.scac,d.vendor)}${exTag(x.code)}</div></div>
     <div class="ta-money"><div><small>Billed</small><b>${m(x.billed)}</b></div><div><small>Disputed</small><b class="red">${m(x.disputed)}</b></div><div class="pay"><small>You'll pay</small><b>${m(pay)}</b>${z.c?'':'<span class="sub">If you resolve to the audited amount</span>'}</div></div>
     <div class="ta-opts" role="radiogroup" aria-label="Resolution">${opts.map(([k,l,bd,lv,tn,ds])=>`<button class="ta-o${z.c===k?' on':''}${k==='returned'?' dg':''}" role="radio" aria-checked="${z.c===k}" data-a="dkresc" data-v="${k}"><span class="rd" aria-hidden="true"></span><span class="tx"><b>${l}<span class="bdg${k==='returned'?' z':''}">${bd}</span><span class="bo-b t-${tn} lv">${lv}</span></b><span>${ds}</span></span></button>`).join('')}</div>
-    <div class="ta-n">${res}<label class="dk-nl" for="dk-notes">Resolution notes</label><textarea id="dk-notes" rows="2" placeholder="Optional context for the resolution record">${z.notes||''}</textarea></div>
+    <div class="ta-n">${res}<label class="dk-nl" for="dk-notes">Resolution notes</label><textarea id="dk-notes" rows="2" placeholder="Optional. Only your team sees this note.">${z.notes||''}</textarea></div>
     <div class="cf-a ta-f"><button class="bo-btn" data-a="dkresx">Cancel</button><button class="${z.c==='billed'||z.c==='returned'?'cf-danger':'bo-pri'}" ${z.c?'data-a="dkresgo"':'disabled'}>${lbl}</button></div></div></div>`;
 }
 function dkApplyModal(){
@@ -4378,16 +4417,19 @@ function dxModal(){
   if(z.kind==='apply')return `<div class="cf-scrim" data-menu><div class="cf-box" role="alertdialog" aria-modal="true" aria-labelledby="dx-mt"><h3 id="dx-mt">${xs[0].rec}${n>1?` on ${plural(n,'charge')}`:''}?</h3>
     <p>${DX_APPLY[xs[0].rec]||'This applies the suggested action.'} You'll pay ${mny(dxSum(xs,x=>x.expected),d.ccy)}; ${mny(dxSum(xs,x=>x.disputed),d.ccy)} is recovered.</p>
     <div class="cf-a">${n===1?`<button class="bo-lnk dx-diff" data-a="dxdiff" data-v="${xs[0].id}">Resolve differently</button>`:''}<button class="bo-btn" data-a="dxbx">Cancel</button><button class="bo-pri" data-a="dxbgo">${xs[0].rec}</button></div></div></div>`;
-  /* bulk resolve offers the same outcomes as one charge (production DisputeResolveModal) */
-  const bill=dxSum(xs,x=>x.billed),exp=dxSum(xs,x=>x.expected),c=z.c,v=tc(d.vendor);
-  const OPTS=[['audited','Go with audited amount',`Pays ${mny(exp,d.ccy)}`,'Resolve in line with the audit. You pay the audited amount, not the full invoice.'],
-    ['billed','Accept as billed',`Pays ${mny(bill,d.ccy)}`,`Drop the dispute. You accept ${v}'s charges as originally billed and pay them in full.`],
-    ['returned','Reject / return invoice','Pays nothing',`These lines are fundamentally wrong. Every affected invoice is returned to ${v} to void and reissue a corrected invoice.`]];
-  return `<div class="cf-scrim" data-menu><div class="cf-box dx-bm" role="dialog" aria-modal="true" aria-labelledby="dx-mt"><h3 id="dx-mt">Resolve ${plural(n,'charge')}</h3>
-    <p class="mu">${plural(n,'charge')} · ${mny(dxSum(xs,x=>x.disputed),d.ccy)} disputed. Choose one outcome for all of them.</p>
-    <div class="dx-opts" role="radiogroup">${OPTS.map(([k,l,b,t])=>`<button role="radio" aria-checked="${c===k}" class="dx-opt${c===k?' on':''}" data-a="dxbc" data-v="${k}"><span class="rd"></span><span class="tx"><b>${l}</b><span>${t}</span></span><span class="bo-b t-gray">${b}</span></button>`).join('')}</div>
-    <label class="dk-nl" for="dx-notes">Resolution notes</label><textarea id="dx-notes" class="dx-mn" rows="2" placeholder="Optional. Only your team sees this note.">${dxEsc(S.dxBulkNote||'')}</textarea>
-    <div class="cf-a"><button class="bo-btn" data-a="dxbx">Cancel</button><button class="bo-pri" data-a="dxbgo" ${c?'':'disabled'}>Resolve ${plural(n,'charge')}</button></div></div></div>`;
+  /* bulk resolve: the same dialog as one charge, with totals across the selected charges */
+  const m=k=>mny(k,d.ccy),bill=dxSum(xs,x=>x.billed),exp=dxSum(xs,x=>x.expected),dis=dxSum(xs,x=>x.disputed),c=z.c,invs=[...new Set(xs.map(x=>x.inv))],codes=[...new Set(xs.map(x=>x.code))],ni=invs.length;
+  const pay=c==='billed'?bill:c==='returned'?0:exp,lbl=!c?'Choose a resolution':c==='audited'?`Resolve ${plural(n,'dispute')}`:c==='billed'?'Accept as billed':`Reject ${plural(ni,'invoice')}`;
+  const OPTS=[['audited','Go with audited amount',`Pays ${m(exp)}`,'Line-item level','teal',`Pay the contract amount on each charge. The vendor credits ${m(dis)}.`],
+    ['billed','Accept as billed',`Pays ${m(bill)}`,'Line-item level','teal',`Pay what the vendor billed and close ${n===1?'this charge':'these charges'}.`],
+    ['returned','Reject / return invoice',`Pays ${m(0)}`,'Invoice-level','info',`Return ${ni===1?invs[0]:plural(ni,'invoice')} to the vendor to void and reissue. Nothing on ${ni===1?'it':'them'} is paid.`]];
+  const out=c==='audited'?`<p class="dk-out ok">${m(dis)} is recorded as recovered.</p>`:c==='billed'?`<p class="dk-out amb">${m(dis)} is paid above the contract amount.</p>`:c==='returned'?`<p class="dk-out amb">${ni===1?invs[0]+' goes':plural(ni,'invoice')+' go'} back to the vendor. Other charges on ${ni===1?'it':'them'} are not paid either.</p>`:'';
+  return `<div class="cf-scrim" data-menu><div class="ta-box dk-rm" role="dialog" aria-modal="true" aria-labelledby="dx-mt">
+    <div class="ta-h"><h3 id="dx-mt">Resolve ${plural(n,'dispute')}</h3><button class="x" data-a="dxbx" aria-label="Close">${ic('x')}</button><div class="ta-sub">${ni===1?`Invoice <b class="mono">${invs[0]}</b>`:plural(ni,'invoice')}<span class="ex-dot">·</span>${vendorCell(d.scac,d.vendor)}${codes.length===1?exTag(codes[0]):`<span class="ex-code">${codes.length} exception types</span>`}</div></div>
+    <div class="ta-money"><div><small>Billed</small><b>${m(bill)}</b></div><div><small>Disputed</small><b class="red">${m(dis)}</b></div><div class="pay"><small>You'll pay</small><b>${m(pay)}</b>${c?'':'<span class="sub">If you resolve to the audited amount</span>'}</div></div>
+    <div class="ta-opts" role="radiogroup" aria-label="Resolution">${OPTS.map(([k,l,bd,lv,tn,ds])=>`<button class="ta-o${c===k?' on':''}${k==='returned'?' dg':''}" role="radio" aria-checked="${c===k}" data-a="dxbc" data-v="${k}"><span class="rd" aria-hidden="true"></span><span class="tx"><b>${l}<span class="bdg${k==='returned'?' z':''}">${bd}</span><span class="bo-b t-${tn} lv">${lv}</span></b><span>${ds}</span></span></button>`).join('')}</div>
+    <div class="ta-n">${out}<label class="dk-nl" for="dx-notes">Resolution notes</label><textarea id="dx-notes" rows="2" placeholder="Optional. Only your team sees this note.">${dxEsc(S.dxBulkNote||'')}</textarea></div>
+    <div class="cf-a ta-f"><button class="bo-btn" data-a="dxbx">Cancel</button><button class="${c==='billed'||c==='returned'?'cf-danger':'bo-pri'}" ${c?'data-a="dxbgo"':'disabled'}>${lbl}</button></div></div></div>`;
 }
 function dxAct(a,v){
   const d=DK.find(x=>x.id===S.dk);if(!d)return null;const X=dxState(),oi=dkOpenI(d);
@@ -4607,6 +4649,7 @@ function runBulk(k,ids){
     if(k==='reprocess')toast('Reprocessing started',`${plural(ninv(re),'invoice')} sent back to extraction`,false,'warning');
     S.sel.clear();return}
   if(S.ctx&&S.ctx!=='inv'&&S.skin==='v1'){const n=ids.length,nn=plural(n,CFG().noun.replace(/s$/,''));
+    if(k==='moveex'){toast('Shown for layout only','Moving disputes back to exceptions isn’t wired in this prototype',false,'info');return}
     if(k==='approve')toast('Spot quotes approved',`${nn} can now price invoices`);else if(k==='reject')toast('Spot quotes rejected',`${nn} will no longer price invoices`,false,'warning');else if(k==='reprocess')toast('Re-processing started',`${nn} queued for extraction`,false,'info');else toast('Export started',`${nn} · the file downloads when ready`,false,'info');
     S.sel.clear();S.allPages=false;return}
   const n=S.allPages&&k!=='delete'?cnt(S.tab):ids.length;
@@ -4687,7 +4730,7 @@ document.addEventListener('click',e=>{
     case 'fbdefault':S.saved.forEach(y=>y.def=y.name===v?!y.def:false);break;
     case 'copopen':S.cop=true;S.menu=null;break;
     case 'copclose':S.cop=false;break;
-    case 'route':if(v==='Invoices'||v==='Contracts'||v==='Exceptions'||v==='Dispute dockets'){S.route=v==='Dispute dockets'?'disputes':v.toLowerCase();S.menu=null;S.sel.clear();S.allPages=false;S.page=1}else{toast(`${v} isn’t in this prototype yet`,'Built so far: Invoices, Contracts, Exceptions and Disputes',false,'info')}break;
+    case 'route':S.ex.view=null;if(v==='Invoices'||v==='Contracts'||v==='Exceptions'||v==='Dispute dockets'){S.route=v==='Dispute dockets'?'disputes':v.toLowerCase();S.menu=null;S.sel.clear();S.allPages=false;S.page=1}else{toast(`${v} isn’t in this prototype yet`,'Built so far: Invoices, Contracts, Exceptions and Disputes',false,'info')}break;
     case 'cttab':S.ct.tab=v;break;
     case 'ctset':S.ct[el.dataset.k]=v;break;
     case 'ctsort':{const t=el.dataset.k,c=S.ctSort[t];S.ctSort[t]=c&&c.k===v?(c.dir>0?{k:v,dir:-1}:null):{k:v,dir:1};break}
@@ -4703,6 +4746,7 @@ document.addEventListener('click',e=>{
     case 'selrows':curRows().forEach(r=>S.sel.add(r.id));break;
     case 'dktab':S.dkTab=v;S.sel.clear();S.page=1;break;
     case 'dkq':S.dkQ=!S.dkQ;break;
+    case 'dkwb':toast(`${v} isn’t wired in this prototype`,'Shown for layout only',false,'info');break;
     case 'dkopen':S.route='dispute';S.dk=v;S.dkSet=false;S.sel.clear();S.menu=null;S.dxTop=true;dxTotsIn=false;dxStuck=false;break;
     case 'dkgo':S.dk=v;S.dkSet=false;S.dxTop=true;dxTotsIn=false;dxStuck=false;break;
     case 'dkback':S.route='disputes';break;
@@ -4752,6 +4796,9 @@ document.addEventListener('click',e=>{
       toast('Group unlocked','Its values are now filters.',true,'info');break}
     case 'exundrill':{const p=S.ex.pre;if(p){S.ex.group=p.group;S.fxt=p.fxt;S.ex.open=new Set(p.open);S.ex.shown=p.shown;S.ex.tab=p.tab;S.ex.restoreScroll=p.scroll}
       S.ex.pre=null;S.ex.scope=null;S.ex.path=[];S.ex.pathDims=[];S.ex.drill=false;S.ex.unlocked=false;S.ex.unlockSnap=null;S.ex.init=true;S.ex.gpage={};S.page=1;S.sel.clear();break}
+    case 'exview':S.ex.view=v;S.menu=null;break;
+    case 'exviewx':S.ex.view=null;break;
+    case 'exinvopen':{const w=window.open(location.href.split('#')[0]+'#exinv='+encodeURIComponent(v),'_blank');if(!w)exInvApply(v);break}
     case 'exta':S.ex.act={id,c:'accept',notes:''};break;
     case 'exchoice':S.ex.act.notes=document.getElementById('ex-notes')?.value||'';S.ex.act.c=v;break;
     case 'exactx':S.ex.act=null;break;
@@ -4843,6 +4890,42 @@ document.addEventListener('dragstart',e=>{const th=e.target.closest&&e.target.cl
 document.addEventListener('dragover',e=>{const th=e.target.closest&&e.target.closest('[data-col]');if(!th||!dragCol)return;e.preventDefault();app.querySelectorAll('.drop').forEach(x=>x.classList.remove('drop'));if(th.dataset.col!==dragCol)th.classList.add('drop')});
 document.addEventListener('drop',e=>{const th=e.target.closest&&e.target.closest('[data-col]');if(!th||!dragCol)return;e.preventDefault();const to=th.dataset.col;if(to!==dragCol){const o=(S.colOrder||CFG().cols.map(c=>c[0])).filter(k=>k!==dragCol);o.splice(o.indexOf(to),0,dragCol);S.colOrder=o}dragCol=null;render()});
 document.addEventListener('dragend',()=>{dragCol=null;app.querySelectorAll('.drop,.dragging').forEach(x=>x.classList.remove('drop','dragging'))});
+/* exception detail side panel: opens from a row, J/K or ↑/↓ steps through the list, Esc closes */
+function exSheet(){
+  const r=S.ex.view&&EX_ROWS.find(x=>x.id===S.ex.view);if(!r)return '';
+  const list=exNavList(),i=list.findIndex(x=>x.id===r.id),m=n=>`${n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}<em>${r.ccy}</em>`;
+  const nav=i>=0?`<div class="dk-rn"><button class="prev" ${i>0?`data-a="exview" data-v="${list[i-1].id}" data-tip="Previous exception (K or ↑)"`:'disabled'} aria-label="Previous exception">${ic('chevL')}</button><span aria-live="polite" data-tip="Exception ${i+1} of ${list.length} in this list">${(i+1).toLocaleString()} of ${list.length.toLocaleString()}</span><button class="next" ${i<list.length-1?`data-a="exview" data-v="${list[i+1].id}" data-tip="Next exception (J or ↓)"`:'disabled'} aria-label="Next exception">${ic('chevR')}</button></div>`:'';
+  const st=`<span class="bo-b t-${r.st==='Open'?'bad':r.st==='Resolved'?'ok':'org'}">${r.st}</span>`,dash='<span class="dash">—</span>';
+  const row=(l,v)=>`<dt>${l}</dt><dd>${v}</dd>`;
+  const invL=`<button class="dx-invl" data-a="exinvopen" data-v="${r.inv}" data-tip="Open ${r.inv} in Invoices (new tab)">${r.inv}${ic('ext')}</button>`;
+  return `<div class="exs-scrim" data-a="exviewx" aria-hidden="true"></div><aside class="exs" role="dialog" aria-modal="true" aria-labelledby="exs-t">
+    <div class="exs-h"><div class="exs-t"><h2 id="exs-t" data-tip="${scase(exCode(r.code))}" data-trunc>${scase(exCode(r.code))}</h2>${st}<span class="sp"></span>${nav}<button class="exs-x" data-a="exviewx" aria-label="Close" data-tip="Close (Esc)">${ic('x')}</button></div>
+      <p class="exs-rule">${ruleTxt(r.rule)} · ${r.desc}</p>
+      <div class="exs-m">Invoice ${invL}<span class="ex-dot">·</span>${vendorCell(r.scac,r.vendor,r.mode)}</div></div>
+    <div class="exs-b">
+      <section class="exs-c"><h3>Amounts</h3><div class="exs-amt"><div><small>Billed</small><b>${m(r.billed)}</b></div><div><small>Expected</small><b>${m(r.expected)}</b><span>Contract amount</span></div><div><small>Variance</small><b class="${r.variance>0?'red':''}">${r.variance>0?'+':''}${m(r.variance)}</b><span>${r.variance>0?'Overcharge':r.variance<0?'Undercharge':'No variance'}</span></div></div></section>
+      <section class="exs-c exs-det"><h3>Exception detail</h3><p>${exExplain(r)}</p><p class="rl">Rule: ${ruleTxt(r.rule)}</p></section>
+      <section class="exs-c"><h3>Ownership</h3><dl class="exs-dl">${row('Team',EX_TEAMS[r.team]||'No team')}${row('Assignee',r.assignee==='__none__'?'Unassigned':EX_PEOPLE[r.assignee])}${row('Blocking payment',r.blocking?'Yes. The invoice is held until this is resolved.':'No')}</dl></section>
+      <section class="exs-c"><h3>Shipment</h3><dl class="exs-dl">${row('Mode',modeCell(r.mode))}${row('Lane',r.lane||dash)}${row('Service',r.service||dash)}${row('Weight band',r.weight||dash)}${row('Tracking number',r.tracking?`<span class="mono">${r.tracking}</span>`:dash)}</dl></section>
+      <section class="exs-c"><h3>Invoice ${invL}</h3><dl class="exs-dl">${row('Status',`<span class="bo-b t-${TONE[r.invStatus]||'mute'}">${r.invStatus}</span>`)}${row('Type',r.invType)}${row('Billed by',r.billedBy)}${row('Invoice date',fmtD(r.invDate))}${row('Received',fmtD(r.received))}${row('Due date',fmtD(r.due))}</dl></section>
+    </div>
+    <div class="exs-f"><span class="mu">${r.id} · J/K to move · Esc to close</span><span class="sp"></span>${r.st==='Open'?`<button class="bo-pri" data-a="exta" data-id="${r.id}">Take action${ic('chevR')}</button>`:`<span class="mu">${r.st==='Disputed'?'In a dispute docket. Resolve it there.':'Resolved. Nothing to do.'}</span>`}</div>
+  </aside>`;
+}
+/* panel order follows the screen: group by group when grouped, else the list order */
+const exNavList=()=>S.ex.group.length?exGroups(v1Rows()).flatMap(g=>g.rows):v1Rows();
+/* exception → Invoices: the invoice, filtered by its number (opened in a new tab via #exinv=) */
+function exInvApply(inv){
+  let r=S.rows.find(x=>x.id===inv);if(!r){r={...S.rows[inv.length%S.rows.length],id:inv};S.rows.unshift(r)}
+  S.route='invoices';useCtx('inv');S.tab='All';S.q='';S.fxt=[];fxEnsure('invoice').values=[inv];S.page=1;S.sel.clear();
+}
+document.addEventListener('keydown',e=>{if(!S||S.route!=='exceptions'||!S.ex||!S.ex.view)return;
+  if(S.ex.act||S.exReject||S.exTeam||S.exConfirm)return;
+  const t=e.target;if(t.closest&&t.closest('input,textarea,select,[contenteditable]'))return;
+  if(e.key==='Escape'){e.stopPropagation();S.ex.view=null;render();return}
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const k=e.key,d=k==='j'||k==='J'||k==='ArrowDown'?1:k==='k'||k==='K'||k==='ArrowUp'?-1:0;if(!d)return;
+  const L=exNavList(),i=L.findIndex(x=>x.id===S.ex.view),n=L[i+d];e.preventDefault();if(n){S.ex.view=n.id;render()}},true);
 /* docket → Invoices: the docket's invoices, filtered by a "Dispute docket" chip (opened in a new tab via #dkinv=) */
 function dkInvApply(id){
   const d=DK.find(x=>String(x.id)===String(id));if(!d)return;
@@ -4852,5 +4935,8 @@ function dkInvApply(id){
   S.route='invoices';useCtx('inv');S.tab='All';S.q='';S.fxt=[];fxEnsure('docket').values=[d.name];S.page=1;S.sel.clear();
 }
 if(location.hash.startsWith('#dkinv='))dkInvApply(decodeURIComponent(location.hash.slice(7)));
+if(location.hash.startsWith('#exinv='))exInvApply(decodeURIComponent(location.hash.slice(7)));
 render();
 </script>
+
+</body></html>

@@ -13,7 +13,7 @@
    ===================================================================== */
 *{box-sizing:border-box}
 body{margin:0;font:400 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text);background:var(--fh-bg)}
-svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:var(--fh-icon-stroke);stroke-linecap:round;stroke-linejoin:round;flex:none}
 .gallery{max-width:1080px;margin:0 auto;padding:32px 24px 120px}
 .gallery>h1{font-size:var(--fh-fs-24);margin:0 0 4px}
 .gallery>p{color:var(--fh-text-meta);margin:0 0 24px}
@@ -23,25 +23,30 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 
 /* ---------- 1. Buttons ---------- */
-.fh-btn{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-control);padding:0 12px;border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:var(--fh-bg);color:var(--fh-text-strong2);font:500 var(--fh-fs-14) var(--fh-font);box-shadow:var(--fh-sh-control);cursor:pointer}
+.fh-btn{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-control);padding:0 12px;border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:var(--fh-bg);color:var(--fh-text-strong2);font:500 var(--fh-fs-14)/1.45 var(--fh-font);box-shadow:var(--fh-sh-control);cursor:pointer}
 .fh-btn:hover{background:#F8FAFC}
 .fh-btn.sm{height:32px;padding:0 10px}
-.fh-btn-pri{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-control);padding:0 14px;border:1px solid var(--fh-brand-hover);border-radius:var(--fh-r-control);background:var(--fh-brand);color:#fff;font:600 var(--fh-fs-14) var(--fh-font);box-shadow:var(--fh-sh-control);cursor:pointer}
+.fh-btn-pri{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-control);padding:0 14px;border:1px solid var(--fh-brand-hover);border-radius:var(--fh-r-control);background:var(--fh-brand);color:#fff;font:600 var(--fh-fs-14)/1.45 var(--fh-font);box-shadow:var(--fh-sh-control);cursor:pointer}
 .fh-btn-pri:hover{background:var(--fh-brand-hover)}
 /* icon button; .act = something is set; .bdot = count badge */
 .fh-ib{position:relative;display:inline-grid;place-items:center;width:var(--fh-h-control);height:var(--fh-h-control);border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:var(--fh-bg);color:var(--fh-text-helper);box-shadow:var(--fh-sh-control);cursor:pointer}
 .fh-ib.act{border-color:var(--fh-brand-ring);background:var(--fh-brand-tint2);color:var(--fh-brand-text)}
 .fh-ib .bdot{position:absolute;top:-6px;right:-6px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--fh-brand);color:#fff;font:600 10px/16px var(--fh-font);font-style:normal;text-align:center}
 
-/* ---------- 2. Status pills (list page status filter; not tabs) ---------- */
+/* ---------- 2. Status tabs (list page status filter; same tab as detail pages) ---------- */
+.fh-tabs{display:flex;gap:20px;height:39px;padding:0 24px;margin-top:4px;border-bottom:1px solid var(--fh-divider)}
+.fh-tab{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-tab);padding:0 2px;border:0;border-bottom:2px solid transparent;background:none;color:var(--fh-text-meta);font:500 var(--fh-fs-14)/1.45 var(--fh-font);cursor:pointer}
+.fh-tab:hover{color:var(--fh-text)}
+.fh-tab.on{color:var(--fh-text);border-bottom-color:var(--fh-brand)}
+/* older pill style, kept for chips that are not status filters */
 .fh-pills{display:flex;gap:8px;flex-wrap:wrap}
-.fh-pill{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-pill);padding:0 10px;border:1px solid var(--fh-border);border-radius:var(--fh-r-pill);background:var(--fh-bg);color:var(--fh-text-helper);font:500 var(--fh-fs-14) var(--fh-font);cursor:pointer}
+.fh-pill{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-pill);padding:0 10px;border:1px solid var(--fh-border);border-radius:var(--fh-r-pill);background:var(--fh-bg);color:var(--fh-text-helper);font:500 var(--fh-fs-14)/1.45 var(--fh-font);cursor:pointer}
 .fh-pill .c{color:var(--fh-text-meta)}
 .fh-pill.on{border-color:var(--fh-brand-ring);background:var(--fh-brand-tint);color:var(--fh-brand-text);font-weight:600}
 .fh-pill.on .c{color:var(--fh-brand-text)}
 
 /* ---------- 3. Badges (status) ---------- */
-.fh-b{display:inline-flex;align-items:center;height:var(--fh-h-badge);padding:0 9px;border-radius:var(--fh-r-pill);font:500 var(--fh-fs-12) var(--fh-font);white-space:nowrap}
+.fh-b{display:inline-flex;align-items:center;height:var(--fh-h-badge);padding:0 9px;border-radius:var(--fh-r-pill);font:500 var(--fh-fs-12)/1.45 var(--fh-font);white-space:nowrap}
 .fh-b.t-ok{color:var(--fh-ok-fg);background:var(--fh-ok-bg);box-shadow:inset 0 0 0 1px var(--fh-ok-ring)}
 .fh-b.t-warn{color:var(--fh-warn-fg);background:var(--fh-warn-bg);box-shadow:inset 0 0 0 1px var(--fh-warn-ring)}
 .fh-b.t-bad{color:var(--fh-bad-fg);background:var(--fh-bad-bg);box-shadow:inset 0 0 0 1px var(--fh-bad-ring)}
@@ -50,33 +55,33 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-b.t-acc{color:var(--fh-acc-fg);background:var(--fh-acc-bg);box-shadow:inset 0 0 0 1px var(--fh-acc-ring)}
 .fh-b.t-mute{color:var(--fh-mute-fg);background:var(--fh-mute-bg);box-shadow:inset 0 0 0 1px var(--fh-mute-ring)}
 /* exception tag inside a card: neutral, so status and money keep the colour */
-.fh-tag{display:inline-flex;align-items:center;height:var(--fh-h-badge);padding:0 9px;border-radius:var(--fh-r-pill);background:#F8FAFC;color:var(--fh-text-helper);box-shadow:inset 0 0 0 1px var(--fh-border);font:500 var(--fh-fs-12) var(--fh-font)}
+.fh-tag{display:inline-flex;align-items:center;height:var(--fh-h-badge);padding:0 9px;border-radius:var(--fh-r-pill);background:#F8FAFC;color:var(--fh-text-helper);box-shadow:inset 0 0 0 1px var(--fh-border);font:500 var(--fh-fs-12)/1.45 var(--fh-font)}
 /* count chip next to a section title */
-.fh-cnt{display:inline-grid;place-items:center;min-width:24px;height:22px;padding:0 7px;border-radius:var(--fh-r-pill);background:var(--fh-bg-chip);color:var(--fh-text-strong2);font:600 var(--fh-fs-12) var(--fh-font)}
+.fh-cnt{display:inline-grid;place-items:center;min-width:24px;height:22px;padding:0 7px;border-radius:var(--fh-r-pill);background:var(--fh-bg-chip);color:var(--fh-text-strong2);font:600 var(--fh-fs-12)/1.45 var(--fh-font)}
 
 /* ---------- 4. Search + dropdown filter (with counts) ---------- */
 .fh-q{display:flex;align-items:center;gap:6px;height:var(--fh-h-control);padding:0 10px;border:1px solid var(--fh-border);border-radius:var(--fh-r-input);background:var(--fh-bg);color:var(--fh-text-meta);min-width:220px}
 .fh-q:focus-within{border-color:var(--fh-brand);box-shadow:0 0 0 3px var(--fh-brand-tint)}
-.fh-q input{border:0;outline:0;background:none;font:400 var(--fh-fs-14) var(--fh-font);color:var(--fh-text);width:100%}
+.fh-q input{border:0;outline:0;background:none;font:400 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text);width:100%}
 .fh-ddw{position:relative}
-.fh-dd{display:inline-flex;align-items:center;justify-content:space-between;gap:6px;min-width:128px;height:var(--fh-h-control);padding:0 10px 0 12px;border:1px solid var(--fh-border);border-radius:var(--fh-r-control);background:var(--fh-bg);color:var(--fh-text-strong2);font:400 var(--fh-fs-14) var(--fh-font);cursor:pointer}
+.fh-dd{display:inline-flex;align-items:center;justify-content:space-between;gap:6px;min-width:128px;height:var(--fh-h-control);padding:0 10px 0 12px;border:1px solid var(--fh-border);border-radius:var(--fh-r-control);background:var(--fh-bg);color:var(--fh-text-strong2);font:400 var(--fh-fs-14)/1.45 var(--fh-font);cursor:pointer}
 .fh-dd .i{color:var(--fh-text-faint);width:14px;height:14px}
-.fh-dd .n{display:inline-grid;place-items:center;min-width:16px;height:16px;margin-left:6px;padding:0 4px;border-radius:999px;background:var(--fh-brand);color:#fff;font:600 10px var(--fh-font)}
+.fh-dd .n{display:inline-grid;place-items:center;min-width:16px;height:16px;margin-left:6px;padding:0 4px;border-radius:999px;background:var(--fh-brand);color:#fff;font:600 10px/1.45 var(--fh-font)}
 .fh-dd.on{border-color:var(--fh-brand-ring);background:var(--fh-brand-tint2);color:var(--fh-brand-text)}
 .fh-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:20;width:240px;padding:6px;background:var(--fh-bg);border:1px solid var(--fh-border);border-radius:var(--fh-r-card);box-shadow:var(--fh-sh-menu)}
-.fh-menu .it{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border:0;border-radius:6px;background:none;font:400 var(--fh-fs-14) var(--fh-font);color:var(--fh-text);text-align:left;cursor:pointer}
+.fh-menu .it{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border:0;border-radius:6px;background:none;font:400 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text);text-align:left;cursor:pointer}
 .fh-menu .it:hover{background:#F8FAFC}
 .fh-menu .it .lb{flex:1}
 .fh-menu .it .ct{color:var(--fh-text-meta);font-size:var(--fh-fs-12)}
-.fh-menu .clr{width:100%;margin-top:4px;padding:8px;border:0;border-top:1px solid var(--fh-divider-soft);background:none;color:var(--fh-brand-text);font:400 var(--fh-fs-14) var(--fh-font);text-align:left;cursor:pointer}
+.fh-menu .clr{width:100%;margin-top:4px;padding:8px;border:0;border-top:1px solid var(--fh-divider-soft);background:none;color:var(--fh-brand-text);font:400 var(--fh-fs-14)/1.45 var(--fh-font);text-align:left;cursor:pointer}
 .fh-cb{width:16px;height:16px;border:1.5px solid #CBD5E1;border-radius:4px;display:inline-grid;place-items:center;background:#fff;flex:none}
 .fh-cb.on{background:var(--fh-brand);border-color:var(--fh-brand);color:#fff}
 .fh-cb.on .i{width:12px;height:12px;stroke-width:3}
 
 /* ---------- 5. Sort menu (listing-page pattern) ---------- */
 .fh-sortpop{position:absolute;top:calc(100% + 6px);right:0;z-index:20;width:240px;padding:12px;background:var(--fh-bg);border:1px solid var(--fh-divider);border-radius:8px;box-shadow:0 10px 15px -3px rgba(15,23,42,.1),0 4px 6px -4px rgba(15,23,42,.1)}
-.fh-sortpop .pl{font:600 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);margin:0 0 6px}
-.fh-sortpop .si{display:flex;align-items:center;justify-content:space-between;width:100%;height:32px;padding:0 8px;border:0;border-radius:6px;background:none;font:400 var(--fh-fs-14) var(--fh-font);color:var(--fh-text);text-align:left;cursor:pointer}
+.fh-sortpop .pl{font:600 var(--fh-fs-12)/1.45 var(--fh-font);color:var(--fh-text-meta);margin:0 0 6px}
+.fh-sortpop .si{display:flex;align-items:center;justify-content:space-between;width:100%;height:32px;padding:0 8px;border:0;border-radius:6px;background:none;font:400 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text);text-align:left;cursor:pointer}
 .fh-sortpop .si.on{background:var(--fh-brand-tint);color:var(--fh-brand-text);font-weight:500}
 .fh-sortpop .seg{display:inline-flex;gap:2px}
 .fh-sortpop .seg button{display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:4px;background:none;color:var(--fh-brand-text);cursor:pointer}
@@ -85,13 +90,25 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 
 /* ---------- 6. Table (list pages) ---------- */
 .fh-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:var(--fh-fs-14)}
-.fh-tbl th{height:var(--fh-h-th);padding:0 24px;background:var(--fh-bg-th);color:var(--fh-text-meta);font:600 var(--fh-fs-12) var(--fh-font);text-align:left;border-bottom:1px solid var(--fh-divider);white-space:nowrap}
-.fh-tbl td{height:var(--fh-h-row);padding:8px 24px;color:var(--fh-text-cell);border-bottom:1px solid var(--fh-divider-soft);vertical-align:middle}
-.fh-tbl tr:hover td{background:#FFF6EF} /* hover and selected share one highlight */
+.fh-tbl th{height:var(--fh-h-th);padding:0 var(--fh-cell-x);background:var(--fh-bg-th);color:var(--fh-th-text);font:600 var(--fh-fs-12)/1.45 var(--fh-font);text-align:left;border-bottom:1px solid var(--fh-divider);border-right:1px solid var(--fh-col-line);white-space:nowrap}
+.fh-tbl td{height:var(--fh-h-row);padding:0 var(--fh-cell-x);color:var(--fh-text-cell);border-bottom:1px solid var(--fh-row-line);border-right:1px solid var(--fh-col-line);vertical-align:middle;background:#fff}
+.fh-tbl th:last-child,.fh-tbl td:last-child{border-right:0}
+.fh-tbl tbody tr:hover td,.fh-tbl tbody tr.sel td{background:var(--fh-row-hover)} /* hover and selected share one neutral grey */
+.fh-tbl tbody tr.sel td:first-child{box-shadow:inset 2px 0 0 var(--fh-brand)} /* selected keeps an orange edge so it survives hover */
+/* row number + checkbox share one column: the number shows at rest, the checkbox on hover, when selected, or while anything is selected */
+.fh-tbl .rn{position:sticky;left:0;z-index:1;width:var(--fh-w-rownum);min-width:var(--fh-w-rownum);padding:0 0 0 24px;color:var(--fh-text-meta);font-size:var(--fh-fs-12);border-right:1px solid var(--fh-divider)}
+.fh-tbl .rn .fh-cb{display:none}
+.fh-tbl thead .rn .n{display:none}.fh-tbl thead .rn .fh-cb{display:inline-grid}
+.fh-tbl tr:hover .rn .n,.fh-tbl tr.sel .rn .n,.fh-tbl.any .rn .n{display:none}
+.fh-tbl tr:hover .rn .fh-cb,.fh-tbl tr.sel .rn .fh-cb,.fh-tbl.any .rn .fh-cb{display:inline-grid}
+/* the first data column is pinned after the row-number column, with a soft edge */
+.fh-tbl .pin1{position:sticky;left:var(--fh-w-rownum);z-index:1;box-shadow:inset -1px 0 0 var(--fh-divider),6px 0 8px -6px rgba(15,23,42,.12)}
 .fh-tbl .r{text-align:right;font-variant-numeric:tabular-nums}
 .fh-tbl .money{font-family:var(--fh-mono);font-weight:600;color:var(--fh-money-held)}
-.fh-vend{display:inline-flex;align-items:center;gap:8px;min-width:0}
-.fh-vend .scac{font:500 var(--fh-fs-12) var(--fh-mono);color:var(--fh-text-meta)}
+.fh-vend{display:inline-flex;align-items:baseline;gap:6px;min-width:0;max-width:100%}
+.fh-vend .scac{display:inline-block;width:38px;flex:none;font:500 var(--fh-fs-12)/1.45 var(--fh-mono);color:var(--fh-text-meta)} /* fixed width so names line up */
+.fh-vend .vsep{color:var(--fh-underline);flex:none}
+.fh-vend .vn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--fh-text)}
 /* two-line cell: line 1 like any cell, line 2 grey 12px; each line truncates, "+N" after two items */
 .fh-2l{display:flex;flex-direction:column;min-width:0;max-width:240px;line-height:18px}
 .fh-2l b,.fh-2l span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -102,9 +119,10 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-foot{display:flex;align-items:center;gap:12px;height:var(--fh-h-foot);padding:0 24px;border-top:1px solid var(--fh-divider);background:var(--fh-bg);color:var(--fh-text-meta);font-size:var(--fh-fs-14)}
 .fh-foot .sp{flex:1}
 .fh-foot .rpp{display:inline-flex;align-items:center;gap:8px}
-.fh-foot .rppb{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 8px;border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:#fff;color:var(--fh-text);font:500 var(--fh-fs-14) var(--fh-font)}
+.fh-foot .rng{color:var(--fh-text-strong2);min-width:96px;text-align:right;font-variant-numeric:tabular-nums} /* range text is darker than the label */
+.fh-foot .rppb{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 8px 0 10px;box-shadow:var(--fh-sh-control);border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:#fff;color:var(--fh-text);font:500 var(--fh-fs-14)/1.45 var(--fh-font)}
 .fh-pgn{display:flex;align-items:center;gap:4px}
-.fh-pgn button{min-width:var(--fh-h-pager);height:var(--fh-h-pager);padding:0 8px;border:1px solid transparent;border-radius:var(--fh-r-control);background:none;color:var(--fh-text-strong2);font:500 var(--fh-fs-14) var(--fh-font);cursor:pointer}
+.fh-pgn button{min-width:var(--fh-h-pager);height:var(--fh-h-pager);padding:0 8px;border:1px solid transparent;border-radius:var(--fh-r-control);background:none;color:var(--fh-text-strong2);font:500 var(--fh-fs-14)/1.45 var(--fh-font);cursor:pointer}
 .fh-pgn button.on{background:#fff;border-color:var(--fh-brand-ring);color:var(--fh-text);font-weight:700;box-shadow:inset 0 -2px 0 var(--fh-brand),var(--fh-sh-control)}
 .fh-pgn button[disabled]{opacity:.4;cursor:not-allowed}
 .fh-pgn .el{color:var(--fh-text-faint);padding:0 2px}
@@ -116,10 +134,10 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-tot{flex:1 1 0;display:flex;flex-direction:column;gap:2px;padding:0 28px;min-width:0}
 .fh-tot:first-child{padding-left:0}
 .fh-tot+.fh-tot{border-left:1px solid var(--fh-divider)}
-.fh-tot small{font:500 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-helper);white-space:nowrap}
+.fh-tot small{font:500 var(--fh-fs-12)/1.45 var(--fh-font);color:var(--fh-text-helper);white-space:nowrap}
 .fh-tot small span{font-weight:400;color:var(--fh-text-meta)}
 .fh-tot b{font:700 var(--fh-fs-20)/26px var(--fh-font);color:var(--fh-text);font-variant-numeric:tabular-nums;white-space:nowrap}
-.fh-tot b em{font-style:normal;font:500 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);margin-left:4px}
+.fh-tot b em{font-style:normal;font:500 var(--fh-fs-12)/1.45 var(--fh-font);color:var(--fh-text-meta);margin-left:4px}
 .fh-tot.held b{color:var(--fh-money-held)}
 .fh-tot.ok b{color:var(--fh-money-ok)}
 
@@ -127,7 +145,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-sum{position:relative;padding:14px 16px 14px 20px;border:1px solid var(--fh-border);border-radius:var(--fh-r-panel);background:#fff;overflow:hidden}
 .fh-sum::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,#FE6301,#FF9A4D 55%,#FDBA74)}
 .fh-sum .h{display:flex;align-items:center;gap:8px;color:var(--fh-brand-deep);font-weight:600}
-.fh-sum .h .meta{margin-left:auto;font:400 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta)}
+.fh-sum .h .meta{margin-left:auto;font:400 var(--fh-fs-12)/1.45 var(--fh-font);color:var(--fh-text-meta)}
 .fh-sum p{margin:8px 0 0;line-height:21.7px}
 .fh-sum .src{margin-top:8px;font-size:var(--fh-fs-12);color:var(--fh-text-meta)}
 .fh-sum .nx{margin-top:12px;padding-top:12px;border-top:1px solid var(--fh-divider-soft)}
@@ -137,11 +155,11 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-card{background:#fff;border:1px solid var(--fh-border);border-radius:var(--fh-r-card);overflow:hidden}
 .fh-card .h{display:flex;align-items:center;gap:10px;height:50px;padding:10px 14px}
 .fh-card .h .sp{flex:1}
-.fh-inv{border:0;background:none;padding:0;font:600 var(--fh-fs-14) var(--fh-mono);color:var(--fh-brand-deep);text-decoration:underline;text-decoration-color:var(--fh-brand-ring);text-underline-offset:3px;cursor:pointer}
+.fh-inv{border:0;background:none;padding:0;font:600 var(--fh-fs-14)/1.45 var(--fh-mono);color:var(--fh-brand-deep);text-decoration:underline;text-decoration-color:var(--fh-brand-ring);text-underline-offset:3px;cursor:pointer}
 .fh-card .amts{display:flex;border-top:1px solid var(--fh-divider-soft)}
 .fh-card .amts>div{flex:1;padding:10px 14px 10px 40px}
 .fh-card .amts>div+div{border-left:1px solid var(--fh-divider-soft);padding-left:24px}
-.fh-card .amts small{display:block;font:500 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);text-transform:uppercase;letter-spacing:.6px}
+.fh-card .amts small{display:block;font:500 var(--fh-fs-12)/1.45 var(--fh-font);color:var(--fh-text-meta);text-transform:uppercase;letter-spacing:.6px}
 .fh-card .amts b{font-weight:500}
 .fh-card .amts b.red{color:var(--fh-money-held)}
 .fh-card .amts em{font-style:normal;font-size:var(--fh-fs-12);color:var(--fh-text-meta);margin-left:3px}
@@ -149,10 +167,10 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-card .sugg{display:flex;align-items:center;gap:10px;padding:8px 15px;border-top:1px solid var(--fh-divider-soft);background:var(--fh-bg-subtle);font-size:var(--fh-fs-12);color:var(--fh-text-helper)}
 .fh-card .sugg b{font-weight:500;color:var(--fh-text)}
 .fh-card .sugg .why{color:var(--fh-text-meta);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.fh-apply{border:0;background:none;padding:0 4px;font:600 var(--fh-fs-14) var(--fh-font);color:var(--fh-brand-deep);text-decoration:underline;text-decoration-color:var(--fh-brand-ring);text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:pointer}
+.fh-apply{border:0;background:none;padding:0 4px;font:600 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-brand-deep);text-decoration:underline;text-decoration-color:var(--fh-brand-ring);text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:pointer}
 
 /* ---------- 11. Text link that opens a new tab ---------- */
-.fh-ext{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;font:500 var(--fh-fs-14) var(--fh-font);color:var(--fh-text-strong2);text-decoration:underline;text-decoration-color:var(--fh-underline);text-underline-offset:3px;cursor:pointer}
+.fh-ext{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;font:500 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text-strong2);text-decoration:underline;text-decoration-color:var(--fh-underline);text-underline-offset:3px;cursor:pointer}
 .fh-ext:hover{color:var(--fh-text);text-decoration-color:currentColor}
 .fh-ext .i{width:13px;height:13px;color:var(--fh-text-meta)}
 
@@ -164,6 +182,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-toast b{font-weight:700}
 .fh-toast .ac{color:#9BCDFF;font-weight:700;background:none;border:0;cursor:pointer;font:inherit}
 
+/* the one exception to line height 1.45: the pill keeps the browser default, so it is 38px tall */
 /* ---------- 14. Ask Freehand button (orange-only rotating ring) ---------- */
 @property --fga{syntax:'<angle>';initial-value:0deg;inherits:false}
 @keyframes fgaspin{to{--fga:360deg}}
@@ -188,48 +207,57 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-cbar.stuck{box-shadow:0 1px 0 var(--fh-divider)} /* divider only while pinned */
 .fh-cbar .row1{display:flex;align-items:center;flex-wrap:wrap;row-gap:8px;min-height:36px}
 .fh-cbar .ttl{display:inline-flex;align-items:center;gap:8px;margin-right:24px;flex:none}
-.fh-cbar .ttl b{font:700 var(--fh-fs-18) var(--fh-font)}
+.fh-cbar .ttl b{font:700 var(--fh-fs-18)/1.45 var(--fh-font)}
 .fh-cbar .tools{flex:1 1 440px;display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
 .fh-cbar .tools .fh-q{flex:1 1 200px;min-width:160px}
 
 /* ---------- 17. Sidebar (232px; 64px rail when collapsed) ---------- */
-.fh-side{width:var(--fh-w-side);background:var(--fh-bg-side);border-right:1px solid var(--fh-divider);padding:16px 10px 0;display:flex;flex-direction:column;gap:2px;height:860px}
-.fh-side .logo{display:flex;align-items:center;padding:0 6px 10px;font:700 20px var(--fh-font);color:var(--fh-text)}
-.fh-ws{display:flex;align-items:center;gap:8px;height:36px;margin-bottom:6px;padding:6px 10px;border:1px solid var(--fh-divider);border-radius:var(--fh-r-input);background:#fff;box-shadow:var(--fh-sh-control);font:600 var(--fh-fs-14) var(--fh-font)}
-.fh-ws .wst{display:grid;place-items:center;width:20px;height:20px;border-radius:4px;background:var(--fh-text);color:#fff;font-size:11px}
+.fh-side{width:var(--fh-w-side);background:var(--fh-bg-side);border-right:1px solid var(--fh-divider);padding:14px 10px 0;display:flex;flex-direction:column;gap:2px;height:860px}
+/* logo: the real SVG (logo-full.svg) at 24px tall, 114px wide; collapse button on the right; 44px row */
+.fh-side .logo{display:flex;align-items:flex-start;justify-content:space-between;min-height:46px;padding:4px 4px 0} /* logo top at 18px, workspace switcher at 62px */
+.fh-side .logo svg{height:24px;width:auto;display:block}
+.fh-ws{display:flex;align-items:center;gap:8px;height:36px;margin-bottom:6px;padding:6px 10px;border:1px solid var(--fh-divider);border-radius:var(--fh-r-input);background:#fff;box-shadow:var(--fh-sh-control);font:600 var(--fh-fs-14)/1.45 var(--fh-font)}
+.fh-ws .wst{display:grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--fh-navy);color:#fff;font:700 var(--fh-fs-12)/1.45 var(--fh-font)}
 .fh-ws .i{margin-left:auto;color:var(--fh-text-faint)}
-.fh-nsrch{display:flex;align-items:center;gap:8px;height:36px;margin-bottom:6px;padding:0 10px;border-radius:var(--fh-r-input);background:#fff;box-shadow:0 0 0 1px #F1F2F4;color:#94A3B8}
-.fh-nsrch kbd{margin-left:auto;font:500 11px var(--fh-font);color:var(--fh-text-meta);border:1px solid var(--fh-border);border-radius:4px;padding:1px 4px}
-.fh-gl{padding:18px 10px 6px;font:600 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);text-transform:uppercase;letter-spacing:.72px}
-.fh-ni{display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border-radius:var(--fh-r-input);color:var(--fh-text-strong2);font:400 var(--fh-fs-14) var(--fh-font);text-decoration:none;cursor:pointer}
+.fh-nsrch{display:flex;align-items:center;gap:8px;height:36px;margin-bottom:6px;padding:0 8px 0 10px;border-radius:var(--fh-r-input);background:#fff;box-shadow:0 0 0 1px #F1F2F4;color:#94A3B8}
+.fh-nsrch kbd{margin-left:auto;font:500 12px/1.45 var(--fh-font);color:var(--fh-text-meta);border:1px solid var(--fh-border);border-radius:4px;padding:1px 4px}
+.fh-gl{display:flex;align-items:center;gap:6px;padding:18px 10px 6px;font:600 var(--fh-fs-12)/1.45 var(--fh-font);color:var(--fh-text-meta);text-transform:uppercase;letter-spacing:.72px}
+.fh-gl .i{width:12px;height:12px;color:var(--fh-underline)}
+.fh-ni{display:flex;align-items:center;gap:12px;height:36px;padding:0 10px;border-radius:var(--fh-r-input);color:var(--fh-text-strong2);font:400 var(--fh-fs-14)/1.45 var(--fh-font);text-decoration:none;cursor:pointer}
 .fh-ni .i{width:18px;height:18px;stroke-width:1.75}
 .fh-ni:hover{background:#F1F5F9}
 .fh-ni.on{background:var(--fh-brand-tint);color:var(--fh-text);font-weight:500}
-.fh-ni .bdg{margin-left:auto;display:grid;place-items:center;min-width:22px;height:22px;border-radius:11px;background:#DC2626;color:#fff;font:700 var(--fh-fs-12) var(--fh-font)}
+.fh-ni .bdg{margin-left:auto;display:grid;place-items:center;min-width:22px;height:22px;border-radius:11px;background:#DC2626;color:#fff;font:700 var(--fh-fs-12)/1.45 var(--fh-font)}
 .fh-ni .chev{margin-left:auto;width:14px;height:14px;color:var(--fh-text-faint)}
-.fh-user{margin-top:auto;display:flex;align-items:center;gap:8px;height:52px;padding:0 10px;border-top:1px solid var(--fh-divider);font-size:var(--fh-fs-14)}
-.fh-user .av{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#FFE4CC;color:#7C2D12;font:700 var(--fh-fs-12) var(--fh-font)}
+/* profile: full-width divider, then a row that highlights on hover */
+.fh-user{margin:auto -10px 0;display:flex;align-items:center;height:52px;padding:0 10px;border-top:1px solid var(--fh-divider);font-size:var(--fh-fs-14)}
+.fh-user .row{flex:1;display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;min-width:0;cursor:pointer}
+.fh-user .row:hover{background:var(--fh-row-hover)}
+.fh-user .row .i{margin-left:auto;color:var(--fh-text-faint)}
+.fh-user .av{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#FFE4CC;color:#7C2D12;font:700 var(--fh-fs-12)/1.45 var(--fh-font)}
 .fh-user small{color:var(--fh-text-meta);font-size:var(--fh-fs-12)}
 
 /* ---------- 18. List toolbar: filter bar (saved filters + tokens + search + Save) ---------- */
-.fh-fx{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
-.fh-fxbox{display:flex;align-items:center;gap:6px;flex:1;min-width:0;height:var(--fh-h-control);padding:0 4px;border:1px solid var(--fh-border);border-radius:var(--fh-r-input);background:#fff}
-.fh-fxbox:focus-within{border-color:var(--fh-brand);box-shadow:0 0 0 3px var(--fh-brand-tint)}
+/* the filter box and Save are one joined control: Save is the last segment, never a separate button */
+.fh-fx{display:flex;align-items:stretch;flex:1;min-width:0}
+.fh-fxbox{display:flex;align-items:center;gap:6px;flex:1;min-width:0;height:var(--fh-h-control);padding:0 4px;border:1px solid var(--fh-border);border-radius:var(--fh-r-input) 0 0 var(--fh-r-input);background:#fff}
+.fh-fxbox:focus-within{border-color:#FF7224;box-shadow:inset 0 0 0 1px #FF7224;position:relative;z-index:2}
 .fh-fxbtn{display:inline-flex;align-items:center;gap:2px;height:28px;padding:0 6px;border:0;border-radius:6px;background:none;color:var(--fh-text-helper);cursor:pointer}
 .fh-fxbtn .i{width:14px;height:14px}
 .fh-fxdiv{width:1px;height:20px;background:var(--fh-border)}
-.fh-tok{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 4px 0 8px;border:1px solid var(--fh-brand-ring);border-radius:6px;background:var(--fh-brand-tint2);color:var(--fh-text);font:400 var(--fh-fs-12) var(--fh-font);white-space:nowrap}
+.fh-tok{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 4px 0 8px;border:1px solid var(--fh-brand-ring);border-radius:6px;background:var(--fh-brand-tint2);color:var(--fh-text);font:400 var(--fh-fs-12)/1.45 var(--fh-font);white-space:nowrap}
 .fh-tok .op{color:var(--fh-text-meta)}
 .fh-tok b{font-weight:600;color:var(--fh-brand-text)}
 .fh-tok button{display:grid;place-items:center;width:18px;height:18px;border:0;border-radius:4px;background:none;color:var(--fh-text-meta);cursor:pointer}
-.fh-fxbox input{flex:1;min-width:120px;border:0;outline:0;background:none;font:400 var(--fh-fs-14) var(--fh-font);color:var(--fh-text)}
-.fh-save{height:var(--fh-h-control);padding:0 12px;border:1px solid var(--fh-border-btn);border-radius:var(--fh-r-control);background:#fff;color:var(--fh-text-strong2);font:500 var(--fh-fs-14) var(--fh-font);box-shadow:var(--fh-sh-control)}
-.fh-save[disabled]{color:#94A3B8;cursor:not-allowed}
-.fh-ib.wide{display:inline-flex;align-items:center;width:auto;gap:6px;padding:0 10px;font:600 var(--fh-fs-14) var(--fh-font);color:var(--fh-text)}
+.fh-fxbox input{flex:1;min-width:120px;border:0;outline:0;background:none;font:400 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text)}
+.fh-save{height:var(--fh-h-control);margin-left:-1px;padding:0 16px;border:1px solid var(--fh-save-on);border-radius:0 var(--fh-r-input) var(--fh-r-input) 0;background:var(--fh-save-on);color:#fff;font:600 var(--fh-fs-14)/1.45 var(--fh-font);box-shadow:var(--fh-sh-control);cursor:pointer}
+.fh-save:hover{background:#1F2F57}
+.fh-save[disabled]{background:#fff;border-color:var(--fh-border-btn);color:#94A3B8;cursor:not-allowed;box-shadow:none}
+.fh-ib.wide{display:inline-flex;align-items:center;width:auto;gap:6px;padding:0 10px;font:600 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text)}
 
 /* ---------- 19. Column picker (no density control) ---------- */
 .fh-cp{width:320px;padding:14px;background:#fff;border:1px solid var(--fh-divider);border-radius:8px;box-shadow:0 10px 15px -3px rgba(15,23,42,.1),0 4px 6px -4px rgba(15,23,42,.1)}
-.fh-cp .pl{font:600 var(--fh-fs-12) var(--fh-font);color:var(--fh-text-meta);margin-bottom:8px}
+.fh-cp .pl{font:600 var(--fh-fs-12)/1.45 var(--fh-font);color:var(--fh-text-meta);margin-bottom:8px}
 .fh-cp .pl span{font-weight:400}
 .fh-cp .find{display:flex;align-items:center;gap:6px;height:30px;margin-bottom:6px;padding:0 10px;border:1px solid var(--fh-border);border-radius:6px;color:#94A3B8}
 .fh-cp .find input{border:0;outline:0;font:inherit;width:100%}
@@ -241,7 +269,54 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .fh-cp .pin{color:var(--fh-brand)}
 .fh-cp .pin.off{color:#CBD5E1}
 .fh-cp .ft{display:flex;justify-content:space-between;margin-top:8px;padding-top:10px;border-top:1px solid var(--fh-divider-soft)}
-.fh-cp .ft button{border:0;background:none;padding:0;font:500 var(--fh-fs-14) var(--fh-font);color:var(--fh-brand-text);cursor:pointer}
+.fh-cp .ft button{border:0;background:none;padding:0;font:500 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-brand-text);cursor:pointer}
+
+/* ---------- 20. Card (section card, and one panel with dividers) ---------- */
+.fh-card{background:var(--fh-bg);border:1px solid var(--fh-divider);border-radius:12px;padding:14px 16px}
+.fh-card h3{margin:0 0 10px;font:600 var(--fh-fs-12)/1.45 var(--fh-font);letter-spacing:.06em;text-transform:uppercase;color:var(--fh-text-meta)}
+.fh-panel{background:var(--fh-bg);border:1px solid var(--fh-divider);border-radius:12px;overflow:hidden}
+.fh-panel>.fh-card{border:0;border-radius:0}
+.fh-panel>.fh-card+.fh-card{border-top:1px solid var(--fh-divider)}
+.fh-sec{padding:4px 0 20px}
+.fh-sec+.fh-sec{border-top:1px solid var(--fh-divider);padding-top:20px}
+.fh-sec>h3{margin:0 0 10px;font:600 var(--fh-fs-12)/1.45 var(--fh-font);letter-spacing:.06em;text-transform:uppercase;color:var(--fh-text-meta)}
+
+/* ---------- 21. Upload card (112px tile while attaching) ---------- */
+.fh-fl{display:flex;align-items:center;gap:4px;margin:0 0 8px;font:500 var(--fh-fs-14)/1.45 var(--fh-font);color:#334155}
+.fh-fl .rq{color:#D92D20;font-weight:600}
+.fh-fl .n{margin-left:8px;font-weight:400;font-size:var(--fh-fs-12);color:var(--fh-text-meta)}
+.fh-tiles{display:flex;flex-wrap:wrap;gap:10px}
+.fh-tile{position:relative;width:112px;height:112px;flex:none;border:1px solid var(--fh-divider);border-radius:12px;background:var(--fh-bg);overflow:hidden}
+.fh-tile .o{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:100%;height:100%;border:0;background:none;padding:10px 10px 30px;text-align:left;cursor:pointer}
+.fh-tile .o:hover{background:#FAFAFA}
+.fh-tile .nm{font:500 var(--fh-fs-12)/1.35 var(--fh-font);color:var(--fh-text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-all}
+.fh-tile .bd{position:absolute;left:8px;bottom:8px;font:600 10px/1.45 var(--fh-font);letter-spacing:.02em;padding:1px 6px;border-radius:999px;background:var(--fh-bg-chip);color:#475569}
+.fh-tile .d,.fh-tile .x{position:absolute;width:24px;height:24px;border-radius:999px;border:1px solid var(--fh-divider);background:#fff;display:grid;place-items:center;color:#334155;opacity:0;transition:opacity .12s;cursor:pointer}
+.fh-tile .d{right:6px;bottom:6px}.fh-tile .x{right:6px;top:6px}
+.fh-tile .d svg,.fh-tile .x svg{width:12px;height:12px}
+.fh-tile:hover .d,.fh-tile:hover .x,.fh-tile .d:focus-visible,.fh-tile .x:focus-visible{opacity:1}
+.fh-tile.add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-style:dashed;color:var(--fh-text-meta);font:500 var(--fh-fs-12)/1.45 var(--fh-font);cursor:pointer}
+.fh-tile.add:hover{border-color:var(--fh-brand);color:#C2410C;background:#FFF7ED}
+/* file type colours, shared by 21 and 22 */
+.fh-fic{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;flex:none;background:var(--fh-bg-chip);color:#475569}
+.fh-fic svg{width:16px;height:16px}
+.fh-fic.pdf,.fh-tile .bd.pdf{background:#FEF3F2;color:#D92D20}
+.fh-tile .bd.pdf{color:#B42318}
+.fh-fic.xls,.fh-tile .bd.xls{background:#ECFDF3;color:#067647}
+.fh-fic.img,.fh-tile .bd.img{background:#F4F3FF;color:#5925DC}
+
+/* ---------- 22. Attachment card (read-only file: shipper documents, submitted answers) ---------- */
+.fh-files{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.fh-fc{display:flex;align-items:center;gap:4px;max-width:360px;border:1px solid var(--fh-divider);border-radius:12px;padding-right:8px;background:var(--fh-bg);transition:border-color .12s,box-shadow .12s}
+.fh-fc:hover{border-color:var(--fh-brand);box-shadow:0 4px 12px -4px rgba(15,23,42,.12)}
+.fh-fc .o{display:flex;align-items:center;gap:12px;flex:1;min-width:0;border:0;background:none;padding:12px;text-align:left;cursor:pointer}
+.fh-fc .fh-fic{width:36px;height:36px}
+.fh-fc .t{min-width:0;display:flex;flex-direction:column;gap:2px}
+.fh-fc .t b{font:600 var(--fh-fs-14)/1.45 var(--fh-font);color:var(--fh-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fh-fc:hover .t b{color:#C2410C}
+.fh-fc .t small{font-size:var(--fh-fs-12);color:var(--fh-text-meta)}
+.fh-fc .a{width:30px;height:30px;border:0;background:none;border-radius:6px;display:grid;place-items:center;color:var(--fh-text-meta);flex:none;cursor:pointer}
+.fh-fc .a:hover{background:var(--fh-bg-chip);color:var(--fh-text)}
 </style>
 </head>
 <body>
@@ -263,6 +338,11 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></symbol>
   <symbol id="i-updown" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></symbol>
   <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-sheet" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h2M14 13h2M8 17h2M14 17h2"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
   <symbol id="i-mark" viewBox="3 3 14 14"><path d="M14.84 9.52h-1.52a2.88 2.88 0 0 1-2.88-2.88V5.12a.25.25 0 0 0-.25-.25H7.97a.25.25 0 0 0-.25.25v1.52a2.88 2.88 0 0 1-2.88 2.88H3.29a.25.25 0 0 0-.25.25v2.22c0 .15.13.25.25.25h1.52a2.88 2.88 0 0 1 2.88 2.88v1.52c0 .15.13.25.25.25h2.22c.15 0 .25-.13.25-.25v-1.52a2.88 2.88 0 0 1 2.88-2.88h1.52c.15 0 .25-.13.25-.25V9.77a.25.25 0 0 0-.25-.25z"/><path d="M16.83 4.79h-.57a1.09 1.09 0 0 1-1.09-1.09v-.57a.1.1 0 0 0-.1-.1h-.84a.1.1 0 0 0-.1.1v.57a1.09 1.09 0 0 1-1.09 1.09h-.58a.1.1 0 0 0-.1.1v.84c0 .06.05.1.1.1h.57c.6 0 1.09.49 1.09 1.09v.57c0 .06.05.1.1.1h.84a.1.1 0 0 0 .1-.1v-.57c0-.6.49-1.09 1.09-1.09h.57a.1.1 0 0 0 .1-.1v-.84a.1.1 0 0 0-.1-.1z"/></symbol>
 </svg>
 
@@ -278,12 +358,12 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
   <button class="fh-ib act" aria-label="Sorted by amount"><svg class="i"><use href="#i-sort"/></svg><i class="bdot">1</i></button>
 </div></section>
 
-<section class="sec"><h2>2. Status pills</h2><p>List-page status filter. Pills, not tabs: they filter one list. 28px tall, count inside.</p>
-<div class="fh-pills">
-  <button class="fh-pill on">All <span class="c">46</span></button>
-  <button class="fh-pill">Open <span class="c">17</span></button>
-  <button class="fh-pill">Partly resolved <span class="c">5</span></button>
-  <button class="fh-pill">Resolved <span class="c">24</span></button>
+<section class="sec"><h2>2. Status tabs</h2><p>List-page status filter, full width under the title. Same tab as detail pages, with a count chip after each label.</p>
+<div class="fh-tabs" role="tablist">
+  <button class="fh-tab on" role="tab" aria-selected="true">All <span class="fh-cnt">46</span></button>
+  <button class="fh-tab" role="tab" aria-selected="false">Open <span class="fh-cnt">17</span></button>
+  <button class="fh-tab" role="tab" aria-selected="false">Partly resolved <span class="fh-cnt">5</span></button>
+  <button class="fh-tab" role="tab" aria-selected="false">Resolved <span class="fh-cnt">24</span></button>
 </div></section>
 
 <section class="sec"><h2>3. Badges, tags, count chip</h2><p>Status badges carry meaning by tone. Exception tags inside cards stay neutral. Count chip sits next to section titles.</p>
@@ -315,14 +395,14 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
     <div class="pf"><button class="fh-ext" style="text-decoration:none">Clear sort</button></div>
   </div></div></div></section>
 
-<section class="sec"><h2>6. Table</h2><p>Header 40px, rows 44px, 24px side padding. Two-line cell: line 1 like any cell, line 2 grey 12px, each truncated.</p>
-<table class="fh-tbl"><thead><tr><th>Vendor</th><th>Status</th><th class="r">Disputed</th><th>Charges / exceptions</th></tr></thead><tbody>
-<tr><td><span class="fh-vend"><span class="scac">UPSN</span>United Parcel Service</span></td><td><span class="fh-b t-info">Partly resolved</span></td><td class="r"><span class="money">1,025.87</span> SGD</td><td><span class="fh-2l"><b>Fuel surcharge, Base rate +3</b><span>Rate overcharge, Discount variance +1</span></span></td></tr>
-<tr><td><span class="fh-vend"><span class="scac">KHNN</span>Kuehne+Nagel</span></td><td><span class="fh-b t-warn">Open</span></td><td class="r"><span class="money">1,088.76</span> EUR</td><td><span class="fh-2l"><b>Ocean freight, Detention</b><span>No contract match, Unauthorized charge</span></span></td></tr>
+<section class="sec"><h2>6. Table</h2><p>Header 40px (text #334155), rows 44px, 16px cell padding, light column lines, neutral grey hover. Row number and checkbox share one 56px column. First data column pinned. Two-line cell: line 1 like any cell, line 2 grey 12px, each truncated.</p>
+<table class="fh-tbl"><thead><tr><th class="rn"><span class="fh-cb" role="checkbox" aria-checked="false" aria-label="Select all rows"></span></th><th class="pin1">Vendor</th><th>Status</th><th class="r">Disputed</th><th>Charges / exceptions</th></tr></thead><tbody>
+<tr><td class="rn"><span class="n">1</span><span class="fh-cb" role="checkbox" aria-checked="false" aria-label="Select row 1"></span></td><td class="pin1"><span class="fh-vend"><span class="scac">UPSN</span><span class="vsep">-</span><span class="vn">United Parcel Service</span></span></td><td><span class="fh-b t-info">Partly resolved</span></td><td class="r"><span class="money">1,025.87</span> SGD</td><td><span class="fh-2l"><b>Fuel surcharge, Base rate +3</b><span>Rate overcharge, Discount variance +1</span></span></td></tr>
+<tr class="sel"><td class="rn"><span class="n">2</span><span class="fh-cb on" role="checkbox" aria-checked="true" aria-label="Select row 2"><svg class="i"><use href="#i-check"/></svg></span></td><td class="pin1"><span class="fh-vend"><span class="scac">KHNN</span><span class="vsep">-</span><span class="vn">Kuehne+Nagel</span></span></td><td><span class="fh-b t-warn">Open</span></td><td class="r"><span class="money">1,088.76</span> EUR</td><td><span class="fh-2l"><b>Ocean freight, Detention</b><span>No contract match, Unauthorized charge</span></span></td></tr>
 </tbody></table></section>
 
 <section class="sec"><h2>7. Footer pager</h2><p>Identical on every list: rows per page, range, numbered pages, "Go to" when there are more than 7 pages.</p>
-<div class="fh-foot"><span class="rpp">Rows per page <button class="rppb">10 <svg class="i" style="width:14px"><use href="#i-chev"/></svg></button></span><span>1–10 of 24</span><span class="sp"></span>
+<div class="fh-foot"><span class="rpp">Rows per page <button class="rppb">10 <svg class="i" style="width:14px"><use href="#i-chev"/></svg></button></span><span class="rng">1–10 of 24</span><span class="sp"></span>
 <nav class="fh-pgn" aria-label="Pagination"><button disabled aria-label="Previous page"><svg class="i"><use href="#i-chevl"/></svg></button><button class="on" aria-current="page">1</button><button>2</button><button>3</button><button aria-label="Next page"><svg class="i"><use href="#i-chevr"/></svg></button></nav></div></section>
 
 <section class="sec"><h2>8. Totals card</h2><p>Three equal columns, left-aligned. Open in red when money is held; Resolved in green only when above zero.</p>
@@ -362,9 +442,9 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
 <div class="fh-cbar stuck" style="position:relative"><div class="row1"><span class="ttl"><span class="fh-cb"></span><b>Disputes</b><span class="fh-cnt">24</span></span>
 <div class="tools"><label class="fh-q"><svg class="i"><use href="#i-search"/></svg><input type="search" placeholder="Search invoice # or charge"></label><button class="fh-dd">Status<svg class="i"><use href="#i-chev"/></svg></button><button class="fh-dd">Exception<svg class="i"><use href="#i-chev"/></svg></button><button class="fh-ib"><svg class="i"><use href="#i-sort"/></svg></button></div></div></div></section>
 
-<section class="sec"><h2>17. Sidebar</h2><p>232px, light. Brand, workspace switcher, "Search anything ⌘K", grouped nav (Operations, Insights, Workspace), profile pinned at the bottom. Keep every item, including "Agents" (a product name). Swap the generic file icon for each page's Lucide icon (18px, stroke 1.75).</p>
+<section class="sec"><h2>17. Sidebar</h2><p>232px, light, 14px top padding. Real logo SVG at 24px tall. Icon-to-label gap 12px. Workspace tile 22px navy. Avatar 26px in a row that highlights on hover. Brand, workspace switcher, "Search anything ⌘K", grouped nav (Operations, Insights, Workspace), profile pinned at the bottom. Keep every item, including "Agents" (a product name). Swap the generic file icon for each page's Lucide icon (18px, stroke 1.75).</p>
 <nav class="fh-side" aria-label="Main navigation">
-  <div class="logo"><span style="color:var(--fh-brand);margin-right:6px">✳</span>freehand</div>
+  <div class="logo"><svg class="lg-full" aria-label="Freehand" role="img" width="133" height="28" viewBox="0 0 133 28" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_10608_958)"> <path d="M32.8054 12.7725V10.8749C32.8054 10.7284 32.9238 10.6098 33.07 10.6098H34.9638C35.11 10.6098 35.2283 10.4912 35.2283 10.3447V9.7405C35.2283 8.16379 35.6572 6.95404 36.5164 6.11126C37.3755 5.26709 38.5647 4.8457 40.0881 4.8457H43.2128C43.3618 4.8457 43.4802 4.96849 43.4774 5.1164L43.4384 6.96381C43.4356 7.10753 43.3173 7.22334 43.1738 7.22334H40.3833C39.6258 7.22334 39.0479 7.40194 38.6483 7.76054C38.2486 8.11774 38.0495 8.65494 38.0495 9.37074V10.3447C38.0495 10.4912 38.1679 10.6098 38.3141 10.6098H41.7646C41.9109 10.6098 42.0292 10.7284 42.0292 10.8749V12.7725C42.0292 12.9191 41.9109 13.0377 41.7646 13.0377H38.6845C38.5383 13.0377 38.4199 13.1563 38.4199 13.3028V23.0352C38.4199 23.1817 38.3015 23.3003 38.1553 23.3003H35.8146C35.6684 23.3003 35.55 23.1817 35.55 23.0352V13.3028C35.55 13.1563 35.4316 13.0377 35.2854 13.0377H33.0728C32.9266 13.0377 32.8082 12.9191 32.8082 12.7725H32.8054Z" fill="black"/> <path d="M46.1927 17.7287V23.0616C46.1927 23.2081 46.0744 23.3267 45.9282 23.3267H43.5749C43.4287 23.3267 43.3103 23.2081 43.3103 23.0616V10.9013C43.3103 10.7548 43.4287 10.6362 43.5749 10.6362H45.814C45.9602 10.6362 46.0786 10.7548 46.0786 10.9013V12.2436C46.0786 12.5102 46.4267 12.6092 46.5673 12.3818C46.7748 12.0455 47.0422 11.7469 47.3666 11.486C48.0726 10.9195 48.9526 10.6362 50.0067 10.6362H50.9564C51.1068 10.6362 51.2266 10.7618 51.221 10.9111L51.1402 12.9622C51.1347 13.1046 51.0177 13.2162 50.8756 13.2162H50.1349C48.8593 13.2162 47.8832 13.5957 47.2079 14.3534C46.5325 15.1124 46.1941 16.2371 46.1941 17.7273L46.1927 17.7287Z" fill="black"/> <path d="M61.4487 19.2495H63.7839C63.9566 19.2495 64.0847 19.4141 64.0415 19.5816C63.7338 20.7787 63.1016 21.729 62.1464 22.4322C61.1048 23.1996 59.8056 23.582 58.2502 23.582C56.3801 23.582 54.8498 22.968 53.6592 21.7415C52.4686 20.515 51.874 18.9299 51.874 16.9876C51.874 15.0454 52.4561 13.4854 53.6216 12.2589C54.7871 11.0324 56.2826 10.4185 58.1109 10.4185C59.9393 10.4185 61.3373 10.9933 62.4597 12.1445C63.582 13.2942 64.1432 14.7816 64.1432 16.6039C64.1432 16.943 64.1306 17.2137 64.107 17.416C64.0916 17.55 63.9789 17.6518 63.8438 17.6518H55.0419C54.8887 17.6518 54.7676 17.7816 54.7773 17.9337C54.833 18.8392 55.1617 19.5997 55.7632 20.2136C56.426 20.8904 57.2462 21.2294 58.2251 21.2294C59.0328 21.2294 59.7026 21.0564 60.2345 20.7118C60.7135 20.4006 61.0352 19.975 61.1995 19.4323C61.2329 19.322 61.3359 19.2481 61.4501 19.2481L61.4487 19.2495ZM60.9641 15.863C61.1201 15.863 61.244 15.7277 61.2287 15.5714C61.1521 14.7914 60.8541 14.1482 60.3347 13.6389C59.7527 13.0682 59.0105 12.7821 58.1096 12.7821C57.2086 12.7821 56.426 13.0682 55.8134 13.6389C55.2689 14.1454 54.9472 14.7872 54.8456 15.563C54.8247 15.7207 54.95 15.8616 55.1088 15.8616H60.9627L60.9641 15.863Z" fill="black"/> <path d="M75.1035 19.2495H77.4387C77.6114 19.2495 77.7395 19.4141 77.6963 19.5816C77.3886 20.7787 76.7564 21.729 75.8011 22.4322C74.7596 23.1996 73.4604 23.582 71.905 23.582C70.0349 23.582 68.5045 22.968 67.314 21.7415C66.1234 20.515 65.5288 18.9299 65.5288 16.9876C65.5288 15.0454 66.1109 13.4854 67.2764 12.2589C68.4419 11.0324 69.9374 10.4185 71.7657 10.4185C73.5941 10.4185 74.9921 10.9933 76.1144 12.1445C77.2368 13.2942 77.798 14.7816 77.798 16.6039C77.798 16.943 77.7854 17.2137 77.7618 17.416C77.7464 17.55 77.6336 17.6518 77.4986 17.6518H68.6967C68.5435 17.6518 68.4224 17.7816 68.4321 17.9337C68.4878 18.8392 68.8165 19.5997 69.418 20.2136C70.0808 20.8904 70.901 21.2294 71.8799 21.2294C72.6876 21.2294 73.3573 21.0564 73.8893 20.7118C74.3683 20.4006 74.6899 19.975 74.8543 19.4323C74.8877 19.322 74.9907 19.2481 75.1049 19.2481L75.1035 19.2495ZM74.6189 15.863C74.7749 15.863 74.8988 15.7277 74.8835 15.5714C74.8069 14.7914 74.5089 14.1482 73.9895 13.6389C73.4075 13.0682 72.6653 12.7821 71.7643 12.7821C70.8634 12.7821 70.0808 13.0682 69.4681 13.6389C68.9237 14.1454 68.602 14.7872 68.5004 15.563C68.4795 15.7207 68.6048 15.8616 68.7635 15.8616H74.6175L74.6189 15.863Z" fill="black"/> <path d="M82.5297 17.1788V23.0615C82.5297 23.208 82.4113 23.3266 82.2651 23.3266H79.9118C79.7656 23.3266 79.6472 23.208 79.6472 23.0615V5.13718C79.6472 4.99067 79.7656 4.87207 79.9118 4.87207H82.2651C82.4113 4.87207 82.5297 4.99067 82.5297 5.13718V11.7343C82.5297 11.9729 82.8207 12.0901 82.985 11.9157C83.9305 10.9166 85.135 10.4171 86.5971 10.4171C88.0592 10.4171 89.2331 10.9236 90.1423 11.938C91.0516 12.9524 91.507 14.324 91.507 16.0528V23.0601C91.507 23.2066 91.3886 23.3253 91.2424 23.3253H88.8766C88.7304 23.3253 88.612 23.2066 88.612 23.0601V16.2063C88.612 15.1417 88.3614 14.3254 87.8601 13.7589C87.3588 13.1924 86.6611 12.9091 85.7686 12.9091C84.876 12.9091 84.0809 13.2608 83.4598 13.964C82.8388 14.6673 82.5283 15.7389 82.5283 17.1774L82.5297 17.1788Z" fill="black"/> <path d="M100.572 15.6329C100.793 15.6077 100.969 15.5184 101.101 15.365C101.233 15.2115 101.299 15.0287 101.299 14.8152V14.6366C101.299 13.9808 101.082 13.4673 100.649 13.0962C100.215 12.725 99.6153 12.5408 98.8508 12.5408C98.0864 12.5408 97.4124 12.732 96.932 13.1157C96.5115 13.4506 96.2761 13.8929 96.2232 14.444C96.2107 14.5808 96.0979 14.6882 95.96 14.6882H93.6151C93.4619 14.6882 93.3408 14.5571 93.3505 14.4036C93.4215 13.2636 93.9312 12.3301 94.8781 11.6018C95.9029 10.8134 97.2272 10.4199 98.8508 10.4199C100.576 10.4199 101.896 10.819 102.811 11.6143C103.725 12.4111 104.183 13.5678 104.183 15.0845V23.063C104.183 23.2095 104.064 23.3281 103.918 23.3281H101.679C101.533 23.3281 101.414 23.2095 101.414 23.063V22.1672C101.414 21.9202 101.107 21.8072 100.949 21.9969C100.646 22.3597 100.254 22.6751 99.7754 22.9388C98.997 23.3685 98.1072 23.5848 97.1033 23.5848C95.8709 23.5848 94.8558 23.2402 94.0621 22.5495C93.267 21.8588 92.8701 20.977 92.8701 19.9039C92.8701 18.8309 93.2099 18.0035 93.8908 17.3477C94.5703 16.6919 95.5701 16.2789 96.8874 16.1087L100.573 15.6356L100.572 15.6329ZM95.7386 19.53C95.7386 20.0756 95.9364 20.5123 96.3318 20.8402C96.7273 21.1681 97.2606 21.3328 97.9318 21.3328C98.9775 21.3328 99.82 21.0244 100.458 20.4063C101.095 19.7881 101.414 19.0068 101.414 18.0607V17.5403C101.414 17.3631 101.244 17.2375 101.075 17.2863C100.799 17.3645 100.398 17.4398 99.8715 17.511L97.6268 17.7789C97.0225 17.8472 96.5574 18.03 96.2302 18.3286C95.9029 18.6272 95.7386 19.0277 95.7386 19.53Z" fill="black"/> <path d="M109.12 16.6542V23.0601C109.12 23.2066 109.002 23.3252 108.856 23.3252H106.502C106.356 23.3252 106.238 23.2066 106.238 23.0601V10.8998C106.238 10.7533 106.356 10.6347 106.502 10.6347H108.741C108.888 10.6347 109.006 10.7533 109.006 10.8998V11.7217C109.006 11.9617 109.297 12.0761 109.463 11.9031C109.835 11.5124 110.268 11.1943 110.759 10.9487C111.469 10.5957 112.253 10.4185 113.112 10.4185C114.651 10.4185 115.863 10.9208 116.747 11.9268C117.631 12.9328 118.074 14.3337 118.074 16.1309V23.0615C118.074 23.208 117.956 23.3266 117.809 23.3266H115.469C115.322 23.3266 115.204 23.208 115.204 23.0615V16.2593C115.204 15.143 114.959 14.3058 114.47 13.7477C113.981 13.1896 113.295 12.9105 112.411 12.9105C111.39 12.9105 110.587 13.2412 110 13.9012C109.414 14.5612 109.12 15.4793 109.12 16.6556V16.6542Z" fill="black"/> <path d="M121.675 21.7416C120.553 20.5151 119.991 18.9383 119.991 17.0128C119.991 15.0872 120.56 13.5077 121.694 12.2715C122.829 11.0366 124.247 10.4185 125.947 10.4185C126.797 10.4185 127.611 10.6083 128.39 10.9878C128.906 11.2389 129.335 11.5487 129.678 11.9143C129.839 12.0873 130.13 11.9659 130.13 11.7287V5.13718C130.13 4.99067 130.248 4.87207 130.395 4.87207H132.735C132.882 4.87207 133 4.99067 133 5.13718V23.0615C133 23.208 132.882 23.3266 132.735 23.3266H130.496C130.35 23.3266 130.232 23.208 130.232 23.0615V22.096C130.232 21.8462 129.924 21.7388 129.762 21.9285C129.406 22.3485 128.972 22.6946 128.459 22.968C127.693 23.3769 126.856 23.582 125.947 23.582C124.22 23.582 122.797 22.968 121.675 21.7416ZM122.913 17.0128C122.913 18.2393 123.248 19.2286 123.921 19.9779C124.592 20.7272 125.46 21.1025 126.522 21.1025C127.585 21.1025 128.435 20.7104 129.098 19.9262C129.761 19.1421 130.093 18.1542 130.093 16.9612V16.7058C130.093 15.6328 129.757 14.7314 129.084 14.0031C128.413 13.2747 127.558 12.9105 126.521 12.9105C125.483 12.9105 124.58 13.2831 123.913 14.0282C123.246 14.7733 122.911 15.7682 122.911 17.0128H122.913Z" fill="black"/> <path d="M0.93728 19.7009C3.06221 18.2609 5.98363 16.3619 8.0821 14.9386C5.84856 13.8614 2.65421 12.3587 0.42067 11.2815C0.0265978 11.0917 -0.119613 10.602 0.107362 10.2266C0.789677 9.0964 1.64188 7.86154 2.32419 6.73132C2.52749 6.39366 2.95916 6.27366 3.30728 6.45924C4.61204 7.15271 7.07951 8.72803 9.3771 9.60849C13.6116 11.2312 15.2784 11.1978 16.3158 12.8261C17.3115 14.3875 16.4843 15.8275 16.3576 19.7832C16.2643 22.6632 16.3033 24.9194 16.3353 27.1896C16.3409 27.6319 16.0151 27.9863 15.5736 27.9891C14.241 28.0003 13.0129 28.0031 11.5396 27.9891C11.1386 27.9849 10.8183 27.5314 10.8183 27.1296C10.8169 24.6864 10.8155 22.2432 10.8128 19.7999C8.69479 21.2134 6.1368 22.9059 4.02162 24.3194C3.67907 24.5482 3.21538 24.4547 2.9898 24.1101L0.733978 20.725C0.509789 20.3846 0.601692 19.9283 0.93728 19.6995V19.7009Z" fill="#FE6200"/> <path d="M26.6604 8.88556C24.0495 10.6465 22.0792 11.9553 19.4766 13.7106L27.8872 17.7473C28.4442 18.0124 28.4136 18.4659 28.2284 18.777C27.5405 19.9379 26.9877 20.9161 26.2469 22.1342C25.9057 22.6965 25.5701 22.769 25.1955 22.6002C23.519 21.8426 21.9385 21.0416 20.2731 20.2617C19.4892 19.8947 18.9196 19.1831 18.733 18.3361C18.5673 17.5868 18.4016 16.7078 18.2666 15.7241C17.9519 13.4176 18.1064 12.7074 17.4701 11.7516C16.8616 10.8376 16.2043 10.7134 14.2312 9.51486C13.4361 9.03207 12.7426 8.56464 12.1591 8.15023C11.4267 7.62837 11.0215 6.7842 10.9881 5.88561C10.9268 4.23076 10.9783 2.3959 10.9728 0.777327C10.9728 0.348962 11.3306 0.00989788 11.7581 0.00850256C13.1589 0.00292126 14.376 -0.00405537 15.7657 0.00850256C16.157 0.0126885 16.4619 0.38524 16.4647 0.777327C16.4842 3.33217 16.4438 6.41165 16.4633 8.96649C18.9948 7.27815 21.0209 5.94003 23.5594 4.2475C23.9005 4.02006 24.3601 4.11215 24.587 4.45261L26.861 7.85581C27.0893 8.19627 26.9988 8.65812 26.659 8.88696L26.6604 8.88556Z" fill="#FE6200"/> </g> <defs> <clipPath id="clip0_10608_958"> <rect width="133" height="28" fill="white"/> </clipPath> </defs> </svg></div>
   <div class="fh-ws"><span class="wst">Z</span>Zebra Technologies<svg class="i" style="width:14px;height:14px"><use href="#i-updown"/></svg></div>
   <div class="fh-nsrch"><svg class="i"><use href="#i-search"/></svg>Search anything<kbd>⌘K</kbd></div>
   <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Dashboard</a>
@@ -385,10 +465,10 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
   <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Context graph</a>
   <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Clients</a>
   <a class="fh-ni"><svg class="i"><use href="#i-file"/></svg>Configuration<svg class="i chev"><use href="#i-chevr"/></svg></a>
-  <div class="fh-user"><span class="av">C</span>cfo <small>· Pandostaging</small></div>
+  <div class="fh-user"><span class="row"><span class="av">C</span>cfo <small>· Pandostaging</small><svg class="i" style="width:16px;height:16px"><use href="#i-chev"/></svg></span></div>
 </nav></section>
 
-<section class="sec"><h2>18. List toolbar: filter bar, sort, columns, export</h2><p>Saved-filters button, then one box holding filter tokens and the search. "Save" stays disabled until there is something to save. Sort and columns are icon buttons; the columns button shows the visible count and opens the column picker (19).</p>
+<section class="sec"><h2>18. List toolbar: filter bar, sort, columns, export</h2><p>Saved-filters button, then one box holding filter tokens and the search, with Save joined to its right end (navy when there is something to save, white and disabled otherwise). Sort and columns are icon buttons; the columns button shows the visible count and opens the column picker (19).</p>
 <div class="row" style="flex-wrap:nowrap">
   <div class="fh-fx"><div class="fh-fxbox"><button class="fh-fxbtn" aria-label="Saved filters"><svg class="i"><use href="#i-funnel"/></svg><svg class="i"><use href="#i-chev"/></svg></button><span class="fh-fxdiv"></span>
     <span class="fh-tok">Status <span class="op">is</span> <b>Held</b><button aria-label="Remove filter"><svg class="i" style="width:12px;height:12px"><use href="#i-x"/></svg></button></span>
@@ -408,6 +488,26 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke
   <div class="row"><svg class="i g"><use href="#i-grip"/></svg><label><span class="fh-cb on"><svg class="i"><use href="#i-check"/></svg></span>Vendor</label><svg class="i pin off"><use href="#i-pin"/></svg></div>
   <div class="row"><svg class="i g"><use href="#i-grip"/></svg><label><span class="fh-cb"></span>Tracking number</label><svg class="i pin off"><use href="#i-pin"/></svg></div>
   <div class="ft"><button>Show all</button><button>Reset to default</button></div>
+</div></section>
+
+<section class="sec"><h2>20. Card</h2><p>One white card per block: 1px <code>#E5E7EB</code> border, 12px radius, 14/16 padding, 12px uppercase grey title. Several blocks that belong together (a side summary) go in <b>one panel with dividers</b>, not separate cards. On a white page, top-level sections need no card at all: title, content, then a divider. Never box inside box inside box; keep boxes for things you act on (inputs, files).</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+<div class="fh-panel"><div class="fh-card"><h3>Event details</h3><p style="margin:0">Name · ID · dates · mode</p></div><div class="fh-card"><h3>Introduction</h3><p style="margin:0">Short text from the shipper.</p></div><div class="fh-card"><h3>Remarks</h3><p style="margin:0">—</p></div></div>
+<div><div class="fh-sec"><h3>Terms and condition documents</h3><p style="margin:0">Section on a white page, no card.</p></div><div class="fh-sec"><h3>Questionnaire</h3><p style="margin:0">Next section after a divider.</p></div></div>
+</div></section>
+
+<section class="sec"><h2>21. Upload card</h2><p>While the user is attaching (before sending or accepting). 112×112 tile, 12px radius: type icon, file name (2 lines, then …), type badge bottom-left; Download bottom-right and Remove top-right show on hover. A click previews. The last tile is a dashed "Attach file"; it disappears at the limit. Above the tiles: "Files" with a red * when required (or "(optional)") and the limit in grey. Type colours: PDF red, XLS/CSV green, image purple, other grey. Tiles wrap; 5 tiles + the add tile fit one row.</p>
+<p class="fh-fl">Files<span class="rq" aria-label="required">*</span><span class="n">Up to 5</span></p>
+<div class="fh-tiles">
+<div class="fh-tile"><button class="o"><span class="fh-fic pdf"><svg class="i"><use href="#i-file"/></svg></span><span class="nm">GT_Certificate_of_Insurance_2026-27.pdf</span></button><span class="bd pdf">PDF</span><button class="d" aria-label="Download"><svg class="i"><use href="#i-download"/></svg></button><button class="x" aria-label="Remove"><svg class="i"><use href="#i-x"/></svg></button></div>
+<div class="fh-tile"><button class="o"><span class="fh-fic xls"><svg class="i"><use href="#i-sheet"/></svg></span><span class="nm">GT_Fleet_List_2027.xlsx</span></button><span class="bd xls">XLSX</span><button class="d" aria-label="Download"><svg class="i"><use href="#i-download"/></svg></button><button class="x" aria-label="Remove"><svg class="i"><use href="#i-x"/></svg></button></div>
+<label class="fh-tile add"><svg class="i"><use href="#i-plus"/></svg>Attach file</label>
+</div></section>
+
+<section class="sec"><h2>22. Attachment card</h2><p>Read-only files: documents the shipper shares, and files after the answer is sent. 36px type tile, name (one line, …, full name on hover), kind ("PDF", "Spreadsheet · XLSX"), then Preview and Download icon buttons (quiet grey, tooltips, always visible). A click on the card previews. Hover: orange border, soft shadow, orange name. Cards sit in a grid: 260px minimum, 360px maximum, filling left to right. 1 file = one 360px card (never full width); 2 = side by side; 4 = three and one; 6 = two rows of three.</p>
+<div class="fh-files">
+<div class="fh-fc"><button class="o"><span class="fh-fic pdf"><svg class="i"><use href="#i-file"/></svg></span><span class="t"><b>Master Transportation Agreement 2027</b><small>PDF</small></span></button><button class="a" aria-label="Preview"><svg class="i"><use href="#i-eye"/></svg></button><button class="a" aria-label="Download"><svg class="i"><use href="#i-download"/></svg></button></div>
+<div class="fh-fc"><button class="o"><span class="fh-fic xls"><svg class="i"><use href="#i-sheet"/></svg></span><span class="t"><b>Accessorial and Fuel Schedule 2027</b><small>Spreadsheet · XLSX</small></span></button><button class="a" aria-label="Preview"><svg class="i"><use href="#i-eye"/></svg></button><button class="a" aria-label="Download"><svg class="i"><use href="#i-download"/></svg></button></div>
 </div></section>
 </main>
 </body>

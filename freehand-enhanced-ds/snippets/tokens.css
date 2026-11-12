@@ -1,5 +1,5 @@
 /* Freehand V1 Enhanced Studio: design tokens
-   Measured from Enhanced Studio v103 (computed styles), cross-checked with freehand-studio main.
+   Measured from Enhanced Studio v106 (computed styles, list table re-measured Nov 3), cross-checked with freehand-studio main.
    Use these variables in every new page; do not introduce new colours. */
 :root{
   /* type */
@@ -15,7 +15,8 @@
 
   /* text */
   --fh-text: #0F172A;          /* titles, values, messages */
-  --fh-text-cell: #1F1F1F;     /* table cell text */
+  --fh-text-cell: #0F172A;     /* table cell text (was #1F1F1F before v106) */
+  --fh-th-text: #334155;       /* table header text */
   --fh-text-strong2: #334155;  /* buttons, dropdown labels, link text */
   --fh-text-helper: #475569;   /* descriptions, reasons, sentences */
   --fh-text-meta: #64748B;     /* labels, times, counts, placeholders */
@@ -37,13 +38,16 @@
   --fh-bg-th: #FAFAF9;         /* table header */
   --fh-bg-subtle: #FAFBFC;     /* suggestion row inside a card */
   --fh-bg-chip: #F1F5F9;       /* count badge, muted chip */
+  --fh-row-hover: #F3F4F6;     /* table row hover and selected (neutral grey, not orange) */
 
   /* borders */
   --fh-border: #E2E8F0;        /* cards, inputs, dropdowns, pills */
   --fh-border-btn: #DCDFE4;    /* buttons */
   --fh-divider: #E5E7EB;       /* page dividers, footer top, sidebar edge */
   --fh-divider-soft: #F1F5F9;  /* lines inside cards */
-  --fh-underline: #CBD5E1;     /* text-link underline */
+  --fh-underline: #CBD5E1;     /* text-link underline, SCAC separator */
+  --fh-col-line: #EEF0F3;      /* vertical lines between table columns */
+  --fh-row-line: #E9EBEF;      /* line under each table row */
 
   /* status tones: text / background / 1px inset ring */
   --fh-ok-fg:#166534;   --fh-ok-bg:#DCFCE7;   --fh-ok-ring:#BBF7D0;    /* Approved, Resolved */
@@ -73,13 +77,20 @@
 
   /* sizes */
   --fh-h-control: 36px;  /* buttons, search, dropdowns, icon buttons */
-  --fh-h-pill: 28px;     /* status pills */
+  --fh-h-pill: 28px;     /* pill-shaped chips; status filters are tabs since Nov 3 */
+  --fh-h-tab: 38px;      /* status tabs (list pages) and record tabs (detail pages) */
   --fh-h-pager: 32px;    /* pager buttons */
   --fh-h-badge: 22px;
   --fh-h-th: 40px;
-  --fh-h-row: 44px;
+  --fh-h-row: 44px;           /* 60px when cells hold two lines (Exceptions) */
+  --fh-cell-x: 16px;          /* table cell side padding */
+  --fh-w-rownum: 56px;        /* row number + checkbox column (24px left padding = page gutter) */
+  --fh-icon-stroke: 1.75;     /* every Lucide icon */
+  --fh-save-on: #14213D;      /* Save segment of the filter bar when there is something to save */
   --fh-h-foot: 52px;
   --fh-w-side: 232px;    /* sidebar; 64px when collapsed */
   --fh-w-conv: 440px;    /* conversation column on detail pages */
   --fh-tip-max: 320px;   /* every tooltip wraps at 320px */
+  --fh-lh: 1.45;         /* line height everywhere; write font shorthands as 14px/1.45, never without it */
+  --fh-navy: #14213D;    /* workspace tile, Save, bulk bar */
 }
