@@ -37,7 +37,17 @@ Rules:
 - Some pages carry a Figma-status notice (OLD, To BE REVIEWED, built from loose frames, legacy, two sets — pick one). Prefer the current/primary option and say so.
 - Icons: 432 SVGs, manifest `components/icons/icons-data.js` (look up by Figma name). Brand: `components/brand/*.svg`. Empty-state art: `components/empty-state/`. Loaders: `components/loader/`.
 - Alerts: the Figma page is empty — use Toast or Callout (`badge`) and ask.
+- **Pop-ups (dialogs, confirmations, results): always the kit `modal`** — 350 fixed, heading + 12px message, detail in the `#EEF2F4` slot (`.pds-modal__slot--content`), Cancel + action or one primary. No wider custom dialogs, coloured callouts, KPI tiles or tables inside. See `components/modal.md` › Do / Don't.
+- **Pop-ups (dialogs, confirmations, results): always the kit `modal`** — 350 fixed, heading + 12px message, detail in the `#EEF2F4` slot (`.pds-modal__slot--content`), Cancel + action or one primary. No wider custom dialogs, coloured callouts, KPI tiles or tables inside. See `components/modal.md` › Do / Don't.
 - Anything genuinely not in the kit: read it from Figma via the MCP, build it from kit tokens, and tell Charles it's outside the kit.
+
+## Page layout: what stays put (Charles, 19 Nov 2026 — apply by default, don't ask)
+| Page | Subheader variant | Sticky (never scrolls) | Scrolls |
+|---|---|---|---|
+| **List page** | Main: menu · title ▾ · search · CTAs | Top Header (branding) · Subheader · filter bar · list column headings | the rows only |
+| **Detail page** | Breadcrumb: breadcrumb (ID - name · info · status) · CTAs — no menu icon | Top Header · Subheader · Tab row | the tab panel; in a two-column panel (e.g. details | version history) each half scrolls on its own |
+
+Build it as a fixed shell: the page is a 100vh flex column, the sticky parts are `flex: none`, and the scroll area is `flex: 1; min-height: 0; overflow-y: auto`. A page with no tab row keeps Top Header + Subheader sticky.
 
 ## Shipping kit code inside an Artifact
 Artifacts can't reach local files. Either inline the CSS/JS from the repo into the page, or publish them as supporting `files` (e.g. `tokens.css`, `components/toast.css`) and link them relatively. Never retype values by hand.

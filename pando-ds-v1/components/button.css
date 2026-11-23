@@ -177,6 +177,9 @@
 }
 .pds-button--text:disabled, .pds-button--text[aria-disabled="true"] { --_bg: transparent; --_fg: var(--button-text-disabled-fg); }
 .pds-button--text.pds-button--danger { --_fg: var(--button-red-fg); } /* light Text Only red: added in review */
+/* Disabled beats the danger tone (13 Nov 2026 fix: the tone rules above had the same specificity as :disabled and came later, so a disabled red button stayed red) */
+.pds-button--secondary.pds-button--danger:disabled, .pds-button--secondary.pds-button--danger[aria-disabled="true"] { --_bg: var(--button-disabled-bg); --_fg: var(--button-disabled-fg); --_bd: transparent; }
+.pds-button--text.pds-button--danger:disabled, .pds-button--text.pds-button--danger[aria-disabled="true"] { --_fg: var(--button-text-disabled-fg); }
 
 /* Action Button */
 .pds-button--action {

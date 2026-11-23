@@ -34,7 +34,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:var(--fh
 .fh-ib .bdot{position:absolute;top:-6px;right:-6px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--fh-brand);color:#fff;font:600 10px/16px var(--fh-font);font-style:normal;text-align:center}
 
 /* ---------- 2. Status tabs (list page status filter; same tab as detail pages) ---------- */
-.fh-tabs{display:flex;gap:20px;height:39px;padding:0 24px;margin-top:4px;border-bottom:1px solid var(--fh-divider)}
+.fh-tabs{display:flex;gap:20px;height:40px;padding:0 24px;margin-top:4px;border-bottom:1px solid var(--fh-divider)}
 .fh-tab{display:inline-flex;align-items:center;gap:6px;height:var(--fh-h-tab);padding:0 2px;border:0;border-bottom:2px solid transparent;background:none;color:var(--fh-text-meta);font:500 var(--fh-fs-14)/1.45 var(--fh-font);cursor:pointer}
 .fh-tab:hover{color:var(--fh-text)}
 .fh-tab.on{color:var(--fh-text);border-bottom-color:var(--fh-brand)}
@@ -323,7 +323,7 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:var(--fh
 <!-- icon sprite (lucide paths) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
-  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol><symbol id="i-chevu" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol><symbol id="i-hist" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
   <symbol id="i-chevl" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
   <symbol id="i-chevr" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
@@ -509,6 +509,131 @@ svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:var(--fh
 <div class="fh-fc"><button class="o"><span class="fh-fic pdf"><svg class="i"><use href="#i-file"/></svg></span><span class="t"><b>Master Transportation Agreement 2027</b><small>PDF</small></span></button><button class="a" aria-label="Preview"><svg class="i"><use href="#i-eye"/></svg></button><button class="a" aria-label="Download"><svg class="i"><use href="#i-download"/></svg></button></div>
 <div class="fh-fc"><button class="o"><span class="fh-fic xls"><svg class="i"><use href="#i-sheet"/></svg></span><span class="t"><b>Accessorial and Fuel Schedule 2027</b><small>Spreadsheet · XLSX</small></span></button><button class="a" aria-label="Preview"><svg class="i"><use href="#i-eye"/></svg></button><button class="a" aria-label="Download"><svg class="i"><use href="#i-download"/></svg></button></div>
 </div></section>
+
+<section class="sec"><h2>23. Date panel</h2><p>Every date filter opens this panel (from freehand-studio <code>InvoiceDateRangeFilter</code>). Presets on the left, one choice, marked with an orange check (not radios or checkboxes, the presets overlap). "Clear dates" only when a date is set; "Custom range" label under the presets. Right: Between / On or after / On or before, then a month calendar; today in orange; Between takes two clicks, the other two one. No "Any time" option: with nothing set the chip reads "All".</p>
+<style>
+.dp{display:inline-flex;font:400 13px/1.45 Inter,system-ui,sans-serif;border:1px solid #E5E7EB;border-radius:10px;background:#fff;box-shadow:0 12px 32px -8px rgba(15,23,42,.2)}
+.dp-l{display:flex;flex-direction:column;gap:2px;padding:8px;width:176px;border-right:1px solid #E5E7EB}
+.dp-p{display:flex;align-items:center;gap:6px;padding:7px 10px;border:0;border-radius:6px;background:none;text-align:left;font:inherit;color:#0F172A}
+.dp-p.on{color:#C2410C;background:#FFF7ED}.dp-p .ck{margin-left:auto;color:#FE6301}
+.dp-p input{width:52px;height:26px;border:1px solid #DCDFE4;border-radius:6px;padding:0 6px;font:inherit;font-size:12px}
+.dp-clr{padding:6px 10px;border:0;background:none;text-align:left;font:inherit;font-size:12px;font-weight:500;color:#64748B}
+.dp-cr{margin:8px 10px 0;font-size:11px;color:#94A3B8}
+.dp-r{padding:8px;width:292px}
+.dp-m{display:flex;border:1px solid #E5E7EB;border-radius:8px;padding:2px;margin-bottom:10px}
+.dp-m button{flex:1;padding:5px 6px;border:0;border-radius:6px;background:none;font:inherit;font-size:12px;font-weight:500;color:#64748B}
+.dp-m button.on{background:#FFF7ED;color:#C2410C}
+.dp-h{display:flex;align-items:center;margin:0 4px 6px}.dp-h b{font-size:14px;font-weight:600;flex:1}.dp-h span{color:#FE6301;padding:0 6px}
+.dp-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.dp-g i{font-style:normal;font-size:11px;color:#64748B;padding:4px 0}
+.dp-g b{font-weight:400;height:32px;display:grid;place-items:center;border-radius:6px}
+.dp-g b.td{color:#FE6301;font-weight:600}.dp-g b.mid{background:#FFF7ED;border-radius:0}.dp-g b.sel{background:#FE6301;color:#fff;font-weight:600}
+</style>
+<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+<div class="dp"><div class="dp-l"><button class="dp-p">Last 7 days</button><button class="dp-p">Last 30 days</button><button class="dp-p">This month</button><button class="dp-p">Last month</button><button class="dp-p on">Last 90 days<span class="ck">✓</span></button><button class="dp-clr">Clear dates</button><p class="dp-cr">Custom range</p></div>
+<div class="dp-r"><div class="dp-m"><button class="on">Between</button><button>On or after</button><button>On or before</button></div><div class="dp-h"><b>November 2026</b><span>‹</span><span>›</span></div>
+<div class="dp-g"><i>Su</i><i>Mo</i><i>Tu</i><i>We</i><i>Th</i><i>Fr</i><i>Sa</i><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b class="sel">10</b><b class="mid">11</b><b class="mid">12</b><b class="sel td">13</b><b>14</b><b>15</b><b>16</b><b>17</b><b>18</b><b>19</b><b>20</b><b>21</b><b>22</b><b>23</b><b>24</b><b>25</b><b>26</b><b>27</b><b>28</b><b>29</b><b>30</b></div></div></div>
+<div class="dp"><div class="dp-l"><button class="dp-p on">Next 48 hours<span class="ck">✓</span></button><button class="dp-p">By next Sunday</button><div class="dp-p">Next <input placeholder="10"> days</div><button class="dp-p">Already ended</button><p class="dp-cr">Custom range · future dates (due, bid end)</p></div></div>
+</div></section>
+<section class="sec"><h2>24. Slide-out record header</h2><p>One row, always. Name truncates (tooltip has the full name); arrows, history, actions and ✕ never wrap. With Ask Freehand open the slide-out widens until this row fits, up to 72px short of the assistant.</p>
+<style>
+.so-h{display:flex;align-items:center;gap:8px;padding:12px 16px 12px 20px;border:1px solid #E5E7EB;border-radius:10px;background:#fff;font:400 13px/1.45 Inter,system-ui,sans-serif;max-width:760px}
+.so-n{display:flex;flex-direction:column;gap:4px;min-width:48px;flex:0 1 auto;overflow:hidden}
+.so-n b{font-size:16px;font-weight:600;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.so-n .tg{align-self:flex-start;font-size:12px;padding:1px 8px;border-radius:999px;background:#F1F5F9;color:#334155}
+.so-sp{flex:1 1 0}
+.so-h > *:not(.so-n):not(.so-sp){flex:none}
+.so-gh{width:30px;height:30px;display:grid;place-items:center;border:0;border-radius:8px;background:none;color:#334155}
+.so-gh:hover{background:#F1F5F9}
+.so-ib{width:30px;height:30px;display:grid;place-items:center;border:1px solid #DCDFE4;border-radius:8px;background:#fff;color:#334155}
+.so-dv{width:1px;height:20px;background:#E5E7EB;margin:0 4px}
+.so-b{height:36px;padding:0 14px;border:1px solid #DCDFE4;border-radius:8px;background:#fff;font:500 14px/1.45 Inter,system-ui,sans-serif;color:#0F172A}
+.so-b.sm{height:30px;padding:0 10px;font-size:13px}
+.so-p{height:36px;padding:0 14px;border:0;border-radius:8px;background:#FE6301;color:#fff;font:600 14px/1.45 Inter,system-ui,sans-serif}
+.so-h svg.i{width:16px;height:16px}
+</style>
+<div class="so-h"><div class="so-n"><b title="Houston, TX → New Orleans, LA">Houston, TX → New Orleans, LA</b><span class="tg">Proposal 1</span></div><span class="so-sp"></span>
+<button class="so-gh" aria-label="Previous"><svg class="i"><use href="#i-chevu"/></svg></button><button class="so-gh" aria-label="Next"><svg class="i"><use href="#i-chev"/></svg></button><span class="so-dv"></span><button class="so-ib" aria-label="Quote history"><svg class="i"><use href="#i-hist"/></svg></button>
+<button class="so-b">Opt out</button><button class="so-b">Withdraw</button><button class="so-p">Submit</button><span class="so-dv"></span><button class="so-gh" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+<p style="margin-top:12px">In history (opened from a list), the history button and actions give way to "Back to current quote":</p>
+<div class="so-h"><div class="so-n"><b>Houston, TX → New Orleans, LA</b><span class="tg">Proposal 1</span></div><span class="so-sp"></span>
+<button class="so-gh"><svg class="i"><use href="#i-chevu"/></svg></button><button class="so-gh"><svg class="i"><use href="#i-chev"/></svg></button><span class="so-dv"></span><button class="so-b sm">Back to current quote</button><span class="so-dv"></span><button class="so-gh" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+</section>
+
+<section class="sec"><h2>25. Quote history: banner, changed values, timeline</h2><p>Read-only. Blue banner for the selected version. Blue dot before the label of a changed value, in a slot every row keeps. Timeline cards select like the lane list; connector dot centre to dot centre; no "Latest" tag in the timeline.</p>
+<style>
+.qh{display:flex;gap:16px;align-items:flex-start;font:400 13px/1.45 Inter,system-ui,sans-serif;color:#334155}
+.qh-c{flex:1;max-width:460px}
+.qh-bn{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #BFDBFE;background:#EFF6FF;border-radius:8px;color:#1D4ED8;margin-bottom:8px}
+.qh-bn b{font-weight:600}.qh-bn .pl{background:#fff;border:1px solid #DBEAFE;border-radius:999px;padding:0 8px;font-size:12px;color:#334155}.qh-bn .w{margin-left:8px;font-size:12px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qh-t{width:100%;border-collapse:collapse}.qh-t td{padding:12px 0;border-bottom:1px solid #EEF0F3}.qh-t td.r{text-align:right;font-variant-numeric:tabular-nums}
+.qh-k{display:inline-flex;align-items:center;gap:8px}.qh-k i{width:6px;height:6px;border-radius:50%;flex:none}.qh-k.on i{background:#2563EB}
+.qh-tl{width:300px;list-style:none;margin:0;padding:0}
+.qh-li{position:relative;display:flex;gap:12px;padding:10px 12px;margin-bottom:4px;border:1px solid transparent;border-radius:10px;cursor:pointer}
+.qh-li:hover:not(.on){background:#F3F4F6}.qh-li.on{border-color:#FE6301;background:#FFF7ED}
+.qh-li time{min-width:84px;font-size:12px;color:#64748B}.qh-li time small{display:block;font-size:12px}
+.qh-li .dt{position:relative;z-index:1;width:9px;height:9px;border-radius:50%;background:#94A3B8;margin-top:5px;flex:none}.qh-li.on .dt{background:#FE6301;box-shadow:0 0 0 3px #FFEDD5}
+.qh-li:not(:last-child)::before{content:"";position:absolute;left:112px;top:20px;bottom:-26px;border-left:2px dotted #CBD5E1}
+.qh-li p{margin:0;color:#0F172A;white-space:nowrap}.qh-li.on p{font-weight:600}.qh-li span.s{font-size:12px;color:#64748B}
+</style>
+<div class="qh"><div class="qh-c"><div class="qh-bn"><span>Quote · <b>Nov 2, 2026, 9:40 AM</b></span><span class="w">Jordan Lee · Draft saved</span></div>
+<table class="qh-t"><tr><td><span class="qh-k"><i></i>SCAC</span></td><td class="r">GTRD</td></tr><tr><td><span class="qh-k on" title="Changed. Current quote: 9"><i></i>Weekly capacity commitment · Jan</span></td><td class="r">8</td></tr><tr><td><span class="qh-k on" title="Changed. Current quote: 1,896.25"><i></i><b>Linehaul cost per mile</b></span></td><td class="r">1,972.00</td></tr></table></div>
+<ol class="qh-tl"><li class="qh-li"><time>Nov 3, 2026<small>5:18 PM</small></time><span class="dt"></span><div><p>Quote uploaded</p><span class="s">Maya Chen · 1,896.25 USD</span></div></li><li class="qh-li on"><time>Nov 2, 2026<small>9:40 AM</small></time><span class="dt"></span><div><p>Draft saved</p><span class="s">Jordan Lee · 1,972.00 USD</span></div></li></ol></div>
+</section>
+<section class="sec"><h2>26. Lane connector</h2><p>An orange line down the list edge wraps the selected card (or the open row beside a slide-out). When the selection scrolls away, a pinned copy (arrow, lot, name) sits at the list edge and the line wraps it. In the app the path is measured from the real card and redrawn on scroll, resize and render.</p>
+<style>
+.lcx{position:relative;display:flex;width:720px;height:300px;border:1px solid #E5E7EB;border-radius:10px;overflow:hidden;background:#fff;font:500 14px/1.45 Inter,system-ui,sans-serif}
+.lcx-l{width:340px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-right:1px solid #E5E7EB}
+.lcx-c{display:flex;align-items:center;gap:12px;height:52px;padding:0 14px;border:1px solid #E5E7EB;border-radius:10px;background:#fff;color:#0F172A}
+.lcx-c i{width:12px;height:12px;border-radius:2px;margin-left:auto}
+.lcx-c.on{border-color:transparent;background:#FFF7ED;box-shadow:0 6px 16px -4px rgba(15,23,42,.18),0 2px 4px -2px rgba(15,23,42,.08)}
+.lcx-p{flex:1;padding:16px 20px;color:#64748B;font-size:13px}
+.lcx svg{position:absolute;inset:0;pointer-events:none}
+.lcx-pin{position:absolute;left:14px;top:8px;width:312px;height:40px;display:flex;align-items:center;gap:10px;padding:0 12px;background:#FFF7ED;border-radius:10px;box-shadow:0 8px 20px -6px rgba(15,23,42,.25);font-size:13px;color:#0F172A}
+.lcx-pin small{font:400 12px ui-monospace,monospace;color:#64748B}.lcx-pin b{font-weight:600}.lcx-pin svg{position:static;width:16px;height:16px;color:#FE6301}
+</style>
+<div style="display:flex;gap:24px;flex-wrap:wrap">
+<div class="lcx"><div class="lcx-l"><div class="lcx-c">Chicago, IL → Dallas, TX<i style="background:#12B76A"></i></div><div class="lcx-c on">Houston, TX → New Orleans, LA<i style="background:#12B76A"></i></div><div class="lcx-c">Dallas, TX → Houston, TX<i style="background:#FDB022"></i></div></div><div class="lcx-p">Lane details and charges</div>
+<svg viewBox="0 0 720 300"><path d="M326 72 H341.5 V132 H326 Z" fill="#FFF7ED"/><path d="M340.5 0 V58 Q340.5 72 326.5 72 H24 Q14 72 14 82 V114 Q14 124 24 124 H326.5 Q340.5 124 340.5 138 V300" fill="none" stroke="#FE6301" stroke-width="1.5"/></svg></div>
+<div class="lcx"><div class="lcx-l" style="padding-top:60px"><div class="lcx-c">Lubbock, TX → Amarillo, TX<i style="background:#FDB022"></i></div><div class="lcx-c">Waco, TX → Austin, TX<i style="background:#F04438"></i></div></div><div class="lcx-p">Selected lane scrolled away: pinned copy</div>
+<div class="lcx-pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7M12 19V5"/></svg><small>LOT-02</small><b>Houston, TX → New Orleans, LA</b></div>
+<svg viewBox="0 0 720 300"><path d="M326 8 H341.5 V48 H326 Z" fill="#FFF7ED"/><path d="M340.5 0 V0 Q340.5 8.75 326.5 8.75 H24 Q14 8.75 14 18.75 V37.25 Q14 47.25 24 47.25 H326.5 Q340.5 47.25 340.5 61.25 V300" fill="none" stroke="#FE6301" stroke-width="1.5"/></svg></div>
+</div>
+</section>
+<section class="sec"><h2>27. Record filter bar (search + filter inside a page)</h2><p>The list filter bar for records inside a page (lanes on the bidding page). Type = "Any field contains" (vague). Pick a field or an exact suggestion = values (precise). Value panel only on hover. In a toolbar the closed bar is one line with "+N" and opens as a pop-up over the content; result count sits outside the bar.</p>
+<style>
+.rfb{display:flex;align-items:flex-start;gap:6px;min-height:34px;padding:4px 6px 4px 8px;border:1px solid #E2E8F0;border-radius:8px;background:#fff;font:500 13px/1.45 Inter,system-ui,sans-serif;color:#0F172A;box-sizing:border-box}
+.rfb.has{border-color:#FDBA74}.rfb.act{border-color:#FF7224;box-shadow:inset 0 0 0 1px #FF7224,0 12px 28px -10px rgba(15,23,42,.25)}
+.rfb>svg{width:15px;height:15px;color:#64748B;margin-top:4px;flex:none}
+.rfb-toks{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.rfb.one .rfb-toks{flex-wrap:nowrap;overflow:hidden}
+.rfb-tok{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 2px 0 8px;border-radius:6px;background:#F1F5F9;font-size:12px;color:#334155;flex:none;max-width:calc(100% - 46px)}
+.rfb-tok .o{color:#64748B}.rfb-tok b{color:#C2410C;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rfb-tok button{display:grid;place-items:center;width:18px;height:18px;border:0;background:none;color:#64748B;cursor:pointer}.rfb-tok svg{width:11px;height:11px}
+.rfb-more{height:24px;padding:0 8px;border:1px solid #FED7AA;border-radius:6px;background:#FFF7ED;color:#C2410C;font:600 12px Inter,system-ui,sans-serif;flex:none}
+.rfb input{flex:1 1 40px;min-width:40px;height:24px;border:0;outline:0;font:inherit;background:none}.rfb input::placeholder{color:#94A3B8}
+.rfb-x{width:24px;height:24px;border:0;background:none;color:#64748B;display:grid;place-items:center;flex:none}.rfb-x svg{width:14px;height:14px}
+.rfb-res{margin:6px 0 0 2px;font-size:12px;color:#64748B}
+.rfb-pop{width:280px;margin-top:6px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;box-shadow:0 10px 30px -8px rgba(15,23,42,.18),0 2px 6px rgba(15,23,42,.06);padding:4px;font:400 13px/1.45 Inter,system-ui,sans-serif}
+.rfb-row{display:flex;align-items:center;gap:6px;height:32px;padding:0 8px;border-radius:6px;color:#0F172A}.rfb-row.hi{background:#F1F5F9}
+.rfb-row b{font-weight:600}.rfb-row .c{margin-left:auto;font-size:12px;color:#64748B}.rfb-row>svg{width:14px;height:14px;color:#94A3B8;flex:none}
+.rfb-row>svg{margin-left:auto}.rfb-cnt+svg{margin-left:6px!important}
+.rfb-ent{display:grid;place-items:center;width:22px;height:20px;border:1px solid #E2E8F0;border-radius:4px;color:#64748B;flex:none}.rfb-ent svg{width:12px;height:12px}
+.rfb-sep{height:1px;background:#E2E8F0;margin:4px 0}.rfb-sec{padding:8px 8px 2px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#64748B}
+.rfb-lbl{margin:0 0 8px;font-size:12px;color:#64748B}
+.rfb-cnt{margin-left:auto;padding:0 8px;border-radius:999px;background:#DBEAFE;color:#1D4ED8;font-size:12px;font-weight:500}
+</style>
+<div style="display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start">
+<div><p class="rfb-lbl">Closed, in a toolbar: one line, extra chips fold into +N (340px rest, 540px when filtered)</p>
+<div class="rfb has one" style="width:540px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><div class="rfb-toks"><span class="rfb-tok"><span>Lot</span><span class="o">is</span><b title="LOT-01, LOT-02, LOT-03">LOT-01 +2</b><button aria-label="Remove Lot filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span><span class="rfb-tok"><span>Source city</span><span class="o">is</span><b title="Dallas, Houston">Dallas +1</b><button aria-label="Remove Source city filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span><button class="rfb-more" title="Source state is TX, IL · Source country is USA · …">+5</button></div><button class="rfb-x" aria-label="Clear search and filters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div></div>
+<div><p class="rfb-lbl">Typing, in a list column: suggestions, result count under the bar</p>
+<div class="rfb act" style="width:310px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><div class="rfb-toks"><span class="rfb-tok"><span>Any field</span><span class="o">contains</span><b>dallas</b><button aria-label="Remove Any field filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span><input value="tyler" aria-label="Search or filter lanes"></div><button class="rfb-x" aria-label="Clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+<p class="rfb-res">2 of 30 lanes</p>
+<div class="rfb-pop"><div class="rfb-row hi"><span>Any field contains <b>tyler</b></span><span class="c">1 lane</span><span class="rfb-ent" title="Press Enter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></span></div>
+<div class="rfb-row"><span><b>Lane name</b> contains <b>tyler</b></span><span class="c">1 lane</span></div>
+<div class="rfb-row"><span><b>Destination city</b> is <b>Tyler</b></span><span class="c">1 lane</span></div>
+<div class="rfb-sep"></div><div class="rfb-sec">Lane</div><div class="rfb-row">Lane name<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div><div class="rfb-row">Lot<span class="rfb-cnt">LOT-01 +2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div><div class="rfb-row">Status<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div><div class="rfb-sec">Source</div><div class="rfb-row">City<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div></div></div>
+</div>
+</section>
 </main>
 </body>
 </html>

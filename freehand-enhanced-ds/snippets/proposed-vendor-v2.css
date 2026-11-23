@@ -1,0 +1,262 @@
+/* Freehand V1 Enhanced Studio: PROPOSED vendor V2 patterns (DESIGN.md §11, P1–P22)
+   From the Procure V2 vendor portal prototype (v198/199, Nov 2026), generator prototypes/vendor/_build/v2/landing.py.
+   Effective rules after the cascade, as listed in prototypes/vendor/handoff/components.md.
+   NOT approved yet: use only for vendor V2 / Procure work, and say they are proposed. Each moves to components.html after design review.
+   Needs snippets/tokens.css. Hex values with no matching token are kept as hex (see DESIGN.md §11 "Open for the design team"). */
+
+
+/* P1 Event header — proposed, pending design review */
+/* 52px including the 1px border: 8 top + 36 line + 7 bottom + 1 border */
+.dx-hd.eh{padding:8px 24px 7px;border-bottom:1px solid var(--fh-divider);background:var(--fh-bg)}
+.eh .dx-l1{display:flex;align-items:center;gap:10px;min-height:36px}
+.eh .dx-t{font-size:16px;font-weight:600;color:var(--fh-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eh .bo-pri,.eh .bo-btn{height:32px}
+.eh-sp{flex:1}                       /* pushes actions right */
+.eh-div{width:1px;height:20px;background:var(--fh-divider);flex:none}
+.eh-i{width:28px;height:28px;border:0;border-radius:6px;background:none;color:var(--fh-text-meta)}
+.eh-i:hover,.eh-i.on{background:var(--fh-bg-chip);color:var(--fh-text)}
+.eh-pop{position:absolute;top:calc(100% + 8px);width:340px;padding:12px 14px;border:1px solid var(--fh-border);border-radius:14px}
+/* time-left clock: icon --fh-text-meta; #D97706 closing soon, #D92D20 very soon (no tokens) */
+
+
+/* P2 Lanes | Table view switch — proposed, pending design review */
+.tv-sw button{height:28px;padding:0 10px;border:0;border-radius:6px;background:none;color:var(--fh-text-meta);font-weight:500}
+.tv-sw button.on{background:var(--fh-bg);color:var(--fh-text);box-shadow:0 0 0 1px var(--fh-divider)}
+
+
+/* P3 Danger button — proposed, pending design review */
+/* add to a secondary button: <button class="bo-btn gt-dng">. Red outline, never solid red. */
+.gt-dng,.bo-btn.gt-dng{background:var(--fh-bg);border-color:#D4183D;color:#D4183D}
+.gt-dng:hover,.bo-btn.gt-dng:hover{background:#FDECEF;border-color:#A3122F;color:#A3122F}
+.gt-dng:focus-visible{outline:2px solid #D4183D;outline-offset:2px}
+
+
+/* P4 Status pills (table toolbar) — proposed, pending design review */
+.tv-pills{display:flex;gap:6px;flex-wrap:wrap}
+.tv-pill{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border:1px solid var(--fh-divider);border-radius:999px;
+  background:var(--fh-bg);color:var(--fh-text-strong2);font-size:13px;font-weight:500}
+.tv-pill .n{color:var(--fh-text-meta)}
+.tv-pill.on{border-color:var(--fh-brand-ring);background:var(--fh-brand-tint2);color:var(--fh-brand-text)}
+
+
+/* P5 Counter-offer tag and chip — proposed, pending design review */
+.bo-b.co-t{background:#F5F0FA;color:#663892;box-shadow:inset 0 0 0 1px #E8DDF3}
+.co-chip{display:block;width:max-content;margin-top:3px;padding:1px 6px;border-radius:4px;background:#F5F0FA;color:#663892;
+  box-shadow:inset 0 0 0 1px #E8DDF3;font-size:11px;font-weight:500;font-variant-numeric:tabular-nums}
+button.co-chip:hover{background:#E8DDF3;color:#4E2B72}
+button.co-chip:focus-visible{outline:2px solid #7F46B0;outline-offset:1px}
+/* Lanes view: chip + Apply link */
+.co-line{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:4px}
+.co-line .co-chip{display:inline-block;margin:0}
+.co-ap{padding:0;border:0;background:none;font:500 12px/1.4 Inter,system-ui,sans-serif;color:#663892;
+  text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.co-ap:hover{color:#4E2B72}
+/* Table view: the chip is the button; "C: 1.90" swaps to "Apply 1.90" on hover / focus */
+/* <button class="co-chip co-sw"><span class="cv">C: 1.90</span><span class="cu">Apply 1.90</span></button> */
+.co-sw{display:inline-flex;border:0;font-family:inherit;cursor:pointer}
+.co-sw .cu{display:none;color:#4E2B72;font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.co-sw:hover .cu,.co-sw:focus-visible .cu{display:inline}
+.co-sw:hover .cv,.co-sw:focus-visible .cv{display:none}
+.co-sw:hover,.co-sw:focus-visible{background:#E8DDF3}
+
+
+/* P6 Ceiling price tag — proposed, pending design review */
+/* on a status badge: <span class="bo-b ceil-t">Ceiling price 2,450</span> */
+.bo-b.ceil-t{background:#FDECEF;color:#A3122F}
+
+
+/* P7 Bid amount field — proposed, pending design review */
+.bd-in{display:inline-flex;align-items:center;gap:6px;width:116px;height:36px;padding:0 10px;border:1px solid var(--fh-border-btn);
+  border-radius:var(--fh-r-control);background:var(--fh-bg);box-shadow:var(--fh-sh-control);cursor:text}
+.bd-in span{font-size:12px;color:var(--fh-text-meta)}
+.bd-in input{flex:1;min-width:0;border:0;outline:0;background:none;font:500 14px/1.45 Inter;color:var(--fh-text);text-align:right;font-variant-numeric:tabular-nums}
+.bd-in:focus-within{border-color:var(--fh-brand);box-shadow:0 0 0 3px rgba(254,99,1,.15)}
+.bd-in.ed{border-color:#F59E0B}                 /* edited, not validated */
+.bd-in.off{background:var(--fh-bg-side);cursor:not-allowed}
+.bd-in.off input{color:var(--fh-text-faint)}
+.rl-h{display:none;margin-top:4px;font-size:11px;line-height:1.35;color:var(--fh-text-meta);text-align:right;max-width:220px;margin-left:auto}
+.rl-c:focus-within .rl-h,.rl-h.bad{display:block}
+.rl-h.bad{color:#DC2626}                        /* error hint; no red border on the field */
+/* in a table cell: no box */
+.tv td.tv-in{position:relative;background:#FFF8EB;padding:0}
+.tv td.tv-in input{width:100%;height:33px;border:0;background:transparent;padding:0 12px;font:400 12px/1.45 Inter;color:var(--fh-text);outline:0}
+.tv td.tv-in:focus-within{box-shadow:inset 0 0 0 2px var(--fh-brand);background:var(--fh-bg)}
+.tv td.tv-bad{box-shadow:inset 0 0 0 1.5px #DC2626;background:#FEF2F2}   /* cell error: outlined and tinted, reason on hover */
+
+
+/* P8 Table compact density and simple mode — proposed, pending design review */
+/* compact density for bidding grids; default density stays components.html #6 */
+.gt.gt-tv{table-layout:fixed;border-collapse:separate;border-spacing:0}
+.gt.gt-tv th,.gt.gt-tv td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:400;padding:0 12px}
+.gt.gt-tv thead th{position:sticky;top:0;z-index:3;height:34px;font-weight:600;color:var(--fh-th-text);background:var(--fh-bg-th);
+  box-shadow:inset -1px 0 0 var(--fh-col-line),inset 0 -1px 0 var(--fh-col-line)}
+.gt.gt-tv tbody td{height:34px;color:var(--fh-text);box-shadow:inset -1px 0 0 var(--fh-col-line),inset 0 -1px 0 var(--fh-col-line)}
+.gt.gt-tv th:first-child,.gt.gt-tv td:first-child{padding-left:16px}
+.gt.gt-tv th.r,.gt.gt-tv td.r{text-align:right;font-variant-numeric:tabular-nums}
+.gt.gt-tv tbody tr:hover td{background:var(--fh-bg-side)}
+.gt.gt-tv tbody tr:hover td.tv-in{background:#FFF3E0}           /* editable cells on row hover */
+.gt.gt-tv tbody tr.on td{background:var(--fh-brand-tint2)}
+.gt.gt-tv .gt-pin{position:sticky;z-index:2;background:var(--fh-bg)}  /* left offset set inline */
+.gt.gt-tv thead .gt-pin{z-index:5;background:var(--fh-bg-th)}
+.gt.gt-tv .gt-pl{box-shadow:inset -1px 0 0 var(--fh-divider),6px 0 8px -6px rgba(15,23,42,.18)}
+.gt.gt-tv .bo-b{font-size:11px;height:20px}
+/* simple mode (gtable o.mode = 'simple'): same CSS; the header has no drag, pin or resize controls. Built, not used. */
+
+
+/* P9 Stacked right-pinned columns — proposed, pending design review */
+.bo-tbl.gt .gt-act{position:sticky;z-index:3;background:var(--fh-bg);box-shadow:inset 1px 0 0 var(--fh-border);text-align:right}
+.bo-tbl.gt thead .gt-act{z-index:4;background:var(--fh-bg-side)}
+.gt.gt-tv .gt-act{z-index:2;font-weight:600;box-shadow:inset 1px 0 0 var(--fh-divider),-6px 0 8px -6px rgba(15,23,42,.18)}
+.gt.gt-tv thead .gt-act{z-index:5;background:var(--fh-bg-th)}
+/* right offsets are inline: style="right:{sum of the widths of the act columns after it}px"; default width 140px */
+
+
+/* P10 Side sheet (upload) — proposed, pending design review */
+.sh-ov{position:fixed;inset:0;z-index:80;background:rgba(15,23,42,.45)}
+.sh-sheet{position:fixed;z-index:81;top:0;right:0;bottom:0;width:min(440px,100vw);display:flex;flex-direction:column;
+  background:var(--fh-bg);border-left:1px solid var(--fh-divider);box-shadow:-16px 0 40px rgba(15,23,42,.14);font:400 14px/1.45 Inter}
+.up-sheet.up-sheet{width:min(480px,100vw)}
+.up-hd{display:flex;align-items:center;gap:12px;padding:16px 16px 16px 24px;border-bottom:1px solid var(--fh-divider)}
+.up-hd h2{margin:0;font:600 18px/1.45 Inter}
+.up-hd .sp{flex:1}
+.sh-sb{flex:1;overflow:auto;padding:16px 24px;display:flex;flex-direction:column;gap:10px}
+@media (prefers-reduced-motion:reduce){.sh-sheet{animation:none}}
+
+
+/* P11 Confirmation dialog — proposed, pending design review */
+/* uses the .sh-ov scrim from P10 */
+.sh-dlg{position:fixed;z-index:81;left:50%;top:50%;transform:translate(-50%,-50%);max-height:calc(100vh - 96px);overflow:auto;
+  padding:24px;border:1px solid var(--fh-divider);border-radius:12px;background:var(--fh-bg);box-shadow:0 20px 48px rgba(15,23,42,.18);font:400 14px/1.45 Inter;color:var(--fh-text)}
+.gt-dlg.gt-dlg{width:min(440px,calc(100vw - 32px));min-width:0}
+.sh-dh h2{margin:0;font:600 18px/1.45 Inter}
+.sh-dh p{margin:4px 0 16px;color:var(--fh-text-meta);font-size:14px}
+.sh-df{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.cf-lot{margin:0 0 4px;padding:10px 12px;border:1px solid var(--fh-border);border-radius:8px;background:var(--fh-bg-side);display:grid;gap:6px}
+
+
+/* P12 Lane card — proposed, pending design review */
+.bd-card{width:100%;text-align:left;border:1px solid var(--fh-divider);border-radius:var(--fh-r-card);background:var(--fh-bg);cursor:pointer}
+.bd-card2{display:flex;align-items:center;gap:12px;padding:14px;min-height:56px}
+.bd-card2:hover:not(.on){background:var(--fh-row-hover);border-color:var(--fh-divider)}
+.bd-card.on{border-color:transparent;background:var(--fh-brand-tint2);
+  box-shadow:0 6px 16px -4px rgba(15,23,42,.18),0 2px 4px -2px rgba(15,23,42,.08)}
+.bd-card2 .bd-ci{display:grid;place-items:center;width:32px;height:32px;border-radius:999px;background:var(--fh-bg-chip);color:var(--fh-text-helper)}
+.bd-card2 .bd-cn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;font-size:14px;color:var(--fh-text)}
+.bd-card2 .bd-cs{font-size:12px;color:var(--fh-text-meta);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd-card2 .bd-dm{font-size:11px;font-weight:500;color:#B54708;background:#FFFAEB;border-radius:4px;padding:1px 6px}   /* demand tag */
+
+
+/* P13 Lot group — proposed, pending design review */
+.lot-ctl{position:sticky;top:-12px;z-index:4;display:flex;align-items:center;justify-content:space-between;height:32px;padding:0 2px;
+  background:var(--fh-bg);box-shadow:0 -12px 0 #fff;font-size:12px;color:var(--fh-text-meta)}
+.lot-g{display:grid;gap:6px;border:0;background:none;margin:0;overflow:visible}
+.lot-g .lot-gh{position:sticky;top:20px;z-index:3;display:flex;align-items:center;gap:6px;width:100%;height:34px;padding:0 8px 0 2px;border:0;background:var(--fh-bg);cursor:pointer}
+.lot-g .lot-gh svg{width:16px;height:16px;color:var(--fh-text-meta);transition:transform .15s}
+.lot-g:not(.on) .lot-gh svg{transform:rotate(-90deg)}
+.lot-gn{font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--fh-text-strong2)}
+.lot-gh:hover .lot-gn{color:var(--fh-text)}
+.lot-gr{flex:1;min-width:12px;height:1px;background:var(--fh-border)}
+.lot-gc{font-size:12px;color:var(--fh-text-meta);font-variant-numeric:tabular-nums}
+.lot-gl2{display:grid;gap:8px;margin-left:9px;padding-left:14px;border-left:1px solid var(--fh-border)}
+.lot-gh:focus-visible{outline:2px solid var(--fh-brand);outline-offset:-2px}
+@media (prefers-reduced-motion:reduce){.lot-g .lot-gh svg{transition:none}}
+
+
+/* P14 Info banner — proposed, pending design review */
+.bd-note{display:flex;align-items:center;gap:8px;margin:0;padding:10px 12px;border-radius:8px;background:var(--fh-bg-chip);color:var(--fh-text-strong2);font-size:14px}
+.bd-note .i{width:16px;height:16px;color:var(--fh-text-meta)}
+.bd-note.lot-note{align-items:center;margin:0 0 12px;font-size:13px}                 /* lot rules */
+.bd-note.lot-note .lot-n{display:block;margin-top:2px;font-size:12px;color:var(--fh-text-meta)}
+.bd-note.optn{background:#EFF6FF;border:1px solid var(--fh-info-ring);color:var(--fh-info-fg)}   /* opted out */
+.bd-optw > :not(.bd-note){opacity:.55;pointer-events:none}
+.bd-note.rm-n{align-items:flex-start;margin:0 0 12px;font-size:13px}                 /* rate match */
+.bd-note.rm-req{background:#FFFAEB;color:#B54708;border:1px solid #FEDF89}
+.bd-note.rm-acc{background:var(--fh-ok-bg);color:var(--fh-ok-fg);border:1px solid var(--fh-ok-ring)}
+.bd-note.rm-rej{background:var(--fh-bad-bg);color:#A3122F;border:1px solid var(--fh-bad-ring)}
+
+
+/* P15 Lane marks (rank square, quote marks) — proposed, pending design review */
+.rk-sq{display:inline-grid;place-items:center;width:12px;height:12px;border-radius:3px;flex:none;vertical-align:middle}
+/* fill inline: Highly competitive #12B76A · Competitive #FDB022 · Non competitive #F79009 · Requires revision #F04438 */
+.bd-card2 .rk-sq,.rkl-i .rk-sq{width:14px;height:14px}
+.rk-sq.rk-none{background:none;border:1.5px dashed var(--fh-underline);width:10px;height:10px}
+.rk-sq.rk-opt{width:14px;height:14px;background:none;color:#F04438}   /* Lucide ban, opted out */
+.rk-sq.rk-ph{visibility:hidden}                                          /* keeps names aligned */
+.tv-ln .rk-sq{margin-right:8px}
+.lq{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:999px;flex:none}
+.lq-ok{background:#16A34A;color:#fff}                                    /* validated, ready to submit */
+.lq-ok svg{width:10px;height:10px}
+.lq-no{border:1.5px dashed var(--fh-text-faint)}                         /* not validated / not quoted */
+.tv-ln > .lq{margin-right:6px}
+
+
+/* P16 Rate match (banner, tag, chip, column ✓ / ✕) — proposed, pending design review */
+/* banner: P14 .bd-note.rm-n variants */
+.bo-b.rm-b.rm-req{background:#FFFAEB;color:#B54708}
+.bo-b.rm-b.rm-acc{background:var(--fh-ok-bg);color:var(--fh-ok-fg)}
+.bo-b.rm-b.rm-rej{background:var(--fh-bad-bg);color:#A3122F}
+.rm-mk{display:inline-grid;place-items:center;flex:none;margin-right:6px}
+.rm-mk.rm-req{color:#B54708} .rm-mk.rm-acc{color:#16A34A} .rm-mk.rm-rej{color:#D4183D}
+.gt-act.rm-td .rm-cl{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.gt-act.rm-td .rm-a{width:76px;display:inline-flex;gap:6px}
+.rm-ib.bo-ib2{width:28px;height:28px;border:1px solid var(--fh-border);border-radius:6px;background:var(--fh-bg)}
+.rm-ib.ok:hover{background:var(--fh-ok-bg);border-color:var(--fh-ok-ring);color:var(--fh-ok-fg)}
+.rm-ib.no:hover{background:var(--fh-bad-bg);border-color:var(--fh-bad-ring);color:#A3122F}
+
+
+/* P17 Suggestion panel — proposed, pending design review */
+.sug-pop{position:absolute;right:0;top:calc(100% + 4px);z-index:40;min-width:230px;padding:4px;text-align:right;
+  background:var(--fh-bg);border:1px solid var(--fh-border);border-radius:10px;box-shadow:0 10px 24px rgba(15,23,42,.12)}
+.sug-pop.up{top:auto;bottom:calc(100% + 4px)}
+.sug-o{display:flex;flex-direction:column;align-items:flex-end;gap:2px;width:100%;padding:8px 10px;border:0;border-radius:6px;background:none}
+.sug-o:hover,.sug-o:focus-visible{background:var(--fh-bg-side);outline:none}
+.sug-o b,.sug-n b{font-size:15px;font-weight:600;color:var(--fh-text)}
+.sug-o span,.sug-n span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--fh-text-meta)}
+.sug-n{display:flex;flex-direction:column;align-items:flex-end;gap:2px;padding:8px 10px}   /* read-only row (ceiling) */
+
+
+/* P18 Auction accept / decline — proposed, pending design review */
+.au-ab2{display:inline-flex;gap:6px;justify-content:flex-end}
+.au-ab.bo-btn{display:inline-flex;align-items:center;gap:4px;height:28px;margin:0;padding:0 10px;font-size:12px;font-weight:500;border-radius:6px}
+.au-ab svg{width:14px;height:14px}
+.au-ab.ya{background:var(--fh-ok-bg);border-color:var(--fh-ok-bg);color:var(--fh-ok-fg)}    /* accepted */
+.au-ab.na{background:var(--fh-bad-bg);border-color:var(--fh-bad-bg);color:#A3122F}         /* declined */
+.au-ab[disabled]:not(.ya):not(.na){color:var(--fh-text-faint);background:var(--fh-bg);cursor:not-allowed}
+.au-ab[disabled].ya,.au-ab[disabled].na{opacity:.7;cursor:not-allowed}
+
+
+/* P19 Busy state — proposed, pending design review */
+/* on click: button.disabled = true; aria-busy="true"; insert <i class="btn-spin" aria-hidden="true"></i> first; about 700 ms in the prototype */
+.btn-spin{display:inline-block;box-sizing:border-box;width:14px;height:14px;margin-right:6px;flex:none;border:2px solid currentColor;
+  border-top-color:transparent;border-radius:50%;vertical-align:-2px;animation:btnspin .8s linear infinite}
+@keyframes btnspin{to{transform:rotate(360deg)}}
+[aria-busy="true"]{cursor:progress}
+[aria-busy="true"] > svg.i{display:none}   /* the button's own icon hides while busy */
+
+
+/* P20 First-use empty state — proposed, pending design review */
+.fu-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:48px 16px;text-align:center}
+.fu-empty .fu-ic{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;margin-bottom:8px;border-radius:50%;
+  background:var(--fh-bg-chip);color:var(--fh-text-meta)}
+.fu-empty .fu-ic svg{width:24px;height:24px}
+.fu-empty > b{font-size:16px;font-weight:600;line-height:1.5;color:var(--fh-text)}
+.fu-empty p{max-width:480px;margin:0;padding:0 8px;font-size:14px;color:var(--fh-text-meta);text-align:center}
+.fu-empty .bo-pri{margin-top:12px}
+.bo-main > .fu-empty{flex:1 1 auto;padding:96px 16px;border-top:1px solid var(--fh-border)}   /* fills the page */
+
+
+/* P21 Page-load error — proposed, pending design review */
+/* P20 layout with role="alert", Lucide cloud-off icon and a primary "Try again"; replaces the page body */
+.fu-empty.pe-err{flex:1 1 auto;padding:96px 16px}
+
+
+/* P22 Failed-save toast — proposed, pending design review */
+/* error tone of the toast as built (production style; Enhanced vs production toast still open). Title "Changes not saved", detail "Your draft is still here. Try again in a moment." */
+.tst{position:fixed;z-index:50;top:60px;right:16px;width:320px;display:flex;align-items:flex-start;gap:12px;padding:16px 16px 16px 20px;
+  background:var(--fh-bg);border:1px solid var(--fh-divider);border-radius:8px;overflow:hidden;
+  box-shadow:0 10px 15px -3px rgba(15,23,42,.1),0 4px 6px -4px rgba(15,23,42,.1)}
+.tst::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--tc)}
+.tst.tone-error{--tc:#DC2626;background:#FEF2F2;border-color:#FECACA}
+.tst .tic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--tc);color:#fff}
+.tst .tx b{font-size:14px;font-weight:600}
+.tst .tx span{font-size:14px;color:var(--fh-text-helper)}

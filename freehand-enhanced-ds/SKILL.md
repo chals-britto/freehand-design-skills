@@ -11,10 +11,10 @@ The point is that every new page looks and behaves like the pages already approv
 
 ## How to use it
 
-1. **Read `DESIGN.md`** before writing any markup. It has the foundations, the 22 components, the page patterns, the content and behaviour rules, and the decision log.
+1. **Read `DESIGN.md`** before writing any markup. It has the foundations, the 27 components, the page patterns, the content and behaviour rules, and the decision log.
 2. **Build from `snippets/`.** The skill is self-contained; it doesn't depend on any other repo.
    - `tokens.css` for every colour, size and radius
-   - `components.html` for the markup and CSS of all 22 components (open it in a browser to see them)
+   - `components.html` for the markup and CSS of all 27 components (open it in a browser to see them)
    - `behaviours.js` for any list inside a scrolling detail page
 
    Copying beats re-creating: re-created components drift in small ways (a 32px dropdown instead of 36px, a blue link), and those are exactly the things reviewers have already pushed back on.
@@ -42,7 +42,9 @@ These came from review comments. Each has a reason, so apply the reason in cases
 - **Rows per page:** 20 on list pages, 10 for lists inside a detail page.
 - **Don't stub components.** The sidebar, toolbar and column picker are in the snippets. Anything else is in `reference/enhanced-studio-v106.html`, the full approved prototype (DESIGN.md §10 lists the functions). A columns button that doesn't open the picker counts as broken.
 - **Same component, same look.** The footer pager, sort menu, dropdown filters and badges are identical on every page. Don't make a "slightly different" pager for one screen.
-- **Ask Freehand:** bottom-right, orange-only rotating ring, and it moves up when a footer pager appears.
+- **Ask Freehand:** orange-only rotating ring, docked bottom-right by default, and it moves up when a footer pager appears. It (and a chat bubble beside it) docks only bottom-right or bottom-left: while dragging, the page dims under a light scrim and both docks show as white placeholders, the nearer one outlined orange; on release it glides into that dock. Never left mid-screen.
+- **Date filters use the date panel (component 23).** Presets with a check mark (one choice), Clear dates, Between / On or after / On or before and a month calendar. No "Any time" option. Past dates: Last 7 days, Last 30 days, This month, Last month, Last 90 days. Future dates (due, bid end): short windows such as Next 48 hours, By next Sunday, Next N days, plus the already-passed case.
+- **Skeletons take the page's shape.** Each page loads with a skeleton that matches its layout (list, detail, multi-pane, table, timeline), so nothing jumps when the content arrives, however long it takes.
 - **No page jumps.** Anything that changes layout (folded totals, pinned bars, minimum heights) must survive a re-render. A filter or page change made while a bar is pinned keeps the bar in place.
 - **Measure, don't hard-code.** Offsets and spaces that depend on screen height are measured from real elements, and re-measured on resize. Check at 1280×720, 1440×900 and 1920×1080.
 - **Tooltips wrap at 320px.** Every truncated value gets a tooltip.
@@ -57,6 +59,14 @@ These came from review comments. Each has a reason, so apply the reason in cases
 
 - Follow Enhanced Studio by default.
 - If your work touches one of those rows, tell Charles which way you went, so the open decisions get settled instead of drifting.
+
+## Proposed vendor V2 patterns
+
+`DESIGN.md` §11 and `snippets/proposed-vendor-v2.css` hold patterns proposed from the Procure V2 vendor portal (event header, danger button, bid field, confirmation dialog, lane card, rate match and more, numbered P1–P22). They are still waiting for design-team review.
+
+- Use them for vendor V2 / Procure work (the Procure V2 vendor portal, not the V2 / Studio orange redesign).
+- When you use one, say it's proposed (for example "P11 confirmation dialog, proposed").
+- Don't treat them as approved for other products. Anywhere else, use only §2 and `components.html`; if a page needs one of these, ask Charles.
 
 ## Working with Charles
 

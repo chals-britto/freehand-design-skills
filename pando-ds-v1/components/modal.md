@@ -55,7 +55,14 @@ Overlay `--color-overlay` (Pando Dark @ 20%).
 - **Text with Input → Dropdown Select** (3405:312): Light, Style=Text with Input with the Input - Text swapped for `Input - Dropdown Select` (Default, Empty, label "Input Label", "Select"), filling 320.
 
 ## Do / Don't
-Figma has none. None added.
+*(Charles, 13 Nov 2026 — after a prototype shipped hand-made pop-ups: 460–620 wide, amber / red callouts, KPI tiles, a table, the wrong close icon. "This isn't a proper pop-up style.")*
+- **Do** build every pop-up with this component (`pdsModal.build` or its exact markup). **Don't** hand-roll a dialog.
+- **Do** keep the fixed 350 width. **Don't** add wider sizes.
+- **Do** put the detail (skipped items, rows not changed, conflicts) in the slot: `.pds-modal__slot.pds-modal__slot--content` with a `.pds-modal__slot-title` and plain `.pds-modal__slot-text` / `.pds-modal__slot-list`. **Don't** use coloured callouts, KPI tiles, tables or captions above the heading.
+- **Do** cap a long list (about 4 lines) and say "+ N more". The modal has no scrolling body.
+- **Do** follow the Notes rule: a workflow confirm gets Cancel + the action and no ×; a result / info pop-up gets one primary button (or ×), not both.
+- **Do** use Secondary Red (`.pds-button--danger`) for a destructive action, as in the Delete example.
+- **Do** use the kit close icon (`icons/nav-close-tag.svg`, inlined in `modal.js`).
 
 ## Accessibility
 - `role="dialog"`, `aria-modal="true"`, labelled by the heading `<h2>`, described by the message. Set by `modal.js`.
@@ -67,7 +74,7 @@ Figma has none. None added.
 
 ## Open issues
 1. The "Close Button vs Icon" note says a modal should have *either* a close icon *or* a Cancel button, not both — but every variant ships with both (Persistence defaults to true).
-2. Heading is SemiBold 14/**16**; nearest `.type-14-semibold` is 14/19. Message is 12/auto (≈16, 3 lines = 48); `.type-12-regular` is 12/17. Swappable text 12/16 vs 17. Heights in the browser come out a few px taller than Figma.
+2. ~~Heading 14/16, message and slot text 12/16 came out 14/19 and 12/17.~~ Fixed 13 Nov 2026: `line-height: 16px` on heading, message and slot text, so heights match Figma.
 3. Button Group gap differs per variant: Light uses 10 (the instance overrides the molecule's 20), Dark Text / Text with Options uses 20, Dark Swappable uses 10 and is not a Button Group instance (loose legacy "Secondary"/"Primary" Dark Small components).
 4. Dark Swappable keeps the light `.Swappable Content` (#EEF2F4 fill, #000 text) on the dark box; there is no dark slot.
 5. `.Swappable Content` text is #000000 (off-token) and fixed 150 wide; the `refresh-line` placeholder icon is not in the kit icon set (inlined here; atom variant missing in kit).

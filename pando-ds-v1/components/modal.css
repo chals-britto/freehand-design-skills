@@ -99,7 +99,8 @@
 }
 .pds-modal__title {
   flex: 1; min-width: 0; margin: 0;
-  font: var(--type-14-semibold);     /* Figma: SemiBold 14 / 16 — see Open issues */
+  font: var(--type-14-semibold);
+  line-height: 16px;                 /* Figma: SemiBold 14 / 16 (13 Nov 2026: matched, was 19) */
   color: var(--_heading);
 }
 .pds-modal__close {
@@ -115,7 +116,8 @@
 /* Message ("Content") */
 .pds-modal__message {
   margin: 0;
-  font: var(--type-12-regular);      /* Figma: Regular 12 / auto — see Open issues */
+  font: var(--type-12-regular);
+  line-height: 16px;                 /* Figma: Regular 12 / auto ≈ 16 (13 Nov 2026: matched, was 17) */
   color: var(--_text);
 }
 
@@ -148,5 +150,14 @@
   width: var(--modal-slot-text-w);
   margin: 0;
   font: var(--type-12-regular);
+  line-height: 16px;                 /* Figma 12 / 16 */
   color: var(--modal-slot-text);
 }
+
+/* Slot holding real content (added 13 Nov 2026, Charles: screens put their
+   detail in the slot, not in coloured callouts or wider dialogs).
+   Text fills the 320 column; a list is plain lines. Same #EEF2F4 box. */
+.pds-modal__slot--content { gap: 6px; }
+.pds-modal__slot--content .pds-modal__slot-text { width: auto; }
+.pds-modal__slot-list { margin: 0; padding-left: 16px; font: var(--type-12-regular); line-height: 16px; color: var(--modal-slot-text); }
+.pds-modal__slot-list li + li { margin-top: 2px; }
